@@ -38,20 +38,16 @@ public:
 	LRESULT MsgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
 	void Initialize();
-	void UpdateScene(const InputState & pInputState);
-	void DrawScene();
 	void OnRender();
 
 	void SetGame(MainGame* pGame) { m_pGame = pGame; }
-
-	void DrawString(tstring const& text, int x, int y);
 
 private:
 	void InitMainWindow(const tstring* pTitle);
 
 	HRESULT CreateDeviceIndependentResources();
     HRESULT CreateDeviceResources();
-    HRESULT RecreateSizedResources(UINT nWidth, UINT nHeight);
+    HRESULT RecreateSizedResources();
 
 	HRESULT CreateD3DDevice(
     IDXGIAdapter *pAdapter,
@@ -68,8 +64,6 @@ private:
 	bool      m_Resizing;
 
 	MainGame* m_pGame;
-
-	tstring m_FrameStats;
  
 	ID3D10Device*    m_pD3DDevice;
 	IDXGISwapChain*  m_pSwapChain;
@@ -79,7 +73,6 @@ private:
 
 	InputStateManager* m_pInputStateManager;
 
-	tstring* m_MainWndCaption;
 	D3D10_DRIVER_TYPE m_d3dDriverType;
 	D3DXCOLOR m_ClearColor;
 

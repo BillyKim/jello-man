@@ -45,14 +45,13 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_Minimized(false)
 ,m_Maximized(false)
 ,m_Resizing(false)
-,m_FrameStats(_T(""))
+,m_pGame(0)
 ,m_pD3DDevice(0)
 ,m_pSwapChain(0)
 ,m_pDepthStencilBuffer(0)
 ,m_pRenderTargetView(0)
 ,m_pDepthStencilView(0)
 ,m_pInputStateManager(0)
-,m_MainWndCaption(0)
 ,m_d3dDriverType( D3D10_DRIVER_TYPE_HARDWARE)
 ,m_ClearColor( D3DXCOLOR(0.0f, 0.0f, 0.4f, 1.0f))
 ,m_ClientWidth( 800)
@@ -64,14 +63,18 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pBackBufferRT(0)
 ,m_pColorBrush(0)
 ,m_pDWriteFactory(0)
+,m_pTextFormat(0)
 ,m_pBlox2D(0)
 {
 }
 
 Engine::~Engine()
-{	
+{
+	delete m_pGameConfig;
+
 	SafeDelete(m_pInputStateManager);
 	SafeDelete(m_pContentManager);
+	SafeDelete(m_pBlox2D);
 
 	if( m_pD3DDevice )m_pD3DDevice->ClearState();
 
@@ -84,6 +87,7 @@ Engine::~Engine()
 	SafeRelease(m_pBackBufferRT);
 	SafeRelease(m_pColorBrush);
 	SafeRelease(m_pDWriteFactory);
+	SafeRelease(m_pTextFormat);
 }
 
 HINSTANCE Engine::GetAppInst()
@@ -113,10 +117,6 @@ int Engine::Run()
         {	
 			if( !m_AppPaused )
 			{
-				//InputState refInputState =  m_pInputStateManager->GenerateInputState();
-				//Get InputState once per frame
-				//UpdateScene(refInputState);
-
 				OnRender();
 			}
 			else
@@ -168,39 +168,13 @@ void Engine::OnRender()
                 0
                 );
 
+	// main game cycle
 	InputState refInputState =  m_pInputStateManager->GenerateInputState();
 	m_pGame->UpdateScene(refInputState);
 	m_pGame->DrawScene(*m_pBlox2D);
 
 	// displaying backbuffer - vsync on
 	m_pSwapChain->Present(1, 0);
-}
-
-void Engine::UpdateScene(const InputState & refInputState)
-{
-	// Code computes the average frames per second, and also the 
-	// average time it takes to render one frame.
-
-	static int frameCnt = 0;
-	static float t_base = 0.0f;
-
-	frameCnt++;
-	// Compute averages over one second period.
-	if( (m_pInputStateManager->GetGameTime() - t_base) >= 1.0f )
-	{
-		float fps = (float)frameCnt; // fps = frameCnt / 1
-		float mspf = 1000.0f / fps;
-
-		tstringstream outs;   
-		//outs.precision(6);
-		outs << _T("FPS: ") << fps << _T("\n") 
-			 << _T("Milliseconds: Per Frame: ") << mspf << _T("\n");
-		m_FrameStats = outs.str();
-		
-		// Reset for next average.
-		frameCnt = 0;
-		t_base  += 1.0f;
-	}
 }
 
 LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
@@ -244,7 +218,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				m_AppPaused = false;
 				m_Minimized = false;
 				m_Maximized = true;
-				//OnResize();
+				RecreateSizedResources();
 			}
 			else if( wParam == SIZE_RESTORED )
 			{
@@ -254,7 +228,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					m_AppPaused = false;
 					m_Minimized = false;
-					//OnResize();
+					RecreateSizedResources();
 				}
 
 				// Restoring from maximized state?
@@ -262,7 +236,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					m_AppPaused = false;
 					m_Maximized = false;
-					//OnResize();
+					RecreateSizedResources();
 				}
 				else if( m_Resizing )
 				{
@@ -277,7 +251,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 				else // API call such as SetWindowPos or mSwapChain->SetFullscreenState.
 				{
-					//OnResize();
+					RecreateSizedResources();
 				}
 			}
 		}
@@ -296,7 +270,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		m_AppPaused = false;
 		m_Resizing  = false;
 		m_pInputStateManager->Start();
-		//OnResize();
+		RecreateSizedResources();
 		return 0;
  
 	// WM_DESTROY is sent when the window is being destroyed.
@@ -510,7 +484,7 @@ HRESULT Engine::CreateDeviceResources()
         }
         if (SUCCEEDED(hr))
         {
-            hr = RecreateSizedResources(nWidth, nHeight);
+            hr = RecreateSizedResources();
         }
 		if (SUCCEEDED(hr))
         {
@@ -519,9 +493,10 @@ HRESULT Engine::CreateDeviceResources()
                 D2D1::ColorF(D2D1::ColorF::Black),
                 &m_pColorBrush
                 );
-        }
 
-		m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+			// disable anti-aliasing for direct2D
+			m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+        }
     }
 
     SafeRelease(pDevice);
@@ -533,8 +508,10 @@ HRESULT Engine::CreateDeviceResources()
     return hr;
 }
 
-HRESULT Engine::RecreateSizedResources(UINT nWidth, UINT nHeight)
+HRESULT Engine::RecreateSizedResources()
 {
+	UINT nWidth = m_ClientWidth;
+	UINT nHeight = m_ClientHeight;
     HRESULT hr = S_OK;
     IDXGISurface *pBackBuffer = NULL;
     ID3D10Resource *pBackBufferResource = NULL;
@@ -640,6 +617,8 @@ HRESULT Engine::RecreateSizedResources(UINT nWidth, UINT nHeight)
             &m_pBackBufferRT
             );
 
+		// sending new rendertarget to Blox2D
+		if (m_pBlox2D) m_pBlox2D->OnResize(m_pBackBufferRT);
     }
 
     SafeRelease(pBackBuffer);
@@ -690,15 +669,4 @@ HRESULT Engine::CreateD3DDevice(
     }
 
     return hr;
-}
-
-void Engine::DrawString(tstring const& text, int x, int y)
-{
-	// Retrieve the size of the render target.
-    D2D1_SIZE_F rtSize = m_pBackBufferRT->GetSize();
-
-	m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-	m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-
-	m_pBackBufferRT->DrawTextW(text.c_str(),text.size(),m_pTextFormat,RectF((float)x,(float)y,rtSize.width,rtSize.height),m_pColorBrush);
 }
