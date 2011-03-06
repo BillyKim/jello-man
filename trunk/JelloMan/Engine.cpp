@@ -171,7 +171,10 @@ void Engine::OnRender()
 	// main game cycle
 	InputState refInputState =  m_pInputStateManager->GenerateInputState();
 	m_pGame->UpdateScene(refInputState);
+	
+	m_pBackBufferRT->BeginDraw();
 	m_pGame->DrawScene(*m_pBlox2D);
+	m_pBackBufferRT->EndDraw();
 
 	// displaying backbuffer - vsync on
 	m_pSwapChain->Present(1, 0);
