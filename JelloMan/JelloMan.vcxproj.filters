@@ -24,9 +24,6 @@
     <ClInclude Include="ContentManager.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
-    <ClInclude Include="D3DApp.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
     <ClInclude Include="D3DUtil.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
@@ -48,12 +45,21 @@
     <ClInclude Include="stdafx.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainGame.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameConfig.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Blox2D.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentManager.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
-    <ClCompile Include="D3DApp.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
     <ClCompile Include="EffectLoader.cpp">
@@ -75,6 +81,18 @@
       <Filter>Engine Files</Filter>
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainGame.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameConfig.cpp">
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Blox2D.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
   </ItemGroup>

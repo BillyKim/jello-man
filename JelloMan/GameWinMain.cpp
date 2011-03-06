@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "GameWinMain.h"
-#include "TestGameApp.h"
+#include "Engine.h"
+#include "MainGame.h"
 
+// console subsystem
+void main()
+{
+	WinMain(0,0,0,0);
+}
 
-//-----------------------------------------------------------------
-// Function called by Windows
-//-----------------------------------------------------------------
+// windows subsystem
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
@@ -44,16 +48,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 //****************************
 
 	//create game singleton object
-	TestGameApp *pGameApp= new TestGameApp(hInstance);
+	Engine* pEngine = new Engine(hInstance);
+	MainGame* pGame = new MainGame();
 
-	pGameApp->InitApp();
+	pEngine->SetGame(pGame);
+	pEngine->Initialize();
 
-	//pGameApp->Load();
-
-	int ret = pGameApp->Run();
+	int ret = pEngine->Run();
 
 	//destroy objects
-	delete pGameApp;
+	delete pEngine;
 
 	return ret;
 

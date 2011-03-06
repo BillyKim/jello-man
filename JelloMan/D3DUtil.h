@@ -11,6 +11,8 @@
 #define _WIN32_WINNT   0x0600 // Vista
 #endif
 
+#include "stdafx.h"
+
 using namespace std;
 
 #ifdef _UNICODE	// extra unicode defines
@@ -56,6 +58,23 @@ using namespace std;
 #include <crtdbg.h>
 #endif
 
+// Direct2D headers
+#include <d2d1.h>
+#include <d2d1helper.h>
+#include <dwrite.h>
+#include <wincodec.h>
+
+using namespace D2D1;
+
+// libs used for Direct2D
+#pragma comment(lib, "d2d1.lib")			
+#pragma comment(lib, "WindowsCodecs.lib")	//WIC
+#pragma comment(lib, "dwrite.lib")			//WIC
+
+// DEFINES
+typedef D2D1_POINT_2F Point2D;
+typedef D2D1_COLOR_F Color2D;
+typedef D2D1_SIZE_F Size2D;
 
 #include <d3d10.h>
 #include <d3dx10.h>
@@ -69,6 +88,7 @@ using namespace std;
 #include <cassert>
 
 #include <D3DX10Math.h>
+
 
 //*****************************************************************************
 // Light Struct
