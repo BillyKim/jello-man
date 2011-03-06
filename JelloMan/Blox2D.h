@@ -63,7 +63,12 @@ private:
 
 	vector<int> m_fpsHistory;
 	vector<float> m_dtimeHistory;
+
+	int m_FrameCount;
+	float m_TBase;
 	float m_GameTime;
+	int m_FPS;
+	float m_DTimeS;
 
 	// -------------------------
 	// Disabling default copy constructor and default 

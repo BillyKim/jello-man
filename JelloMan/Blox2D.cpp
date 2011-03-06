@@ -17,7 +17,11 @@ Blox2D::Blox2D(	ID2D1RenderTarget* pRenderTarget,
 				m_pDWriteFactory(pDWriteFactory),
 				m_pColorBrush(pColorBrush),
 				m_pTextFormat(pTextFormat),
-				m_GameTime(0)
+				m_FrameCount(0),
+				m_TBase(0),
+				m_GameTime(0),
+				m_FPS(0),
+				m_DTimeS(0)
 {
 	// nothing to create
 }
@@ -36,7 +40,10 @@ void Blox2D::SetColor(int r, int g, int b, float a)
 	temp.b = ((float)b/255);
 	temp.a = a;
 
-	m_pColorBrush->SetColor(temp);
+	if (m_pColorBrush->GetColor().r != temp.r ||
+		m_pColorBrush->GetColor().g != temp.g || 
+		m_pColorBrush->GetColor().b != temp.b ||
+		m_pColorBrush->GetColor().a != temp.a)	m_pColorBrush->SetColor(temp);
 }
 
 void Blox2D::SetColor(D2D1_COLOR_F color)
@@ -46,6 +53,8 @@ void Blox2D::SetColor(D2D1_COLOR_F color)
 
 void Blox2D::SetFont(tstring const& fontName, bool bold, bool italic, float size)
 {
+	SafeRelease(m_pTextFormat);
+
 	DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
 	DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
 
@@ -97,31 +106,15 @@ void Blox2D::FillBackGround()
 
 void Blox2D::DrawLine(int x, int y, int x2, int y2, float strokeSize)
 {
-	m_pRenderTarget-> BeginDraw();
 	m_pRenderTarget->DrawLine(Point2F((float)x,(float)y),Point2F((float)x2,(float)y2),m_pColorBrush,strokeSize);
-	m_pRenderTarget->EndDraw();
 }
 
 void  Blox2D::DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize)
 {
-	m_pRenderTarget-> BeginDraw();
-
-	D2D_POINT_2F tempStart;
-	D2D_POINT_2F tempEnd;
-
-	tempStart.x = (float)start.x;
-	tempStart.y = (float)start.y;
-	tempEnd.x = (float)end.x;
-	tempEnd.y = (float)end.y;
-
-	m_pRenderTarget->DrawLine(tempStart,tempEnd,m_pColorBrush,strokeSize);
-
-	m_pRenderTarget->EndDraw();
+	m_pRenderTarget->DrawLine(start,end,m_pColorBrush,strokeSize);
 }
 void Blox2D::DrawEllipse(int x, int y, int width, int height, float strokeSize)
 {
-	m_pRenderTarget->BeginDraw();
-
 	D2D1_ELLIPSE temp;
 
 	temp.point.x = (float)x;
@@ -130,14 +123,10 @@ void Blox2D::DrawEllipse(int x, int y, int width, int height, float strokeSize)
 	temp.radiusY = (float)height;
 
 	m_pRenderTarget->DrawEllipse(temp,m_pColorBrush,strokeSize);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strokeSize)
 {
-	m_pRenderTarget->BeginDraw();
-
 	D2D1_ELLIPSE temp;
 
 	temp.point.x = (float)coord.x;
@@ -146,8 +135,6 @@ void Blox2D::DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strok
 	temp.radiusY = (float)height;
 
 	m_pRenderTarget->DrawEllipse(temp,m_pColorBrush,strokeSize);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize)
@@ -161,8 +148,6 @@ void Blox2D::DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize)
 
 void Blox2D::FillEllipse(int x, int y, int width, int height)
 {
-	m_pRenderTarget->BeginDraw();
-
 	D2D1_ELLIPSE temp;
 
 	temp.point.x = (float)x;
@@ -171,14 +156,10 @@ void Blox2D::FillEllipse(int x, int y, int width, int height)
 	temp.radiusY = (float)height;
 
 	m_pRenderTarget->FillEllipse(temp,m_pColorBrush);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::FillEllipse(D2D1_POINT_2F coord, int width, int height)
 {
-	m_pRenderTarget->BeginDraw();
-
 	D2D1_ELLIPSE temp;
 
 	temp.point.x = (float)coord.x;
@@ -187,23 +168,15 @@ void Blox2D::FillEllipse(D2D1_POINT_2F coord, int width, int height)
 	temp.radiusY = (float)height;
 
 	m_pRenderTarget->FillEllipse(temp,m_pColorBrush);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::FillEllipse(D2D1_ELLIPSE ellipse)
 {
-	m_pRenderTarget->BeginDraw();
-
 	m_pRenderTarget->FillEllipse(ellipse,m_pColorBrush);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::DrawStringCentered(tstring const& text, int offSetX, int offSetY)
 {
-	m_pRenderTarget->BeginDraw();
-
 	// Retrieve the size of the render target.
     D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
 	D2D1_RECT_F rect = RectF(0,0,rtSize.width+(offSetX*2),rtSize.height+(offSetY*2));
@@ -212,14 +185,10 @@ void Blox2D::DrawStringCentered(tstring const& text, int offSetX, int offSetY)
 	m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 	
 	m_pRenderTarget->DrawTextW(text.c_str(),text.size(),m_pTextFormat,rect,m_pColorBrush);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::DrawString(tstring const& text, int x, int y)
 {
-	m_pRenderTarget->BeginDraw();
-
 	// Retrieve the size of the render target.
     D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
 
@@ -227,8 +196,6 @@ void Blox2D::DrawString(tstring const& text, int x, int y)
 	m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_pRenderTarget->DrawTextW(text.c_str(),text.size(),m_pTextFormat,RectF((float)x,(float)y,rtSize.width,rtSize.height),m_pColorBrush);
-
-	m_pRenderTarget->EndDraw();
 }
 
 /*void Blox2D::DrawString(tstring const& text, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment)
@@ -254,44 +221,39 @@ void  Blox2D::DrawString(int nr, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment,
 
 void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 {
-	static int frameCnt = 0;
-	static float t_base = 0.0f;
-	static float GameTime = 0.0f;
-	static int FPS = 0;
-	static float dTimeS = 0;
-	
-
-	frameCnt++;
-	GameTime += dTime;
+	m_FrameCount++;
 	m_GameTime += dTime;
 
 	// Compute averages over one second period.
-	if( (GameTime - t_base) >= delayInterval )
+	if( (m_GameTime - m_TBase) >= delayInterval )
 	{
-		float fps = (float)(frameCnt*(1/delayInterval)); // fps = frameCnt / 1
+		float fps = (float)(m_FrameCount*(1/delayInterval)); // fps = frameCnt / 1
 
-		FPS = (int)fps;
+		m_FPS = (int)fps;
 		
 		// Reset for next average.
-		frameCnt = 0;
-		t_base  += delayInterval;
+		m_FrameCount = 0;
+		m_TBase  += delayInterval;
 
-		dTimeS = dTime*1000;
+		m_DTimeS = dTime*1000;
 
-		if (FPS > 80) m_fpsHistory.push_back(80);
-		else if (FPS < 0) m_fpsHistory.push_back(0);
-		else m_fpsHistory.push_back(FPS);
+		if (showGraph)
+		{
+			if (m_FPS > 80) m_fpsHistory.push_back(80);
+			else if (m_FPS < 0) m_fpsHistory.push_back(0);
+			else m_fpsHistory.push_back(m_FPS);
 
-		if (dTimeS > 80) m_dtimeHistory.push_back(80);
-		else if (dTimeS < 0) m_dtimeHistory.push_back(0);
-		else m_dtimeHistory.push_back(dTimeS);
+			if (m_DTimeS > 80) m_dtimeHistory.push_back(80);
+			else if (m_DTimeS < 0) m_dtimeHistory.push_back(0);
+			else m_dtimeHistory.push_back(m_DTimeS);
+		}
 	}
 
 	tstringstream outs;
 	outs.precision(5);
 
-	outs << L"FPS: " << FPS << L"\n";
-	outs << L"DeltaTime: " << dTimeS << L" ms\n";
+	outs << L"FPS: " << m_FPS << L"\n";
+	outs << L"DeltaTime: " << m_DTimeS << L" ms\n";
 
 	SetFont(_T("Consolas"),true,false,14);
 	DrawString(outs.str(),2,0);
@@ -307,14 +269,14 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 		SetColor(255,0,0,0.5f);
 		for (unsigned int i = 0; i < m_fpsHistory.size()-1; ++i)
 		{
-			DrawLine((i*4)+2,80-(m_fpsHistory.at(i)/2),(i*4) + 6,80-(m_fpsHistory.at(i+1)/2));
+			DrawLine((i*4)+2,80-(m_fpsHistory.at(i)/2),((i+1)*4)+2,80-(m_fpsHistory.at(i+1)/2));
 		}
 		DrawString(_T("fps"),104,40);
 
 		SetColor(255,255,0,0.5f);
 		for (unsigned int i = 0; i < m_dtimeHistory.size()-1; ++i)
 		{
-			DrawLine((i*4)+2,(int)(80-(m_dtimeHistory.at(i)/2)),(i*4) + 6,(int)(80-(m_dtimeHistory.at(i+1)/2)));
+			DrawLine((i*4)+2,(int)(80-(m_dtimeHistory.at(i)/2)),((i+1)*4)+2,(int)(80-(m_dtimeHistory.at(i+1)/2)));
 		}
 		DrawString(_T("dt"),104,60);		
 	}
@@ -322,34 +284,22 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 
 void Blox2D::DrawRect(int x, int y, int width, int height, float strokeSize)
 {
-	m_pRenderTarget->BeginDraw();
-
 	m_pRenderTarget->DrawRectangle(RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),m_pColorBrush,strokeSize);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::DrawRect(D2D1_RECT_F rect, float strokeSize)
 {
-	m_pRenderTarget->BeginDraw();
-
 	m_pRenderTarget->DrawRectangle(rect,m_pColorBrush, strokeSize);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::FillRect(int x, int y, int width, int height)
 {
-	m_pRenderTarget->BeginDraw();
 	m_pRenderTarget->FillRectangle(RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),m_pColorBrush);
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::FillRect(D2D1_RECT_F rect)
 {
-	m_pRenderTarget->BeginDraw();
 	m_pRenderTarget->FillRectangle(rect,m_pColorBrush);
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::FillBlock(int x, int y, int size)
@@ -378,8 +328,6 @@ void Blox2D::FillBlock(D2D1_POINT_2F coord, int size,D2D1_COLOR_F color1, D2D1_C
 
 void Blox2D::DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize)
 {
-	m_pRenderTarget->BeginDraw();
-
 	ID2D1PathGeometry* pPathGeometry = NULL;
 	m_pD2DFactory->CreatePathGeometry(&pPathGeometry);
 
@@ -397,14 +345,10 @@ void Blox2D::DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float s
 	SafeRelease(pSink);
 
 	m_pRenderTarget->DrawGeometry(pPathGeometry,m_pColorBrush,strokeSize);
-
-	m_pRenderTarget->EndDraw();
 }
 
 void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints)
 {
-	m_pRenderTarget->BeginDraw();
-
 	ID2D1PathGeometry* pPathGeometry = NULL;
 	m_pD2DFactory->CreatePathGeometry(&pPathGeometry);
 
@@ -423,8 +367,6 @@ void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints)
 	m_pRenderTarget->FillGeometry(pPathGeometry,m_pColorBrush);
 
 	SafeRelease(pPathGeometry);
-
-	m_pRenderTarget->EndDraw();
 }
 
 /*void Blox2D::DrawBitmap(Bitmap* bitmap, int x, int y, float opacity, int width, int height)
