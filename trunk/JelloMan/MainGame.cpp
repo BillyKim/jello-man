@@ -28,6 +28,7 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 
 void MainGame::UpdateScene(const InputState & refInputState)
 {
+	// TEST - inputstate & inputstateManager gaat nog weg
 	m_dTtime = refInputState.GetDeltaTime();
 }
 
@@ -36,4 +37,8 @@ void MainGame::DrawScene(Blox2D& refBlox2D)
 	// TEST - van blox 2d gaat nog singleton worden gemaakt!
 	refBlox2D.SetColor(255,255,255);
 	refBlox2D.ShowFPS(m_dTtime, true);
+
+	refBlox2D.SetColor(255,255,0);
+	refBlox2D.SetFont(_T("Arial"),true,false,50);
+	refBlox2D.DrawStringCentered(_T("IT WORKS!"));
 }
