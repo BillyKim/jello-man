@@ -17,6 +17,5 @@ public:
 private:
 	
 	float m_dTtime;
-	Blox2D* m_pBlox2D;
 
 };
