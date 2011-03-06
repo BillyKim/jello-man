@@ -316,7 +316,7 @@ void Blox2D::ShowFPS(float dTime, bool showGraph)
 		{
 			DrawLine((i*4)+2,(int)(80-(m_dtimeHistory.at(i)/2)),(i*4) + 6,(int)(80-(m_dtimeHistory.at(i+1)/2)));
 		}
-		DrawString(_T("mspf"),104,60);		
+		DrawString(_T("dt"),104,60);		
 	}
 }
 

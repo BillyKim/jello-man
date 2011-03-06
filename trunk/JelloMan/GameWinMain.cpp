@@ -57,6 +57,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	int ret = pEngine->Run();
 
 	//destroy objects
+	delete pGame;
 	delete pEngine;
 
 	return ret;

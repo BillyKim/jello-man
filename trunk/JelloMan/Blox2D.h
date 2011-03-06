@@ -24,6 +24,8 @@ public:
 	void SetColor(int r, int g, int b, float a = 1.0f);
 	void SetColor(D2D1_COLOR_F color);
 	void SetFont(tstring const& fontName, bool bold, bool italic, float size);
+
+	void OnResize(ID2D1RenderTarget* pRenderTarget) { m_pRenderTarget = pRenderTarget; }
 	
 	// DRAW METHODS
 	void DrawGrid(int stepsize);
