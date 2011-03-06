@@ -39,6 +39,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>C:\Program Files\Microsoft DirectX SDK %28June 2010%29\Utilities\bin\x86;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\Program Files\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,6 +57,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d2d1.lib;dwrite.lib;windowscodecs.lib;dxgi.lib;d3d10_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,27 +78,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Blox2D.h" />
     <ClInclude Include="ContentManager.h" />
-    <ClInclude Include="D3DApp.h" />
+    <ClInclude Include="Engine.h" />
     <ClInclude Include="D3DUtil.h" />
     <ClInclude Include="EffectLoader.h" />
+    <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="InputState.h" />
     <ClInclude Include="InputStateManager.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="MainGame.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="ContentManager.cpp" />
-    <ClCompile Include="D3DApp.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EffectLoader.cpp" />
+    <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GameWinMain.cpp" />
     <ClCompile Include="InputState.cpp" />
     <ClCompile Include="InputStateManager.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
