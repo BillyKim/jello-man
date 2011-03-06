@@ -143,7 +143,7 @@ void Engine::Initialize()
 	InitMainWindow(m_pGameConfig->GetGameTitle());
 	CreateDeviceResources();
 
-	cout << "Direct2D & DirectX active...\n";
+	cout << "-Direct2D & DirectX active\n";
 
 	// init D2D engine
 	m_pBlox2D = new Blox2D(	m_pBackBufferRT,
@@ -152,7 +152,7 @@ void Engine::Initialize()
 							m_pColorBrush,
 							m_pTextFormat );
 
-	cout << "Blox2D Engine active...";
+	cout << "-Blox2D Engine active\n";
 }
 
 void Engine::OnRender()
@@ -616,6 +616,9 @@ HRESULT Engine::RecreateSizedResources()
             &props,
             &m_pBackBufferRT
             );
+
+		// turning off anti-aliasing
+		m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
 		// sending new rendertarget to Blox2D
 		if (m_pBlox2D) m_pBlox2D->OnResize(m_pBackBufferRT);

@@ -46,7 +46,7 @@ public:
 	void DrawStringCentered(tstring const& text, int offSetX = 0, int offSetY = 0);
 	//void DrawString(tstring const& text, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment);
 	//void DrawString(int nr, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment);
-	void ShowFPS(float dTime, bool showGraph);
+	void ShowFPS(float dTime, bool showGraph = false, float delayInterval = 1.0f);
 	void FillBlock(int x, int y, int size);
 	void FillBlock(D2D1_POINT_2F coord, int size, D2D1_COLOR_F color1, D2D1_COLOR_F color2);
 	void DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize);

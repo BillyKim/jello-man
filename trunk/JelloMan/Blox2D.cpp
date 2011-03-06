@@ -252,7 +252,7 @@ void  Blox2D::DrawString(int nr, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment,
 	GAME_ENGINE->DrawString(stream.str(),rect,textAlignment,paragraphAlignment);
 }*/
 
-void Blox2D::ShowFPS(float dTime, bool showGraph)
+void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 {
 	static int frameCnt = 0;
 	static float t_base = 0.0f;
@@ -266,15 +266,15 @@ void Blox2D::ShowFPS(float dTime, bool showGraph)
 	m_GameTime += dTime;
 
 	// Compute averages over one second period.
-	if( (GameTime - t_base) >= 1 )
+	if( (GameTime - t_base) >= delayInterval )
 	{
-		float fps = (float)frameCnt; // fps = frameCnt / 1
+		float fps = (float)(frameCnt*(1/delayInterval)); // fps = frameCnt / 1
 
 		FPS = (int)fps;
 		
 		// Reset for next average.
 		frameCnt = 0;
-		t_base  += 1.0f;
+		t_base  += delayInterval;
 
 		dTimeS = dTime*1000;
 
