@@ -1,6 +1,7 @@
 #include "D3DUtil.h"
 
-class InputState;
+#include "KeyboardState.h"
+#include "MouseState.h"
 class GameConfig;
 class Blox2D;
 
@@ -11,11 +12,12 @@ public:
 	~MainGame();
 
 	void Initialize(GameConfig& refGameConfig);
-	void UpdateScene(const InputState & refInputState);
+	void UpdateScene(const KeyboardState& refKeyboard, const MouseState& refMouse, const float dTime);
 	void DrawScene(Blox2D& refBlox2D); 
 
 private:
-	
+
 	float m_dTtime;
+	bool m_bDraw;
 
 };

@@ -6,15 +6,9 @@
 
 #include "MainGame.h"
 #include "ContentManager.h"
-#include "InputStateManager.h"
+#include "Controls.h"
 #include "GameConfig.h"
 #include "Blox2D.h"
-
-//#include "ObjMesh.h"
-//#include "IndexedGeometry.h"
-//#include "IndexBufferMaterial.h"
-//#include "VertexList.h"
-
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -51,7 +45,7 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pDepthStencilBuffer(0)
 ,m_pRenderTargetView(0)
 ,m_pDepthStencilView(0)
-,m_pInputStateManager(0)
+,m_pControls(0)
 ,m_d3dDriverType( D3D10_DRIVER_TYPE_HARDWARE)
 ,m_ClearColor( D3DXCOLOR(0.0f, 0.0f, 0.4f, 1.0f))
 ,m_ClientWidth( 800)
@@ -66,13 +60,14 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pTextFormat(0)
 ,m_pBlox2D(0)
 {
+	m_GameTimer.Reset();
 }
 
 Engine::~Engine()
 {
 	delete m_pGameConfig;
 
-	SafeDelete(m_pInputStateManager);
+	SafeDelete(m_pControls);
 	SafeDelete(m_pContentManager);
 	SafeDelete(m_pBlox2D);
 
@@ -117,6 +112,7 @@ int Engine::Run()
         {	
 			if( !m_AppPaused )
 			{
+				m_GameTimer.Tick();
 				OnRender();
 			}
 			else
@@ -136,7 +132,7 @@ void Engine::Initialize()
 	m_ClientWidth = (int)m_pGameConfig->GetWindowSize().width;
 	m_ClientHeight = (int)m_pGameConfig->GetWindowSize().height;
 
-	m_pInputStateManager = new InputStateManager();
+	m_pControls = new Controls();
 
 	// init DirectX & Direct2D & open window
 	CreateDeviceIndependentResources();
@@ -169,8 +165,10 @@ void Engine::OnRender()
                 );
 
 	// main game cycle
-	InputState refInputState =  m_pInputStateManager->GenerateInputState();
-	m_pGame->UpdateScene(refInputState);
+	KeyboardState kbState =  m_pControls->Keyboard();
+	MouseState msState = m_pControls->Mouse();
+
+	m_pGame->UpdateScene(kbState,msState,m_GameTimer.GetDeltaTime());
 	
 	m_pBackBufferRT->BeginDraw();
 	m_pGame->DrawScene(*m_pBlox2D);
@@ -185,6 +183,11 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	POINTS currentpos;
 	short zPos=0;
 
+	m_pControls->SetLeftMBDown(false);
+	m_pControls->SetLeftMBClicked(false);
+	m_pControls->SetLeftMBDown(false);
+	m_pControls->SetLeftMBClicked(false);
+
 	switch( msg )
 	{
 	// WM_ACTIVATE is sent when the window is activated or deactivated.  
@@ -194,12 +197,12 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		if( LOWORD(wParam) == WA_INACTIVE )
 		{
 			m_AppPaused = true;
-			m_pInputStateManager->Stop();
+			m_GameTimer.Stop();
 		}
 		else
 		{
 			m_AppPaused = false;
-			m_pInputStateManager->Start();
+			m_GameTimer.Start();
 		}
 		return 0;
 
@@ -264,7 +267,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_ENTERSIZEMOVE:
 		m_AppPaused = true;
 		m_Resizing  = true;
-		m_pInputStateManager->Stop();
+		m_GameTimer.Stop();
 		return 0;
 
 	// WM_EXITSIZEMOVE is sent when the user releases the resize bars.
@@ -272,7 +275,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_EXITSIZEMOVE:
 		m_AppPaused = false;
 		m_Resizing  = false;
-		m_pInputStateManager->Start();
+		m_GameTimer.Start();
 		RecreateSizedResources();
 		return 0;
  
@@ -296,28 +299,28 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	//mousemoves for input state
 	case WM_MOUSEMOVE:
 		currentpos = MAKEPOINTS(lParam);
-		m_pInputStateManager->SetMousePos(currentpos);
+		m_pControls->SetMousePos(Point2F(currentpos.x,currentpos.y));
 		return 0;
 
 	case WM_LBUTTONDOWN:
-		m_pInputStateManager->SetLMousePressed(true);
+		m_pControls->SetLeftMBDown(true);
 		return 0;
 
 	case WM_LBUTTONUP:
-		m_pInputStateManager->SetLMousePressed(false);
+		m_pControls->SetLeftMBClicked(true);
 		return 0;
 
 	case WM_RBUTTONDOWN:
-		m_pInputStateManager->SetRMousePressed(true);
+		m_pControls->SetLeftMBDown(true);
 		return 0;
 
 	case WM_RBUTTONUP:
-		m_pInputStateManager->SetRMousePressed(false);
+		m_pControls->SetLeftMBClicked(true);
 		return 0;
 
 	case WM_MOUSEWHEEL:
 		zPos = GET_WHEEL_DELTA_WPARAM(wParam);
-		m_pInputStateManager->SetWheelPos(zPos);
+		m_pControls->SetMouseWheelPos(zPos);
 		return 0;
 	}
 	return DefWindowProc(m_hMainWnd, msg, wParam, lParam);
