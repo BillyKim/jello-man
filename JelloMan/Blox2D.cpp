@@ -260,8 +260,8 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 
 	if (showGraph && m_GameTime > 1)
 	{
-		SetColor(255,255,255,0.5f);
-		FillRect(2,40,100,40);
+		SetColor(255,255,255,0.4f);
+		FillRect(2,40,200,80);
 
 		if (m_fpsHistory.size() > 26) m_fpsHistory.erase(m_fpsHistory.begin());
 		if (m_dtimeHistory.size() > 26) m_dtimeHistory.erase(m_dtimeHistory.begin());
@@ -269,16 +269,16 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 		SetColor(255,0,0,0.5f);
 		for (unsigned int i = 0; i < m_fpsHistory.size()-1; ++i)
 		{
-			DrawLine((i*4)+2,80-(m_fpsHistory.at(i)/2),((i+1)*4)+2,80-(m_fpsHistory.at(i+1)/2));
+			DrawLine(202-(i*8),120-(m_fpsHistory.at(i)),202-((i+1)*8),120-(m_fpsHistory.at(i+1)),2.0f);
 		}
-		DrawString(_T("fps"),104,40);
+		DrawString(_T("fps"),174,65);
 
 		SetColor(255,255,0,0.5f);
 		for (unsigned int i = 0; i < m_dtimeHistory.size()-1; ++i)
 		{
-			DrawLine((i*4)+2,(int)(80-(m_dtimeHistory.at(i)/2)),((i+1)*4)+2,(int)(80-(m_dtimeHistory.at(i+1)/2)));
+			DrawLine(202-(i*8),(int)(120-(m_dtimeHistory.at(i))),(202-(i+1)*8),(int)(120-(m_dtimeHistory.at(i+1))),2.0f);
 		}
-		DrawString(_T("dt"),104,60);		
+		DrawString(_T("dt"),174,80);		
 	}
 }
 

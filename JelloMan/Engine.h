@@ -11,19 +11,15 @@
 #pragma once
 
 #include "d3dUtil.h"
+#include "GameTimer.h"
 
-class InputState;
+class KeyboardState;
 class InputStateManager;
-//class DX10ObjMesh;
-//class ObjMesh;
-//class VertexList;
-//class DX10MaterialIndexBuffer;
-//class IndexBufferMaterial;
 class ContentManager;
 class MainGame;
 class GameConfig;
 class Blox2D;
-
+class Controls;
 
 class Engine
 {
@@ -71,7 +67,7 @@ private:
 	ID3D10RenderTargetView* m_pRenderTargetView;
 	ID3D10DepthStencilView* m_pDepthStencilView;
 
-	InputStateManager* m_pInputStateManager;
+	Controls* m_pControls;
 
 	D3D10_DRIVER_TYPE m_d3dDriverType;
 	D3DXCOLOR m_ClearColor;
@@ -95,6 +91,8 @@ private:
 
 	GameConfig* m_pGameConfig;
 	Blox2D* m_pBlox2D;
+
+	GameTimer m_GameTimer;
 
 private:
 	Engine(const Engine& t);
