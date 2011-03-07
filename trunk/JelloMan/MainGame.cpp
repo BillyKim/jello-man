@@ -7,8 +7,8 @@
 #include "Blox2D.h"
 
 
-MainGame::MainGame()	:	m_dTtime(0),
-							m_bDraw(false)
+MainGame::MainGame()	:	m_dTtime(0)
+							//m_bDraw(false)
 {
 
 }
@@ -41,9 +41,9 @@ void MainGame::DrawScene(Blox2D& refBlox2D)
 	refBlox2D.SetColor(255,255,255);
 	refBlox2D.ShowFPS(m_dTtime,true,0.5f);
 
-	refBlox2D.SetColor(0,255,0);
+	refBlox2D.SetColor(255,0,255);
 	refBlox2D.SetFont(_T("Arial"),true,false,50);
-	refBlox2D.DrawStringCentered(_T("IT WORKS!"));
+	refBlox2D.DrawStringCentered(_T("HAPPY ENGINE IS HAPPY :^D"));
 
 
 }
