@@ -18,6 +18,6 @@ public:
 private:
 
 	float m_dTtime;
-	bool m_bDraw;
+	//bool m_bDraw;
 
 };
