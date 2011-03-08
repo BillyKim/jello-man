@@ -1,6 +1,5 @@
-#summary One-sentence summary of this page.
 #labels Phase-Implementation
-MathHelper.h contains helpful math functions and const
+MathHelper.h contains helpful math functions and constants
 
 = Content =
 {{{
