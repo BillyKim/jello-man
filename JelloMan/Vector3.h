@@ -54,7 +54,9 @@ public:
 	//<-----------------------------------------
 
 	//---Public Datamembers--->
-	float X, Y, Z;
+	float X;
+    float Y;
+    float Z;
 	//<------------------------
 };
 

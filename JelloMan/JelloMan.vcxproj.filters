@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vertex.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
     <ClInclude Include="D3DUtil.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
@@ -98,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="Vector4.h">
       <Filter>Engine Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex.h">
+      <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

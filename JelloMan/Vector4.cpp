@@ -43,6 +43,10 @@ void Vector4::ToFloat4(float* float4) const
     float4[2] = B;
     float4[3] = A;
 }
+D3DXCOLOR Vector4::ToD3DColor() const
+{
+    return D3DXCOLOR(R, G, B, A);
+}
 //<-----------------------------------------
 
 //----------Operators--------------------->
