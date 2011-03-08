@@ -19,6 +19,7 @@ public:
 
 	//---Getters--------->
 	void ToFloat4(float* float4) const;
+    D3DXCOLOR ToD3DColor() const; 
 	//<------------------
 
 	//----------Operators--------------------->
@@ -41,7 +42,10 @@ public:
 	//<-----------------------------------------
 
 	//---Public Datamembers--->
-	float R, G, B, A;
+	float R;
+    float G;
+    float B;
+    float A;
 	//<------------------------
 };
 
