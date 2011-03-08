@@ -10,63 +10,31 @@ TextureLoader::TextureLoader(void)
 
 TextureLoader::~TextureLoader(void)
 {
-	RemoveAllTextures();
+	AssetContainer::~AssetContainer();
 }
 
-void TextureLoader::AddTexture(const tstring& key, ID3D10ShaderResourceView* texture)
+Texture2D* TextureLoader::Load(ID3D10Device *pD3DDevice, const tstring& assetName) 
 {
-	tstringstream strstr;
-	strstr<<_T("Adding Texture ")<<key<<_T("\n");
-	OutputDebugString(strstr.str().c_str());
-	m_Textures[key]=texture;
-}
-
-void TextureLoader::RemoveTexture(const tstring& key)
-{
-	tstringstream strstr;
-	strstr<<_T("Removing Texture ")<<key<<_T("\n");
-	OutputDebugString(strstr.str().c_str());
-	SafeRelease(m_Textures[key]);
-	m_Textures.erase(key);
-}
-
-void TextureLoader::RemoveAllTextures()
-{
-	OutputDebugString(_T("Releasing all ID3DTextures.\n"));
-	map<tstring,ID3D10ShaderResourceView*>::iterator it;
-	for(it=m_Textures.begin(); it != m_Textures.end();++it)
+	if ( IsAssetPresent(assetName))
 	{
-		SafeRelease((*it).second);
-	}
-	m_Textures.clear();
-}
-
-bool TextureLoader::IsTexturePresent(const tstring& key) const
-{
-	map<tstring,ID3D10ShaderResourceView*>::iterator it;
-	return  m_Textures.find(key) != m_Textures.end();
-	return false;
-}
-
-ID3D10ShaderResourceView* TextureLoader::GetTexture(ID3D10Device *pD3DDevice, const tstring& Filename) 
-{
-	if ( IsTexturePresent(Filename))
-	{
-		OutputDebugString(_T("Using Existing Texture.\n"));
+        //#if defined DEBUG || _DEBUG
+		//cout << "Using Existing Texture.\n";
+        //#endif
 	}
 	else
 	{
-		OutputDebugString(_T("Loading New Texture.\n"));
 		ID3D10ShaderResourceView *pTextureRV;
-		HRESULT hr = D3DX10CreateShaderResourceViewFromFile( pD3DDevice, Filename.c_str(), NULL, NULL, &pTextureRV, NULL );
-		if(hr!=S_OK)
+
+		HRESULT hr = D3DX10CreateShaderResourceViewFromFile(pD3DDevice, assetName.c_str(), NULL, NULL, &pTextureRV, NULL);
+		if(hr != S_OK)
 		{
-			tstringstream tstrstr;
-			tstrstr << _T("Loading texture ") << Filename << _T(" Failed  !!!");
-			//MessageBox(0,tstrstr.str().c_str(),_T("ERROR"),0);
+			wcout << "Loading texture " << assetName << "Failed!";
 			return 0;
 		}
-		AddTexture(Filename, pTextureRV);
+
+        Texture2D* tex = new Texture2D(pTextureRV);
+        AddAsset(assetName, tex);
 	}
-	return m_Textures[Filename];
+
+    return GetAsset(assetName);
 }

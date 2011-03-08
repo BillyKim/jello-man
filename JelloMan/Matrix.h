@@ -1,11 +1,13 @@
 #pragma once
+#include "D3DUtil.h"
 
-struct Matrix
-{
-public:
-	Matrix(void);
-	virtual ~Matrix(void);
-
-
-};
+typedef D3DXMATRIX Matrix
+//struct Matrix
+//{
+//public:
+//	Matrix(void);
+//	virtual ~Matrix(void);
+//
+//
+//};
 

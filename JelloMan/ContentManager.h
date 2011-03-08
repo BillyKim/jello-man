@@ -1,23 +1,30 @@
 #pragma once
 #include "d3dUtil.h"
+#include "Texture2D.h"
+#include "Effect.h"
 
 class TextureLoader;
 class EffectLoader;
 
+#define Content ContentManager::GetSingleton();
+
 class ContentManager
 {
 public:
-	ContentManager();	
+	ContentManager(ID3D10Device* pD3DDevice);
 	virtual ~ContentManager();	
 
-	ID3D10Effect* GetEffect(ID3D10Device *pD3DDevice, const tstring& key);
-	ID3D10ShaderResourceView* GetTexture(ID3D10Device *pD3DDevice, const tstring& Filename);
+	Effect*	LoadEffect(const tstring& assetName);
+	Texture2D* LoadTexture2D(const tstring& assetName);
 
+ 
 
 private: 
 	//-------------------------------------------------
 	// Datamembers								
 	//-------------------------------------------------
+	ID3D10Device* m_pDevice;
+	
 	TextureLoader *m_pTextureLoader;
 	EffectLoader *m_pEffectLoader;
 
