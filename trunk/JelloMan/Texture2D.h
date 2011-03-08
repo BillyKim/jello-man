@@ -1,16 +1,38 @@
 #pragma once
 #include "D3DUtil.h"
+#include "Vector4.h"
 
 class Texture2D
 {
 public:
 	Texture2D(ID3D10ShaderResourceView* pTex);
-	virtual ~Texture2D(void);
-    void Release();
+    Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap = true, DXGI_FORMAT colorFormat = DXGI_FORMAT_B8G8R8A8_UNORM);
 
-    ID3D10ShaderResourceView* GetShaderResourceView() { return m_pTex;}
+	virtual ~Texture2D(void);
+
+    ID3D10ShaderResourceView* GetColorMap() { return m_pColorMapSRV; }
+    ID3D10ShaderResourceView* GetDepthMap() { return m_pDepthMapSRV; }
+
+    void BeginDraw();
+    void EndDraw();
+
+    void Clear(const Vector4& color);
 
 private:
-	ID3D10ShaderResourceView* m_pTex;
+    void BuildColorMap();
+    void BuildDepthMap();
+
+    UINT m_Width;
+    UINT m_Height;
+    DXGI_FORMAT m_ColorFormat;
+    ID3D10Device* m_pDevice;
+
+    ID3D10ShaderResourceView* m_pColorMapSRV;
+    ID3D10RenderTargetView* m_pColorMapRTV;
+
+    ID3D10ShaderResourceView* m_pDepthMapSRV;
+    ID3D10DepthStencilView* m_pDepthMapDSV;
+
+    D3D10_VIEWPORT m_Viewport;
 };
 

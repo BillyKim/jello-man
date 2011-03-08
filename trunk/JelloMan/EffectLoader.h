@@ -3,7 +3,7 @@
 //-----------------------------------------------------
 // Include Files
 //-----------------------------------------------------
-#include "d3dUtil.h"
+#include "D3DUtil.h"
 #include "AssetContainer.h"
 #include "Effect.h"
 

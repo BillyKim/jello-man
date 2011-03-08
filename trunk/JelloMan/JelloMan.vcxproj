@@ -92,6 +92,7 @@
     <ClInclude Include="AssetContainer.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="MouseState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
+    <ClInclude Include="Vector4.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +116,7 @@
     <ClCompile Include="KeyboardState.cpp" />
     <ClCompile Include="AssetContainer.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
@@ -121,6 +124,7 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="Vector4.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -29,7 +29,7 @@ protected:
 	    wcout << "Releasing Asset " << key << "\n";
         #endif
 
-	    SafeRelease(m_Map[key]);
+	    delete m_Map[key];
 	    m_Map.erase(key);
     }
 	void RemoveAllAssets()
@@ -40,7 +40,7 @@ protected:
 	        #if defined DEBUG || _DEBUG
 	        wcout << "Releasing Asset " << (*it).first << "\n";
             #endif
-		    SafeRelease((*it).second);
+		    delete (*it).second;
 	    }
 	    m_Map.clear();
     }
