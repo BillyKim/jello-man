@@ -89,6 +89,7 @@ typedef D2D1_SIZE_F Size2D;
 
 #include <D3DX10Math.h>
 
+#include "MathHelper.h"
 
 //*****************************************************************************
 // Light Struct
@@ -100,12 +101,6 @@ typedef struct DirLight
 	D3DXCOLOR Specular;
 	D3DXVECTOR3 DirW;
 }DirLight;
-
-//*****************************************************************************
-// Math Constants
-//*****************************************************************************
-const float INFINITY = FLT_MAX;
-const float EPSILON  = 0.001f;
 
 //*****************************************************************************
 // Bounding Volumes
@@ -226,28 +221,4 @@ D3DX10INLINE D3DXVECTOR3 RandUnitVec3()
 	D3DXVECTOR3 v(RandF(), RandF(), RandF());
 	D3DXVec3Normalize(&v, &v);
 	return v;
-}
- 
-template<typename T>
-D3DX10INLINE T Min(const T& a, const T& b)
-{
-	return a < b ? a : b;
-}
-
-template<typename T>
-D3DX10INLINE T Max(const T& a, const T& b)
-{
-	return a > b ? a : b;
-}
- 
-template<typename T>
-D3DX10INLINE T Lerp(const T& a, const T& b, float t)
-{
-	return a + (b-a)*t;
-}
-
-template<typename T>
-D3DX10INLINE T Clamp(const T& x, const T& low, const T& high)
-{
-	return x < low ? low : (x > high ? high : x); 
 }
