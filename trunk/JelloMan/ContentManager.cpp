@@ -9,8 +9,9 @@
 //---------------------------
 // Constructor & Destructor
 //---------------------------
-ContentManager::ContentManager()
-	:m_pTextureLoader(0)
+ContentManager::ContentManager(ID3D10Device* pD3DDevice):
+     m_pDevice(pD3DDevice)
+	,m_pTextureLoader(0)
 	,m_pEffectLoader(0)
 {
 	m_pTextureLoader = new TextureLoader();
@@ -23,15 +24,16 @@ ContentManager::~ContentManager()
 	delete m_pEffectLoader;
 }
 
-//pass through methods
-ID3D10Effect* ContentManager::GetEffect(ID3D10Device *pD3DDevice,const tstring& key)
+
+Effect*	ContentManager::LoadEffect(const tstring& assetName)
 {
-	return m_pEffectLoader->GetEffect(pD3DDevice, key);
+    return m_pEffectLoader->Load(m_pDevice, assetName); 
 }
-ID3D10ShaderResourceView* ContentManager::GetTexture(ID3D10Device *pD3DDevice, const tstring& Filename)
+Texture2D* ContentManager::LoadTexture2D(const tstring& assetName)
 {
-	return m_pTextureLoader->GetTexture(pD3DDevice, Filename);
+    return m_pTextureLoader->Load(m_pDevice, assetName);
 }
+
 
 
 
