@@ -81,6 +81,7 @@
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="D3DUtil.h" />
     <ClInclude Include="EffectLoader.h" />
@@ -88,26 +89,36 @@
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="KeyboardState.h" />
+    <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="MouseState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Vector3.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EffectLoader.cpp" />
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GameWinMain.cpp" />
     <ClCompile Include="KeyboardState.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

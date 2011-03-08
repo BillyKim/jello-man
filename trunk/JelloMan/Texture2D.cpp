@@ -1,0 +1,12 @@
+#include "stdafx.h"
+#include "Texture2D.h"
+
+
+Texture2D::Texture2D(void)
+{
+}
+
+
+Texture2D::~Texture2D(void)
+{
+}

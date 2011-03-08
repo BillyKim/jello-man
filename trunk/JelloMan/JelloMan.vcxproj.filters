@@ -13,21 +13,21 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Engine Files\Graphics">
+      <UniqueIdentifier>{ec9ba507-075a-447a-ab6c-c1333a108d1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Content">
+      <UniqueIdentifier>{3eb70322-e931-422f-8c32-47c3cf63eb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Math">
+      <UniqueIdentifier>{557d443e-2462-488d-b15b-05b43819c044}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TextureLoader.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
     <ClInclude Include="vertex.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
-    <ClInclude Include="ContentManager.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
     <ClInclude Include="D3DUtil.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EffectLoader.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
     <ClInclude Include="GameTimer.h">
@@ -52,22 +52,43 @@
       <Filter>Engine Files</Filter>
     </ClInclude>
     <ClInclude Include="Controls.h">
-      <Filter>Engine Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardState.h">
-      <Filter>Engine Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MouseState.h">
-      <Filter>Engine Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentManager.h">
+      <Filter>Engine Files\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Engine Files\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectLoader.h">
+      <Filter>Engine Files\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Engine Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Engine Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>Engine Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Engine Files\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ContentManager.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EffectLoader.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameTimer.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
@@ -75,9 +96,6 @@
       <Filter>Engine Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureLoader.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
@@ -100,6 +118,30 @@
     </ClCompile>
     <ClCompile Include="MouseState.cpp">
       <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentManager.cpp">
+      <Filter>Engine Files\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Engine Files\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectLoader.cpp">
+      <Filter>Engine Files\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Engine Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Engine Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Engine Files\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
