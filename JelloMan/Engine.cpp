@@ -10,6 +10,8 @@
 #include "GameConfig.h"
 #include "Blox2D.h"
 
+#define BLOX_2D (Blox2D::GetSingleton())
+
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	static Engine* app = 0;
@@ -58,7 +60,6 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pColorBrush(0)
 ,m_pDWriteFactory(0)
 ,m_pTextFormat(0)
-,m_pBlox2D(0)
 {
 	m_GameTimer.Reset();
 }
@@ -69,7 +70,6 @@ Engine::~Engine()
 
 	SafeDelete(m_pControls);
 	SafeDelete(m_pContentManager);
-	SafeDelete(m_pBlox2D);
 
 	if( m_pD3DDevice )m_pD3DDevice->ClearState();
 
@@ -139,16 +139,20 @@ void Engine::Initialize()
 	InitMainWindow(m_pGameConfig->GetGameTitle());
 	CreateDeviceResources();
 
+	#if defined DEBUG || _DEBUG
 	cout << "-Direct2D & DirectX active\n";
+	#endif
 
 	// init D2D engine
-	m_pBlox2D = new Blox2D(	m_pBackBufferRT,
-							m_pD2DFactory,
-							m_pDWriteFactory,
-							m_pColorBrush,
-							m_pTextFormat );
+	BLOX_2D->SetParams(	m_pBackBufferRT,
+						m_pD2DFactory,
+						m_pDWriteFactory,
+						m_pColorBrush,
+						m_pTextFormat );
 
+	#if defined DEBUG || _DEBUG
 	cout << "-Blox2D Engine active\n";
+	#endif
 }
 
 void Engine::OnRender()
@@ -171,7 +175,7 @@ void Engine::OnRender()
 	m_pGame->UpdateScene(kbState,msState,m_GameTimer.GetDeltaTime());
 	
 	m_pBackBufferRT->BeginDraw();
-	m_pGame->DrawScene(*m_pBlox2D);
+	m_pGame->DrawScene();
 	m_pBackBufferRT->EndDraw();
 
 	// displaying backbuffer - vsync on
@@ -627,7 +631,7 @@ HRESULT Engine::RecreateSizedResources()
 		m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
 		// sending new rendertarget to Blox2D
-		if (m_pBlox2D) m_pBlox2D->OnResize(m_pBackBufferRT);
+		BLOX_2D->OnResize(m_pBackBufferRT);
     }
 
     SafeRelease(pBackBuffer);

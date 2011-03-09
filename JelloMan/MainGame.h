@@ -2,8 +2,9 @@
 
 #include "KeyboardState.h"
 #include "MouseState.h"
+#include "Blox2D.h"
+
 class GameConfig;
-class Blox2D;
 
 class MainGame
 {
@@ -13,11 +14,9 @@ public:
 
 	void Initialize(GameConfig& refGameConfig);
 	void UpdateScene(const KeyboardState& refKeyboard, const MouseState& refMouse, const float dTime);
-	void DrawScene(Blox2D& refBlox2D); 
+	void DrawScene(); 
 
 private:
 
 	float m_dTtime;
-	//bool m_bDraw;
-
 };

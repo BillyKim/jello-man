@@ -11,19 +11,26 @@
 //-----------------------------------------------------
 class Blox2D
 {
-public:
-	Blox2D(	ID2D1RenderTarget* pRenderTarget,
-			ID2D1Factory* pD2DFactory,
-			IDWriteFactory* pDWriteFactory,
-			ID2D1SolidColorBrush* pColorBrush,
-			IDWriteTextFormat* pTextFormat);
+private:
+	// singleton
+	Blox2D();
+	static Blox2D* m_pSingleton;
 
+public:
+	
 	virtual ~Blox2D();
+	static Blox2D* GetSingleton();
 
 	// SETTERS
 	void SetColor(int r, int g, int b, float a = 1.0f);
 	void SetColor(D2D1_COLOR_F color);
 	void SetFont(tstring const& fontName, bool bold, bool italic, float size);
+
+	void SetParams(	ID2D1RenderTarget* pRenderTarget,
+					ID2D1Factory* pD2DFactory,
+					IDWriteFactory* pDWriteFactory,
+					ID2D1SolidColorBrush* pColorBrush,
+					IDWriteTextFormat* pTextFormat);
 
 	void OnResize(ID2D1RenderTarget* pRenderTarget) { m_pRenderTarget = pRenderTarget; }
 	
@@ -53,7 +60,7 @@ public:
 	void FillPolygon(D2D1_POINT_2F pArr[], int nrPoints);
 	//void DrawBitmap(Bitmap* bitmap, int x, int y, float opacity = 1.0f, int width = 0, int height = 0);
 
-private: 
+private:
 
 	ID2D1RenderTarget* m_pRenderTarget;
 	ID2D1Factory* m_pD2DFactory;

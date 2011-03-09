@@ -4,11 +4,10 @@
 #include "MainGame.h"
 
 #include "GameConfig.h"
-#include "Blox2D.h"
 
+#define BLOX_2D (Blox2D::GetSingleton())
 
 MainGame::MainGame()	:	m_dTtime(0)
-							//m_bDraw(false)
 {
 
 }
@@ -30,20 +29,16 @@ void MainGame::UpdateScene(const KeyboardState& refKeyboard, const MouseState& r
 {
 	// TEST - van keyboardstate & mousestate word nog singleton gemaakt
 	m_dTtime = dTime;
-
-	/*if (refKeyboard.isKeyDown('X')) m_bDraw = true;
-	else m_bDraw = false;*/
 }
 
-void MainGame::DrawScene(Blox2D& refBlox2D)
+void MainGame::DrawScene()
 {
-	// TEST - van blox 2d gaat nog singleton worden gemaakt!
-	refBlox2D.SetColor(255,255,255);
-	refBlox2D.ShowFPS(m_dTtime,true,0.5f);
+	// singleton gemaakt van Blox2D
 
-	refBlox2D.SetColor(255,0,255);
-	refBlox2D.SetFont(_T("Arial"),true,false,50);
-	refBlox2D.DrawStringCentered(_T("HAPPY ENGINE IS HAPPY :^D"));
+	BLOX_2D->SetColor(255,255,255);
+	BLOX_2D->ShowFPS(m_dTtime,true,0.5f);
 
-
+	BLOX_2D->SetColor(255,0,255);
+	BLOX_2D->SetFont(_T("Arial"),true,false,50);
+	BLOX_2D->DrawStringCentered(_T("HAPPY ENGINE :D"));
 }
