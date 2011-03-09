@@ -80,6 +80,16 @@ void Blox2D::SetFont(tstring const& fontName, bool bold, bool italic, float size
             );
 }
 
+void Blox2D::SetTransform(D2D1_MATRIX_3X2_F transform)
+{
+	m_pRenderTarget->SetTransform(transform);
+}
+
+void Blox2D::ResetTransform()
+{
+	m_pRenderTarget->SetTransform(Matrix3x2F::Identity());
+}
+
 void Blox2D::SetParams(	ID2D1RenderTarget* pRenderTarget,
 						ID2D1Factory* pD2DFactory,
 						IDWriteFactory* pDWriteFactory,
@@ -93,10 +103,16 @@ void Blox2D::SetParams(	ID2D1RenderTarget* pRenderTarget,
 	m_pTextFormat = pTextFormat;
 }
 
+// GETTERS
+Size2D Blox2D::GetWindowSize() const
+{
+	return m_pRenderTarget->GetSize();
+}
+
 // -------------------------------------
 // GAME_ENGINE DRAW METHODS	
 // -------------------------------------
-void Blox2D::DrawGrid(int stepsize)
+void Blox2D::DrawGrid(int stepsize) const
 {
 	// Retrieve the size of the render target.
     D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
@@ -116,7 +132,7 @@ void Blox2D::DrawGrid(int stepsize)
 	}
 }
 
-void Blox2D::FillBackGround()
+void Blox2D::FillBackGround() const
 {
 	// Retrieve the size of the render target.
     D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
@@ -124,16 +140,16 @@ void Blox2D::FillBackGround()
 	m_pRenderTarget->FillRectangle(RectF(0,0,rtSize.width,rtSize.height),m_pColorBrush);
 }
 
-void Blox2D::DrawLine(int x, int y, int x2, int y2, float strokeSize)
+void Blox2D::DrawLine(int x, int y, int x2, int y2, float strokeSize) const
 {
 	m_pRenderTarget->DrawLine(Point2F((float)x,(float)y),Point2F((float)x2,(float)y2),m_pColorBrush,strokeSize);
 }
 
-void  Blox2D::DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize)
+void  Blox2D::DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize) const
 {
 	m_pRenderTarget->DrawLine(start,end,m_pColorBrush,strokeSize);
 }
-void Blox2D::DrawEllipse(int x, int y, int width, int height, float strokeSize)
+void Blox2D::DrawEllipse(int x, int y, int width, int height, float strokeSize) const
 {
 	D2D1_ELLIPSE temp;
 
@@ -145,7 +161,7 @@ void Blox2D::DrawEllipse(int x, int y, int width, int height, float strokeSize)
 	m_pRenderTarget->DrawEllipse(temp,m_pColorBrush,strokeSize);
 }
 
-void Blox2D::DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strokeSize)
+void Blox2D::DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strokeSize) const
 {
 	D2D1_ELLIPSE temp;
 
@@ -157,7 +173,7 @@ void Blox2D::DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strok
 	m_pRenderTarget->DrawEllipse(temp,m_pColorBrush,strokeSize);
 }
 
-void Blox2D::DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize)
+void Blox2D::DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize) const
 {
 	m_pRenderTarget->BeginDraw();
 
@@ -166,7 +182,7 @@ void Blox2D::DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize)
 	m_pRenderTarget->EndDraw();
 }
 
-void Blox2D::FillEllipse(int x, int y, int width, int height)
+void Blox2D::FillEllipse(int x, int y, int width, int height) const
 {
 	D2D1_ELLIPSE temp;
 
@@ -178,7 +194,7 @@ void Blox2D::FillEllipse(int x, int y, int width, int height)
 	m_pRenderTarget->FillEllipse(temp,m_pColorBrush);
 }
 
-void Blox2D::FillEllipse(D2D1_POINT_2F coord, int width, int height)
+void Blox2D::FillEllipse(D2D1_POINT_2F coord, int width, int height) const
 {
 	D2D1_ELLIPSE temp;
 
@@ -190,12 +206,12 @@ void Blox2D::FillEllipse(D2D1_POINT_2F coord, int width, int height)
 	m_pRenderTarget->FillEllipse(temp,m_pColorBrush);
 }
 
-void Blox2D::FillEllipse(D2D1_ELLIPSE ellipse)
+void Blox2D::FillEllipse(D2D1_ELLIPSE ellipse) const
 {
 	m_pRenderTarget->FillEllipse(ellipse,m_pColorBrush);
 }
 
-void Blox2D::DrawStringCentered(tstring const& text, int offSetX, int offSetY)
+void Blox2D::DrawStringCentered(tstring const& text, int offSetX, int offSetY) const
 {
 	// Retrieve the size of the render target.
     D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
@@ -207,7 +223,7 @@ void Blox2D::DrawStringCentered(tstring const& text, int offSetX, int offSetY)
 	m_pRenderTarget->DrawTextW(text.c_str(),text.size(),m_pTextFormat,rect,m_pColorBrush);
 }
 
-void Blox2D::DrawString(tstring const& text, int x, int y)
+void Blox2D::DrawString(tstring const& text, int x, int y) const
 {
 	// Retrieve the size of the render target.
     D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
@@ -302,22 +318,22 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 	}
 }
 
-void Blox2D::DrawRect(int x, int y, int width, int height, float strokeSize)
+void Blox2D::DrawRect(int x, int y, int width, int height, float strokeSize) const
 {
 	m_pRenderTarget->DrawRectangle(RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),m_pColorBrush,strokeSize);
 }
 
-void Blox2D::DrawRect(D2D1_RECT_F rect, float strokeSize)
+void Blox2D::DrawRect(D2D1_RECT_F rect, float strokeSize) const
 {
 	m_pRenderTarget->DrawRectangle(rect,m_pColorBrush, strokeSize);
 }
 
-void Blox2D::FillRect(int x, int y, int width, int height)
+void Blox2D::FillRect(int x, int y, int width, int height) const
 {
 	m_pRenderTarget->FillRectangle(RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),m_pColorBrush);
 }
 
-void Blox2D::FillRect(D2D1_RECT_F rect)
+void Blox2D::FillRect(D2D1_RECT_F rect) const
 {
 	m_pRenderTarget->FillRectangle(rect,m_pColorBrush);
 }
@@ -346,7 +362,7 @@ void Blox2D::FillBlock(D2D1_POINT_2F coord, int size,D2D1_COLOR_F color1, D2D1_C
 	FillRect((int)coord.x,(int)coord.y,size,size);
 }
 
-void Blox2D::DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize)
+void Blox2D::DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize) const
 {
 	ID2D1PathGeometry* pPathGeometry = NULL;
 	m_pD2DFactory->CreatePathGeometry(&pPathGeometry);
@@ -367,7 +383,7 @@ void Blox2D::DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float s
 	m_pRenderTarget->DrawGeometry(pPathGeometry,m_pColorBrush,strokeSize);
 }
 
-void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints)
+void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const
 {
 	ID2D1PathGeometry* pPathGeometry = NULL;
 	m_pD2DFactory->CreatePathGeometry(&pPathGeometry);
