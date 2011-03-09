@@ -81,6 +81,7 @@
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
+    <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="D3DUtil.h" />
@@ -90,9 +91,13 @@
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="KeyboardState.h" />
     <ClInclude Include="AssetContainer.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightController.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelLoader.h" />
+    <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="MouseState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
@@ -107,6 +112,7 @@
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
+    <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EffectLoader.cpp" />
@@ -115,8 +121,12 @@
     <ClCompile Include="GameWinMain.cpp" />
     <ClCompile Include="KeyboardState.cpp" />
     <ClCompile Include="AssetContainer.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightController.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ModelLoader.cpp" />
+    <ClCompile Include="ModelMesh.cpp" />
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
