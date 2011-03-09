@@ -12,9 +12,14 @@
 //-----------------------------------------------------
 class Controls
 {
+private:
+	// singleton implementation
+	Controls();	// Constructor
+	static Controls* m_pSingleton;
+
 public:
-	Controls();				// Constructor
 	virtual ~Controls();		// Destructor
+	static Controls* GetSingleton();
 
 	// GETTERS
 	KeyboardState Keyboard();
@@ -37,6 +42,9 @@ private:
 	short m_MouseWheelPos;
 	Point2D m_MousePos;
 	unsigned char m_Keys[NUMKEYS];
+
+	//MouseState* m_MouseState;
+	//KeyboardState* m_KeyboardState;
 
 	// -------------------------
 	// Disabling default copy constructor and default 

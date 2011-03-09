@@ -25,6 +25,8 @@ public:
 	void SetColor(int r, int g, int b, float a = 1.0f);
 	void SetColor(D2D1_COLOR_F color);
 	void SetFont(tstring const& fontName, bool bold, bool italic, float size);
+	void SetTransform(D2D1_MATRIX_3X2_F transform);
+	void ResetTransform();
 
 	void SetParams(	ID2D1RenderTarget* pRenderTarget,
 					ID2D1Factory* pD2DFactory,
@@ -33,31 +35,34 @@ public:
 					IDWriteTextFormat* pTextFormat);
 
 	void OnResize(ID2D1RenderTarget* pRenderTarget) { m_pRenderTarget = pRenderTarget; }
+
+	// GETTERS
+	Size2D GetWindowSize() const;
 	
 	// DRAW METHODS
-	void DrawGrid(int stepsize);
-	void FillBackGround();
-	void DrawLine(int x, int y, int x2, int y2, float strokeSize = 1.0f);
-	void DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize = 1.0f);
-	void DrawRect(int x, int y, int width, int height, float strokeSize = 1.0f);
-	void DrawRect(D2D1_RECT_F rect, float strokeSize = 1.0f);
-	void FillRect(int x, int y, int width, int height);
-	void FillRect(D2D1_RECT_F rect);
-	void DrawEllipse(int x, int y, int width, int height, float strokeSize= 1.0f);
-	void DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strokeSize= 1.0f);
-	void DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize= 1.0f);
-	void FillEllipse(int x, int y, int width, int height);
-	void FillEllipse(D2D1_POINT_2F coord, int width, int height);
-	void FillEllipse(D2D1_ELLIPSE ellipse);
-	void DrawString(tstring const& text, int x, int y);
-	void DrawStringCentered(tstring const& text, int offSetX = 0, int offSetY = 0);
+	void DrawGrid(int stepsize) const;
+	void FillBackGround() const;
+	void DrawLine(int x, int y, int x2, int y2, float strokeSize = 1.0f) const;
+	void DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize = 1.0f) const;
+	void DrawRect(int x, int y, int width, int height, float strokeSize = 1.0f) const;
+	void DrawRect(D2D1_RECT_F rect, float strokeSize = 1.0f) const;
+	void FillRect(int x, int y, int width, int height) const;
+	void FillRect(D2D1_RECT_F rect) const;
+	void DrawEllipse(int x, int y, int width, int height, float strokeSize= 1.0f) const;
+	void DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strokeSize= 1.0f) const;
+	void DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize= 1.0f) const;
+	void FillEllipse(int x, int y, int width, int height) const;
+	void FillEllipse(D2D1_POINT_2F coord, int width, int height)const;
+	void FillEllipse(D2D1_ELLIPSE ellipse) const;
+	void DrawString(tstring const& text, int x, int y) const;
+	void DrawStringCentered(tstring const& text, int offSetX = 0, int offSetY = 0) const;
 	//void DrawString(tstring const& text, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment);
 	//void DrawString(int nr, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment);
 	void ShowFPS(float dTime, bool showGraph = false, float delayInterval = 1.0f);
 	void FillBlock(int x, int y, int size);
 	void FillBlock(D2D1_POINT_2F coord, int size, D2D1_COLOR_F color1, D2D1_COLOR_F color2);
-	void DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize);
-	void FillPolygon(D2D1_POINT_2F pArr[], int nrPoints);
+	void DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize) const;
+	void FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const;
 	//void DrawBitmap(Bitmap* bitmap, int x, int y, float opacity = 1.0f, int width = 0, int height = 0);
 
 private:

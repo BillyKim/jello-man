@@ -13,13 +13,14 @@
 #include "d3dUtil.h"
 #include "GameTimer.h"
 
+#include "Controls.h"
+#include "Blox2D.h"
+
 class KeyboardState;
 class InputStateManager;
 class ContentManager;
 class MainGame;
 class GameConfig;
-class Blox2D;
-class Controls;
 
 class Engine
 {
@@ -66,8 +67,6 @@ private:
 	ID3D10Texture2D* m_pDepthStencilBuffer;
 	ID3D10RenderTargetView* m_pRenderTargetView;
 	ID3D10DepthStencilView* m_pDepthStencilView;
-
-	Controls* m_pControls;
 
 	D3D10_DRIVER_TYPE m_d3dDriverType;
 	D3DXCOLOR m_ClearColor;

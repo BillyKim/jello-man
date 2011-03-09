@@ -3,21 +3,35 @@
 //---------------------------
 #include "Controls.h"
 
+//-----------------------------------------------------------------
+// Static Variable Initialization
+//-----------------------------------------------------------------
+Controls* Controls::m_pSingleton = NULL;
+
 //---------------------------
 // Constructor & Destructor
-//---------------------------c
+//---------------------------
 Controls::Controls()	:	m_bLMBClicked(false),
 							m_bRMBClicked(false),
 							m_bLMBDown(false),
 							m_bRMBDown(false),
 							m_MouseWheelPos(0),
 							m_MousePos(Point2F(0,0))
+							//m_MouseState(0),
+							//m_KeyboardState(0)
 {
 
 }
 
 Controls::~Controls()
 {
+}
+
+// STATIC METHOD
+Controls* Controls::GetSingleton()
+{
+	if (m_pSingleton == NULL) m_pSingleton = new Controls();
+	return m_pSingleton;
 }
 
 // GETTERS

@@ -6,11 +6,10 @@
 
 #include "MainGame.h"
 #include "ContentManager.h"
-#include "Controls.h"
 #include "GameConfig.h"
-#include "Blox2D.h"
 
 #define BLOX_2D (Blox2D::GetSingleton())
+#define CONTROLS (Controls::GetSingleton())
 
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -47,7 +46,6 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pDepthStencilBuffer(0)
 ,m_pRenderTargetView(0)
 ,m_pDepthStencilView(0)
-,m_pControls(0)
 ,m_d3dDriverType( D3D10_DRIVER_TYPE_HARDWARE)
 ,m_ClearColor( D3DXCOLOR(0.0f, 0.0f, 0.4f, 1.0f))
 ,m_ClientWidth( 800)
@@ -68,7 +66,6 @@ Engine::~Engine()
 {
 	delete m_pGameConfig;
 
-	SafeDelete(m_pControls);
 	SafeDelete(m_pContentManager);
 
 	if( m_pD3DDevice )m_pD3DDevice->ClearState();
@@ -132,8 +129,6 @@ void Engine::Initialize()
 	m_ClientWidth = (int)m_pGameConfig->GetWindowSize().width;
 	m_ClientHeight = (int)m_pGameConfig->GetWindowSize().height;
 
-	m_pControls = new Controls();
-
 	// init DirectX & Direct2D & open window
 	CreateDeviceIndependentResources();
 	InitMainWindow(m_pGameConfig->GetGameTitle());
@@ -169,10 +164,7 @@ void Engine::OnRender()
                 );
 
 	// main game cycle
-	KeyboardState kbState =  m_pControls->Keyboard();
-	MouseState msState = m_pControls->Mouse();
-
-	m_pGame->UpdateScene(kbState,msState,m_GameTimer.GetDeltaTime());
+	m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
 	
 	m_pBackBufferRT->BeginDraw();
 	m_pGame->DrawScene();
@@ -187,10 +179,10 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	POINTS currentpos;
 	short zPos=0;
 
-	m_pControls->SetLeftMBDown(false);
-	m_pControls->SetLeftMBClicked(false);
-	m_pControls->SetLeftMBDown(false);
-	m_pControls->SetLeftMBClicked(false);
+	CONTROLS->SetLeftMBDown(false);
+	CONTROLS->SetLeftMBClicked(false);
+	CONTROLS->SetLeftMBDown(false);
+	CONTROLS->SetLeftMBClicked(false);
 
 	switch( msg )
 	{
@@ -303,28 +295,28 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	//mousemoves for input state
 	case WM_MOUSEMOVE:
 		currentpos = MAKEPOINTS(lParam);
-		m_pControls->SetMousePos(Point2F(currentpos.x,currentpos.y));
+		CONTROLS->SetMousePos(Point2F(currentpos.x,currentpos.y));
 		return 0;
 
 	case WM_LBUTTONDOWN:
-		m_pControls->SetLeftMBDown(true);
+		CONTROLS->SetLeftMBDown(true);
 		return 0;
 
 	case WM_LBUTTONUP:
-		m_pControls->SetLeftMBClicked(true);
+		CONTROLS->SetLeftMBClicked(true);
 		return 0;
 
 	case WM_RBUTTONDOWN:
-		m_pControls->SetLeftMBDown(true);
+		CONTROLS->SetLeftMBDown(true);
 		return 0;
 
 	case WM_RBUTTONUP:
-		m_pControls->SetLeftMBClicked(true);
+		CONTROLS->SetLeftMBClicked(true);
 		return 0;
 
 	case WM_MOUSEWHEEL:
 		zPos = GET_WHEEL_DELTA_WPARAM(wParam);
-		m_pControls->SetMouseWheelPos(zPos);
+		CONTROLS->SetMouseWheelPos(zPos);
 		return 0;
 	}
 	return DefWindowProc(m_hMainWnd, msg, wParam, lParam);
