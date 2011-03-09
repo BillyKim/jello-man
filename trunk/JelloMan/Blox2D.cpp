@@ -3,25 +3,25 @@
 //---------------------------
 #include "Blox2D.h"
 
+
+//-----------------------------------------------------------------
+// Static Variable Initialization
+//-----------------------------------------------------------------
+Blox2D* Blox2D::m_pSingleton = NULL;
+
 //---------------------------
 // Constructor & Destructor
 //---------------------------
-Blox2D::Blox2D(	ID2D1RenderTarget* pRenderTarget,
-				ID2D1Factory* pD2DFactory,
-				IDWriteFactory* pDWriteFactory,
-				ID2D1SolidColorBrush* pColorBrush,
-				IDWriteTextFormat* pTextFormat)
-				:
-				m_pRenderTarget(pRenderTarget),
-				m_pD2DFactory(pD2DFactory),
-				m_pDWriteFactory(pDWriteFactory),
-				m_pColorBrush(pColorBrush),
-				m_pTextFormat(pTextFormat),
-				m_FrameCount(0),
-				m_TBase(0),
-				m_GameTime(0),
-				m_FPS(0),
-				m_DTimeS(0)
+Blox2D::Blox2D()	:	m_pRenderTarget(0),
+						m_pD2DFactory(0),
+						m_pDWriteFactory(0),
+						m_pColorBrush(0),
+						m_pTextFormat(0),
+						m_FrameCount(0),
+						m_TBase(0),
+						m_GameTime(0),
+						m_FPS(0),
+						m_DTimeS(0)
 {
 	// nothing to create
 }
@@ -29,6 +29,13 @@ Blox2D::Blox2D(	ID2D1RenderTarget* pRenderTarget,
 Blox2D::~Blox2D()
 {
 	// nothing to destroy
+}
+
+// STATIC METHOD
+Blox2D* Blox2D::GetSingleton()
+{
+	if (m_pSingleton == NULL) m_pSingleton = new Blox2D();
+	return m_pSingleton;
 }
 
 // SETTERS
@@ -71,6 +78,19 @@ void Blox2D::SetFont(tstring const& fontName, bool bold, bool italic, float size
             L"", //locale
             &m_pTextFormat
             );
+}
+
+void Blox2D::SetParams(	ID2D1RenderTarget* pRenderTarget,
+						ID2D1Factory* pD2DFactory,
+						IDWriteFactory* pDWriteFactory,
+						ID2D1SolidColorBrush* pColorBrush,
+						IDWriteTextFormat* pTextFormat)
+{
+	m_pRenderTarget = pRenderTarget;
+	m_pD2DFactory = pD2DFactory;
+	m_pDWriteFactory = pDWriteFactory;
+	m_pColorBrush = pColorBrush;
+	m_pTextFormat = pTextFormat;
 }
 
 // -------------------------------------

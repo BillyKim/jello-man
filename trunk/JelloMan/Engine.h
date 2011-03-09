@@ -90,7 +90,6 @@ private:
 	IDWriteTextFormat* m_pTextFormat;
 
 	GameConfig* m_pGameConfig;
-	Blox2D* m_pBlox2D;
 
 	GameTimer m_GameTimer;
 

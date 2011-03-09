@@ -51,12 +51,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	Engine* pEngine = new Engine(hInstance);
 	MainGame* pGame = new MainGame();
 
+	#if defined DEBUG || _DEBUG
 	cout << "-Engine & Game created\n";
+	#endif
 
 	pEngine->SetGame(pGame);
 	pEngine->Initialize();
 
+	#if defined DEBUG || _DEBUG
 	cout << "------------------------\n:::Engine Initialized:::\n------------------------\n";
+	#endif
 
 	int ret = pEngine->Run();
 
