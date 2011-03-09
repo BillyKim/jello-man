@@ -37,14 +37,15 @@ public:
 	static const int NUMKEYS = 256;
 
 private:
+	// help function for IsKeyPressed
+	bool IsKeyPressed(int vKey);
+
 	bool m_bLMBClicked, m_bRMBClicked;
 	bool m_bLMBDown, m_bRMBDown;
 	short m_MouseWheelPos;
 	Point2D m_MousePos;
 	unsigned char m_Keys[NUMKEYS];
-
-	//MouseState* m_MouseState;
-	//KeyboardState* m_KeyboardState;
+	bool m_bKeysPressed[NUMKEYS];
 
 	// -------------------------
 	// Disabling default copy constructor and default 

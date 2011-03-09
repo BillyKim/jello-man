@@ -6,13 +6,12 @@
 //---------------------------
 // Constructor & Destructor
 //---------------------------
-KeyboardState::KeyboardState(byte* pKeys)
+KeyboardState::KeyboardState(bool bDownKeys[256], bool bPressedKeys[256])
 {
-	memcpy_s(m_Keys, NUMKEYS, pKeys, NUMKEYS);
-
-	for(int i = 0; i < NUMKEYS; ++i)
+	for (int i = 0; i < NUMKEYS; ++i)
 	{
-		m_bKeysPressed[i] = false;
+		m_bKeysDown[i] = bDownKeys[i];
+		m_bKeysPressed[i] = bPressedKeys[i];
 	}
 }
 
@@ -23,38 +22,30 @@ KeyboardState::~KeyboardState(void)
 // assignment operator & copy constructor
 KeyboardState& KeyboardState::operator=(const KeyboardState& ref)
 {
-	//deep copy keys
-	memcpy_s(m_Keys,NUMKEYS,ref.m_Keys,NUMKEYS);
+	for (int i = 0; i < NUMKEYS; ++i)
+	{
+		m_bKeysDown[i] = ref.m_bKeysDown[i];
+		m_bKeysPressed[i] = ref.m_bKeysPressed[i];
+	}
 
 	return *this;
 }
 KeyboardState::KeyboardState(const KeyboardState& ref)
 {
-	//deep copy keys
-	memcpy_s(m_Keys,NUMKEYS,ref.m_Keys,NUMKEYS);
+	for (int i = 0; i < NUMKEYS; ++i)
+	{
+		m_bKeysDown[i] = ref.m_bKeysDown[i];
+		m_bKeysPressed[i] = ref.m_bKeysPressed[i];
+	}
 }
 
 // GETTERS
-bool KeyboardState::isKeyDown(int vKey) const
+bool KeyboardState::IsKeyDown(int vKey) const
 {
-	if (m_Keys[vKey] & 0x80) return true;
-	return false;
+	return m_bKeysDown[vKey];
 }
 
-/*bool KeyboardState::isKeyPressed(int vKey)
+bool KeyboardState::IsKeyPressed(int vKey) const
 {
-	if (m_Keys[vKey] & 0x80)
-	{
-		if (m_bKeysPressed[vKey] == false)
-		{	
-			m_bKeysPressed[vKey] = true;
-			return true;
-		}
-		else return false;
-	}
-	else
-	{
-		m_bKeysPressed[vKey] = false;
-		return false;
-	}
-}*/
+	return m_bKeysPressed[vKey];
+}

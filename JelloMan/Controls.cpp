@@ -17,10 +17,11 @@ Controls::Controls()	:	m_bLMBClicked(false),
 							m_bRMBDown(false),
 							m_MouseWheelPos(0),
 							m_MousePos(Point2F(0,0))
-							//m_MouseState(0),
-							//m_KeyboardState(0)
 {
-
+	for(int i = 0; i < NUMKEYS; ++i)
+	{
+		m_bKeysPressed[i] = false;
+	}
 }
 
 Controls::~Controls()
@@ -40,11 +41,43 @@ KeyboardState Controls::Keyboard()
 	// getstatus of keys
 	BOOL b = GetKeyboardState(m_Keys);
 
+	bool bKeysDown[NUMKEYS];
+	bool bKeysPressed[NUMKEYS];
+
+	for (int i = 0; i < NUMKEYS; ++i)
+	{
+		if (m_Keys[i] & 0x80)
+			bKeysDown[i] = true;
+		else
+			bKeysDown[i] = false;
+
+		bKeysPressed[i] = IsKeyPressed(i);
+	}
+
 	// create state object on stack
-	KeyboardState keyboardState(m_Keys);
+	KeyboardState keyboardState(bKeysDown,bKeysPressed);
 
 	return keyboardState;
 }
+
+bool Controls::IsKeyPressed(int vKey)
+{
+	if (m_Keys[vKey] & 0x80)
+	{
+		if (m_bKeysPressed[vKey] == false)
+		{	
+			m_bKeysPressed[vKey] = true;
+			return true;
+		}
+		else return false;
+	}
+	else
+	{
+		m_bKeysPressed[vKey] = false;
+		return false;
+	}
+}
+
 MouseState Controls::Mouse()
 {
 	// create state object on stack

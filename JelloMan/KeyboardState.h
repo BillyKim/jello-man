@@ -10,7 +10,7 @@ class KeyboardState
 public:
 
 	// constructor & destructor
-	KeyboardState(unsigned char* pKeys);
+	KeyboardState(bool bDownKeys[256], bool bPressedKeys[256]);
 	virtual ~KeyboardState(void);
 
 	// assignment operator & copy constructor
@@ -18,14 +18,14 @@ public:
 	KeyboardState(const KeyboardState& g);
 
 	// GETTERS
-	bool isKeyDown(int vKey) const;
-	//bool isKeyPressed(int vKey);
+	bool IsKeyDown(int vKey) const;
+	bool IsKeyPressed(int vKey) const;
 
 	// CONSTANTS
 	static const int NUMKEYS = 256;
 
 private: 
-	unsigned char m_Keys[NUMKEYS];
+	bool m_bKeysDown[NUMKEYS];
 	bool m_bKeysPressed[NUMKEYS];
 };
 

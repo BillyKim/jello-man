@@ -112,22 +112,19 @@ Size2D Blox2D::GetWindowSize() const
 // -------------------------------------
 // GAME_ENGINE DRAW METHODS	
 // -------------------------------------
-void Blox2D::DrawGrid(int stepsize) const
+void Blox2D::DrawGrid(int stepsize, D2D1_RECT_F area) const
 {
-	// Retrieve the size of the render target.
-    D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
-
-	for (int x = 0; x < rtSize.width; x += stepsize)
+	for (int x = (int)area.left; x < area.right; x += stepsize)
 	{
-		m_pRenderTarget->DrawLine(	Point2F((float)x, 0.0f),
-									Point2F((float)x, rtSize.height),
+		m_pRenderTarget->DrawLine(	Point2F((float)x, area.top),
+									Point2F((float)x,area.bottom),
 									m_pColorBrush);
 	}
 
-	for (int y = 0; y < rtSize.height; y += stepsize)
+	for (int y = (int)area.top; y < area.bottom; y += stepsize)
 	{
-		m_pRenderTarget->DrawLine(	Point2F(0.0f, (float)y),
-									Point2F(rtSize.width, (float)y),
+		m_pRenderTarget->DrawLine(	Point2F(area.left, (float)y),
+									Point2F(area.right, (float)y),
 									m_pColorBrush);
 	}
 }
@@ -314,7 +311,10 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 		{
 			DrawLine(202-(i*8),(int)(120-(m_dtimeHistory.at(i))),(202-(i+1)*8),(int)(120-(m_dtimeHistory.at(i+1))),2.0f);
 		}
-		DrawString(_T("dt"),174,80);		
+		DrawString(_T("dt"),174,80);	
+
+		SetColor(43,43,43,0.5f);
+		DrawRect(2,40,200,80);
 	}
 }
 
