@@ -12,14 +12,20 @@
     <Filter Include="Engine Files\Graphics">
       <UniqueIdentifier>{ec9ba507-075a-447a-ab6c-c1333a108d1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Content">
-      <UniqueIdentifier>{3eb70322-e931-422f-8c32-47c3cf63eb16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine Files\Math">
       <UniqueIdentifier>{557d443e-2462-488d-b15b-05b43819c044}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine Files\Graphics\Effect">
       <UniqueIdentifier>{29bcf718-8788-465d-9651-16d99dd92347}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\Model">
+      <UniqueIdentifier>{c68b0156-cb7d-45f7-968a-24b9995936f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\ContentManager">
+      <UniqueIdentifier>{3eb70322-e931-422f-8c32-47c3cf63eb16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\Light">
+      <UniqueIdentifier>{7e7f15c7-c33d-479b-8a00-9efef0989047}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine Files\Input">
       <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
@@ -37,13 +43,13 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="ContentManager.h">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClInclude>
     <ClInclude Include="EffectLoader.h">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClInclude>
     <ClInclude Include="Vector3.h">
       <Filter>Engine Files\Math</Filter>
@@ -58,18 +64,33 @@
       <Filter>Engine Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="AssetContainer.h">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClInclude>
     <ClInclude Include="Effect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Vector4.h">
       <Filter>Engine Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="vertex.h">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Engine Files\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMesh.h">
+      <Filter>Engine Files\Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="LightController.h">
+      <Filter>Engine Files\Graphics\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Engine Files\Graphics\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRenderer.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Controls.h">
@@ -111,13 +132,13 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="ContentManager.cpp">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClCompile>
     <ClCompile Include="EffectLoader.cpp">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClCompile>
     <ClCompile Include="Vector2.cpp">
       <Filter>Engine Files\Math</Filter>
@@ -129,16 +150,31 @@
       <Filter>Engine Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="AssetContainer.cpp">
-      <Filter>Engine Files\Content</Filter>
+      <Filter>Engine Files\ContentManager</Filter>
     </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Engine Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Vector4.cpp">
       <Filter>Engine Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Engine Files\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMesh.cpp">
+      <Filter>Engine Files\Graphics\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Engine Files\Graphics\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="LightController.cpp">
+      <Filter>Engine Files\Graphics\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRenderer.cpp">
+      <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Controls.cpp">
       <Filter>Engine Files\Input</Filter>
