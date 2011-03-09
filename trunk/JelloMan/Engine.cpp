@@ -496,8 +496,11 @@ HRESULT Engine::CreateDeviceResources()
                 &m_pColorBrush
                 );
 
-			// disable anti-aliasing for direct2D
-			m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+			// anti-aliasing for direct2D
+			if (m_pGameConfig->Blox2DAntiAliasing())
+				m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+			else
+				m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
         }
     }
 
@@ -619,8 +622,11 @@ HRESULT Engine::RecreateSizedResources()
             &m_pBackBufferRT
             );
 
-		// turning off anti-aliasing
-		m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
+		// anti-aliasing for direct2D
+		if (m_pGameConfig->Blox2DAntiAliasing())
+			m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+		else
+			m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
 		// sending new rendertarget to Blox2D
 		BLOX_2D->OnResize(m_pBackBufferRT);

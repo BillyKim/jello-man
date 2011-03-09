@@ -5,7 +5,7 @@
 #include "MouseState.h"
 #include "Blox2D.h"
 
-class GameConfig;
+#include "GameConfig.h"
 
 class MainGame
 {
@@ -18,6 +18,5 @@ public:
 	void DrawScene(); 
 
 private:
-
 	float m_dTtime;
 };

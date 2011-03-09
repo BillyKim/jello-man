@@ -6,7 +6,10 @@
 //---------------------------
 // Constructor & Destructor
 //---------------------------
-GameConfig::GameConfig()
+GameConfig::GameConfig()	:	m_pGameTitle(new tstring(_T(""))),
+								m_WindowWidth(640),
+								m_Windowheight(480),
+								m_b2DAntiAliasing(false)
 {
 	// nothing to create
 }
@@ -18,7 +21,7 @@ GameConfig::~GameConfig()
 
 void GameConfig::SetTitle(const tstring& titleRef)
 {
-	//delete m_pGameTitle;
+	delete m_pGameTitle;
 	m_pGameTitle = new tstring(titleRef);
 }
 

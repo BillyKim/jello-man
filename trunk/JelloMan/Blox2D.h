@@ -40,7 +40,7 @@ public:
 	Size2D GetWindowSize() const;
 	
 	// DRAW METHODS
-	void DrawGrid(int stepsize) const;
+	void DrawGrid(int stepsize, D2D1_RECT_F area) const;
 	void FillBackGround() const;
 	void DrawLine(int x, int y, int x2, int y2, float strokeSize = 1.0f) const;
 	void DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize = 1.0f) const;
