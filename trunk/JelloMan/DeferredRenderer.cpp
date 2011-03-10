@@ -36,11 +36,9 @@ void DeferredRenderer::Init(UINT width, UINT height)
     m_Viewport.MinDepth = 0.f;
     m_Viewport.MaxDepth = 1.f;
 
-    CreateColorMap(DeferredRenderMap_Color, DXGI_FORMAT_R8G8B8A8_UNORM);
-    CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R32G32B32_FLOAT);
-    CreateColorMap(DeferredRenderMap_Position, DXGI_FORMAT_R32G32B32_FLOAT);
-    CreateColorMap(DeferredRenderMap_Spec, DXGI_FORMAT_R8G8B8A8_UNORM);
-    CreateColorMap(DeferredRenderMap_Gloss, DXGI_FORMAT_R8_UNORM);
+    CreateColorMap(DeferredRenderMap_Color, DXGI_FORMAT_R8G8B8A8_UNORM); //R G B A
+	CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z Spec
+    CreateColorMap(DeferredRenderMap_Position, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z gloss
 
     CreateDepthMap();
 }
@@ -120,4 +118,5 @@ void DeferredRenderer::Begin()
 
 void DeferredRenderer::End()
 { 
+
 }

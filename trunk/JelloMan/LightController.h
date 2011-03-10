@@ -18,5 +18,6 @@ public:
 private:
     vector<PointLight*> m_PointLights;
     vector<DirectionalLight*> m_DirectionalLights;
+	vector<SpotLight*> m_SpotLights;
 };
 

@@ -6,9 +6,7 @@ enum DeferredRenderMap
     DeferredRenderMap_Color     = 0,
     DeferredRenderMap_Normal    = 1,
     DeferredRenderMap_Position  = 2,
-    DeferredRenderMap_Spec      = 3,
-    DeferredRenderMap_Gloss     = 4,
-    DeferredRenderMap_Depth     = 5
+    DeferredRenderMap_Depth     = 3
 };
 class DeferredRenderer
 {
@@ -29,9 +27,9 @@ private:
 
     ID3D10Device* m_pDevice;
     
-    static const int MAXRENDERTARGETS = 5;
-    ID3D10ShaderResourceView* m_pSRV[MAXRENDERTARGETS + 1];    //Color, Normal, Position, Spec, Gloss, Depth
-    ID3D10RenderTargetView* m_RenderTargets[MAXRENDERTARGETS]; //Color, Normal, Position, Spec, Gloss
+    static const int MAXRENDERTARGETS = 3;
+    ID3D10ShaderResourceView* m_pSRV[MAXRENDERTARGETS + 1];    //Color, Normal(+spec), Position(+gloss), Depth
+    ID3D10RenderTargetView* m_RenderTargets[MAXRENDERTARGETS]; //Color, Normal(+spec), Position(+gloss)
 
     ID3D10DepthStencilView* m_pDepthDSV;
 

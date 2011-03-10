@@ -3,7 +3,7 @@
 #include "Vector4.h"
 
 //-------Light------------------->
-class Light
+struct Light
 {
 public:
     Light(): m_Position(Vector3()), m_Color(Vector4(1.f, 1.f, 1.f, 1.f)), 
@@ -33,8 +33,9 @@ public:
 
 protected:
     Vector3 m_Position;
-    Vector4 m_Color;
     float m_Multiplier;
+
+    Vector4 m_Color;
 
     float m_AttenuationStart;
     float m_AttenuationEnd;
@@ -43,13 +44,19 @@ protected:
 };
 
 ////-------SpotLight--------------------->
-//class SpotLight : public Light
-//{
-//public:
-//    SpotLight(void);
-//    virtual ~SpotLight(void);
-//};
-////<-------------------------------------
+struct SpotLight : public Light
+{
+public:
+    SpotLight(void);
+    virtual ~SpotLight(void);
+
+	float GetRadius();
+	void SetRadius(float radius);
+
+private:
+	float m_Radius;
+};
+//<-------------------------------------
 
 //-------DirectionalLight--------------------->
 class DirectionalLight : public Light
