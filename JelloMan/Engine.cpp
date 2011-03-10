@@ -120,7 +120,7 @@ int Engine::Run()
 
         }
     }
-	return (int)msg.wParam;
+	return static_cast<int>(msg.wParam);
 }
 
 void Engine::Initialize()
@@ -129,8 +129,8 @@ void Engine::Initialize()
 	m_pGameConfig = new GameConfig();
 	m_pGame->Initialize(*m_pGameConfig);
 
-	m_ClientWidth = (int)m_pGameConfig->GetWindowSize().width;
-	m_ClientHeight = (int)m_pGameConfig->GetWindowSize().height;
+	m_ClientWidth = static_cast<int>(m_pGameConfig->GetWindowSize().width);
+	m_ClientHeight = static_cast<int>(m_pGameConfig->GetWindowSize().height);
 
 	// init DirectX & Direct2D & open window
 	CreateDeviceIndependentResources();

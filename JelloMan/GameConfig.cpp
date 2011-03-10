@@ -28,8 +28,8 @@ void GameConfig::SetTitle(const tstring& titleRef)
 Size2D GameConfig::GetWindowSize()
 {
 	Size2D size;
-	size.width = (float)m_WindowWidth;
-	size.height = (float)m_Windowheight;
+	size.width = static_cast<float>(m_WindowWidth);
+	size.height = static_cast<float>(m_Windowheight);
 
 	return size;
 }

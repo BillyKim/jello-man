@@ -31,7 +31,7 @@ float GameTimer::GetGameTime()const
 
 	if( m_bStopped )
 	{
-		return (float)((m_StopTime - m_BaseTime)*m_SecondsPerCount);
+		return static_cast<float>((m_StopTime - m_BaseTime)*m_SecondsPerCount);
 	}
 
 	// The distance mCurrTime - mBaseTime includes paused time,
@@ -46,13 +46,13 @@ float GameTimer::GetGameTime()const
 	
 	else
 	{
-		return (float)(((m_CurrTime-m_PausedTime)-m_BaseTime)*m_SecondsPerCount);
+		return static_cast<float>(((m_CurrTime-m_PausedTime)-m_BaseTime)*m_SecondsPerCount);
 	}
 }
 
 float GameTimer::GetDeltaTime()const
 {
-	return (float)m_DeltaTime;
+	return static_cast<float>(m_DeltaTime);
 }
 
 void GameTimer::Reset()
