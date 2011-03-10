@@ -138,6 +138,9 @@
     <ClInclude Include="Level.h">
       <Filter>Engine Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredPreEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -229,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="vertex.cpp">
       <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredPreEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

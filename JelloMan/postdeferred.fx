@@ -1,7 +1,7 @@
 cbuffer cbPerObject
 {
-	matrix mtxWorld : World;
-	matrix mtxWorldVP : WorldViewProjection;
+	//matrix mtxWorld : World;
+	//matrix mtxWorldVP : WorldViewProjection;
 
 	float3 vLightDir : LightDir;
 	float3 cLightColor : LightColor;
