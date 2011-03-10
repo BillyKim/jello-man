@@ -12,7 +12,7 @@ DeferredRenderer::DeferredRenderer(ID3D10Device* device):
     m_Width(0), m_Height(0)
 {
     ZeroMemory(&m_Viewport, sizeof(D3D10_VIEWPORT));
-    Vector4(0.f, 0.f, 0.f, 1.f).ToFloat4(m_ClearColor);
+    Vector4(0.f, 0.f, 0.f, 0.f).ToFloat4(m_ClearColor);
 
     for (int i = 0; i < MAXRENDERTARGETS; ++i)
         m_RenderTargets[i] = 0;
@@ -147,6 +147,13 @@ void DeferredRenderer::Begin()
 
 void DeferredRenderer::End()
 { 
+    ID3D10RenderTargetView* renderTargets[1] = { m_RenderTargets[DeferredRenderMap_Color] };
+    m_pDevice->OMSetRenderTargets(1, renderTargets, m_pDepthDSV);
+    m_pDevice->RSSetViewports(1, &m_Viewport);
+
+    m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
+    m_pDevice->ClearRenderTargetView(m_RenderTargets[DeferredRenderMap_Color], m_ClearColor);
+
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
 	m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);
 	m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);

@@ -5,18 +5,16 @@ cbuffer cbPerObject
 
 	float3 vLightDir : LightDir;
 	float3 cLightColor : LightColor;
-	floar3 vCamDir : CamDirection
+	float3 vCamDir : CamDirection;
 };
 
 Texture2D colorMap : ColorMap;
 Texture2D normalSpecMap : NormalSpecMap;
 Texture2D positionGlossMap : PositionGlossMap;
 
-sampler2D MapSampler
+SamplerState mapSampler
 {
-	MinFilter = POINT;
-	MagFilter = POINT;
-	MipFilter = POINT;
+	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = WRAP;
 	AddressV = WRAP;
 	AddressW = WRAP;
@@ -34,11 +32,12 @@ struct VertexShaderOutput
 	float2 texCoord : TEXCOORD0;
 };
 
-VertexShaderOutput  VS(VS_INPUT input) 
+VertexShaderOutput  VS(VertexShaderInput input) 
 {
     VertexShaderOutput output;
 
-    output.position = mul(input.position, mtxWVP);
+    //output.position = mul(input.position, mtxWVP);
+	output.position = input.position;
 
 	output.texCoord = input.texCoord;
 
@@ -51,19 +50,15 @@ struct PixelShaderInput
 	float2 texCoord : TEXCOORD0;
 };
 
-struct PixelShaderOutput
-{
-	float4 color : COLOR0;
-};
 
-PixelShaderOutput  PS(PS_INPUT input) 
+float4  PS(PixelShaderInput input) : COLOR0
 {
 	float4 posGloss = positionGlossMap.Sample(mapSampler, input.texCoord);
 	float4 col = colorMap.Sample(mapSampler, input.texCoord);
 	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
 
 	//DiffuseLight
-    float3 color = dot(normalize(input.normal), normalize(vLightDir));
+    float3 color = dot(normalize(normalSpec.rgb), normalize(vLightDir));
 
 	//DiffuseColor
 	color *= col.rgb;
@@ -73,13 +68,12 @@ PixelShaderOutput  PS(PS_INPUT input)
 	float3 reflect = normalize(normalSpec.rgb * y * 2 - vLightDir);
 	float spec = saturate(dot(vCamDir, reflect));
 	spec = pow(spec, posGloss.a * 25.0f);
-	spec *= cLightColor * normalSpec.a;
 
-	color += spec;
+	color += spec * cLightColor * normalSpec.a;
 
 	color = saturate(color);
 
-    return float4(color, texSample.a);
+    return float4(color, 1.0f);
 };
 
 

@@ -16,8 +16,7 @@ public:
     ~Model(void)
     {
 	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DeleteModelMesh<T>);
-	    m_Meshes.clear();
-        
+	    m_Meshes.clear();        
     }
     //<---------------------------------------------------------------
 
@@ -26,6 +25,11 @@ public:
 	    ModelMesh<T>* mesh = new ModelMesh<T>(m_pDevice, name);
 	    m_Meshes[name] = mesh;
 	    return mesh;
+    }
+
+    void Draw()
+    {
+	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DrawModelMesh<T>);
     }
 
 private:
@@ -38,5 +42,10 @@ template <typename T>
 void DeleteModelMesh(const pair<tstring, ModelMesh<T>*>& p)
 {
 	delete p.second;
+}
+template <typename T>
+void DrawModelMesh(const pair<tstring, ModelMesh<T>*>& p)
+{
+	p.second->Draw();
 }
 

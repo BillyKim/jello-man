@@ -1,0 +1,39 @@
+#include "DeferredPreEffect.h"
+
+
+DeferredPreEffect::DeferredPreEffect(ID3D10Device* pDXDevice, ID3D10Effect* pEffect): 
+                Effect(pDXDevice, pEffect),
+                m_pWorld(GetVariableBySemantic("World")->AsMatrix()),
+                m_pWVP(GetVariableBySemantic("WorldViewProjection")->AsMatrix()),
+                m_pDiffuseMap(GetVariableBySemantic("DiffuseMap")->AsShaderResource()),
+                m_pSpecMap(GetVariableBySemantic("SpecMap")->AsShaderResource()),
+                m_pGlossMap(GetVariableBySemantic("GlossMap")->AsShaderResource())
+{
+}
+
+
+DeferredPreEffect::~DeferredPreEffect(void)
+{
+}
+
+void DeferredPreEffect::SetWorld(const Matrix& world)
+{
+    m_pWorld->SetMatrix((float*)const_cast<Matrix&>(world));
+}
+void DeferredPreEffect::SetWorldViewProjection(const Matrix& wvp)
+{
+    m_pWVP->SetMatrix((float*)const_cast<Matrix&>(wvp));
+}
+
+void DeferredPreEffect::SetDiffuseMap(Texture2D* diffuseMap)
+{
+    m_pDiffuseMap->SetResource(diffuseMap->GetColorMap());
+}
+void DeferredPreEffect::SetSpecMap(Texture2D* specMap)
+{
+    m_pSpecMap->SetResource(specMap->GetColorMap());
+}
+void DeferredPreEffect::SetGlossMap(Texture2D* glossMap)
+{
+    m_pGlossMap->SetResource(glossMap->GetColorMap());
+}

@@ -3,7 +3,7 @@
 
 
 
-EffectLoader::EffectLoader(void)
+EffectLoader::EffectLoader(void) : AssetContainer()
 {
 
 }

@@ -1,7 +1,7 @@
 cbuffer cbPerObject
 {
 	matrix mtxWorld : World;
-	matrix mtxWorldVP : WorldViewProjection;
+	matrix mtxWVP : WorldViewProjection;
 };
 
 Texture2D diffuseMap : DiffuseMap;
@@ -9,11 +9,9 @@ Texture2D diffuseMap : DiffuseMap;
 Texture2D specMap : SpecMap;
 Texture2D glossMap : GlossMap;
 
-sampler2D MapSampler
+SamplerState mapSampler
 {
-	MinFilter = LINEAR;
-	MagFilter = LINEAR;
-	MipFilter = LINEAR;
+	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = WRAP;
 	AddressV = WRAP;
 	AddressW = WRAP;
@@ -34,14 +32,14 @@ struct VertexShaderOutput
 	float2 texCoord : TEXCOORD0;
 };
 
-VertexShaderOutput  VS(VS_INPUT input) 
+VertexShaderOutput  VS(VertexShaderInput input) 
 {
     VertexShaderOutput output;
 
     output.position = mul(input.position, mtxWVP);
 	output.worldPos = mul(input.position, mtxWorld).xyz;
 
-	output.normal = mul(float4(input.normal, 0.0f), mtxWorld);
+	output.normal = mul(float4(input.normal, 0.0f), mtxWorld).xyz;
 	//output.tangent = mul(float4(input.tangent, 0.0f), mtxWorld);
 	//output.binormal = mul(float4(input.binormal, 0.0f), mtxWorld);
 
@@ -65,12 +63,14 @@ struct PixelShaderOutput
 	float4 positionGloss : COLOR2;
 };
 
-PixelShaderOutput  PS(PS_INPUT input) 
+PixelShaderOutput  PS(PixelShaderInput input) 
 {
 	PixelShaderOutput output;
-	output.color = float4(diffuseMap.Sample(mapSampler, input.texCoord), 1.0f);
+	output.color = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, 1.0f);
 	output.normalSpec = float4(input.normal, specMap.Sample(mapSampler, input.texCoord).r);
 	output.positionGloss = float4(input.worldPos, glossMap.Sample(mapSampler, input.texCoord).r);
+
+	return output;
 };
 
 

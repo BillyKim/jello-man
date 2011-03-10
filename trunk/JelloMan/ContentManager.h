@@ -8,7 +8,7 @@
 class TextureLoader;
 class EffectLoader;
 
-#define Content ContentManager::GetSingleton();
+#define Content ContentManager::GetSingleton()
 
 class ContentManager
 {

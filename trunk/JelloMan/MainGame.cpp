@@ -2,6 +2,7 @@
 // MainGame by Bastian Damman & Sebastiaan Sprengers
 //=============================================================================
 #include "MainGame.h"
+#include "ContentManager.h"
 
 // CONTROLS & BLOX2D SINGLETON
 #define BLOX_2D (Blox2D::GetSingleton())
@@ -29,6 +30,7 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 
 void MainGame::LoadResources(ID3D10Device* pDXDevice)
 {
+    Content->Init(pDXDevice);
 	m_pLevel = new Level(pDXDevice);
 	m_pLevel->Initialize();
 }
