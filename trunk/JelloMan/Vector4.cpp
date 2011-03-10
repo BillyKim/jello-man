@@ -36,6 +36,10 @@ Vector4::~Vector4(void)
 
 
 //----------Getters----------------------->
+Vector3 Vector4::XYZ() const
+{
+    return Vector3(R, G, B);
+}
 void Vector4::ToFloat4(float* float4) const
 {
     float4[0] = R;

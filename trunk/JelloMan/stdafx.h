@@ -39,9 +39,7 @@ struct LocalAssert { \
 	LocalAssert(int line=__LINE__) : mLine(line) {} \
 	LocalAssert(bool isOK, const TCHAR* message=_T("")) { \
 		if ( !isOK ) { \
-			tstringstream buffer; \
-			buffer << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
-			OutputDebugString(buffer.str().c_str()); \
+			cout << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
 			__asm { int 3 } \
 		} \
 	} \

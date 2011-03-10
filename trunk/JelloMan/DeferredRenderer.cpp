@@ -8,7 +8,8 @@ DeferredRenderer::DeferredRenderer(ID3D10Device* device):
     m_pDepthDSV(0),
     m_pDevice(device),
 	m_pScreenMesh(new ModelMesh<VertexPosTex>(device, _T("screenMesh"))),
-	m_pEffect(0)
+	m_pEffect(0),
+    m_Width(0), m_Height(0)
 {
     ZeroMemory(&m_Viewport, sizeof(D3D10_VIEWPORT));
     Vector4(0.f, 0.f, 0.f, 1.f).ToFloat4(m_ClearColor);

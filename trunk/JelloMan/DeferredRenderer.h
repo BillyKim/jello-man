@@ -23,10 +23,11 @@ public:
     void End();
 
 private:
-    UINT m_Width, m_Height;
 
     void CreateColorMap(DeferredRenderMap map, DXGI_FORMAT format);
     void CreateDepthMap();
+
+    UINT m_Width, m_Height;
 
     ID3D10Device* m_pDevice;
     

@@ -24,6 +24,7 @@ public:
 	Vector2 XZ() const; 
 	Vector2 YZ() const; 
 	float Length() const; 
+    void ToFloat(float* f) const;
 	D3DXVECTOR3 ToD3DVector3() const;
 	//<------------------
 	

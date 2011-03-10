@@ -83,6 +83,7 @@
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DeferredPostEffect.h" />
+    <ClInclude Include="DeferredPreEffect.h" />
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
     <ClCompile Include="DeferredPostEffect.cpp" />
+    <ClCompile Include="DeferredPreEffect.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />

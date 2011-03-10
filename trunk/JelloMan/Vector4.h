@@ -18,6 +18,7 @@ public:
 	~Vector4(void);
 
 	//---Getters--------->
+    Vector3 XYZ() const;
 	void ToFloat4(float* float4) const;
     D3DXCOLOR ToD3DColor() const; 
 	//<------------------

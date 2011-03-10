@@ -55,6 +55,13 @@ float Vector3::Length() const
 {
 	return sqrt(sqr(X) + sqr(Y) + sqr(Z));
 }
+
+void Vector3::ToFloat(float* f) const
+{
+    f[0] = X;
+    f[1] = Y;
+    f[2] = Z;
+}
 D3DXVECTOR3 Vector3::ToD3DVector3() const
 {
 	return D3DXVECTOR3(X, Y, Z);

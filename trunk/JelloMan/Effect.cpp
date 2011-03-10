@@ -19,18 +19,26 @@ Effect::~Effect(void)
 void Effect::SetTechnique(int index)
 {
     m_pCurrentTechnique = m_pEffect->GetTechniqueByIndex(index);
-    ASSERT(m_pCurrentTechnique->IsValid());
+    ASSERT(m_pCurrentTechnique->IsValid() != 0, _T("Effect technique is not valid"));
 }
 void Effect::SetTechnique(const string& name)
 {
     m_pCurrentTechnique = m_pEffect->GetTechniqueByName(name.c_str());
-    ASSERT(m_pCurrentTechnique->IsValid());
+    ASSERT(m_pCurrentTechnique->IsValid() != 0, _T("Effect technique is not valid"));
 }
 ID3D10EffectVariable* Effect::GetVariableByName(const string& name) const
 {
-    return m_pEffect->GetVariableByName(name.c_str());
+    ID3D10EffectVariable* var = m_pEffect->GetVariableByName(name.c_str());
+
+    ASSERT(var->IsValid() != 0, _T("Effect variable is not valid!"));
+
+    return var;
 }
 ID3D10EffectVariable* Effect::GetVariableBySemantic(const string& semantic) const
 {
-    return m_pEffect->GetVariableBySemantic(semantic.c_str());
+    ID3D10EffectVariable* var = m_pEffect->GetVariableBySemantic(semantic.c_str());
+    
+    ASSERT(var->IsValid() != 0, _T("Effect variable is not valid!"));
+    
+    return var;
 }
