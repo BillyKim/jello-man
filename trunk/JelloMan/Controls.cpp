@@ -27,6 +27,7 @@ Controls::Controls()	:	m_bLMBClicked(false),
 
 Controls::~Controls()
 {
+	m_pSingleton = 0;
 }
 
 // STATIC METHOD

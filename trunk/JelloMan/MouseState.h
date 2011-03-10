@@ -24,7 +24,7 @@ public:
 	bool RightMBClicked() const {return m_bRMBClicked;}
 	bool LeftMBDown() const {return m_bLMBDown;}
 	bool RightMBDown() const {return m_bRMBDown;}
-	Point2D GetMouseMovement() const;
+	Point2D GetMouseMovement() const {return m_MouseDeltaPos;}
 
 private: 
 	bool m_bLMBClicked, m_bRMBClicked;
