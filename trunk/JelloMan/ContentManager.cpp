@@ -26,9 +26,9 @@ ContentManager::~ContentManager()
 	m_pSingleton = 0;
 }
 
-void ContentManager::Init(ID3D10Device* pD3DDevice)
+void ContentManager::Init(ID3D10Device* pDXDevice)
 {
-	m_pDevice = pD3DDevice;
+	m_pDevice = pDXDevice;
 	m_pTextureLoader = new TextureLoader();
 	m_pEffectLoader = new EffectLoader();
 	m_pModelLoader = new ModelLoader();

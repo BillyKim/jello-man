@@ -14,7 +14,7 @@ class ContentManager
 public:
 	virtual ~ContentManager();	
 
-	void Init(ID3D10Device* pD3DDevice);
+	void Init(ID3D10Device* pDXDevice);
 
 	Effect* LoadEffect(const tstring& assetName);
 	Texture2D* LoadTexture2D(const tstring& assetName);

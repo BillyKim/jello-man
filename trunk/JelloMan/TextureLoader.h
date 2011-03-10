@@ -15,7 +15,7 @@ public:
 	virtual ~TextureLoader(void);
     //<-----------------------------------
 
-	Texture2D* Load(ID3D10Device* pD3DDevice, const tstring& key);
+	Texture2D* Load(ID3D10Device* pDXDevice, const tstring& key);
 
 private:
 	TextureLoader(TextureLoader& t);

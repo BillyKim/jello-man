@@ -41,7 +41,7 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_Maximized(false)
 ,m_Resizing(false)
 ,m_pGame(0)
-,m_pD3DDevice(0)
+,m_pDXDevice(0)
 ,m_pSwapChain(0)
 ,m_pDepthStencilBuffer(0)
 ,m_pRenderTargetView(0)
@@ -71,13 +71,13 @@ Engine::~Engine()
 
 	SafeDelete(m_pContentManager);
 
-	if( m_pD3DDevice )m_pD3DDevice->ClearState();
+	if( m_pDXDevice )m_pDXDevice->ClearState();
 
 	SafeRelease(m_pRenderTargetView);
 	SafeRelease(m_pDepthStencilView);
 	SafeRelease(m_pSwapChain);
 	SafeRelease(m_pDepthStencilBuffer);
-	SafeRelease(m_pD3DDevice);
+	SafeRelease(m_pDXDevice);
 	SafeRelease(m_pD2DFactory);
 	SafeRelease(m_pBackBufferRT);
 	SafeRelease(m_pColorBrush);
@@ -138,7 +138,7 @@ void Engine::Initialize()
 	CreateDeviceResources();
 
 	#if defined DEBUG || _DEBUG
-	cout << "-Direct2D & DirectX active\n";
+	cout << "-Direct2D & DirectX initialized\n";
 	#endif
 
 	// init D2D engine
@@ -149,13 +149,13 @@ void Engine::Initialize()
 						m_pTextFormat );
 
 	#if defined DEBUG || _DEBUG
-	cout << "-Blox2D Engine active\n";
+	cout << "-Blox2D Engine initialized\n";
 	#endif
 
-	m_pGame->LoadResources(m_pD3DDevice);
+	m_pGame->LoadResources(m_pDXDevice);
 
 	#if defined DEBUG || _DEBUG
-	cout << "-Resources loaded\n";
+	cout << "-Resources initialized\n";
 	#endif
 }
 
@@ -164,8 +164,8 @@ void Engine::OnRender()
 	CreateDeviceResources();
 
 	// clearing rendertarget for new frame
-	m_pD3DDevice->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
-	m_pD3DDevice->ClearDepthStencilView(
+	m_pDXDevice->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
+	m_pDXDevice->ClearDepthStencilView(
                 m_pDepthStencilView,
                 D3D10_CLEAR_DEPTH,
                 1,
@@ -216,7 +216,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		// Save the new client area dimensions.
 		m_ClientWidth  = LOWORD(lParam);
 		m_ClientHeight = HIWORD(lParam);
-		if( m_pD3DDevice )
+		if( m_pDXDevice )
 		{
 			if( wParam == SIZE_MINIMIZED )
 			{
@@ -435,7 +435,7 @@ HRESULT Engine::CreateDeviceResources()
 
     // If we don't have a device, need to create one now and all
     // accompanying D3D resources.
-    if (!m_pD3DDevice)
+    if (!m_pDXDevice)
     {
         UINT nDeviceFlags = D3D10_CREATE_DEVICE_BGRA_SUPPORT;
         // Create device
@@ -458,7 +458,7 @@ HRESULT Engine::CreateDeviceResources()
 
         if (SUCCEEDED(hr))
         {
-            hr = pDevice->QueryInterface(&m_pD3DDevice);
+            hr = pDevice->QueryInterface(&m_pDXDevice);
         }
         if (SUCCEEDED(hr))
         {
@@ -491,7 +491,7 @@ HRESULT Engine::CreateDeviceResources()
             swapDesc.OutputWindow = m_hMainWnd;
             swapDesc.Windowed = TRUE;
 
-            hr = pDXGIFactory->CreateSwapChain(m_pD3DDevice, &swapDesc, &m_pSwapChain);
+            hr = pDXGIFactory->CreateSwapChain(m_pDXDevice, &swapDesc, &m_pSwapChain);
         }
         if (SUCCEEDED(hr))
         {
@@ -534,7 +534,7 @@ HRESULT Engine::RecreateSizedResources()
     // Ensure that nobody is holding onto one of the old resources
     SafeRelease(m_pBackBufferRT);
     SafeRelease(m_pRenderTargetView);
-    m_pD3DDevice->OMSetRenderTargets(1, viewList, NULL);
+    m_pDXDevice->OMSetRenderTargets(1, viewList, NULL);
 
     // Resize render target buffers
     hr = m_pSwapChain->ResizeBuffers(1, nWidth, nHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0);
@@ -555,7 +555,7 @@ HRESULT Engine::RecreateSizedResources()
         texDesc.Usage = D3D10_USAGE_DEFAULT;
 
 		SafeRelease(m_pDepthStencilBuffer);
-		hr = m_pD3DDevice->CreateTexture2D(&texDesc, NULL, &m_pDepthStencilBuffer);
+		hr = m_pDXDevice->CreateTexture2D(&texDesc, NULL, &m_pDepthStencilBuffer);
     }
 
     if (SUCCEEDED(hr))
@@ -574,7 +574,7 @@ HRESULT Engine::RecreateSizedResources()
         renderDesc.Texture2D.MipSlice = 0;
 
         SafeRelease(m_pRenderTargetView);
-        hr = m_pD3DDevice->CreateRenderTargetView(pBackBufferResource, &renderDesc, &m_pRenderTargetView);
+        hr = m_pDXDevice->CreateRenderTargetView(pBackBufferResource, &renderDesc, &m_pRenderTargetView);
     }
     if (SUCCEEDED(hr))
     {
@@ -584,12 +584,12 @@ HRESULT Engine::RecreateSizedResources()
         depthViewDesc.Texture2D.MipSlice = 0;
 
         SafeRelease(m_pDepthStencilView);
-		hr = m_pD3DDevice->CreateDepthStencilView(m_pDepthStencilBuffer, &depthViewDesc, &m_pDepthStencilView);
+		hr = m_pDXDevice->CreateDepthStencilView(m_pDepthStencilBuffer, &depthViewDesc, &m_pDepthStencilView);
     }
     if (SUCCEEDED(hr))
     {
         viewList[0] = m_pRenderTargetView;
-        m_pD3DDevice->OMSetRenderTargets(1, viewList, m_pDepthStencilView);
+        m_pDXDevice->OMSetRenderTargets(1, viewList, m_pDepthStencilView);
 
         // Set a new viewport based on the new dimensions
         D3D10_VIEWPORT viewport;
@@ -599,7 +599,7 @@ HRESULT Engine::RecreateSizedResources()
         viewport.TopLeftY = 0;
         viewport.MinDepth = 0;
         viewport.MaxDepth = 1;
-        m_pD3DDevice->RSSetViewports(1, &viewport);
+        m_pDXDevice->RSSetViewports(1, &viewport);
 
         // Get a surface in the swap chain
         hr = m_pSwapChain->GetBuffer(
