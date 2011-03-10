@@ -79,6 +79,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Blox2D.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DeferredRenderer.h" />
@@ -110,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Blox2D.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
