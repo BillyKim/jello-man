@@ -132,6 +132,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Engine Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -214,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Engine Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

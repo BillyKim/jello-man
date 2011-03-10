@@ -15,7 +15,7 @@ public:
 	virtual ~EffectLoader(void);
     //<-----------------------------------
 
-    Effect* Load(ID3D10Device *pD3DDevice, const tstring& key);
+    Effect* Load(ID3D10Device *pDXDevice, const tstring& key);
 
 private:
 	EffectLoader(const EffectLoader& t);

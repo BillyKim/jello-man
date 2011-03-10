@@ -13,7 +13,7 @@ TextureLoader::~TextureLoader(void)
 	AssetContainer::~AssetContainer();
 }
 
-Texture2D* TextureLoader::Load(ID3D10Device *pD3DDevice, const tstring& assetName) 
+Texture2D* TextureLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName) 
 {
 	if ( IsAssetPresent(assetName))
 	{
@@ -25,7 +25,7 @@ Texture2D* TextureLoader::Load(ID3D10Device *pD3DDevice, const tstring& assetNam
 	{
 		ID3D10ShaderResourceView *pTextureRV;
 
-		HRESULT hr = D3DX10CreateShaderResourceViewFromFile(pD3DDevice, assetName.c_str(), NULL, NULL, &pTextureRV, NULL);
+		HRESULT hr = D3DX10CreateShaderResourceViewFromFile(pDXDevice, assetName.c_str(), NULL, NULL, &pTextureRV, NULL);
 		if(hr != S_OK)
 		{
 			wcout << "Loading texture " << assetName << "Failed!";

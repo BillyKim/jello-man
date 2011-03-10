@@ -18,7 +18,7 @@ public:
 	virtual ~ModelLoader(void);
     //<-----------------------------------
 
-    Model* Load(ID3D10Device *pD3DDevice, const tstring& assetName);
+    Model* Load(ID3D10Device *pDXDevice, const tstring& assetName);
 
 private:
     void ReadObj(const tstring& assetName);

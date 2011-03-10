@@ -14,7 +14,7 @@ EffectLoader::~EffectLoader(void)
 	AssetContainer::~AssetContainer();
 }
 
-Effect* EffectLoader::Load(ID3D10Device *pD3DDevice, const tstring& key)
+Effect* EffectLoader::Load(ID3D10Device *pDXDevice, const tstring& key)
 {
 	HRESULT hr;
 	if ( IsAssetPresent(key))
@@ -38,7 +38,7 @@ Effect* EffectLoader::Load(ID3D10Device *pD3DDevice, const tstring& key)
 		ID3D10Blob* ErrorBlob = 0;
 		ID3D10Effect* pEffect = 0;
 		D3DX10CreateEffectFromFile(key.c_str(), NULL, NULL, "fx_4_0",  dwShaderFlags, 0, 
-										 pD3DDevice, NULL, NULL, &pEffect, &ErrorBlob, &hr);
+										 pDXDevice, NULL, NULL, &pEffect, &ErrorBlob, &hr);
 
 		if(FAILED(hr)) 
 		{
@@ -59,7 +59,7 @@ Effect* EffectLoader::Load(ID3D10Device *pD3DDevice, const tstring& key)
 		}
 		else
 		{
-            Effect* e = new Effect(pD3DDevice, pEffect);
+            Effect* e = new Effect(pDXDevice, pEffect);
 			AddAsset(key, e);
 		}
         

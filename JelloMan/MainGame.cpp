@@ -7,7 +7,8 @@
 #define BLOX_2D (Blox2D::GetSingleton())
 #define CONTROLS (Controls::GetSingleton())
 
-MainGame::MainGame()	:	m_dTtime(0)
+MainGame::MainGame()	:	m_dTtime(0),
+							m_pLevel(0)
 {
 
 }
@@ -26,18 +27,24 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 	refGameConfig.SetBlox2DAntiAliasing(true);
 }
 
-void MainGame::LoadResources(ID3D10Device* pD3D10Device)
+void MainGame::LoadResources(ID3D10Device* pDXDevice)
 {
+	m_pLevel = new Level(pDXDevice);
+	m_pLevel->Initialize();
 }
 
 void MainGame::UpdateScene(const float dTime)
 {
 	// dtime
 	m_dTtime = dTime;
+
+	m_pLevel->Tick(dTime);
 }
 
 void MainGame::DrawScene()
 {
+	m_pLevel->Draw();
+
 	/* ---------------------------------------------- */
 	/*					TEST STUFF					  */
 	/* ---------------------------------------------- */

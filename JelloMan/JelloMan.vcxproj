@@ -92,6 +92,7 @@
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="KeyboardState.h" />
     <ClInclude Include="AssetContainer.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightController.h" />
     <ClInclude Include="MathHelper.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="GameWinMain.cpp" />
     <ClCompile Include="KeyboardState.cpp" />
     <ClCompile Include="AssetContainer.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightController.cpp" />
     <ClCompile Include="Matrix.cpp" />
