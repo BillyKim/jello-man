@@ -1,7 +1,8 @@
 #pragma once
 #include "d3dUtil.h"
-#include "Texture2D.h"
-#include "Effect.h"
+#include "EffectLoader.h"
+#include "TextureLoader.h"
+#include "ModelLoader.h"
 
 class TextureLoader;
 class EffectLoader;
@@ -11,11 +12,16 @@ class EffectLoader;
 class ContentManager
 {
 public:
-	ContentManager(ID3D10Device* pD3DDevice);
+	ContentManager();
 	virtual ~ContentManager();	
 
-	Effect*	LoadEffect(const tstring& assetName);
+	void Init(ID3D10Device* pD3DDevice);
+
+	Effect* LoadEffect(const tstring& assetName);
 	Texture2D* LoadTexture2D(const tstring& assetName);
+	Model* LoadModel(const tstring& assetName);
+
+	static ContentManager* GetSingleton();
 
  
 
@@ -25,8 +31,11 @@ private:
 	//-------------------------------------------------
 	ID3D10Device* m_pDevice;
 	
-	TextureLoader *m_pTextureLoader;
-	EffectLoader *m_pEffectLoader;
+	TextureLoader* m_pTextureLoader;
+	EffectLoader* m_pEffectLoader;
+	ModelLoader* m_pModelLoader;
+	
+	static ContentManager* m_pSingleton;
 
 	// -------------------------
 	// Disabling default copy constructor and default 
