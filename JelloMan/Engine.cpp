@@ -151,6 +151,12 @@ void Engine::Initialize()
 	#if defined DEBUG || _DEBUG
 	cout << "-Blox2D Engine active\n";
 	#endif
+
+	m_pGame->LoadResources(m_pD3DDevice);
+
+	#if defined DEBUG || _DEBUG
+	cout << "-Resources loaded\n";
+	#endif
 }
 
 void Engine::OnRender()

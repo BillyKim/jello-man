@@ -14,6 +14,7 @@ public:
 	~MainGame();
 
 	void Initialize(GameConfig& refGameConfig);
+	void LoadResources(ID3D10Device* pD3D10Device);
 	void UpdateScene(const float dTime);
 	void DrawScene(); 
 
