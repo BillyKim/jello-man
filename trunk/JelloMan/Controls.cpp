@@ -16,7 +16,8 @@ Controls::Controls()	:	m_bLMBClicked(false),
 							m_bLMBDown(false),
 							m_bRMBDown(false),
 							m_MouseWheelPos(0),
-							m_MousePos(Point2F(0,0))
+							m_MousePos(Point2F(0,0)),
+							m_OldMousePos(Point2F(0,0))
 {
 	for(int i = 0; i < NUMKEYS; ++i)
 	{
@@ -80,8 +81,20 @@ bool Controls::IsKeyPressed(int vKey)
 
 MouseState Controls::Mouse()
 {
+	// calc mousemovement
+	Point2D mouseDeltaPos;
+	mouseDeltaPos.x = m_MousePos.x - m_OldMousePos.x;
+	mouseDeltaPos.y = m_MousePos.y - m_OldMousePos.y;
+	m_OldMousePos = m_MousePos;
+
 	// create state object on stack
-	MouseState mouseState(m_bLMBClicked, m_bRMBClicked, m_bLMBDown, m_bRMBDown, m_MouseWheelPos, m_MousePos);
+	MouseState mouseState(	m_bLMBClicked,
+							m_bRMBClicked,
+							m_bLMBDown, 
+							m_bRMBDown,
+							m_MouseWheelPos,
+							m_MousePos,
+							mouseDeltaPos);
 
 	// reset data
 	m_MouseWheelPos = 0;

@@ -129,6 +129,9 @@
     <ClInclude Include="Blox2D.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -207,6 +210,9 @@
       <Filter>Engine Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Blox2D.cpp">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>

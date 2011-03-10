@@ -44,6 +44,7 @@ private:
 	bool m_bLMBDown, m_bRMBDown;
 	short m_MouseWheelPos;
 	Point2D m_MousePos;
+	Point2D m_OldMousePos;
 	unsigned char m_Keys[NUMKEYS];
 	bool m_bKeysPressed[NUMKEYS];
 

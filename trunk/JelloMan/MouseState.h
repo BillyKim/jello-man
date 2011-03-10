@@ -10,7 +10,7 @@ class MouseState
 public:
 
 	// constructor & destructor
-	MouseState(bool bLMBClicked, bool bRMBClicked, bool bLMBDown, bool bRBMDown, int iMWPos, Point2D mousePos);
+	MouseState(bool bLMBClicked, bool bRMBClicked, bool bLMBDown, bool bRBMDown, int iMWPos, Point2D mousePos, Point2D mouseMovement);
 	virtual ~MouseState(void);
 
 	// assignment operator & copy constructor
@@ -24,12 +24,14 @@ public:
 	bool RightMBClicked() const {return m_bRMBClicked;}
 	bool LeftMBDown() const {return m_bLMBDown;}
 	bool RightMBDown() const {return m_bRMBDown;}
+	Point2D GetMouseMovement() const;
 
 private: 
 	bool m_bLMBClicked, m_bRMBClicked;
 	bool m_bLMBDown, m_bRMBDown;
 	short m_MouseWheelPos;
 	Point2D m_MousePos;
+	Point2D m_MouseDeltaPos;
 };
 
  

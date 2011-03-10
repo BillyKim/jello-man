@@ -11,14 +11,16 @@ MouseState::MouseState(	bool bLMBClicked,
 						bool bLMBDown,
 						bool bRMBDown,
 						int iMWPos,
-						Point2D mousePos
+						Point2D mousePos,
+						Point2D mouseMovement
 						):
 						m_bLMBClicked(bLMBClicked),
 						m_bRMBClicked(bRMBClicked),
 						m_bLMBDown(bLMBDown),
 						m_bRMBDown(bRMBDown),
 						m_MouseWheelPos(iMWPos),
-						m_MousePos(mousePos)
+						m_MousePos(mousePos),
+						m_MouseDeltaPos(mouseMovement)
 {
 }
 
