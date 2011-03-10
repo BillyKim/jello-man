@@ -118,7 +118,7 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 12, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        GetInputElementDesc(desc[2], "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 24, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[2], "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 24, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPosNormTex))
@@ -128,7 +128,7 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 12, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        GetInputElementDesc(desc[2], "TEXTURE", 0, DXGI_FORMAT_R32G32_FLOAT, 24, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[2], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 24, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPosTex))
@@ -136,8 +136,9 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        GetInputElementDesc(desc[1], "TEXTURE", 0, DXGI_FORMAT_R32G32_FLOAT, 12, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[1], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 12, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         elements = desc.size();
     }
-    ASSERT(false);
+    else
+        ASSERT(false);
 }

@@ -7,13 +7,11 @@ template<typename T>
 class AssetContainer
 {
 protected:
-    AssetContainer(void) {}
+    AssetContainer(void) { /*m_Map.insert( make_pair<tstring, T*>(_T(""), 0));*/ }
     virtual ~AssetContainer(void) { RemoveAllAssets(); }
 
 	bool IsAssetPresent(const tstring &key) const
     {
-	    map<tstring, T*>::iterator it;
-
 	    return m_Map.find(key) != m_Map.end();
     }
     void AddAsset(const tstring &key, T* asset)

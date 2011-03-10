@@ -28,7 +28,7 @@ Texture2D* TextureLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName
 		HRESULT hr = D3DX10CreateShaderResourceViewFromFile(pDXDevice, assetName.c_str(), NULL, NULL, &pTextureRV, NULL);
 		if(hr != S_OK)
 		{
-			wcout << "Loading texture " << assetName << "Failed!";
+			wcout << "Loading texture '" << assetName << "' Failed!\n";
 			return 0;
 		}
 

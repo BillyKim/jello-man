@@ -105,6 +105,7 @@
     <ClInclude Include="MouseState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="TestObject.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Vector2.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="TestObject.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Vector2.cpp" />

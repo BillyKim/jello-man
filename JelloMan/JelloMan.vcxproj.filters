@@ -135,11 +135,14 @@
     <ClInclude Include="Camera.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Level.h">
-      <Filter>Engine Files</Filter>
-    </ClInclude>
     <ClInclude Include="DeferredPreEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="TestObject.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Game Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -227,14 +230,17 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Level.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="vertex.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="DeferredPreEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObject.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Game Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

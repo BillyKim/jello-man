@@ -9,12 +9,13 @@ class ModelMesh
 {
 public:
     ModelMesh(ID3D10Device* device, const tstring& name) : 
-			      m_pDevice(0)
+			      m_pDevice(device)
 			    , m_pIndexBuffer(0)
 			    , m_pVertexBuffer(0)
 			    , m_pEffect(0)
 	            , m_pInputLayout(0)
 	            , m_VertexBufferStride(0)
+                , m_Name(name)
     {
     }
     ~ModelMesh(void)
