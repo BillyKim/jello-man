@@ -42,9 +42,9 @@ Blox2D* Blox2D::GetSingleton()
 void Blox2D::SetColor(int r, int g, int b, float a)
 {
 	D2D_COLOR_F temp;
-	temp.r = ((float)r/255);
-	temp.g = ((float)g/255);
-	temp.b = ((float)b/255);
+	temp.r = (static_cast<float>(r/255));
+	temp.g = (static_cast<float>(g/255));
+	temp.b = (static_cast<float>(b/255));
 	temp.a = a;
 
 	if (m_pColorBrush->GetColor().r != temp.r ||
@@ -114,17 +114,17 @@ Size2D Blox2D::GetWindowSize() const
 // -------------------------------------
 void Blox2D::DrawGrid(int stepsize, D2D1_RECT_F area) const
 {
-	for (int x = (int)area.left; x < area.right; x += stepsize)
+	for (int x = static_cast<int>(area.left); x < area.right; x += stepsize)
 	{
-		m_pRenderTarget->DrawLine(	Point2F((float)x, area.top),
-									Point2F((float)x,area.bottom),
+		m_pRenderTarget->DrawLine(	Point2F(static_cast<float>(x), area.top),
+									Point2F(static_cast<float>(x),area.bottom),
 									m_pColorBrush);
 	}
 
-	for (int y = (int)area.top; y < area.bottom; y += stepsize)
+	for (int y = static_cast<int>(area.top); y < area.bottom; y += stepsize)
 	{
-		m_pRenderTarget->DrawLine(	Point2F(area.left, (float)y),
-									Point2F(area.right, (float)y),
+		m_pRenderTarget->DrawLine(	Point2F(area.left, static_cast<float>(y)),
+									Point2F(area.right, static_cast<float>(y)),
 									m_pColorBrush);
 	}
 }
@@ -139,7 +139,7 @@ void Blox2D::FillBackGround() const
 
 void Blox2D::DrawLine(int x, int y, int x2, int y2, float strokeSize) const
 {
-	m_pRenderTarget->DrawLine(Point2F((float)x,(float)y),Point2F((float)x2,(float)y2),m_pColorBrush,strokeSize);
+	m_pRenderTarget->DrawLine(Point2F(static_cast<float>(x),static_cast<float>(y)),Point2F(static_cast<float>(x2),static_cast<float>(y2)),m_pColorBrush,strokeSize);
 }
 
 void  Blox2D::DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize) const
@@ -150,10 +150,10 @@ void Blox2D::DrawEllipse(int x, int y, int width, int height, float strokeSize) 
 {
 	D2D1_ELLIPSE temp;
 
-	temp.point.x = (float)x;
-	temp.point.y = (float)y;
-	temp.radiusX = (float)width;
-	temp.radiusY = (float)height;
+	temp.point.x = static_cast<float>(x);
+	temp.point.y = static_cast<float>(y);
+	temp.radiusX = static_cast<float>(width);
+	temp.radiusY = static_cast<float>(height);
 
 	m_pRenderTarget->DrawEllipse(temp,m_pColorBrush,strokeSize);
 }
@@ -162,10 +162,10 @@ void Blox2D::DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strok
 {
 	D2D1_ELLIPSE temp;
 
-	temp.point.x = (float)coord.x;
-	temp.point.y = (float)coord.y;
-	temp.radiusX = (float)width;
-	temp.radiusY = (float)height;
+	temp.point.x = static_cast<float>(coord.x);
+	temp.point.y = static_cast<float>(coord.y);
+	temp.radiusX = static_cast<float>(width);
+	temp.radiusY = static_cast<float>(height);
 
 	m_pRenderTarget->DrawEllipse(temp,m_pColorBrush,strokeSize);
 }
@@ -183,10 +183,10 @@ void Blox2D::FillEllipse(int x, int y, int width, int height) const
 {
 	D2D1_ELLIPSE temp;
 
-	temp.point.x = (float)x;
-	temp.point.y = (float)y;
-	temp.radiusX = (float)width;
-	temp.radiusY = (float)height;
+	temp.point.x = static_cast<float>(x);
+	temp.point.y = static_cast<float>(y);
+	temp.radiusX = static_cast<float>(width);
+	temp.radiusY = static_cast<float>(height);
 
 	m_pRenderTarget->FillEllipse(temp,m_pColorBrush);
 }
@@ -195,10 +195,10 @@ void Blox2D::FillEllipse(D2D1_POINT_2F coord, int width, int height) const
 {
 	D2D1_ELLIPSE temp;
 
-	temp.point.x = (float)coord.x;
-	temp.point.y = (float)coord.y;
-	temp.radiusX = (float)width;
-	temp.radiusY = (float)height;
+	temp.point.x = static_cast<float>(coord.x);
+	temp.point.y = static_cast<float>(coord.y);
+	temp.radiusX = static_cast<float>(width);
+	temp.radiusY = static_cast<float>(height);
 
 	m_pRenderTarget->FillEllipse(temp,m_pColorBrush);
 }
@@ -228,7 +228,7 @@ void Blox2D::DrawString(tstring const& text, int x, int y) const
 	m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 	m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
-	m_pRenderTarget->DrawTextW(text.c_str(),text.size(),m_pTextFormat,RectF((float)x,(float)y,rtSize.width,rtSize.height),m_pColorBrush);
+	m_pRenderTarget->DrawTextW(text.c_str(),text.size(),m_pTextFormat,RectF(static_cast<float>(x),static_cast<float>(y),rtSize.width,rtSize.height),m_pColorBrush);
 }
 
 /*void Blox2D::DrawString(tstring const& text, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment)
@@ -260,9 +260,9 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 	// Compute averages over one second period.
 	if( (m_GameTime - m_TBase) >= delayInterval )
 	{
-		float fps = (float)(m_FrameCount*(1/delayInterval)); // fps = frameCnt / 1
+		float fps = static_cast<float>(m_FrameCount*(1/delayInterval)); // fps = frameCnt / 1
 
-		m_FPS = (int)fps;
+		m_FPS = static_cast<int>(fps);
 		
 		// Reset for next average.
 		m_FrameCount = 0;
@@ -309,7 +309,7 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 		SetColor(255,255,0,0.5f);
 		for (unsigned int i = 0; i < m_dtimeHistory.size()-1; ++i)
 		{
-			DrawLine(202-(i*8),(int)(120-(m_dtimeHistory.at(i))),(202-(i+1)*8),(int)(120-(m_dtimeHistory.at(i+1))),2.0f);
+			DrawLine(202-(i*8),static_cast<int>((120-(m_dtimeHistory.at(i)))),(202-(i+1)*8),static_cast<int>((120-(m_dtimeHistory.at(i+1)))),2.0f);
 		}
 		DrawString(_T("dt"),174,80);	
 
@@ -320,7 +320,7 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 
 void Blox2D::DrawRect(int x, int y, int width, int height, float strokeSize) const
 {
-	m_pRenderTarget->DrawRectangle(RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),m_pColorBrush,strokeSize);
+	m_pRenderTarget->DrawRectangle(RectF(static_cast<float>(x),static_cast<float>(y),static_cast<float>(x+width),static_cast<float>(y+height)),m_pColorBrush,strokeSize);
 }
 
 void Blox2D::DrawRect(D2D1_RECT_F rect, float strokeSize) const
@@ -330,7 +330,7 @@ void Blox2D::DrawRect(D2D1_RECT_F rect, float strokeSize) const
 
 void Blox2D::FillRect(int x, int y, int width, int height) const
 {
-	m_pRenderTarget->FillRectangle(RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),m_pColorBrush);
+	m_pRenderTarget->FillRectangle(RectF(static_cast<float>(x),static_cast<float>(y),static_cast<float>(x+width),static_cast<float>(y+height)),m_pColorBrush);
 }
 
 void Blox2D::FillRect(D2D1_RECT_F rect) const
@@ -352,14 +352,14 @@ void Blox2D::FillBlock(int x, int y, int size)
 
 void Blox2D::FillBlock(D2D1_POINT_2F coord, int size,D2D1_COLOR_F color1, D2D1_COLOR_F color2)
 {
-	SetColor((int)color2.r,(int)color2.g,(int)color2.b,color2.a);
+	SetColor(static_cast<int>(color2.r),static_cast<int>(color2.g),static_cast<int>(color2.b,color2.a));
 	for(int i = 0; i < (size/4); ++i)
 	{
-		FillRect((int)coord.x-i,(int)coord.y-i,size,size);
+		FillRect(static_cast<int>(coord.x-i),static_cast<int>(coord.y-i),size,size);
 	}
 
-	SetColor((int)color1.r,(int)color1.g,(int)color1.b,color1.a);
-	FillRect((int)coord.x,(int)coord.y,size,size);
+	SetColor(static_cast<int>(color1.r),static_cast<int>(color1.g),static_cast<int>(color1.b,color1.a));
+	FillRect(static_cast<int>(coord.x),static_cast<int>(coord.y),size,size);
 }
 
 void Blox2D::DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize) const
@@ -409,28 +409,28 @@ void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const
 {
 	D2D1_RECT_F rect;
 
-	rect.left = (float)x;
-	rect.top = (float)y;
+	rect.left = static_cast<float>x;
+	rect.top = static_cast<float>y;
 
 	if (width == 0 && height == 0)
 	{
-		rect.right = (float)(x + bitmap->GetSize().width);
-		rect.bottom = (float)(y + bitmap->GetSize().height);
+		rect.right = static_cast<float>(x + bitmap->GetSize().width);
+		rect.bottom = static_cast<float>(y + bitmap->GetSize().height);
 	}
 	else if (width == 0 && height != 0)
 	{
-		rect.right = (float)(x + bitmap->GetSize().width);
-		rect.bottom = (float)(y + height);
+		rect.right = static_cast<float>(x + bitmap->GetSize().width);
+		rect.bottom = static_cast<float>(y + height);
 	}
 	else if (width != 0 && height == 0)
 	{
-		rect.right = (float)(x + width);
-		rect.bottom = (float)(y + bitmap->GetSize().height);
+		rect.right = static_cast<float>(x + width);
+		rect.bottom = static_cast<float>(y + bitmap->GetSize().height);
 	}
 	else
 	{
-		rect.right = (float)(x + width);
-		rect.bottom = (float)(y + height);
+		rect.right = static_cast<float>(x + width);
+		rect.bottom = static_cast<float>(y + height);
 	}
 
 	BITMAP_INFO info = bitmap->GetInfo();

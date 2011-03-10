@@ -206,7 +206,7 @@ D3DX10INLINE UINT ARGB2ABGR(UINT argb)
 // Returns random float in [0, 1).
 D3DX10INLINE float RandF()
 {
-	return (float)(rand()) / (float)RAND_MAX;
+	return static_cast<float>(rand() / RAND_MAX);
 }
 
 // Returns random float in [a, b).

@@ -22,7 +22,7 @@ Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(5.0f),
 	m_UpWorld = Vector3(0.0f,1.0f,0.0f);
 	m_LookWorld = Vector3(0.0f,-0.4f,1.0f);
 
-	SetAspectRatio((float)(windowWidth/windowHeight));
+	SetAspectRatio(static_cast<float>(windowWidth/windowHeight));
 }
 
 Camera::~Camera()
@@ -59,7 +59,7 @@ void Camera::Tick(const float dTime)
 	m_PosWorld += dir * finalSpeed * dTime;
 
 	// change FOV with mousewheel
-	float angle = (float)CONTROLS->Mouse().GetMouseWheelPos() / 120 / 10;
+	float angle = static_cast<float>(CONTROLS->Mouse().GetMouseWheelPos() / 120 / 10);
 
 	if (angle != 0)
 	{
