@@ -26,6 +26,10 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 	refGameConfig.SetBlox2DAntiAliasing(true);
 }
 
+void MainGame::LoadResources(ID3D10Device* pD3D10Device)
+{
+}
+
 void MainGame::UpdateScene(const float dTime)
 {
 	// dtime
