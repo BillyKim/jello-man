@@ -12,7 +12,6 @@ class EffectLoader;
 class ContentManager
 {
 public:
-	ContentManager();
 	virtual ~ContentManager();	
 
 	void Init(ID3D10Device* pD3DDevice);
@@ -25,7 +24,8 @@ public:
 
  
 
-private: 
+private:
+	ContentManager();
 	//-------------------------------------------------
 	// Datamembers								
 	//-------------------------------------------------

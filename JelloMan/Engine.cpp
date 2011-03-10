@@ -66,8 +66,9 @@ Engine::~Engine()
 {
 	delete m_pGameConfig;
 
-	SafeDelete(*CONTROLS);
-	SafeDelete(*BLOX_2D);
+	delete CONTROLS;
+	delete BLOX_2D;
+
 	SafeDelete(m_pContentManager);
 
 	if( m_pD3DDevice )m_pD3DDevice->ClearState();

@@ -28,7 +28,7 @@ Blox2D::Blox2D()	:	m_pRenderTarget(0),
 
 Blox2D::~Blox2D()
 {
-	// nothing to destroy
+	m_pSingleton = 0;
 }
 
 // STATIC METHOD
