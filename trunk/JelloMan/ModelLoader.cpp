@@ -10,7 +10,7 @@ ModelLoader::~ModelLoader(void)
 	AssetContainer::~AssetContainer();
 }
 
-Model* ModelLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName)
+Model<VertexPosNormTex>* ModelLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName)
 {
     if (IsAssetPresent(assetName))
     {
@@ -18,7 +18,7 @@ Model* ModelLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName)
     }
     else
     {
-        m_pCurrentModel = new Model(pDXDevice);
+        m_pCurrentModel = new Model<VertexPosNormTex>(pDXDevice);
         m_VertexData.clear();
         m_NormalData.clear();
         m_TextureData.clear();

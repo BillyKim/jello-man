@@ -2,23 +2,41 @@
 #include <map>
 #include "D3DUtil.h"
 #include "ModelMesh.h"
+#include <algorithm>
 
+template <typename T>
 class Model
 {
 public:
-    Model(ID3D10Device* device);
-    virtual ~Model(void);
+   //---------Constructor-Destructor-------------------------------->
+    Model(ID3D10Device* device): m_pDevice(device)
+    {
+    }
 
-    ModelMesh* AddMesh(const tstring& name);
+    ~Model(void)
+    {
+	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DeleteModelMesh<T>);
+	    m_Meshes.clear();
+        
+    }
+    //<---------------------------------------------------------------
 
-    void Draw();
+    ModelMesh<T>* AddMesh(const tstring& name)
+    {
+	    ModelMesh<T>* mesh = new ModelMesh<T>(m_pDevice, name);
+	    m_Meshes[name] = mesh;
+	    return mesh;
+    }
 
 private:
     ID3D10Device* m_pDevice;
-    
-    map<tstring, ModelMesh*> m_Meshes;
+    map<tstring, ModelMesh<T>*> m_Meshes;
 
 };
-void DeleteModelMesh(const pair<tstring, ModelMesh*>& p);
 
+template <typename T>
+void DeleteModelMesh(const pair<tstring, ModelMesh<T>*>& p)
+{
+	delete p.second;
+}
 

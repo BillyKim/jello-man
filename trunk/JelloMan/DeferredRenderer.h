@@ -1,5 +1,8 @@
 #pragma once
 #include "D3DUtil.h"
+#include "DeferredPostEffect.h"
+#include "vertex.h"
+#include "ModelMesh.h"
 
 enum DeferredRenderMap
 {
@@ -36,6 +39,9 @@ private:
     D3D10_VIEWPORT m_Viewport;
     
     float m_ClearColor[4];
+
+	ModelMesh<VertexPosTex>* m_pScreenMesh;
+	DeferredPostEffect* m_pEffect;
 };
 
 

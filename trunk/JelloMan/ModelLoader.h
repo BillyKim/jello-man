@@ -10,15 +10,15 @@
 #include "vertex.h"
 #include <vector>
 
-class ModelLoader : public AssetContainer<Model>
+class ModelLoader : public AssetContainer<Model<VertexPosNormTex>>
 {
 public:
     //------Constructor-Destructor------->
 	ModelLoader(void);
 	virtual ~ModelLoader(void);
     //<-----------------------------------
-
-    Model* Load(ID3D10Device *pDXDevice, const tstring& assetName);
+	
+	Model<VertexPosNormTex>* Load(ID3D10Device *pDXDevice, const tstring& assetName);
 
 private:
     void ReadObj(const tstring& assetName);
@@ -37,8 +37,8 @@ private:
     vector<VertexPosNormTex> m_VPNTData;
     vector<DWORD> m_IndexData;
 
-    Model* m_pCurrentModel;
-    ModelMesh* m_pCurrentMesh;
+    Model<VertexPosNormTex>* m_pCurrentModel;
+    ModelMesh<VertexPosNormTex>* m_pCurrentMesh;
 
 	ModelLoader(const ModelLoader& t);
 	ModelLoader& operator=(const ModelLoader& t);
