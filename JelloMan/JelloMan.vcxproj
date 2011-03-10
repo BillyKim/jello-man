@@ -82,6 +82,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
+    <ClInclude Include="DeferredPostEffect.h" />
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
@@ -115,6 +116,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
+    <ClCompile Include="DeferredPostEffect.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -139,6 +141,7 @@
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
+    <ClCompile Include="vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx" />

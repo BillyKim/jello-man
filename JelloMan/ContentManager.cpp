@@ -34,15 +34,12 @@ void ContentManager::Init(ID3D10Device* pDXDevice)
 	m_pModelLoader = new ModelLoader();
 }
 
-Effect*	ContentManager::LoadEffect(const tstring& assetName)
-{
-    return m_pEffectLoader->Load(m_pDevice, assetName); 
-}
 Texture2D* ContentManager::LoadTexture2D(const tstring& assetName)
 {
     return m_pTextureLoader->Load(m_pDevice, assetName);
 }
-Model* ContentManager::LoadModel(const tstring& assetName)
+
+Model<VertexPosNormTex>* ContentManager::LoadModel(const tstring& assetName)
 {
     return m_pModelLoader->Load(m_pDevice, assetName);
 }

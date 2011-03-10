@@ -129,6 +129,9 @@
     <ClInclude Include="Blox2D.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredPostEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
@@ -215,11 +218,17 @@
     <ClCompile Include="Blox2D.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredPostEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Level.cpp">
       <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex.cpp">
+      <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

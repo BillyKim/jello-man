@@ -1,18 +1,17 @@
 #include "stdafx.h"
 #include "Effect.h"
+#include "vertex.h"
 
-
-Effect::Effect(ID3D10Device* graphicsDevice, ID3D10Effect* effect)
+Effect::Effect(ID3D10Device* graphicsDevice, ID3D10Effect* effect):
+	m_pCurrentTechnique(0),
+	m_pDevice(graphicsDevice),
+	m_pEffect(effect)
 {
 	SetTechnique(0);
 }
 
 
 Effect::~Effect(void)
-{
-}
-
-void Effect::Release()
 {
     SafeRelease(m_pEffect);
 }
@@ -35,4 +34,3 @@ ID3D10EffectVariable* Effect::GetVariableBySemantic(const string& semantic) cons
 {
     return m_pEffect->GetVariableBySemantic(semantic.c_str());
 }
-

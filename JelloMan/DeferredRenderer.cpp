@@ -1,9 +1,14 @@
 #include "DeferredRenderer.h"
 #include "Vector4.h"
+#include "ContentManager.h"
+#include "vertex.h"
+#include <vector>
 
 DeferredRenderer::DeferredRenderer(ID3D10Device* device):
     m_pDepthDSV(0),
-    m_pDevice(device)
+    m_pDevice(device),
+	m_pScreenMesh(new ModelMesh<VertexPosTex>(device, _T("screenMesh"))),
+	m_pEffect(0)
 {
     ZeroMemory(&m_Viewport, sizeof(D3D10_VIEWPORT));
     Vector4(0.f, 0.f, 0.f, 1.f).ToFloat4(m_ClearColor);
@@ -22,6 +27,8 @@ DeferredRenderer::~DeferredRenderer(void)
     for (int i = 0; i < MAXRENDERTARGETS + 1; ++i)
         SafeRelease(m_pSRV[i]);
     SafeRelease(m_pDepthDSV);
+
+	delete m_pScreenMesh;
 }
 
 void DeferredRenderer::Init(UINT width, UINT height)
@@ -41,6 +48,27 @@ void DeferredRenderer::Init(UINT width, UINT height)
     CreateColorMap(DeferredRenderMap_Position, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z gloss
 
     CreateDepthMap();
+
+	m_pEffect = ContentManager::GetSingleton()->LoadEffect<DeferredPostEffect>(_T("postdeferred.fx"));
+
+	m_pScreenMesh->SetEffect(m_pEffect);
+	vector<VertexPosTex> vertices;
+
+	vertices.push_back(VertexPosTex(0.0f, 0.0f, 0.0f, 0.0f, 0.0f));
+	vertices.push_back(VertexPosTex(static_cast<float>(m_Width), 0.0f, 0.0f, 1.0f, 0.0f));
+	vertices.push_back(VertexPosTex(0.0f, static_cast<float>(m_Height), 0.0f, 0.0f, 1.0f));
+	vertices.push_back(VertexPosTex(static_cast<float>(m_Width), static_cast<float>(m_Height), 0.0f, 1.0f, 1.0f));
+
+	vector<UINT> indices;
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+	indices.push_back(2);
+	indices.push_back(1);
+	indices.push_back(3);
+
+	m_pScreenMesh->SetVertices(vertices);
+	m_pScreenMesh->SetEffect(m_pEffect);
 }
 
 void DeferredRenderer::CreateColorMap(DeferredRenderMap map, DXGI_FORMAT format)
@@ -118,5 +146,9 @@ void DeferredRenderer::Begin()
 
 void DeferredRenderer::End()
 { 
+	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
+	m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);
+	m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
 
+	m_pScreenMesh->Draw();
 }

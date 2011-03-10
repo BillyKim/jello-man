@@ -3,6 +3,7 @@
 #include "EffectLoader.h"
 #include "TextureLoader.h"
 #include "ModelLoader.h"
+#include "vertex.h"
 
 class TextureLoader;
 class EffectLoader;
@@ -15,10 +16,15 @@ public:
 	virtual ~ContentManager();	
 
 	void Init(ID3D10Device* pDXDevice);
+	
+	template <typename T>
+    T* LoadEffect(const tstring& assetName)
+    {
+        return m_pEffectLoader->Load<T>(m_pDevice, assetName); 
+    }
 
-	Effect* LoadEffect(const tstring& assetName);
 	Texture2D* LoadTexture2D(const tstring& assetName);
-	Model* LoadModel(const tstring& assetName);
+	Model<VertexPosNormTex>* LoadModel(const tstring& assetName);
 
 	static ContentManager* GetSingleton();
 
