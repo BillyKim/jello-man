@@ -108,7 +108,11 @@ float Vector3::Dot(const Vector3& v) const
 }
 Vector3 Vector3::Cross(const Vector3& v) const
 {
-	return Vector3(*D3DXVec3Cross(0, &this->ToD3DVector3(), &v.ToD3DVector3()));
+	D3DXVECTOR3 temp;
+	
+	D3DXVec3Cross(&temp, &this->ToD3DVector3(), &v.ToD3DVector3());
+
+	return Vector3(temp);
 }
 
 Vector3& Vector3::operator+=(const Vector3& v)
