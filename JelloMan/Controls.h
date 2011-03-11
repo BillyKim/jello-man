@@ -7,6 +7,8 @@
 #include "MouseState.h"
 #include "KeyboardState.h"
 
+#define CONTROLS (Controls::GetSingleton())
+
 //-----------------------------------------------------
 // Controls Class									
 //-----------------------------------------------------

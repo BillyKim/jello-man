@@ -8,9 +8,6 @@
 #include "ContentManager.h"
 #include "GameConfig.h"
 
-#define BLOX_2D (Blox2D::GetSingleton())
-#define CONTROLS (Controls::GetSingleton())
-
 LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	static Engine* app = 0;

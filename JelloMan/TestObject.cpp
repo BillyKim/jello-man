@@ -22,14 +22,14 @@ void TestObject::Init()
     m_pModel = Content->LoadModel(_T(""));
 }
 
-void TestObject::Draw() //rendercontext ? => wvp 
+void TestObject::Draw(const RenderContext* pRenderContext)
 {
     m_pEffect->SetDiffuseMap(m_pDiffuseMap);
     m_pEffect->SetSpecMap(m_pSpecMap);
     m_pEffect->SetGlossMap(m_pGlossMap);
 
     m_pEffect->SetWorld(m_mtxWorld);
-    m_pEffect->SetWorldViewProjection(m_mtxWorld); //WRONG!!!
+	m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 
     m_pModel->Draw();
 }

@@ -19,7 +19,8 @@ Level::~Level()
 // GENERAL
 void Level::Initialize()
 {
-    m_pDeferredRenderer->Init(800, 600); //where to get width and height ?
+	m_pDeferredRenderer->Init(	static_cast<int>(BLOX_2D->GetWindowSize().width),
+								static_cast<int>(BLOX_2D->GetWindowSize().height)	);
     m_pTestObject->Init();
 }
 
@@ -27,11 +28,11 @@ void Level::Tick(const float dTime)
 {
 }
 
-void Level::Draw()
+void Level::Draw(const RenderContext* pRenderContext)
 {
     m_pDeferredRenderer->Begin();
 
-    m_pTestObject->Draw();
+	m_pTestObject->Draw(pRenderContext);
 
     m_pDeferredRenderer->End();
 }

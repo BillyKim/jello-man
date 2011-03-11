@@ -4,19 +4,17 @@
 #include "MainGame.h"
 #include "ContentManager.h"
 
-// CONTROLS & BLOX2D SINGLETON
-#define BLOX_2D (Blox2D::GetSingleton())
-#define CONTROLS (Controls::GetSingleton())
-
 MainGame::MainGame()	:	m_dTtime(0),
-							m_pLevel(0)
+							m_pLevel(0),
+							m_pCamera(0)
 {
 
 }
 
 MainGame::~MainGame()
 {
-	
+	delete m_pCamera;
+	delete m_pLevel;
 }
 
 void MainGame::Initialize(GameConfig& refGameConfig)
@@ -31,8 +29,18 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 void MainGame::LoadResources(ID3D10Device* pDXDevice)
 {
     Content->Init(pDXDevice);
+
+	m_pCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
+							static_cast<int>(BLOX_2D->GetWindowSize().height)	);
+	m_pCamera->LookAt(Vector3(4,4,-4),Vector3(0,2,0),Vector3(0,1,0));
+
 	m_pLevel = new Level(pDXDevice);
 	m_pLevel->Initialize();
+
+	// TEST
+	D3DXVECTOR3 lightDir(-.1f,-0.1f,-1);
+	D3DXVec3Normalize(&m_DirLight.DirW,&lightDir);
+	m_DirLight.Diffuse = m_DirLight.Ambient = m_DirLight.Specular = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 }
 
 void MainGame::UpdateScene(const float dTime)
@@ -40,12 +48,15 @@ void MainGame::UpdateScene(const float dTime)
 	// dtime
 	m_dTtime = dTime;
 
+	m_pCamera->Tick(dTime);
 	m_pLevel->Tick(dTime);
 }
 
 void MainGame::DrawScene()
 {
-	m_pLevel->Draw();
+	RenderContext renderContext(m_pCamera, m_DirLight); // hoe lichten doorgeven, vector van alle lights?
+	m_pLevel->Draw(&renderContext);
+
 
 	/* ---------------------------------------------- */
 	/*					TEST STUFF					  */

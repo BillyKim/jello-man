@@ -6,6 +6,8 @@
 #include "Blox2D.h"
 #include "GameConfig.h"
 #include "Level.h"
+#include "RenderContext.h"
+#include "Camera.h"
 
 class MainGame
 {
@@ -27,4 +29,8 @@ private:
 	float m_dTtime;
 	
 	Level* m_pLevel;
+
+	DirLight m_DirLight;
+
+	Camera* m_pCamera;
 };

@@ -3,6 +3,8 @@
 #include "D3DUtil.h"
 #include "DeferredRenderer.h"
 #include "TestObject.h"
+#include "Blox2D.h"
+#include "RenderContext.h"
 
 class Level
 {
@@ -15,7 +17,7 @@ public:
 	// GENERAL
 	void Initialize();
 	void Tick(const float dTime);
-	void Draw();
+	void Draw(const RenderContext* pRenderContext);
 
 private:
 

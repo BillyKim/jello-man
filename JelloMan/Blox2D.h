@@ -6,6 +6,8 @@
 #include "D3DUtil.h"
 #include <vector>
 
+#define BLOX_2D (Blox2D::GetSingleton())
+
 //-----------------------------------------------------
 // Blox2D Class									
 //-----------------------------------------------------

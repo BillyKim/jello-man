@@ -4,6 +4,7 @@
 #include "DeferredPreEffect.h"
 #include "Vector4.h"
 #include "Matrix.h"
+#include "RenderContext.h"
 
 class TestObject
 {
@@ -12,7 +13,7 @@ public:
     virtual ~TestObject(void);
 
     void Init();
-    void Draw();
+    void Draw(const RenderContext* pRenderContext);
 
 private:
     Model<VertexPosNormTex>* m_pModel;

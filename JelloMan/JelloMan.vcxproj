@@ -103,6 +103,7 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="MouseState.h" />
+    <ClInclude Include="RenderContext.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="TestObject.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelMesh.cpp" />
     <ClCompile Include="MouseState.cpp" />
+    <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="TestObject.cpp" />
