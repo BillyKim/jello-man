@@ -13,13 +13,18 @@ TestObject::~TestObject(void)
 
 void TestObject::Init()
 {
-    m_pDiffuseMap = Content->LoadTexture2D(_T(""));
-    m_pSpecMap = Content->LoadTexture2D(_T(""));
-    m_pGlossMap = Content->LoadTexture2D(_T(""));
+    m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Models/testtex.png"));
+    m_pSpecMap = Content->LoadTexture2D(_T("Content/Models/testtex.png"));
+    m_pGlossMap = Content->LoadTexture2D(_T("Content/Models/testtex.png"));
 
     m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
 
-    m_pModel = Content->LoadModel(_T(""));
+    m_pModel = Content->LoadModel(_T("Content/Models/test3.obj"));
+    
+    for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
+    {
+        (*it)->SetEffect(m_pEffect);
+    }
 }
 
 void TestObject::Draw(const RenderContext* pRenderContext)

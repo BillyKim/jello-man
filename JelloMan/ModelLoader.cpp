@@ -36,22 +36,23 @@ void ModelLoader::ReadObj(const tstring& assetName)
 {
     tifstream stream;
     stream.open(assetName.c_str());
+    if (stream.fail())
+    {
+        wcout << "File open fail: '" << assetName << "'\n";
+        return;
+    }
 
     tstring line;
     
-    vector<vector<int>> faceData(3);
+    vector<vector<int>> faceData;
     for (int i = 0; i < 3; ++i)
-        faceData[i].reserve(3);
+    {
+        faceData.push_back(vector<int>(3));
+    }
     while (stream.eof() == false)
     {
         getline(stream, line);
-        if (line.find(_T("v"), 0) == 0) //v is 0'd char
-        {
-            Vector3 v;
-            swscanf_s(line.c_str(), _T("v %f %f %f"), &v.X, &v.Y, &v.Z);
-            AddVertex(v);
-        }
-        else if (line.find(_T("vn"), 0) == 0)
+        if (line.find(_T("vn"), 0) == 0)
         {
             Vector3 v;
             swscanf_s(line.c_str(), _T("vn %f %f %f"), &v.X, &v.Y, &v.Z);
@@ -73,9 +74,15 @@ void ModelLoader::ReadObj(const tstring& assetName)
         }
         else if (line.find(_T("g"), 0) == 0)
         {
-            tstring s;
-            swscanf_s(line.c_str(), _T("g %s"), s);
+            wchar_t s[40];
+            swscanf_s(line.c_str(), _T("g %s40"), s, _countof(s));
             AddMesh(s);
+        }
+        else if (line.find(_T("v"), 0) == 0) //v is 0'd char
+        {
+            Vector3 v;
+            swscanf_s(line.c_str(), _T("v %f %f %f"), &v.X, &v.Y, &v.Z);
+            AddVertex(v);
         }
     }
     FlushMesh(); //apply last mesh
