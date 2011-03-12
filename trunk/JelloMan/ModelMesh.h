@@ -73,15 +73,15 @@ public:
         SafeRelease(m_pInputLayout);
 
         // Define the input layout
-        //D3D10_INPUT_ELEMENT_DESC layout[];
-        vector<D3D10_INPUT_ELEMENT_DESC> layout;
+        //;
+        vector<D3D10_INPUT_ELEMENT_DESC> veclayout;
         UINT numElements;
-        GetInputElementDesc<T>(layout, numElements);
+        GetInputElementDesc<T>(veclayout, numElements);
 
         D3D10_PASS_DESC PassDesc;
         m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->GetDesc(&PassDesc);
 
-        HR(m_pDevice->CreateInputLayout(layout.data(), numElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &m_pInputLayout));
+        HR(m_pDevice->CreateInputLayout(&veclayout[0], numElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &m_pInputLayout));
 
         m_VertexBufferStride = sizeof(T);
     }

@@ -19,25 +19,25 @@ SamplerState mapSampler
 
 struct VertexShaderInput
 {
-    float4 position : POSITION0;
+    float3 position : POSITION0;
 	float3 normal : NORMAL;
 	float2 texCoord: TEXCOORD0;
 };
 
 struct VertexShaderOutput
 {
-    float4 position : POSITION0;
-	float3 worldPos : TEXCOORD1;
+    float4 position : SV_POSITION;
 	float3 normal : NORMAL;
 	float2 texCoord : TEXCOORD0;
+	float3 worldPos : TEXCOORD1;
 };
 
 VertexShaderOutput  VS(VertexShaderInput input) 
 {
     VertexShaderOutput output;
 
-    output.position = mul(input.position, mtxWVP);
-	output.worldPos = mul(input.position, mtxWorld).xyz;
+    output.position = mul(float4(input.position, 1.0f), mtxWVP);
+	output.worldPos = mul(float4(input.position, 1.0f), mtxWorld).xyz;
 
 	output.normal = mul(float4(input.normal, 0.0f), mtxWorld).xyz;
 	//output.tangent = mul(float4(input.tangent, 0.0f), mtxWorld);
@@ -48,14 +48,6 @@ VertexShaderOutput  VS(VertexShaderInput input)
     return output;	
 };
 
-struct PixelShaderInput
-{
-    float4 position : POSITION0;
-	float3 worldPos : TEXCOORD1;
-	float3 normal : NORMAL;
-	float2 texCoord : TEXCOORD0;
-};
-
 struct PixelShaderOutput
 {
 	float4 color : COLOR0;
@@ -63,7 +55,7 @@ struct PixelShaderOutput
 	float4 positionGloss : COLOR2;
 };
 
-PixelShaderOutput  PS(PixelShaderInput input) 
+PixelShaderOutput  PS(VertexShaderOutput input) 
 {
 	PixelShaderOutput output;
 	output.color = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, 1.0f);

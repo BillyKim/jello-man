@@ -1,5 +1,4 @@
 #include "DeferredPostEffect.h"
-#include "vertex.h"
 
 DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effect): 
 				Effect(pDevice, effect), 

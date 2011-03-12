@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <vector>
 #include "D3DUtil.h"
 #include "ModelMesh.h"
 #include <algorithm>
@@ -16,36 +16,37 @@ public:
     ~Model(void)
     {
 	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DeleteModelMesh<T>);
-	    m_Meshes.clear();        
+	    m_Meshes.clear();   
     }
     //<---------------------------------------------------------------
 
+    const vector<ModelMesh<T>*>& GetModelMeshes() const { return m_Meshes; }
     ModelMesh<T>* AddMesh(const tstring& name)
     {
 	    ModelMesh<T>* mesh = new ModelMesh<T>(m_pDevice, name);
-	    m_Meshes[name] = mesh;
+	    m_Meshes.push_back(mesh);
 	    return mesh;
     }
 
-    void Draw()
+    void Draw() const
     {
 	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DrawModelMesh<T>);
     }
 
 private:
     ID3D10Device* m_pDevice;
-    map<tstring, ModelMesh<T>*> m_Meshes;
+    vector<ModelMesh<T>*> m_Meshes;
 
 };
 
 template <typename T>
-void DeleteModelMesh(const pair<tstring, ModelMesh<T>*>& p)
+void DeleteModelMesh(ModelMesh<T>* p)
 {
-	delete p.second;
+	delete p;
 }
 template <typename T>
-void DrawModelMesh(const pair<tstring, ModelMesh<T>*>& p)
+void DrawModelMesh(ModelMesh<T>* p)
 {
-	p.second->Draw();
+	p->Draw();
 }
 
