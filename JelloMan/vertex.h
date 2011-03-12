@@ -139,6 +139,6 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         GetInputElementDesc(desc[1], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 12, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         elements = desc.size();
     }
-    else
-        ASSERT(false);
+    //else
+       // ASSERT(false);
 }

@@ -8,6 +8,9 @@
 #include "Level.h"
 #include "RenderContext.h"
 #include "Camera.h"
+#include "Sound.h"
+
+class AudioEngine;
 
 class MainGame
 {
@@ -27,10 +30,12 @@ private:
 
 	// DATAMEMBERS
 	float m_dTtime;
+	bool m_bPlayAudio;
 	
-	Level* m_pLevel;
-
 	DirLight m_DirLight;
 
+	Level* m_pLevel;
 	Camera* m_pCamera;
+	AudioEngine* m_pAudioEngine;
+	Sound* m_pTestSound;
 };

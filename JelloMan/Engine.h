@@ -59,6 +59,7 @@ private:
 	bool      m_Minimized;
 	bool      m_Maximized;
 	bool      m_Resizing;
+	bool	  m_bInitialized;
 
 	MainGame* m_pGame;
  
