@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ContentManager.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="MouseState.h" />
     <ClInclude Include="RenderContext.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="TestObject.h" />
@@ -115,6 +117,7 @@
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ContentManager.cpp" />
@@ -139,6 +142,7 @@
     <ClCompile Include="ModelMesh.cpp" />
     <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="RenderContext.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="TestObject.cpp" />

@@ -55,6 +55,7 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pColorBrush(0)
 ,m_pDWriteFactory(0)
 ,m_pTextFormat(0)
+,m_bInitialized(false)
 {
 	m_GameTimer.Reset();
 }
@@ -109,6 +110,18 @@ int Engine::Run()
         {	
 			if( !m_AppPaused )
 			{
+				if (!m_bInitialized)
+				{
+					m_pGame->LoadResources(m_pDXDevice);
+
+					#if defined DEBUG || _DEBUG
+					cout << "---------------------------\n:::Resources Initialized:::\n---------------------------\n\n\n";
+					cout << "   GAME EVENTS   \n-----------------\n";
+					#endif
+
+					m_bInitialized = true;
+				}
+
 				m_GameTimer.Tick();
 				OnRender();
 			}
@@ -147,12 +160,6 @@ void Engine::Initialize()
 
 	#if defined DEBUG || _DEBUG
 	cout << "-Blox2D Engine initialized\n";
-	#endif
-
-	m_pGame->LoadResources(m_pDXDevice);
-
-	#if defined DEBUG || _DEBUG
-	cout << "-Resources initialized\n";
 	#endif
 }
 

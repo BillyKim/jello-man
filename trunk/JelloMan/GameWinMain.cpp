@@ -59,7 +59,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	pEngine->Initialize();
 
 	#if defined DEBUG || _DEBUG
-	cout << "------------------------\n:::Engine Initialized:::\n------------------------\n";
+	cout << "------------------------\n:::Engine Initialized:::\n------------------------\n\n";
 	#endif
 
 	int ret = pEngine->Run();
