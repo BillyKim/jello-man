@@ -10,7 +10,6 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
 							m_pCamera(0),
 							m_pAudioEngine(0),
-							m_bPlayAudio(true),
 							m_pTestSound(0)
 {
 
@@ -52,8 +51,10 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pAudioEngine = new AudioEngine(projectLocation);
 	m_pAudioEngine->Initialize();
 
-	m_pTestSound = new Sound(m_pAudioEngine,_T("BackgroundMusic"));
+	m_pTestSound = new Sound(m_pAudioEngine,_T("BackgroundMusic"),_T("BackGroundMusicVolume"));
 	m_pTestSound->PreLoad();
+	m_pTestSound->SetLoopCount(1);
+	m_pTestSound->SetVolume(90);
 
 	// TEST
 	D3DXVECTOR3 lightDir(-.1f,-0.1f,-1);
@@ -74,16 +75,23 @@ void MainGame::UpdateScene(const float dTime)
 
 	if (CONTROLS->Keyboard().IsKeyPressed(VK_SPACE))
 	{
-		if(m_bPlayAudio)
+		if (!m_pTestSound->IsPlaying())
 		{
 			m_pTestSound->Play();
-			m_bPlayAudio = !m_bPlayAudio;
 		}
 		else
 		{
-			m_pTestSound->Stop();
-			m_bPlayAudio = !m_bPlayAudio;
+			m_pTestSound->Pause();
 		}
+	}
+	
+	if (CONTROLS->Keyboard().IsKeyDown(VK_ADD))
+	{
+		m_pTestSound->SetVolume(m_pTestSound->GetVolume() + 1);
+	}
+	else if (CONTROLS->Keyboard().IsKeyDown(VK_SUBTRACT))
+	{
+		m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
 	}
 }
 
@@ -128,11 +136,11 @@ void MainGame::DrawScene()
 
 	if (m_pTestSound->IsPlaying())
 	{
-		BLOX_2D->DrawStringCentered(m_pTestSound->GetSoundInfo(),0,-100);
+		BLOX_2D->DrawStringCentered(m_pTestSound->GetSoundInfo(),0,-120);
 	}
 	else
 	{
-		BLOX_2D->DrawStringCentered(_T("PRESS SPACE"),0,-100);
+		BLOX_2D->DrawStringCentered(_T("PRESS SPACE"),0,-120);
 	}
 
 	/* ---------------------------------------------- */

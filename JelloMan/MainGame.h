@@ -30,7 +30,6 @@ private:
 
 	// DATAMEMBERS
 	float m_dTtime;
-	bool m_bPlayAudio;
 	
 	DirLight m_DirLight;
 

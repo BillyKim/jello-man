@@ -256,3 +256,20 @@ IXACT3Cue* AudioEngine::Prepare(string name)
 
 	return pCue;
 }
+void AudioEngine::SetGlobalVariable(string name, float value)
+{
+	XACTINDEX varI;
+	varI = m_pXACT3Engine->GetGlobalVariableIndex(name.c_str());
+	
+	m_pXACT3Engine->SetGlobalVariable(varI,value);
+}
+float AudioEngine::GetGlobalVariable(string name)
+{
+	XACTINDEX varI;
+	varI = m_pXACT3Engine->GetGlobalVariableIndex(name.c_str());
+	
+	float var = 0.0f;
+	m_pXACT3Engine->GetGlobalVariable(varI,&var);
+
+	return var;
+}
