@@ -46,8 +46,9 @@ void Sound::PreLoad()
 }
 void Sound::Play()
 {
-	m_SoundTimer.Reset();
 	m_pCue = m_pAudioEngine->Play(m_CueName);
+
+	m_SoundTimer.Reset();
 	m_SoundTimer.Start();
 
 	if (!m_bLoaded) m_bLoaded = true;
@@ -98,18 +99,9 @@ void Sound::Tick()
 	{
 		if (m_SoundTimer.GetGameTime() > (m_SoundLength/1000))
 		{
-			if (m_TotalLoopCount == -1)
+			if (m_TotalLoopCount == -1 || m_LoopCount < m_TotalLoopCount)
 			{
-				m_SoundTimer.Reset();
 				Play();
-
-				++m_LoopCount;
-			}
-			else if (m_LoopCount < m_TotalLoopCount)
-			{
-				m_SoundTimer.Reset();
-				Play();
-
 				++m_LoopCount;
 			}
 			else
