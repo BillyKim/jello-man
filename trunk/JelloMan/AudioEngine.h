@@ -19,10 +19,11 @@ public:
 	void Stop(string name);
 	IXACT3Cue* Prepare(string name);
 	void Update3DAudio(IXACT3Cue *p3DCue, X3DAUDIO_EMITTER &emitter, const X3DAUDIO_LISTENER &listener);
-	IXACT3SoundBank* GetSoundBank() const
-	{ return m_pSoundBank; }
+	void SetGlobalVariable(string name, float value);
+	float GetGlobalVariable(string name);
 
 private:
+
 	IXACT3Engine *m_pXACT3Engine;
 	IXACT3WaveBank *m_pWaveBank;
 	IXACT3SoundBank *m_pSoundBank;
