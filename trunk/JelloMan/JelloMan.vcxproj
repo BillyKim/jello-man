@@ -161,7 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="phong.fx" />
-    <None Include="PNT.fx" />
     <None Include="postdeferred.fx" />
     <None Include="predeferred.fx" />
   </ItemGroup>

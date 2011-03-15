@@ -46,8 +46,12 @@ D3DXVECTOR2 Vector2::ToD3DVector2() const
 void Vector2::Normalize()
 {
 	float len = Length();
-	X /= len;
-	Y /= len;
+    
+    if (len != 0)
+    {
+	    X /= len;
+	    Y /= len;
+    }
 }
 //<-----------------------
 
