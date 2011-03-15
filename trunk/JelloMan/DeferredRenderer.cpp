@@ -9,7 +9,8 @@ DeferredRenderer::DeferredRenderer(ID3D10Device* device):
     m_pDevice(device),
 	m_pScreenMesh(new ModelMesh<VertexPosTex>(device, _T("screenMesh"))),
 	m_pEffect(0),
-    m_Width(0), m_Height(0)
+    m_Width(0), m_Height(0),
+    m_pBackbuffer(0)
 {
     ZeroMemory(&m_Viewport, sizeof(D3D10_VIEWPORT));
     Vector4(0.f, 0.f, 0.f, 0.f).ToFloat4(m_ClearColor);
@@ -32,7 +33,7 @@ DeferredRenderer::~DeferredRenderer(void)
 	delete m_pScreenMesh;
 }
 
-void DeferredRenderer::Init(UINT width, UINT height)
+void DeferredRenderer::Init(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer)
 {
     m_Width = width;
     m_Height = height;
@@ -43,6 +44,8 @@ void DeferredRenderer::Init(UINT width, UINT height)
     m_Viewport.Height = m_Height;
     m_Viewport.MinDepth = 0.f;
     m_Viewport.MaxDepth = 1.f;
+
+    m_pBackbuffer = pBackbuffer;
 
     CreateColorMap(DeferredRenderMap_Color, DXGI_FORMAT_R8G8B8A8_UNORM); //R G B A
 	CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z Spec
@@ -55,12 +58,12 @@ void DeferredRenderer::Init(UINT width, UINT height)
 	m_pScreenMesh->SetEffect(m_pEffect);
 	vector<VertexPosTex> vertices;
 
-	vertices.push_back(VertexPosTex(0.0f, 0.0f, 0.0f, 0.0f, 0.0f));
-	vertices.push_back(VertexPosTex(static_cast<float>(m_Width), 0.0f, 0.0f, 1.0f, 0.0f));
-	vertices.push_back(VertexPosTex(0.0f, static_cast<float>(m_Height), 0.0f, 0.0f, 1.0f));
-	vertices.push_back(VertexPosTex(static_cast<float>(m_Width), static_cast<float>(m_Height), 0.0f, 1.0f, 1.0f));
+	vertices.push_back(VertexPosTex(-1.0f, -1.0f, 1.f, 0.0f, 0.0f));
+	vertices.push_back(VertexPosTex(1.0f, -1.0f, 1.f, 1.0f, 0.0f));
+	vertices.push_back(VertexPosTex(-1.0f, 1.0f, 1.f, 0.0f, 1.0f));
+	vertices.push_back(VertexPosTex(1.0f, 1.0f, 1.f, 1.0f, 1.0f));
 
-	vector<UINT> indices;
+	vector<DWORD> indices;
 	indices.push_back(0);
 	indices.push_back(1);
 	indices.push_back(2);
@@ -69,7 +72,30 @@ void DeferredRenderer::Init(UINT width, UINT height)
 	indices.push_back(3);
 
 	m_pScreenMesh->SetVertices(vertices);
+    m_pScreenMesh->SetIndices(indices);
 	m_pScreenMesh->SetEffect(m_pEffect);
+}
+
+UINT DeferredRenderer::GetBackbufferWidth() const
+{
+    return m_Width;
+}
+UINT DeferredRenderer::GetBackbufferHeight() const
+{
+    return m_Height;
+}
+ID3D10RenderTargetView* DeferredRenderer::GetBackbuffer() const
+{
+    return m_pBackbuffer;
+}
+ID3D10DepthStencilView* DeferredRenderer::GetDepthbuffer() const
+{
+    return m_pDepthDSV;
+}
+
+void DeferredRenderer::SetClearColor(const Vector4& color)
+{
+    color.ToFloat4(m_ClearColor);
 }
 
 void DeferredRenderer::CreateColorMap(DeferredRenderMap map, DXGI_FORMAT format)
@@ -134,7 +160,7 @@ void DeferredRenderer::CreateDepthMap()
 }
 
 
-void DeferredRenderer::Begin()
+void DeferredRenderer::Begin() const
 { 
     m_pDevice->OMSetRenderTargets(MAXRENDERTARGETS, m_RenderTargets, m_pDepthDSV);
     m_pDevice->RSSetViewports(1, &m_Viewport);
@@ -145,14 +171,14 @@ void DeferredRenderer::Begin()
         m_pDevice->ClearRenderTargetView(m_RenderTargets[i], m_ClearColor);
 }
 
-void DeferredRenderer::End()
+void DeferredRenderer::End() const
 { 
-    ID3D10RenderTargetView* renderTargets[1] = { m_RenderTargets[DeferredRenderMap_Color] };
-    m_pDevice->OMSetRenderTargets(1, renderTargets, m_pDepthDSV);
+    ASSERT(m_pBackbuffer != 0 && m_pDepthDSV != 0);
+    m_pDevice->OMSetRenderTargets(1, &m_pBackbuffer, m_pDepthDSV);
     m_pDevice->RSSetViewports(1, &m_Viewport);
 
     m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
-    m_pDevice->ClearRenderTargetView(m_RenderTargets[DeferredRenderMap_Color], m_ClearColor);
+    m_pDevice->ClearRenderTargetView(m_pBackbuffer, m_ClearColor);
 
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
 	m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);

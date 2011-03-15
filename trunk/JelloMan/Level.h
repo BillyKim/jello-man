@@ -2,6 +2,7 @@
 
 #include "D3DUtil.h"
 #include "DeferredRenderer.h"
+#include "ForwardRenderer.h"
 #include "TestObject.h"
 #include "Blox2D.h"
 #include "RenderContext.h"
@@ -24,6 +25,7 @@ private:
 	// DATAMEMBERS
 	ID3D10Device* m_pDXDevice;
     DeferredRenderer* m_pDeferredRenderer;
+    ForwardRenderer* m_pForwardRenderer;
 
     TestObject* m_pTestObject;
 

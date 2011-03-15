@@ -1,8 +1,5 @@
 cbuffer cbPerObject
 {
-	//matrix mtxWorld : World;
-	//matrix mtxWorldVP : WorldViewProjection;
-
 	float3 vLightDir : LightDir;
 	float3 cLightColor : LightColor;
 	float3 vCamDir : CamDirection;
@@ -36,8 +33,7 @@ VertexShaderOutput  VS(VertexShaderInput input)
 {
     VertexShaderOutput output;
 
-    //output.position = mul(input.position, mtxWVP);
-	output.position = input.position;
+    output.position = input.position;
 
 	output.texCoord = input.texCoord;
 
@@ -72,7 +68,7 @@ float4  PS(PixelShaderInput input) : COLOR0
 	color += spec * cLightColor * normalSpec.a;
 
 	color = saturate(color);
-
+	color = float3(1.f, 0.f, 0.f);
     return float4(color, 1.0f);
 };
 

@@ -43,8 +43,8 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pCamera->LookAt(Vector3(4,4,-4),Vector3(0,2,0),Vector3(0,1,0));
 
 	// LEVEL
-	//m_pLevel = new Level(pDXDevice);
-	//m_pLevel->Initialize();
+	m_pLevel = new Level(pDXDevice);
+	m_pLevel->Initialize();
 
 	// AUDIO
 	tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
@@ -68,7 +68,7 @@ void MainGame::UpdateScene(const float dTime)
 	m_dTtime = dTime;
 
 	m_pCamera->Tick(dTime);
-	//m_pLevel->Tick(dTime);
+	m_pLevel->Tick(dTime);
 
 	m_pAudioEngine->DoWork();
 	m_pTestSound->Tick();
@@ -98,7 +98,7 @@ void MainGame::UpdateScene(const float dTime)
 void MainGame::DrawScene()
 {
 	RenderContext renderContext(m_pCamera, m_DirLight); // hoe lichten doorgeven, vector van alle lights?
-	//m_pLevel->Draw(&renderContext);
+	m_pLevel->Draw(&renderContext);
 
 
 	/* ---------------------------------------------- */
