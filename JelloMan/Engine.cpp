@@ -112,9 +112,6 @@ int Engine::Run()
 			{
 				if (!m_bInitialized)
 				{
-
-					RecreateSizedResources();
-
 					m_pGame->LoadResources(m_pDXDevice);
 
 					#if defined DEBUG || _DEBUG
@@ -187,9 +184,12 @@ void Engine::OnRender()
 	// main game cycle
 	m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
 	
-	m_pBackBufferRT->BeginDraw();
-	m_pGame->DrawScene();
-	m_pBackBufferRT->EndDraw();
+	if (m_pBackBufferRT)
+	{
+		m_pBackBufferRT->BeginDraw();
+		m_pGame->DrawScene();
+		m_pBackBufferRT->EndDraw();
+	}
 
 	// displaying backbuffer - vsync on
 	m_pSwapChain->Present(1, 0);
@@ -512,6 +512,7 @@ HRESULT Engine::CreateDeviceResources()
         if (SUCCEEDED(hr))
         {
             hr = RecreateSizedResources();
+			m_pGame->OnResize(m_pRenderTargetView);
         }
 		if (SUCCEEDED(hr))
         {
@@ -655,6 +656,7 @@ HRESULT Engine::RecreateSizedResources()
 
 		// sending new rendertarget to Blox2D
 		BLOX_2D->OnResize(m_pBackBufferRT);
+		m_pGame->OnResize(m_pRenderTargetView);
     }
 
     SafeRelease(pBackBuffer);

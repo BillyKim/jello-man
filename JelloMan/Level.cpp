@@ -58,3 +58,11 @@ void Level::Draw(const RenderContext* pRenderContext)
 
     m_pForwardRenderer->End();
 }
+
+void Level::OnResize(ID3D10RenderTargetView* pRTView)
+{
+	m_pDeferredRenderer->OnResize();
+	m_pDeferredRenderer->OnResized(	static_cast<int>(BLOX_2D->GetWindowSize().width),
+									static_cast<int>(BLOX_2D->GetWindowSize().height),
+									pRTView);
+}
