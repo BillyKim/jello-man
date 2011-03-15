@@ -20,7 +20,8 @@ PhongEffect::~PhongEffect(void)
 
 void PhongEffect::SetWorldViewProjection(const Matrix& wvp)
 {
-    m_pMtxWVP->SetMatrix((float*)&wvp);
+    float* fWvp = (float*)&wvp;
+    m_pMtxWVP->SetMatrix(fWvp);
 }
 void PhongEffect::SetWorld(const Matrix& world)
 {

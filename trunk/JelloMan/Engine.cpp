@@ -435,7 +435,7 @@ HRESULT Engine::CreateDeviceResources()
     IDXGIFactory *pDXGIFactory = NULL;
     IDXGISurface *pSurface = NULL;
 
-    Assert(m_hMainWnd);
+    ASSERT(m_hMainWnd != 0);
 
     GetClientRect(m_hMainWnd, &rcClient);
 
@@ -447,6 +447,9 @@ HRESULT Engine::CreateDeviceResources()
     if (!m_pDXDevice)
     {
         UINT nDeviceFlags = D3D10_CREATE_DEVICE_BGRA_SUPPORT;
+#if defined DEBUG || _DEBUG
+        nDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
+#endif
         // Create device
         hr = CreateD3DDevice(
             NULL,
@@ -491,6 +494,8 @@ HRESULT Engine::CreateDeviceResources()
             swapDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
             swapDesc.BufferDesc.RefreshRate.Numerator = 60;
             swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+	        swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	        swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
            
 			swapDesc.SampleDesc.Count = 1;
             swapDesc.SampleDesc.Quality = 0;
@@ -499,6 +504,8 @@ HRESULT Engine::CreateDeviceResources()
             swapDesc.BufferCount = 1;
             swapDesc.OutputWindow = m_hMainWnd;
             swapDesc.Windowed = TRUE;
+	        swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	        swapDesc.Flags = 0;
 
             hr = pDXGIFactory->CreateSwapChain(m_pDXDevice, &swapDesc, &m_pSwapChain);
         }
