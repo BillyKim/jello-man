@@ -112,6 +112,9 @@ int Engine::Run()
 			{
 				if (!m_bInitialized)
 				{
+
+					RecreateSizedResources();
+
 					m_pGame->LoadResources(m_pDXDevice);
 
 					#if defined DEBUG || _DEBUG
