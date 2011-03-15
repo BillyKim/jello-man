@@ -94,7 +94,6 @@
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GameWinMain.h" />
-    <ClInclude Include="KeyboardState.h" />
     <ClInclude Include="AssetContainer.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Light.h" />
@@ -104,7 +103,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelMesh.h" />
-    <ClInclude Include="MouseState.h" />
     <ClInclude Include="PhongEffect.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="Sound.h" />
@@ -135,7 +133,6 @@
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GameWinMain.cpp" />
-    <ClCompile Include="KeyboardState.cpp" />
     <ClCompile Include="AssetContainer.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -144,7 +141,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelMesh.cpp" />
-    <ClCompile Include="MouseState.cpp" />
     <ClCompile Include="PhongEffect.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="Sound.cpp" />

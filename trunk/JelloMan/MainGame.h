@@ -1,8 +1,6 @@
 #include "D3DUtil.h"
 
 #include "Controls.h"
-#include "KeyboardState.h"
-#include "MouseState.h"
 #include "Blox2D.h"
 #include "GameConfig.h"
 #include "Level.h"

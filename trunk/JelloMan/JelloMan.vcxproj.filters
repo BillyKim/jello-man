@@ -102,12 +102,6 @@
     <ClInclude Include="Controls.h">
       <Filter>Engine Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="KeyboardState.h">
-      <Filter>Engine Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="MouseState.h">
-      <Filter>Engine Files\Input</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Engine Files\Core</Filter>
     </ClInclude>
@@ -216,12 +210,6 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Controls.cpp">
-      <Filter>Engine Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="MouseState.cpp">
-      <Filter>Engine Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyboardState.cpp">
       <Filter>Engine Files\Input</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
