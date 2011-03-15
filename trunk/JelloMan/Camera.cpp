@@ -10,7 +10,7 @@ Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(5.0f),
 													m_AspectRatio(4.0f/3.0f),
 													m_NearClippingPlane(1.0f),
 													m_FarClippingPlane(1000.0f),
-													m_bIsActive(false)
+													m_bIsActive(true)
 {
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProjection);

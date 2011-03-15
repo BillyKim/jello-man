@@ -99,8 +99,8 @@ MouseState Controls::Mouse()
 
 	// reset data
 	m_MouseWheelPos = 0;
-	m_bLMBClicked = m_bRMBClicked = false;
-	m_bLMBDown = m_bRMBDown= false;
+	/*m_bLMBClicked = m_bRMBClicked = false;
+	m_bLMBDown = m_bRMBDown= false;*/
 
 	return mouseState;
 }
