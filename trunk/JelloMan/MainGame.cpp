@@ -10,7 +10,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
 							m_pCamera(0),
 							m_pAudioEngine(0),
-							m_pTestSound(0)
+							m_pTestSound(0),
+							m_bTest(false)
 {
 
 }
@@ -45,6 +46,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
 	m_pLevel->Initialize();
+	m_bTest = true;
 
 	// AUDIO
 	tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
@@ -159,4 +161,10 @@ void MainGame::DrawScene()
 	}
 
 	/* ---------------------------------------------- */
+}
+
+void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
+{
+	if (m_bTest)
+		m_pLevel->OnResize(pRTView);
 }

@@ -22,12 +22,14 @@ public:
 	void Initialize(GameConfig& refGameConfig);
 	void LoadResources(ID3D10Device* pDXDevice);
 	void UpdateScene(const float dTime);
-	void DrawScene(); 
+	void DrawScene();
+	void OnResize(ID3D10RenderTargetView* pRTView);
 
 private:
 
 	// DATAMEMBERS
 	float m_dTtime;
+	bool m_bTest;
 	
 	DirLight m_DirLight;
 
