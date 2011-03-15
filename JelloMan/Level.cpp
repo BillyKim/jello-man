@@ -42,14 +42,11 @@ void Level::Tick(const float dTime)
 
 void Level::Draw(const RenderContext* pRenderContext)
 {
-    pRenderContext->GetCamera()->LookAt(Vector3(-225, 199, -197), Vector3(0, 0, 0), Vector3(0, 1, 0));
-    pRenderContext->GetCamera()->SetLens();
-
- //   m_pDeferredRenderer->Begin();
+    m_pDeferredRenderer->Begin();
 
 	//m_pTestObject->Draw(pRenderContext);
 
- //   m_pDeferredRenderer->End();
+    m_pDeferredRenderer->End();
 
     m_pForwardRenderer->Begin();
     m_pForwardRenderer->Clear(Vector4(0.1f, 0.2f, 0.5f, 1.0f));

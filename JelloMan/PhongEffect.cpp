@@ -2,7 +2,7 @@
 
 PhongEffect::PhongEffect(ID3D10Device* pDevice, ID3D10Effect* effect): 
 				Effect(pDevice, effect), 
-                m_pMtxWVP(GetVariableBySemantic("WorldViewPosition")->AsMatrix()),
+                m_pMtxWVP(GetVariableBySemantic("WorldViewProjection")->AsMatrix()),
                 m_pMtxWorld(GetVariableBySemantic("World")->AsMatrix())
                     /*m_pColorMap(GetVariableBySemantic("ColorMap")->AsShaderResource()), 
                     m_pNormalSpecMap(GetVariableBySemantic("NormalSpecMap")->AsShaderResource()), 
@@ -11,6 +11,8 @@ PhongEffect::PhongEffect(ID3D10Device* pDevice, ID3D10Effect* effect):
                     m_pLightColor(GetVariableBySemantic("LightColor")->AsVector()),
                     m_pCamDir(GetVariableBySemantic("CamDirection")->AsVector())*/
 {
+    ASSERT(m_pMtxWVP->IsValid());
+    ASSERT(m_pMtxWorld->IsValid());
 }
 
 

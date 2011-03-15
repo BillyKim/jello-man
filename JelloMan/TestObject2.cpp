@@ -29,23 +29,12 @@ void TestObject2::Init()
 
 void TestObject2::Draw(const RenderContext* pRenderContext)
 {
-    Matrix view;
-    D3DXVECTOR3 pos(-225, 199, -197), 
-                lookAt(0, 0, 0), 
-                up(0, 1, 0);
-	D3DXMatrixLookAtLH(&view, &pos, &lookAt, &up);
-    
-    Matrix proj;
-    D3DXMatrixPerspectiveFovLH(	&proj,
-        PiOver4, 640/480.0f,
-						10,
-						10000);
     //m_pEffect->SetDiffuseMap(m_pDiffuseMap);
     //m_pEffect->SetSpecMap(m_pSpecMap);
     //m_pEffect->SetGlossMap(m_pGlossMap);
 
     m_pEffect->SetWorld(m_mtxWorld);
-	m_pEffect->SetWorldViewProjection(m_mtxWorld * view * proj);
+	m_pEffect->SetWorldViewProjection(m_mtxWorld * pRenderContext->GetCamera()->GetViewProjection());
 
     m_pModel->Draw();
 }

@@ -9,6 +9,12 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pLightColor(GetVariableBySemantic("LightColor")->AsVector()),
                     m_pCamDir(GetVariableBySemantic("CamDirection")->AsVector())
 {
+    ASSERT(m_pColorMap->IsValid());
+    ASSERT(m_pNormalSpecMap->IsValid());
+    ASSERT(m_pPosGlossMap->IsValid());
+    ASSERT(m_pLightDir->IsValid());
+    ASSERT(m_pLightColor->IsValid());
+    ASSERT(m_pCamDir->IsValid());
 }
 
 
