@@ -4,6 +4,7 @@
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
 #include "TestObject.h"
+#include "TestObject2.h"
 #include "Blox2D.h"
 #include "RenderContext.h"
 
@@ -28,6 +29,7 @@ private:
     ForwardRenderer* m_pForwardRenderer;
 
     TestObject* m_pTestObject;
+    TestObject2* m_pTestObject2;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);

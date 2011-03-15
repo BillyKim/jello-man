@@ -105,11 +105,13 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="MouseState.h" />
+    <ClInclude Include="PhongEffect.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="TestObject.h" />
+    <ClInclude Include="TestObject2.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Vector2.h" />
@@ -143,11 +145,13 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelMesh.cpp" />
     <ClCompile Include="MouseState.cpp" />
+    <ClCompile Include="PhongEffect.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="TestObject.cpp" />
+    <ClCompile Include="TestObject2.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Vector2.cpp" />
