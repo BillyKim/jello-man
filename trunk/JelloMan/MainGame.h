@@ -24,6 +24,7 @@ public:
 	void UpdateScene(const float dTime);
 	void DrawScene();
 	void OnResize(ID3D10RenderTargetView* pRTView);
+	void Release();
 
 private:
 

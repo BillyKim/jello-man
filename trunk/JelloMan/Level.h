@@ -21,6 +21,7 @@ public:
 	void Tick(const float dTime);
 	void Draw(const RenderContext* pRenderContext);
 	void OnResize(ID3D10RenderTargetView* pRTView);
+	void Release();
 
 private:
 

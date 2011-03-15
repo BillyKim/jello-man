@@ -168,3 +168,8 @@ void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
 	if (m_bTest)
 		m_pLevel->OnResize(pRTView);
 }
+void MainGame::Release()
+{
+	if (m_bTest)
+		m_pLevel->Release();
+}
