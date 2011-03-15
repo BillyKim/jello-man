@@ -40,7 +40,7 @@ public:
 	    ibd.MiscFlags = 0;
 
 	    D3D10_SUBRESOURCE_DATA initData;
-	    initData.pSysMem = m_VecIndices.data();
+	    initData.pSysMem = &m_VecIndices[0];
 
 	    HR(m_pDevice->CreateBuffer(&ibd, &initData, &m_pIndexBuffer));
     }   
@@ -59,7 +59,7 @@ public:
 	    bd.MiscFlags = 0;
 
 	    D3D10_SUBRESOURCE_DATA initData;
-	    initData.pSysMem = m_VecVertices.data();
+	    initData.pSysMem = &m_VecVertices[0];
 
 	    HR(m_pDevice->CreateBuffer( &bd, &initData, &m_pVertexBuffer ));
     }  
@@ -73,7 +73,6 @@ public:
         SafeRelease(m_pInputLayout);
 
         // Define the input layout
-        //;
         vector<D3D10_INPUT_ELEMENT_DESC> veclayout;
         UINT numElements;
         GetInputElementDesc<T>(veclayout, numElements);

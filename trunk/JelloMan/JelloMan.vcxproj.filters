@@ -159,6 +159,12 @@
     <ClInclude Include="ForwardRenderer.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="TestObject2.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhongEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -268,6 +274,12 @@
     </ClCompile>
     <ClCompile Include="ForwardRenderer.cpp">
       <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObject2.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhongEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,8 @@ Level::Level(ID3D10Device* pDXDevice)	:
                 m_pDXDevice(pDXDevice), 
                 m_pDeferredRenderer(new DeferredRenderer(pDXDevice)),
                 m_pForwardRenderer(new ForwardRenderer(pDXDevice)),
-                m_pTestObject(new TestObject())
+                m_pTestObject(new TestObject()),
+                m_pTestObject2(new TestObject2())
 {
 
 }
@@ -16,6 +17,7 @@ Level::~Level()
     delete m_pDeferredRenderer;
     delete m_pForwardRenderer;
     delete m_pTestObject;
+    delete m_pTestObject2;
 }
 
 // GENERAL
@@ -29,6 +31,7 @@ void Level::Initialize()
                                 rtv);
     m_pForwardRenderer->Init(m_pDeferredRenderer);
     m_pTestObject->Init();
+    m_pTestObject2->Init();
 
     m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
 }
@@ -39,15 +42,19 @@ void Level::Tick(const float dTime)
 
 void Level::Draw(const RenderContext* pRenderContext)
 {
-    m_pDeferredRenderer->Begin();
+    pRenderContext->GetCamera()->LookAt(Vector3(-225, 199, -197), Vector3(0, 0, 0), Vector3(0, 1, 0));
+    pRenderContext->GetCamera()->SetLens();
 
-	m_pTestObject->Draw(pRenderContext);
+    //m_pDeferredRenderer->Begin();
 
-    m_pDeferredRenderer->End();
+	//m_pTestObject->Draw(pRenderContext);
 
-    //m_pForwardRenderer->Begin();
+    //m_pDeferredRenderer->End();
 
+    m_pForwardRenderer->Begin();
+    m_pForwardRenderer->Clear(Vector4(0.1f, 0.2f, 0.5f, 1.0f));
 
+    m_pTestObject2->Draw(pRenderContext);
 
-    //m_pForwardRenderer->End();
+    m_pForwardRenderer->End();
 }

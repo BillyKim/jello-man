@@ -68,6 +68,7 @@ float4  PS(PixelShaderInput input) : COLOR0
 	color += spec * cLightColor * normalSpec.a;
 
 	color = saturate(color);
+
 	color = float3(1.f, 0.f, 0.f);
     return float4(color, 1.0f);
 };

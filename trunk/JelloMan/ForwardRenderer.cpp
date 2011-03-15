@@ -57,7 +57,7 @@ void ForwardRenderer::End() const
 
 void ForwardRenderer::Clear(const Vector4& color) const
 {
-    m_pDevice->ClearDepthStencilView(m_pDepthbuffer, D3D10_CLEAR_DEPTH, 1.0f, 0);
+    m_pDevice->ClearDepthStencilView(m_pDepthbuffer, D3D10_CLEAR_DEPTH|D3D10_CLEAR_STENCIL, 1.0f, 0);
 
     float c[4];
     color.ToFloat4(c);
