@@ -35,23 +35,7 @@ DeferredRenderer::~DeferredRenderer(void)
 
 void DeferredRenderer::Init(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer)
 {
-    m_Width = width;
-    m_Height = height;
-    
-    m_Viewport.TopLeftX = 0;
-    m_Viewport.TopLeftY = 0;
-    m_Viewport.Width = m_Width;
-    m_Viewport.Height = m_Height;
-    m_Viewport.MinDepth = 0.f;
-    m_Viewport.MaxDepth = 1.f;
-
-    m_pBackbuffer = pBackbuffer;
-
-    CreateColorMap(DeferredRenderMap_Color, DXGI_FORMAT_R8G8B8A8_UNORM); //R G B A
-	CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z Spec
-    CreateColorMap(DeferredRenderMap_Position, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z gloss
-
-    CreateDepthMap();
+    OnResized(width, height, pBackbuffer);
 
 	m_pEffect = ContentManager::GetSingleton()->LoadEffect<DeferredPostEffect>(_T("postdeferred.fx"));
 
@@ -74,6 +58,38 @@ void DeferredRenderer::Init(UINT width, UINT height, ID3D10RenderTargetView* pBa
 	m_pScreenMesh->SetVertices(vertices);
     m_pScreenMesh->SetIndices(indices);
 	m_pScreenMesh->SetEffect(m_pEffect);
+}
+
+
+void DeferredRenderer::OnResize()
+{
+    for (int i = 0; i < MAXRENDERTARGETS; ++i)
+        SafeRelease(m_RenderTargets[i]); 
+    for (int i = 0; i < MAXRENDERTARGETS + 1; ++i)
+        SafeRelease(m_pSRV[i]);
+    SafeRelease(m_pDepthDSV);
+}
+void DeferredRenderer::OnResized(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer)
+{
+    ASSERT(m_pDepthDSV == 0 && m_RenderTargets[0] == 0 && m_pSRV[0] == 0, _T("OnResize() must be called first!"));
+
+    m_Width = width;
+    m_Height = height;
+    
+    m_Viewport.TopLeftX = 0;
+    m_Viewport.TopLeftY = 0;
+    m_Viewport.Width = m_Width;
+    m_Viewport.Height = m_Height;
+    m_Viewport.MinDepth = 0.f;
+    m_Viewport.MaxDepth = 1.f;
+
+    m_pBackbuffer = pBackbuffer;
+
+    CreateColorMap(DeferredRenderMap_Color, DXGI_FORMAT_R8G8B8A8_UNORM); //R G B A
+	CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z Spec
+    CreateColorMap(DeferredRenderMap_Position, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z gloss
+
+    CreateDepthMap();
 }
 
 UINT DeferredRenderer::GetBackbufferWidth() const

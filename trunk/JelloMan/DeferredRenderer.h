@@ -20,6 +20,9 @@ public:
 
     void Init(UINT width, UINT height, ID3D10RenderTargetView* backbuffer);
 
+    void OnResize();
+    void OnResized(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer);
+
     void Begin() const;
     void End() const;
 
