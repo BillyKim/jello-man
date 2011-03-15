@@ -197,11 +197,6 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	POINTS currentpos;
 	short zPos=0;
 
-	CONTROLS->SetLeftMBDown(false);
-	CONTROLS->SetLeftMBClicked(false);
-	CONTROLS->SetLeftMBDown(false);
-	CONTROLS->SetLeftMBClicked(false);
-
 	switch( msg )
 	{
 	// WM_ACTIVATE is sent when the window is activated or deactivated.  
