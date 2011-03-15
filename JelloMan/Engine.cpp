@@ -627,9 +627,9 @@ HRESULT Engine::RecreateSizedResources()
     if (SUCCEEDED(hr))
     {
         // Create the DXGI Surface Render Target.
-        FLOAT dpiX;
-        FLOAT dpiY;
-        m_pD2DFactory->GetDesktopDpi(&dpiX, &dpiY);
+        FLOAT dpiX = 96;
+        FLOAT dpiY = 96;
+        //m_pD2DFactory->GetDesktopDpi(&dpiX, &dpiY);
 
         D2D1_RENDER_TARGET_PROPERTIES props =
             D2D1::RenderTargetProperties(
