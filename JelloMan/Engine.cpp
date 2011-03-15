@@ -541,6 +541,8 @@ HRESULT Engine::CreateDeviceResources()
 
 HRESULT Engine::RecreateSizedResources()
 {
+	m_pGame->Release();
+
 	UINT nWidth = m_ClientWidth;
 	UINT nHeight = m_ClientHeight;
     HRESULT hr = S_OK;
