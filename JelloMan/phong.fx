@@ -1,8 +1,8 @@
 cbuffer cbPerObject
 {
-	matrix mtxWorld : World;
-	matrix mtxWVP : WorldViewProjection;
 };
+matrix mtxWVP : WorldViewProjection;
+matrix mtxWorld : World;
 
 RasterizerState RState
 {
@@ -12,7 +12,7 @@ RasterizerState RState
 
 struct VertexShaderInput
 {
-    float4 position : POSITION0;
+    float3 position : POSITION0;
 	float3 normal : NORMAL;
 	float2 texCoord: TEXCOORD0;
 };
@@ -28,7 +28,7 @@ VertexShaderOutput VS(VertexShaderInput input)
 {
     VertexShaderOutput output;
 
-    output.position = mul(float4(input.position.xyz, 1.0f), mtxWVP);
+    output.position = mul(float4(input.position, 1.0f), mtxWVP);
 
 	output.normal = mul(float4(input.normal, 0.0f), mtxWorld).xyz;
 

@@ -53,7 +53,7 @@ public:
 
 	    D3D10_BUFFER_DESC bd;
 	    bd.Usage = D3D10_USAGE_IMMUTABLE;
-	    bd.ByteWidth = sizeof( VertexPosNormTex ) * m_VecVertices.size();
+	    bd.ByteWidth = sizeof( T ) * m_VecVertices.size();
 	    bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
 	    bd.CPUAccessFlags = 0;
 	    bd.MiscFlags = 0;
