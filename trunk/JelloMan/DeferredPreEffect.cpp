@@ -8,7 +8,12 @@ DeferredPreEffect::DeferredPreEffect(ID3D10Device* pDXDevice, ID3D10Effect* pEff
                 m_pDiffuseMap(GetVariableBySemantic("DiffuseMap")->AsShaderResource()),
                 m_pSpecMap(GetVariableBySemantic("SpecMap")->AsShaderResource()),
                 m_pGlossMap(GetVariableBySemantic("GlossMap")->AsShaderResource())
-{
+{    
+    ASSERT(m_pWorld->IsValid());
+    ASSERT(m_pWVP->IsValid());
+    ASSERT(m_pDiffuseMap->IsValid());
+    ASSERT(m_pSpecMap->IsValid());
+    ASSERT(m_pGlossMap->IsValid());
 }
 
 

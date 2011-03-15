@@ -13,6 +13,9 @@ Vector4::Vector4(float r, float g, float b, float a): R(r), G(g), B(b), A(a)
 Vector4::Vector4(const Vector3& v3, float a): R(v3.X), G(v3.Y), B(v3.Z), A(a)
 {
 }
+Vector4::Vector4(const D3DXCOLOR& color): R(color.r), G(color.g), B(color.b), A(color.a)
+{
+}
 
 //Copy en assignment
 Vector4::Vector4(const Vector4& v4) : R(v4.R), G(v4.G), B(v4.B), A(v4.A)

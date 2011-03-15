@@ -1,8 +1,8 @@
 cbuffer cbPerObject
 {
+	matrix mtxWVP : WorldViewProjection;
+	matrix mtxWorld : World;
 };
-matrix mtxWVP : WorldViewProjection;
-matrix mtxWorld : World;
 
 RasterizerState RState
 {
@@ -38,10 +38,8 @@ VertexShaderOutput VS(VertexShaderInput input)
 };
 
 float4 PS(VertexShaderOutput input) : SV_TARGET
-{
-	
-	
-	return float4(1.0f, 0.0f, 0.0f, 1.0f);
+{	
+	return float4(normalize(input.normal/2+0.5f), 1.0f);
 };
 
 

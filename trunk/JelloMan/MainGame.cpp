@@ -62,6 +62,10 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	D3DXVECTOR3 lightDir(-.1f,-0.1f,-1);
 	D3DXVec3Normalize(&m_DirLight.DirW,&lightDir);
 	m_DirLight.Diffuse = m_DirLight.Ambient = m_DirLight.Specular = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+
+    
+    m_pCamera->LookAt(Vector3(-225, 199, -197), Vector3(0, 0, 0), Vector3(0, 1, 0));
+    m_pCamera->SetLens();
 }
 
 void MainGame::UpdateScene(const float dTime)
