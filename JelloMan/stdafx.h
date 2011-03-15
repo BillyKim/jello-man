@@ -27,18 +27,22 @@
 
 
 
-/*//*****************************************************************************
+//*****************************************************************************
 // Assert Macro
 //*****************************************************************************
+#define XMA2DEFS_ASSERT(a)
 #ifndef NDEBUG
 #define ASSERT \
 if ( false ) {} \
 else \
-struct LocalAssert { \
+struct LocalAssert \
+{ \
 	int mLine; \
 	LocalAssert(int line=__LINE__) : mLine(line) {} \
-	LocalAssert(bool isOK, const TCHAR* message=_T("")) { \
-		if ( !isOK ) { \
+	LocalAssert(bool isOK, const TCHAR* message=_T("")) \
+    { \
+		if ( !isOK ) \
+        { \
 			cout << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
 			__asm { int 3 } \
 		} \
@@ -50,4 +54,4 @@ if ( true ) {} else \
 struct NoAssert { \
 	NoAssert(bool isOK, const TCHAR* message=_T("")) {} \
 } myAsserter = NoAssert
-#endif*/
+#endif

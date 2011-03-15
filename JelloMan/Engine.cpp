@@ -115,8 +115,13 @@ int Engine::Run()
 					m_pGame->LoadResources(m_pDXDevice);
 
 					#if defined DEBUG || _DEBUG
-					cout << "---------------------------\n:::Resources Initialized:::\n---------------------------\n\n\n";
-					cout << "   GAME EVENTS   \n-----------------\n";
+					cout << "---------------------------\n";
+                    cout << ":::Resources Initialized:::\n";
+                    cout << "---------------------------\n";
+                    cout << "\n";
+                    cout << "\n";
+					cout << "   GAME EVENTS   \n";
+                    cout << "-----------------\n";
 					#endif
 
 					m_bInitialized = true;
@@ -168,13 +173,13 @@ void Engine::OnRender()
 	CreateDeviceResources();
 
 	// clearing rendertarget for new frame
-	m_pDXDevice->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
-	m_pDXDevice->ClearDepthStencilView(
-                m_pDepthStencilView,
-                D3D10_CLEAR_DEPTH,
-                1,
-                0
-                );
+	//m_pDXDevice->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
+	//m_pDXDevice->ClearDepthStencilView(
+     //               m_pDepthStencilView,
+     //               D3D10_CLEAR_DEPTH,
+     //               1,
+     //               0
+     //               );
 
 	// main game cycle
 	m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());

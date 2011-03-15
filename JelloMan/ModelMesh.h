@@ -93,6 +93,8 @@ public:
     }  
     void Draw()
     {
+        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && m_pEffect != 0);
+
 	    m_pDevice->IASetInputLayout(m_pInputLayout);
 
         // Set vertex buffer(s)

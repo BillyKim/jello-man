@@ -20,8 +20,8 @@ SamplerState mapSampler
 struct VertexShaderInput
 {
     float3 position : POSITION0;
-	float3 normal : NORMAL;
 	float2 texCoord: TEXCOORD0;
+	float3 normal : NORMAL;
 };
 
 struct VertexShaderOutput

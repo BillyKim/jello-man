@@ -156,6 +156,9 @@
     <ClInclude Include="Sound.h">
       <Filter>Content\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="ForwardRenderer.h">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -263,12 +266,21 @@
     <ClCompile Include="Sound.cpp">
       <Filter>Content\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="ForwardRenderer.cpp">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx">
       <Filter>Content\effect</Filter>
     </None>
     <None Include="predeferred.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="phong.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="PNT.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>
