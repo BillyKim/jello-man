@@ -39,17 +39,17 @@ void Camera::Tick(const float dTime)
 	// camera controls
 	Vector3 dir(0.0f,0.0f,0.0f);
 
-	if (CONTROLS->Keyboard().IsKeyDown('Z'))
+	if (CONTROLS->IsKeyDown('Z'))
 		dir += m_LookWorld;
-	if (CONTROLS->Keyboard().IsKeyDown('S'))
+	if (CONTROLS->IsKeyDown('S'))
 		dir -= m_LookWorld;
-	if (CONTROLS->Keyboard().IsKeyDown('Q'))
+	if (CONTROLS->IsKeyDown('Q'))
 		dir -= m_RightWorld;
-	if (CONTROLS->Keyboard().IsKeyDown('D'))
+	if (CONTROLS->IsKeyDown('D'))
 		dir += m_RightWorld;
 
 	// fast forward
-	if (CONTROLS->Keyboard().IsKeyDown(VK_LSHIFT))
+	if (CONTROLS->IsKeyDown(VK_LSHIFT))
 		bRunning = true;
 
 	dir.Normalize();
@@ -59,7 +59,7 @@ void Camera::Tick(const float dTime)
 	m_PosWorld += dir * finalSpeed * dTime;
 
 	// change FOV with mousewheel
-	float angle = static_cast<float>(CONTROLS->Mouse().GetMouseWheelPos() / 120 / 10);
+	float angle = static_cast<float>(CONTROLS->GetMouseWheelPos() / 120 / 10);
 
 	if (angle != 0)
 	{
@@ -67,9 +67,9 @@ void Camera::Tick(const float dTime)
 		BuildProjectionMatrix();
 	}
 
-	if (CONTROLS->Mouse().LeftMBDown())
+	if (CONTROLS->LeftMBDown())
 	{
-		Point2D mouseMovement = CONTROLS->Mouse().GetMouseMovement();
+		Point2D mouseMovement = CONTROLS->GetMouseMovement();
 		float pitch = mouseMovement.y / m_MouseSensitivity;
 		float yAngle = mouseMovement.x / m_MouseSensitivity;
 

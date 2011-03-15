@@ -73,7 +73,7 @@ void MainGame::UpdateScene(const float dTime)
 	m_pAudioEngine->DoWork();
 	m_pTestSound->Tick();
 
-	if (CONTROLS->Keyboard().IsKeyPressed(VK_SPACE))
+	if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{
 		if (!m_pTestSound->IsPlaying())
 		{
@@ -85,11 +85,11 @@ void MainGame::UpdateScene(const float dTime)
 		}
 	}
 	
-	if (CONTROLS->Keyboard().IsKeyDown(VK_ADD))
+	if (CONTROLS->IsKeyDown(VK_ADD))
 	{
 		m_pTestSound->SetVolume(m_pTestSound->GetVolume() + 1);
 	}
-	else if (CONTROLS->Keyboard().IsKeyDown(VK_SUBTRACT))
+	else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
 	{
 		m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
 	}
@@ -100,6 +100,21 @@ void MainGame::DrawScene()
 	RenderContext renderContext(m_pCamera, m_DirLight); // hoe lichten doorgeven, vector van alle lights?
 	m_pLevel->Draw(&renderContext);
 
+	tstringstream stream;
+	stream << _T("look - ");
+	stream << _T("X: ") << m_pCamera->GetLook().X << _T(" ");
+	stream << _T("Y: ") << m_pCamera->GetLook().Y << _T(" ");
+	stream << _T("Z: ") << m_pCamera->GetLook().Z << _T(" ");
+
+	BLOX_2D->DrawString(stream.str(),400,20);
+
+	tstringstream stream2;
+	stream2 << _T("pos - ");
+	stream2 << _T("X: ") << m_pCamera->GetPosition().X << _T(" ");
+	stream2 << _T("Y: ") << m_pCamera->GetPosition().Y << _T(" ");
+	stream2 << _T("Z: ") << m_pCamera->GetPosition().Z << _T(" ");
+
+	BLOX_2D->DrawString(stream2.str(),400,40);
 
 	/* ---------------------------------------------- */
 	/*					TEST STUFF					  */
@@ -110,7 +125,7 @@ void MainGame::DrawScene()
 	BLOX_2D->ShowFPS(m_dTtime,true,0.5f);
 
 	// singleton gemaakt van Controls
-	if (CONTROLS->Keyboard().IsKeyDown('X'))
+	if (CONTROLS->IsKeyDown('X'))
 	{
 		BLOX_2D->SetColor(255,0,255);
 		BLOX_2D->SetFont(_T("Arial"),true,false,150);
@@ -126,8 +141,8 @@ void MainGame::DrawScene()
 		BLOX_2D->DrawStringCentered(_T("PRESS X"));
 
 		tstringstream stream;
-		stream << _T("X: ") << CONTROLS->Mouse().GetMousePos().x;
-		stream << _T("  Y: ") << CONTROLS->Mouse().GetMousePos().y;
+		stream << _T("X: ") << CONTROLS->GetMousePos().x;
+		stream << _T("  Y: ") << CONTROLS->GetMousePos().y;
 		BLOX_2D->DrawStringCentered(stream.str(),0,50);
 	}
 

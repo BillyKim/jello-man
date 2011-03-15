@@ -317,14 +317,16 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 	case WM_LBUTTONUP:
 		CONTROLS->SetLeftMBClicked(true);
+		CONTROLS->SetLeftMBDown(false);
 		return 0;
 
 	case WM_RBUTTONDOWN:
-		CONTROLS->SetLeftMBDown(true);
+		CONTROLS->SetRightMBDown(true);
 		return 0;
 
 	case WM_RBUTTONUP:
-		CONTROLS->SetLeftMBClicked(true);
+		CONTROLS->SetRightMBClicked(true);
+		CONTROLS->SetRightMBDown(false);
 		return 0;
 
 	case WM_MOUSEWHEEL:

@@ -38,32 +38,11 @@ Controls* Controls::GetSingleton()
 }
 
 // GETTERS
-KeyboardState Controls::Keyboard()
+bool Controls::IsKeyPressed(int vKey)
 {
 	// getstatus of keys
 	BOOL b = GetKeyboardState(m_Keys);
 
-	bool bKeysDown[NUMKEYS];
-	bool bKeysPressed[NUMKEYS];
-
-	for (int i = 0; i < NUMKEYS; ++i)
-	{
-		if (m_Keys[i] & 0x80)
-			bKeysDown[i] = true;
-		else
-			bKeysDown[i] = false;
-
-		bKeysPressed[i] = IsKeyPressed(i);
-	}
-
-	// create state object on stack
-	KeyboardState keyboardState(bKeysDown,bKeysPressed);
-
-	return keyboardState;
-}
-
-bool Controls::IsKeyPressed(int vKey)
-{
 	if (m_Keys[vKey] & 0x80)
 	{
 		if (m_bKeysPressed[vKey] == false)
@@ -80,7 +59,18 @@ bool Controls::IsKeyPressed(int vKey)
 	}
 }
 
-MouseState Controls::Mouse()
+bool Controls::IsKeyDown(int vKey)
+{
+	// getstatus of keys
+	BOOL b = GetKeyboardState(m_Keys);
+
+	if (m_Keys[vKey] & 0x80)
+		return true;
+	else
+		return false;
+}
+
+Point2D Controls::GetMouseMovement()
 {
 	// calc mousemovement
 	Point2D mouseDeltaPos;
@@ -88,21 +78,15 @@ MouseState Controls::Mouse()
 	mouseDeltaPos.y = m_MousePos.y - m_OldMousePos.y;
 	m_OldMousePos = m_MousePos;
 
-	// create state object on stack
-	MouseState mouseState(	m_bLMBClicked,
-							m_bRMBClicked,
-							m_bLMBDown, 
-							m_bRMBDown,
-							m_MouseWheelPos,
-							m_MousePos,
-							mouseDeltaPos);
+	return mouseDeltaPos;
+}
 
-	// reset data
+short Controls::GetMouseWheelPos()
+{
+	int mwPos = m_MouseWheelPos;
 	m_MouseWheelPos = 0;
-	/*m_bLMBClicked = m_bRMBClicked = false;
-	m_bLMBDown = m_bRMBDown= false;*/
 
-	return mouseState;
+	return mwPos;
 }
 
 // SETTERS

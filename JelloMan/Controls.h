@@ -4,8 +4,6 @@
 // Include Files
 //-----------------------------------------------------
 #include "D3DUtil.h"
-#include "MouseState.h"
-#include "KeyboardState.h"
 
 #define CONTROLS (Controls::GetSingleton())
 
@@ -24,8 +22,16 @@ public:
 	static Controls* GetSingleton();
 
 	// GETTERS
-	KeyboardState Keyboard();
-	MouseState Mouse();
+	bool IsKeyDown(int vKey);
+	bool IsKeyPressed(int vKey);
+
+	Point2D GetMousePos() const {return m_MousePos;}
+	short GetMouseWheelPos();
+	bool LeftMBClicked() const { return m_bLMBClicked; }
+	bool RightMBClicked() const { return m_bRMBClicked; }
+	bool LeftMBDown() const { return m_bLMBDown; }
+	bool RightMBDown() const { return m_bRMBDown; }
+	Point2D GetMouseMovement();
 
 	// SETTERS
 	void SetMousePos(Point2D pos);
@@ -39,8 +45,6 @@ public:
 	static const int NUMKEYS = 256;
 
 private:
-	// help function for IsKeyPressed
-	bool IsKeyPressed(int vKey);
 
 	bool m_bLMBClicked, m_bRMBClicked;
 	bool m_bLMBDown, m_bRMBDown;
