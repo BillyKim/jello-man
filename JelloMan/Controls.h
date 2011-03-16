@@ -35,6 +35,7 @@ public:
 
 	// SETTERS
 	void SetMousePos(Point2D pos);
+	void SetOldMousePos(Point2D oldPos);
 	void SetLeftMBClicked(bool clicked) {m_bLMBClicked = clicked;}
 	void SetRightMBClicked(bool clicked) {m_bRMBClicked = clicked;}
 	void SetLeftMBDown(bool down) {m_bLMBDown = down;}

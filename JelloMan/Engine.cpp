@@ -316,6 +316,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_LBUTTONDOWN:
+		CONTROLS->SetOldMousePos(CONTROLS->GetMousePos());
 		CONTROLS->SetLeftMBDown(true);
 		return 0;
 
@@ -325,6 +326,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_RBUTTONDOWN:
+		CONTROLS->SetOldMousePos(CONTROLS->GetMousePos());
 		CONTROLS->SetRightMBDown(true);
 		return 0;
 
