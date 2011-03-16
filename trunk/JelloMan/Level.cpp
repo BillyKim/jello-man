@@ -6,7 +6,8 @@ Level::Level(ID3D10Device* pDXDevice)	:
                 m_pDeferredRenderer(new DeferredRenderer(pDXDevice)),
                 m_pForwardRenderer(new ForwardRenderer(pDXDevice)),
                 m_pTestObject(new TestObject()),
-                m_pTestObject2(new TestObject2())
+                m_pTestObject2(new TestObject2()),
+				m_pRenderContext(0)
 {
 
 }
@@ -54,6 +55,8 @@ void Level::Draw(const RenderContext* pRenderContext)
     m_pTestObject2->Draw(pRenderContext);
 
     m_pForwardRenderer->End();
+
+	m_pRenderContext = pRenderContext;
 }
 
 void Level::OnResize(ID3D10RenderTargetView* pRTView)
@@ -61,9 +64,11 @@ void Level::OnResize(ID3D10RenderTargetView* pRTView)
 	m_pDeferredRenderer->OnResized(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 									static_cast<int>(BLOX_2D->GetWindowSize().height),
 									pRTView);
+	m_pDeferredRenderer->Begin();
 }
 
 void Level::Release()
 {
+	m_pDeferredRenderer->End(m_pRenderContext);
 	m_pDeferredRenderer->OnResize();
 }

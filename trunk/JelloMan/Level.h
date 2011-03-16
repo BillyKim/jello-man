@@ -33,6 +33,8 @@ private:
     TestObject* m_pTestObject;
     TestObject2* m_pTestObject2;
 
+	const RenderContext* m_pRenderContext;
+
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);
 	Level& operator=(const Level& t);
