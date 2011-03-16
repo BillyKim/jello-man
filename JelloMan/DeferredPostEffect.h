@@ -15,7 +15,7 @@ public:
 
     void SetLightDirection(const Vector3& v);
     void SetLightColor(const Vector3& v);
-    void SetCameraDirection(const Vector3& v);
+    void SetCameraPosition(const Vector3& v);
 
 private:
 	ID3D10EffectShaderResourceVariable* m_pColorMap, 
@@ -24,6 +24,6 @@ private:
 
     ID3D10EffectVectorVariable* m_pLightDir;
     ID3D10EffectVectorVariable* m_pLightColor;
-    ID3D10EffectVectorVariable* m_pCamDir;
+    ID3D10EffectVectorVariable* m_pCamPos;
 };
 

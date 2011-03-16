@@ -4,6 +4,7 @@
 #include "vertex.h"
 #include "ModelMesh.h"
 #include "Matrix.h"
+#include "RenderContext.h"
 
 enum DeferredRenderMap
 {
@@ -24,7 +25,7 @@ public:
     void OnResized(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer);
 
     void Begin() const;
-    void End() const;
+    void End(const RenderContext* pRenderContext) const;
 
     UINT GetBackbufferWidth() const;
     UINT GetBackbufferHeight() const;

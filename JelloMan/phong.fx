@@ -7,7 +7,8 @@ cbuffer cbPerObject
 RasterizerState RState
 {
 	FillMode = Solid;
-	CullMode = None;
+	CullMode = Back;
+	FrontCounterClockwise = false;
 };
 
 struct VertexShaderInput

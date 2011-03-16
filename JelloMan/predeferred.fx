@@ -9,6 +9,13 @@ Texture2D diffuseMap : DiffuseMap;
 Texture2D specMap : SpecMap;
 Texture2D glossMap : GlossMap;
 
+RasterizerState RState
+{
+	FillMode = Solid;
+	CullMode = None;
+	FrontCounterClockwise = false;
+};
+
 SamplerState mapSampler
 {
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -50,15 +57,16 @@ VertexShaderOutput  VS(VertexShaderInput input)
 
 struct PixelShaderOutput
 {
-	float4 color : COLOR0;
-	float4 normalSpec : COLOR1;
-	float4 positionGloss : COLOR2;
+	float4 color : SV_TARGET0;
+	float4 normalSpec : SV_TARGET1;
+	float4 positionGloss : SV_TARGET2;
 };
 
 PixelShaderOutput  PS(VertexShaderOutput input) 
 {
 	PixelShaderOutput output;
 	output.color = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, 1.0f);
+	//output.color = float4(1, 0, 0, 1);
 	output.normalSpec = float4(input.normal, specMap.Sample(mapSampler, input.texCoord).r);
 	output.positionGloss = float4(input.worldPos, glossMap.Sample(mapSampler, input.texCoord).r);
 
@@ -66,12 +74,13 @@ PixelShaderOutput  PS(VertexShaderOutput input)
 };
 
 
-technique10 pass1
+technique10 tech1
 {
-	pass one
+	pass P0
 	{
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
-		SetPixelShader( CompileShader ( ps_4_0, PS() ));
 		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader ( ps_4_0, PS() ));
+		SetRasterizerState(RState);
 	}
 }

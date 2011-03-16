@@ -39,13 +39,12 @@ void DeferredRenderer::Init(UINT width, UINT height, ID3D10RenderTargetView* pBa
 
 	m_pEffect = ContentManager::GetSingleton()->LoadEffect<DeferredPostEffect>(_T("postdeferred.fx"));
 
-	m_pScreenMesh->SetEffect(m_pEffect);
 	vector<VertexPosTex> vertices;
 
-	vertices.push_back(VertexPosTex(-1.0f, -1.0f, 1.f, 0.0f, 0.0f));
-	vertices.push_back(VertexPosTex(1.0f, -1.0f, 1.f, 1.0f, 0.0f));
-	vertices.push_back(VertexPosTex(-1.0f, 1.0f, 1.f, 0.0f, 1.0f));
-	vertices.push_back(VertexPosTex(1.0f, 1.0f, 1.f, 1.0f, 1.0f));
+	vertices.push_back(VertexPosTex(-1.0f, -1.0f, 0.5f, 0.0f, 0.0f));
+	vertices.push_back(VertexPosTex( 1.0f, -1.0f, 0.5f, 1.0f, 0.0f));
+	vertices.push_back(VertexPosTex(-1.0f,  1.0f, 0.5f, 0.0f, 1.0f));
+	vertices.push_back(VertexPosTex( 1.0f,  1.0f, 0.5f, 1.0f, 1.0f));
 
 	vector<DWORD> indices;
 	indices.push_back(0);
@@ -183,22 +182,56 @@ void DeferredRenderer::Begin() const
 
     m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
 
+    float c[4] = { 0, 0, 0, 1};
     for (int i = 0; i < MAXRENDERTARGETS; ++i)
-        m_pDevice->ClearRenderTargetView(m_RenderTargets[i], m_ClearColor);
+        m_pDevice->ClearRenderTargetView(m_RenderTargets[i], c);
 }
 
-void DeferredRenderer::End() const
+void DeferredRenderer::End(const RenderContext* pRenderContext) const
 { 
+    //ID3D10Resource *backbufferRes;
+    //m_RenderTargets[0]->GetResource(&backbufferRes);
+
+    //D3D10_TEXTURE2D_DESC texDesc;
+    //texDesc.ArraySize = 1;
+    //texDesc.BindFlags = 0;
+    //texDesc.CPUAccessFlags = 0;
+    //texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    //texDesc.Width = 800;  // must be same as backbuffer
+    //texDesc.Height = 600; // must be same as backbuffer
+    //texDesc.MipLevels = 1;
+    //texDesc.MiscFlags = 0;
+    //texDesc.SampleDesc.Count = 1;
+    //texDesc.SampleDesc.Quality = 0;
+    //texDesc.Usage = D3D10_USAGE_DEFAULT;
+
+    //ID3D10Texture2D *texture;
+    //m_pDevice->CreateTexture2D(&texDesc, 0, &texture);
+    //m_pDevice->CopyResource(texture, backbufferRes);
+
+    //D3DX10SaveTextureToFile(texture, D3DX10_IFF_PNG, L"test.png");
+    //texture->Release();
+    //backbufferRes->Release();
+
+
     ASSERT(m_pBackbuffer != 0 && m_pDepthDSV != 0);
-    m_pDevice->OMSetRenderTargets(1, &m_pBackbuffer, m_pDepthDSV);
+    m_pDevice->OMSetRenderTargets(1, &m_pBackbuffer, NULL); //depth = 0, no depthbuffer needed in postprocessing
     m_pDevice->RSSetViewports(1, &m_Viewport);
 
-    m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
+    //m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH|D3D10_CLEAR_STENCIL, 1.0f, 0);
     m_pDevice->ClearRenderTargetView(m_pBackbuffer, m_ClearColor);
 
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
 	m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);
 	m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
+    m_pEffect->SetLightDirection(-pRenderContext->GetCamera()->GetLook());
+    m_pEffect->SetLightColor(Vector3(1, 1, 1));
+    m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());
 
 	m_pScreenMesh->Draw();
+
+	m_pEffect->SetColorMap(0);
+	m_pEffect->SetNormalSpecMap(0);
+	m_pEffect->SetPosGlossMap(0);
+    m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertargets
 }

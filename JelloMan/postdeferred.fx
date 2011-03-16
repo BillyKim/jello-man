@@ -1,8 +1,8 @@
-cbuffer cbPerObject
+cbuffer cbPerFrame
 {
 	float3 vLightDir : LightDir;
 	float3 cLightColor : LightColor;
-	float3 vCamDir : CamDirection;
+	float3 vCamPos : CamPosition;
 };
 
 Texture2D colorMap : ColorMap;
@@ -25,8 +25,14 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-    float4 position : POSITION0;
+    float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD0;
+};
+
+RasterizerState RState
+{
+	FillMode = Solid;
+	CullMode = None;
 };
 
 VertexShaderOutput  VS(VertexShaderInput input) 
@@ -40,14 +46,7 @@ VertexShaderOutput  VS(VertexShaderInput input)
     return output;	
 };
 
-struct PixelShaderInput
-{
-    float4 position : SV_POSITION;
-	float2 texCoord : TEXCOORD0;
-};
-
-
-float4  PS(PixelShaderInput input) : COLOR0
+float4  PS(VertexShaderOutput input) : SV_TARGET
 {
 	float4 posGloss = positionGlossMap.Sample(mapSampler, input.texCoord);
 	float4 col = colorMap.Sample(mapSampler, input.texCoord);
@@ -58,6 +57,9 @@ float4  PS(PixelShaderInput input) : COLOR0
 
 	//DiffuseColor
 	color *= col.rgb;
+	//float3 color = col.rgb;
+
+	float3 vCamDir = normalize(vCamPos - posGloss.xyz);
 
 	//Phong
 	float y = saturate(dot(normalSpec.rgb, vLightDir));
@@ -69,17 +71,19 @@ float4  PS(PixelShaderInput input) : COLOR0
 
 	color = saturate(color);
 
-	color = float3(1.f, 0.f, 0.f);
-    return float4(color, 1.0f);
+	//return float3(1, 0, 0);
+    return float4(color, 1);
 };
 
 
-technique10 pass1
+technique10 tech1
 {
-	pass one
+	pass p0
 	{
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
-		SetPixelShader( CompileShader ( ps_4_0, PS() ));
 		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader ( ps_4_0, PS() ));
+
+		SetRasterizerState(RState);
 	}
 }
