@@ -3,7 +3,7 @@
 #define CONTROLS (Controls::GetSingleton())
 
 // CONSTRUCTOR - DESTRUCTOR
-Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(5.0f),
+Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(50.0f),
 													m_FastForward(10.0f),
 													m_MouseSensitivity(100),
 													m_FOV(PiOver4),
@@ -70,6 +70,12 @@ void Camera::Tick(const float dTime)
 	if (CONTROLS->LeftMBDown())
 	{
 		Point2D mouseMovement = CONTROLS->GetMouseMovement();
+
+		BLOX_2D->SetColor(255,255,255);
+		tstringstream stream;
+		stream << mouseMovement.x << _T(" ") << mouseMovement.y;
+		BLOX_2D->DrawString(stream.str(),20,300);
+
 		float pitch = mouseMovement.y / m_MouseSensitivity;
 		float yAngle = mouseMovement.x / m_MouseSensitivity;
 

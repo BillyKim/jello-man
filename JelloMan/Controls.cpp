@@ -17,7 +17,7 @@ Controls::Controls()	:	m_bLMBClicked(false),
 							m_bRMBDown(false),
 							m_MouseWheelPos(0),
 							m_MousePos(Point2F(0,0)),
-							m_OldMousePos(Point2F(0,0))
+							m_OldMousePos(Point2F(400,300))
 {
 	for(int i = 0; i < NUMKEYS; ++i)
 	{

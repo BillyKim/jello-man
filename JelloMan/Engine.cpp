@@ -182,11 +182,12 @@ void Engine::OnRender()
      //               );
 
 	// main game cycle
-	m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
+	
 	
 	if (m_pBackBufferRT)
 	{
 		m_pBackBufferRT->BeginDraw();
+		m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
 		m_pGame->DrawScene();
 		m_pBackBufferRT->EndDraw();
 	}
