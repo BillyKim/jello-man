@@ -41,10 +41,10 @@ void DeferredRenderer::Init(UINT width, UINT height, ID3D10RenderTargetView* pBa
 
 	vector<VertexPosTex> vertices;
 
-	vertices.push_back(VertexPosTex(-1.0f, -1.0f, 0.5f, 0.0f, 0.0f));
-	vertices.push_back(VertexPosTex( 1.0f, -1.0f, 0.5f, 1.0f, 0.0f));
-	vertices.push_back(VertexPosTex(-1.0f,  1.0f, 0.5f, 0.0f, 1.0f));
-	vertices.push_back(VertexPosTex( 1.0f,  1.0f, 0.5f, 1.0f, 1.0f));
+	vertices.push_back(VertexPosTex(-1.0f, -1.0f, 0.5f, 0.0f, 1.0f));
+	vertices.push_back(VertexPosTex( 1.0f, -1.0f, 0.5f, 1.0f, 1.0f));
+	vertices.push_back(VertexPosTex(-1.0f,  1.0f, 0.5f, 0.0f, 0.0f));
+	vertices.push_back(VertexPosTex( 1.0f,  1.0f, 0.5f, 1.0f, 0.0f));
 
 	vector<DWORD> indices;
 	indices.push_back(0);

@@ -2,27 +2,28 @@
 
 #include "D3DUtil.h"
 #include "Camera.h"
+#include "LightController.h"
 
 class RenderContext
 {
 public:
 	
 	// CONSTRUCTOR - DESTRUCTOR
-	RenderContext(Camera* pCamera, DirLight dirLight);
+	RenderContext(Camera* pCamera, LightController* pLichtController);
 	virtual ~RenderContext();
 
 	// GETTERS
 	Camera* GetCamera() const
 	{ return m_pCamera; }
 
-	DirLight GetLight() const
-	{ return m_Light; }
+	LightController* GetLightController() const
+	{ return m_pLightController; }
 	
 private:
 
 	// DATAMEMBERS
 	Camera* m_pCamera;
-	DirLight m_Light;
+    LightController* m_pLightController;
 
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT

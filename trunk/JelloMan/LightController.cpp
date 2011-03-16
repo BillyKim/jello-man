@@ -22,6 +22,10 @@ void LightController::AddLight(DirectionalLight* light)
 {
     m_DirectionalLights.push_back(light);
 }
+void LightController::AddLight(SpotLight* light)
+{
+    m_SpotLights.push_back(light);
+}
 
 const vector<PointLight*>& LightController::GetPointLights() const
 {
@@ -30,4 +34,8 @@ const vector<PointLight*>& LightController::GetPointLights() const
 const vector<DirectionalLight*>& LightController::GetDirectionalLights() const
 {
     return m_DirectionalLights;
+}
+const vector<SpotLight*>& LightController::GetSpotLights() const
+{
+    return m_SpotLights;
 }

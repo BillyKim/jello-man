@@ -11,9 +11,11 @@ public:
 
     void AddLight(PointLight* light);
     void AddLight(DirectionalLight* light);
+    void AddLight(SpotLight* light);
 
     const vector<PointLight*>& GetPointLights() const;
     const vector<DirectionalLight*>& GetDirectionalLights() const;
+    const vector<SpotLight*>& GetSpotLights() const;
 
 private:
     vector<PointLight*> m_PointLights;
