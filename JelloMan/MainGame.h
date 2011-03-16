@@ -7,6 +7,7 @@
 #include "RenderContext.h"
 #include "Camera.h"
 #include "Sound.h"
+#include "LightController.h"
 
 class AudioEngine;
 
@@ -31,11 +32,10 @@ private:
 	// DATAMEMBERS
 	float m_dTtime;
 	bool m_bTest;
-	
-	DirLight m_DirLight;
 
 	Level* m_pLevel;
 	Camera* m_pCamera;
+    LightController* m_pLightController;
 	AudioEngine* m_pAudioEngine;
 	Sound* m_pTestSound;
 };

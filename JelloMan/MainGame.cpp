@@ -9,6 +9,7 @@
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
 							m_pCamera(0),
+                            m_pLightController(0),
 							m_pAudioEngine(0),
 							m_pTestSound(0),
 							m_bTest(false)
@@ -19,6 +20,7 @@ MainGame::MainGame()	:	m_dTtime(0),
 MainGame::~MainGame()
 {
 	delete m_pCamera;
+    delete m_pLightController;
 	delete m_pAudioEngine;
 	delete m_pTestSound;
 
@@ -41,7 +43,11 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	// CAMERA
 	m_pCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 							static_cast<int>(BLOX_2D->GetWindowSize().height)	);
-	m_pCamera->LookAt(Vector3(4,4,-4),Vector3(0,2,0),Vector3(0,1,0));
+    m_pCamera->LookAt(Vector3(-225, 199, -197), Vector3(0, 0, 0), Vector3(0, 1, 0));
+    m_pCamera->SetLens();
+
+    // LIGHTCONTROLLER
+    m_pLightController = new LightController();
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
@@ -57,15 +63,6 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pTestSound->PreLoad();
 	m_pTestSound->SetLoopCount(1);
 	m_pTestSound->SetVolume(90);
-
-	// TEST
-	D3DXVECTOR3 lightDir(-.1f,-0.1f,-1);
-	D3DXVec3Normalize(&m_DirLight.DirW,&lightDir);
-	m_DirLight.Diffuse = m_DirLight.Ambient = m_DirLight.Specular = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
-
-    
-    m_pCamera->LookAt(Vector3(-225, 199, -197), Vector3(0, 0, 0), Vector3(0, 1, 0));
-    m_pCamera->SetLens();
 }
 
 void MainGame::UpdateScene(const float dTime)
@@ -103,7 +100,7 @@ void MainGame::UpdateScene(const float dTime)
 
 void MainGame::DrawScene()
 {
-	RenderContext renderContext(m_pCamera, m_DirLight); // hoe lichten doorgeven, vector van alle lights?
+	RenderContext renderContext(m_pCamera, m_pLightController);
 	m_pLevel->Draw(&renderContext);
 
 	tstringstream stream;
