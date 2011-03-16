@@ -9,17 +9,17 @@ public:
     LightController(void);
     virtual ~LightController(void);
 
-    void AddLight(PointLight* light);
-    void AddLight(DirectionalLight* light);
-    void AddLight(SpotLight* light);
+    void AddLight(const PointLight& light);
+    void AddLight(const DirectionalLight& light);
+    void AddLight(const SpotLight& light);
 
-    const vector<PointLight*>& GetPointLights() const;
-    const vector<DirectionalLight*>& GetDirectionalLights() const;
-    const vector<SpotLight*>& GetSpotLights() const;
+    const vector<PointLight>& GetPointLights() const;
+    const vector<DirectionalLight>& GetDirectionalLights() const;
+    const vector<SpotLight>& GetSpotLights() const;
 
 private:
-    vector<PointLight*> m_PointLights;
-    vector<DirectionalLight*> m_DirectionalLights;
-	vector<SpotLight*> m_SpotLights;
+    vector<PointLight> m_PointLights;
+    vector<DirectionalLight> m_DirectionalLights;
+	vector<SpotLight> m_SpotLights;
 };
 

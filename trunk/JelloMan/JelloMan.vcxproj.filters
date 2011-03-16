@@ -280,5 +280,8 @@
     <None Include="phong.fx">
       <Filter>Content\effect</Filter>
     </None>
+    <None Include="lights.fx">
+      <Filter>Content\effect</Filter>
+    </None>
   </ItemGroup>
 </Project>

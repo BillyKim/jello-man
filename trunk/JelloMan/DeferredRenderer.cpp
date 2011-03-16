@@ -224,9 +224,10 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
 	m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);
 	m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
-    m_pEffect->SetLightDirection(-pRenderContext->GetCamera()->GetLook());
-    m_pEffect->SetLightColor(Vector3(1, 1, 1));
+
     m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());
+
+    m_pEffect->SetPointLights(pRenderContext->GetLightController()->GetPointLights());
 
 	m_pScreenMesh->Draw();
 

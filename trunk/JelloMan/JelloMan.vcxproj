@@ -156,6 +156,7 @@
     <ClCompile Include="vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lights.fx" />
     <None Include="phong.fx" />
     <None Include="postdeferred.fx" />
     <None Include="predeferred.fx" />

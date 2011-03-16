@@ -1,13 +1,19 @@
+#include "lights.fx"
+#define MAXLIGHTS 64
+
 cbuffer cbPerFrame
 {
-	float3 vLightDir : LightDir;
-	float3 cLightColor : LightColor;
-	float3 vCamPos : CamPosition;
 };
+
+PointLight pointLights[MAXLIGHTS] : PointLightArr;
+int pointLightCount : PointLightCount;
+
+float3 vCamPos : CameraPosition;
 
 Texture2D colorMap : ColorMap;
 Texture2D normalSpecMap : NormalSpecMap;
 Texture2D positionGlossMap : PositionGlossMap;
+
 
 SamplerState mapSampler
 {
@@ -51,28 +57,42 @@ float4  PS(VertexShaderOutput input) : SV_TARGET
 	float4 posGloss = positionGlossMap.Sample(mapSampler, input.texCoord);
 	float4 col = colorMap.Sample(mapSampler, input.texCoord);
 	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
-
-	//DiffuseLight
-    float3 color = dot(normalize(normalSpec.rgb), normalize(vLightDir));
-
-	//DiffuseColor
-	color *= col.rgb;
-	//float3 color = col.rgb;
-
 	float3 vCamDir = normalize(vCamPos - posGloss.xyz);
 
-	//Phong
-	float y = saturate(dot(normalSpec.rgb, vLightDir));
-	float3 reflect = normalize(normalSpec.rgb * y * 2 - vLightDir);
-	float spec = saturate(dot(vCamDir, reflect));
-	spec = pow(spec, posGloss.a * 25.0f);
+	float3 normal = normalize(normalSpec.xyz);
+	
+	float3 endColor = float3(0, 0, 0);
 
-	color += spec * cLightColor * normalSpec.a;
+	for (int i = 0; i < pointLightCount; ++i)
+	{
+		float3 vLightDir = pointLights[i].Position - posGloss.xyz;
+		float dist = length(vLightDir);
+		vLightDir /= dist;
+		dist = max(dist, 1) / 10;
 
-	color = saturate(color);
+		//DiffuseLight
+		float3 color = saturate(dot(normal, vLightDir)) * pointLights[i].Color;
 
-	//return float3(1, 0, 0);
-    return float4(color, 1);
+		//DiffuseColor
+		//color *= col.rgb;
+
+		//Phong
+		float y = saturate(dot(normal, vLightDir));
+		float3 reflect = normalize(normal * y * 2 - vLightDir);
+		float spec = saturate(dot(vCamDir, reflect));
+		spec = pow(spec, posGloss.a * 1.0f);
+		spec *= pointLights[i].Color * normalSpec.a;
+
+		color += spec;
+
+		color = color / (dist /* dist*/);
+
+		endColor += color * pointLights[i].Multiplier;
+	}
+
+	endColor = saturate(endColor);
+
+    return float4(endColor, 1);
 };
 
 
