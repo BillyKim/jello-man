@@ -4,6 +4,7 @@
 #include "Vector4.h"
 #include "Matrix.h"
 #include "Controls.h"
+#include "Blox2D.h"
 
 class Camera
 {
