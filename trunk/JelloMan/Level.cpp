@@ -31,7 +31,7 @@ void Level::Initialize()
                                 rtv);
     m_pForwardRenderer->Init(m_pDeferredRenderer);
     m_pTestObject->Init();
-    m_pTestObject2->Init();
+    //m_pTestObject2->Init();
 
     m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
 }
@@ -42,18 +42,18 @@ void Level::Tick(const float dTime)
 
 void Level::Draw(const RenderContext* pRenderContext)
 {
-    m_pDeferredRenderer->Begin();
+   m_pDeferredRenderer->Begin();
 
-	//m_pTestObject->Draw(pRenderContext);
+	m_pTestObject->Draw(pRenderContext);
 
-    m_pDeferredRenderer->End();
+    m_pDeferredRenderer->End(pRenderContext);
 
-    m_pForwardRenderer->Begin();
-    m_pForwardRenderer->Clear(Vector4(0.1f, 0.2f, 0.5f, 1.0f));
+    //m_pForwardRenderer->Begin();
+    ////m_pForwardRenderer->Clear(Vector4(0.1f, 0.2f, 0.5f, 1.0f));
 
-    m_pTestObject2->Draw(pRenderContext);
+    //m_pTestObject2->Draw(pRenderContext);
 
-    m_pForwardRenderer->End();
+    //m_pForwardRenderer->End();
 }
 
 void Level::OnResize(ID3D10RenderTargetView* pRTView)

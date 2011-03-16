@@ -26,15 +26,3 @@ private:
     //ID3D10ShaderResourceView* m_pNormalMap;
 
 };
-
-
-//cbuffer cbPerObject
-//{
-//	matrix mtxWorld : World;
-//	matrix mtxWorldVP : WorldViewProjection;
-//};
-//
-//Texture2D diffuseMap : DiffuseMap;
-////Texture2D normalMap : NormalMap;
-//Texture2D specMap : SpecMap;
-//Texture2D glossMap : GlossMap;
