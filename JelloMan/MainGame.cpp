@@ -43,11 +43,43 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	// CAMERA
 	m_pCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 							static_cast<int>(BLOX_2D->GetWindowSize().height)	);
-    m_pCamera->LookAt(Vector3(-225, 199, -197), Vector3(0, 0, 0), Vector3(0, 1, 0));
+    m_pCamera->LookAt(Vector3(-225, 115, -205), Vector3(0, 0, 0), Vector3(0, 1, 0));
     m_pCamera->SetLens();
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
+
+    PointLight pl;
+        //Omni 1
+        pl = PointLight();
+        pl.position = Vector3(-62.07f, 46.88f, -112.47f);
+        pl.color = Vector4(240/255.f, 203/255.f, 104/255.f, 1);
+        pl.multiplier = 4.0f;
+        m_pLightController->AddLight(pl);
+        //Omni 2
+        pl = PointLight();
+        pl.position = Vector3(-14.64f, 63.71f, -45.00f);
+        pl.color = Vector4(255/255.f, 54/255.f, 54/255.f, 1);
+        pl.multiplier = 2.0f;
+        m_pLightController->AddLight(pl);
+        //Omni 3
+        pl = PointLight();
+        pl.position = Vector3(-36.82f, 13.95f, 61.24f);
+        pl.color = Vector4(85/255.f, 151/255.f, 249/255.f, 1);
+        pl.multiplier = 2.0f;
+        m_pLightController->AddLight(pl);
+        //Omni 4
+        pl = PointLight();
+        pl.position = Vector3(154.73f, 13.95f, 207.77f);
+        pl.color = Vector4(100/255.f, 253/255.f, 100/255.f, 1);
+        pl.multiplier = 10.0f;
+        m_pLightController->AddLight(pl);
+        //Omni 5
+        pl = PointLight();
+        pl.position = Vector3(154.73f, -43.72f, 68.5f);
+        pl.color = Vector4(249/255.f, 69/255.f, 141/255.f, 1);
+        pl.multiplier = 10.0f;
+        m_pLightController->AddLight(pl);
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
