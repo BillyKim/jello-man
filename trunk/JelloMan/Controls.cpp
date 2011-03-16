@@ -95,3 +95,8 @@ void Controls::SetMousePos(Point2D pos)
 	m_MousePos.x = pos.x;
 	m_MousePos.y = pos.y;
 }
+void Controls::SetOldMousePos(Point2D oldPos)
+{
+	m_OldMousePos.x = oldPos.x;
+	m_OldMousePos.y = oldPos.y;
+}
