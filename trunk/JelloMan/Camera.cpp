@@ -70,12 +70,6 @@ void Camera::Tick(const float dTime)
 	if (CONTROLS->LeftMBDown())
 	{
 		Point2D mouseMovement = CONTROLS->GetMouseMovement();
-
-		BLOX_2D->SetColor(255,255,255);
-		tstringstream stream;
-		stream << mouseMovement.x << _T(" ") << mouseMovement.y;
-		BLOX_2D->DrawString(stream.str(),20,300);
-
 		float pitch = mouseMovement.y / m_MouseSensitivity;
 		float yAngle = mouseMovement.x / m_MouseSensitivity;
 

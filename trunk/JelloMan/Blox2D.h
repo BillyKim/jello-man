@@ -13,6 +13,21 @@
 //-----------------------------------------------------
 class Blox2D
 {
+public:
+	enum HORIZONTAL_ALIGN
+	{
+		HORIZONTAL_ALIGN_LEFT = 0,
+		HORIZONTAL_ALIGN_CENTER = 1,
+		HORIZONTAL_ALIGN_RIGHT = 2
+	};
+
+	enum VERTICAL_ALIGN
+	{
+		VERTICAL_ALIGN_TOP = 0,
+		VERTICAL_ALIGN_MIDDLE = 1,
+		VERTICAL_ALIGN_BOTTOM = 2
+	};
+
 private:
 	// singleton
 	Blox2D();
@@ -58,7 +73,7 @@ public:
 	void FillEllipse(D2D1_ELLIPSE ellipse) const;
 	void DrawString(tstring const& text, int x, int y) const;
 	void DrawStringCentered(tstring const& text, int offSetX = 0, int offSetY = 0) const;
-	//void DrawString(tstring const& text, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment);
+	void DrawString(tstring const& text, D2D1_RECT_F rect, HORIZONTAL_ALIGN textAlignment, VERTICAL_ALIGN paragraphAlignment);
 	//void DrawString(int nr, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment);
 	void ShowFPS(float dTime, bool showGraph = false, float delayInterval = 1.0f);
 	void FillBlock(int x, int y, int size);

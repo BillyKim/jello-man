@@ -8,6 +8,8 @@
 #include "Camera.h"
 #include "Sound.h"
 #include "LightController.h"
+#include "Matrix.h"
+#include <vector>
 
 class AudioEngine;
 
@@ -32,6 +34,9 @@ private:
 	// DATAMEMBERS
 	float m_dTtime;
 	bool m_bTest;
+
+	vector<Matrix> m_LightWorldVec;
+	vector<D3DXVECTOR3> m_LightPosvec;
 
 	Level* m_pLevel;
 	Camera* m_pCamera;
