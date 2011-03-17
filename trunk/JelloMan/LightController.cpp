@@ -81,11 +81,21 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 				if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()))
 				{
 					m_LightsSelected[i] = !m_LightsSelected[i];
+					
+					for (unsigned int i2 = 0; i2 < m_pHitRectLights.size(); ++i2)
+					{
+						if (i != i2)
+							m_LightsSelected[i2] = false;
+					}
 				}
-				else
-					m_LightsSelected[i] = false;
 			}
 		}
+	}
+
+	if (CONTROLS->RightMBClicked())
+	{
+		for (unsigned int i = 0; i < m_pHitRectLights.size(); ++i)
+			m_LightsSelected[i] = false;
 	}
 
 	// POINTLIGHTS
@@ -174,5 +184,4 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 				}
 		}
 	}
-
 }
