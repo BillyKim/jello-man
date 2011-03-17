@@ -12,7 +12,7 @@ MainGame::MainGame()	:	m_dTtime(0),
                             m_pLightController(0),
 							m_pAudioEngine(0),
 							m_pTestSound(0),
-							m_bTest(false)
+							m_bResourcesLoaded(false)
 {
 
 }
@@ -57,9 +57,9 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
         pl.multiplier = 4.0f;
         m_pLightController->AddLight(pl);
 		
-		m_LightPosvec.push_back(D3DXVECTOR3(-62.07f, 46.88f, -112.47f));
-		m_LightWorldVec.push_back(Matrix());
-		D3DXMatrixTranslation(&m_LightWorldVec[0],-62.07f, 46.88f, -112.47f);
+			m_LightPosvec.push_back(D3DXVECTOR3(-62.07f, 46.88f, -112.47f));
+			m_LightWorldVec.push_back(Matrix());
+			D3DXMatrixTranslation(&m_LightWorldVec[0],-62.07f, 46.88f, -112.47f);
 
         //Omni 2
         pl = PointLight();
@@ -68,9 +68,9 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
         pl.multiplier = 2.0f;
         m_pLightController->AddLight(pl);
 		
-		m_LightPosvec.push_back(D3DXVECTOR3(-14.64f, 63.71f, -45.00f));
-		m_LightWorldVec.push_back(Matrix());
-		D3DXMatrixTranslation(&m_LightWorldVec[1],-14.64f, 63.71f, -45.00f);
+			m_LightPosvec.push_back(D3DXVECTOR3(-14.64f, 63.71f, -45.00f));
+			m_LightWorldVec.push_back(Matrix());
+			D3DXMatrixTranslation(&m_LightWorldVec[1],-14.64f, 63.71f, -45.00f);
 
         //Omni 3
         pl = PointLight();
@@ -79,9 +79,9 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
         pl.multiplier = 2.0f;
 		m_pLightController->AddLight(pl);
 		
-		m_LightPosvec.push_back(D3DXVECTOR3(-36.82f, 13.95f, 61.24f));
-		m_LightWorldVec.push_back(Matrix());
-		D3DXMatrixTranslation(&m_LightWorldVec[2],-36.82f, 13.95f, 61.24f);
+			m_LightPosvec.push_back(D3DXVECTOR3(-36.82f, 13.95f, 61.24f));
+			m_LightWorldVec.push_back(Matrix());
+			D3DXMatrixTranslation(&m_LightWorldVec[2],-36.82f, 13.95f, 61.24f);
 
         //Omni 4
         pl = PointLight();
@@ -90,9 +90,9 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
         pl.multiplier = 10.0f;
         m_pLightController->AddLight(pl);
 		
-		m_LightPosvec.push_back(D3DXVECTOR3(154.73f, 13.95f, 207.77f));
-		m_LightWorldVec.push_back(Matrix());
-		D3DXMatrixTranslation(&m_LightWorldVec[3],154.73f, 13.95f, 207.77f);
+			m_LightPosvec.push_back(D3DXVECTOR3(154.73f, 13.95f, 207.77f));
+			m_LightWorldVec.push_back(Matrix());
+			D3DXMatrixTranslation(&m_LightWorldVec[3],154.73f, 13.95f, 207.77f);
       
 		//Omni 5
         pl = PointLight();
@@ -101,14 +101,14 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
         pl.multiplier = 10.0f;
         m_pLightController->AddLight(pl);
 		
-		m_LightPosvec.push_back(D3DXVECTOR3(154.73f, -43.72f, 68.5f));
-		m_LightWorldVec.push_back(Matrix());
-		D3DXMatrixTranslation(&m_LightWorldVec[4],154.73f, -43.72f, 68.5f);
+			m_LightPosvec.push_back(D3DXVECTOR3(154.73f, -43.72f, 68.5f));
+			m_LightWorldVec.push_back(Matrix());
+			D3DXMatrixTranslation(&m_LightWorldVec[4],154.73f, -43.72f, 68.5f);
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
 	m_pLevel->Initialize();
-	m_bTest = true;
+	m_bResourcesLoaded = true;
 
 	// AUDIO
 	tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
@@ -126,7 +126,7 @@ void MainGame::UpdateScene(const float dTime)
 	// dtime
 	m_dTtime = dTime;
 
-	if (m_bTest)
+	if (m_bResourcesLoaded)
 	{
 		m_pCamera->Tick(dTime);
 		m_pLevel->Tick(dTime);
@@ -159,7 +159,7 @@ void MainGame::UpdateScene(const float dTime)
 
 void MainGame::DrawScene()
 {
-	if (m_bTest)
+	if (m_bResourcesLoaded)
 	{
 		RenderContext renderContext(m_pCamera, m_pLightController);
 		m_pLevel->Draw(&renderContext);
@@ -200,12 +200,17 @@ void MainGame::DrawScene()
 			D3DXVECTOR3 temp;
 			D3DXVec3Project(&temp,&m_LightPosvec[i],&viewP,&matProj,&matView,&m_LightWorldVec[i]);
 
+			Vector3 length = m_pCamera->GetPosition() - m_LightPosvec[i];
+			float l = length.Length();
+			l *= 0.001f;
+
 			BLOX_2D->SetColor(255,255,0,0.8f);
-			BLOX_2D->FillEllipse((int)temp.x,(int)temp.y,20,20);
+			BLOX_2D->FillEllipse((int)temp.x,(int)temp.y,(int)(20/l),(int)(20/l));
 			BLOX_2D->SetColor(255,255,255,0.8f);
-			BLOX_2D->DrawEllipse((int)temp.x,(int)temp.y,20,20,2.0f);
+			BLOX_2D->DrawEllipse((int)temp.x,(int)temp.y,(int)(20/l),(int)(20/l),2.0f);
 			BLOX_2D->SetColor(0,0,0,0.8f);
-			BLOX_2D->DrawString(_T("P"),(int)temp.x-5,(int)temp.y-7);
+			BLOX_2D->SetFont(_T("Arial"),true,false,10/(l/2));
+			BLOX_2D->DrawString(_T("P"),(int)((temp.x-(20/l)/2)+5),(int)(temp.y-(20/l)/2));
 		}
 
 	}
@@ -226,11 +231,11 @@ void MainGame::DrawScene()
 
 void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
 {
-	if (m_bTest)
+	if (m_bResourcesLoaded)
 		m_pLevel->OnResize(pRTView);
 }
 void MainGame::Release()
 {
-	if (m_bTest)
+	if (m_bResourcesLoaded)
 		m_pLevel->Release();
 }

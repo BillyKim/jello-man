@@ -33,7 +33,7 @@ private:
 
 	// DATAMEMBERS
 	float m_dTtime;
-	bool m_bTest;
+	bool m_bResourcesLoaded;
 
 	vector<Matrix> m_LightWorldVec;
 	vector<D3DXVECTOR3> m_LightPosvec;
