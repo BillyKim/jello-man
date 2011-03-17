@@ -52,7 +52,7 @@ void Level::Draw(const RenderContext* pRenderContext)
     m_pForwardRenderer->Begin();
     //m_pForwardRenderer->Clear(Vector4(0.1f, 0.2f, 0.5f, 1.0f));
 
-    m_pTestObject2->Draw(pRenderContext);
+    //m_pTestObject2->Draw(pRenderContext);
 
     m_pForwardRenderer->End();
 
