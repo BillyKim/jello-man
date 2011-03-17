@@ -110,6 +110,9 @@ int Engine::Run()
         {	
 			if( !m_AppPaused )
 			{
+				m_GameTimer.Tick();
+				OnRender();
+
 				if (!m_bInitialized)
 				{
 					m_pGame->LoadResources(m_pDXDevice);
@@ -126,9 +129,6 @@ int Engine::Run()
 
 					m_bInitialized = true;
 				}
-
-				m_GameTimer.Tick();
-				OnRender();
 			}
 			else
 				Sleep(50);
