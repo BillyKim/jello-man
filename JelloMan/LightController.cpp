@@ -65,6 +65,10 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 
 	int size = 10;
 
+	BLOX_2D->SetColor(0,0,0,0.5f);
+	BLOX_2D->FillRect(0,0,220,BLOX_2D->GetWindowSize().height);
+
+	BLOX_2D->SetColor(255,255,255);
 	// DEBUG INFO
 	BLOX_2D->SetFont(_T("Arial"),false,false,12);
 	tstringstream stream;
@@ -169,6 +173,9 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 				BLOX_2D->DrawString(s.str(),
 				RectF(temp.x-(((size-40)/l)/2),temp.y-(((size+40)/l)/2),temp.x+(size/l)-(((size+40)/l)/2),temp.y+(size/l)-(((size+40)/l)/2)),
 				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
+
+				BLOX_2D->SetColor(255,255,255);
+				BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(m_PointLights[i].AttenuationEnd/l),static_cast<int>(m_PointLights[i].AttenuationEnd/l),2);
 			}
 			else
 			{

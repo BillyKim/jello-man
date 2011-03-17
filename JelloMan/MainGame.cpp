@@ -222,7 +222,7 @@ void MainGame::DrawScene()
 		// if using camera
 		if (CONTROLS->LeftMBDown())
 		{
-			BLOX_2D->DrawBitmap(m_bmpCamera,BLOX_2D->GetWindowSize().width-70,20,0.8f);
+			BLOX_2D->DrawBitmap(m_bmpCamera,static_cast<int>(BLOX_2D->GetWindowSize().width-70),20,0.8f);
 		}
 	}
 	else

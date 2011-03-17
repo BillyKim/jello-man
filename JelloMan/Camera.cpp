@@ -59,7 +59,7 @@ void Camera::Tick(const float dTime)
 	m_PosWorld += dir * finalSpeed * dTime;
 
 	// change FOV with mousewheel
-	float angle = static_cast<float>(CONTROLS->GetMouseWheelPos() / 120 / 10);
+	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 10.0f);
 
 	if (angle != 0)
 	{
