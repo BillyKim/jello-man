@@ -80,7 +80,7 @@ float3  PS(VertexShaderOutput input) : SV_TARGET
 				float3 color = diff * pointLights[i].Color;
 
 				//DiffuseColor
-				//color *= col.rgb;
+				color *= col.rgb;
 
 				//Phong
 				float y = max(dot(normal, vLightDir), 0);
