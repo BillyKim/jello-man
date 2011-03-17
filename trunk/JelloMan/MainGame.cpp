@@ -204,13 +204,16 @@ void MainGame::DrawScene()
 			float l = length.Length();
 			l *= 0.001f;
 
-			BLOX_2D->SetColor(255,255,0,0.8f);
+			BLOX_2D->SetColor(255,255,0,0.4f/l);
 			BLOX_2D->FillEllipse((int)temp.x,(int)temp.y,(int)(20/l),(int)(20/l));
-			BLOX_2D->SetColor(255,255,255,0.8f);
+			BLOX_2D->SetColor(255,255,255,0.4f/l);
 			BLOX_2D->DrawEllipse((int)temp.x,(int)temp.y,(int)(20/l),(int)(20/l),2.0f);
-			BLOX_2D->SetColor(0,0,0,0.8f);
+			BLOX_2D->SetColor(0,0,0,0.4f/l);
 			BLOX_2D->SetFont(_T("Arial"),true,false,10/(l/2));
-			BLOX_2D->DrawString(_T("P"),(int)((temp.x-(20/l)/2)+5),(int)(temp.y-(20/l)/2));
+			
+			BLOX_2D->DrawString(_T("P"),
+				RectF(temp.x-((20/l)/2),temp.y-((20/l)/2),temp.x+(20/l)-((20/l)/2),temp.y+(20/l)-((20/l)/2)),
+				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
 		}
 
 	}
