@@ -69,14 +69,14 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 		//pl.AttenuationEnd = 500;
   //      m_pLightController->AddLight(pl);
 
-  //      //Omni 3
-  //      pl = PointLight();
-  //      pl.position = Vector3(-36.82f, 13.95f, 61.24f);
-  //      pl.color = Vector4(85/255.f, 151/255.f, 249/255.f, 1);
-  //      pl.multiplier = 1.0f;
-		//pl.AttenuationStart = 0;
-		//pl.AttenuationEnd = 200;
-		//m_pLightController->AddLight(pl);
+        //Omni 3
+        pl = PointLight();
+        pl.position = Vector3(300.f, 200.95f, -300.24f);
+        pl.color = Vector4(85/255.f, 151/255.f, 249/255.f, 1);
+        pl.multiplier = 2.0f;
+		pl.AttenuationStart = 10;
+		pl.AttenuationEnd = 400;
+		m_pLightController->AddLight(pl);
 
   //      //Omni 4
   //      pl = PointLight();
@@ -95,6 +95,15 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 		//pl.AttenuationStart = 0;
 		//pl.AttenuationEnd = 800;
   //      m_pLightController->AddLight(pl);
+
+		//Omni 6
+        pl = PointLight();
+        pl.position = Vector3(0.f, 300.0f, 0.f);
+        pl.color = Vector4(128/255.f, 128/255.f, 250/255.f, 1);
+        pl.multiplier = 0.3f;
+		pl.AttenuationStart = 0;
+		pl.AttenuationEnd = 500;
+        m_pLightController->AddLight(pl);
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
