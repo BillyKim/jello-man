@@ -88,6 +88,9 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 			stream << _T("X:") << m_PointLights[i].position.X << _T(" ");
 			stream << _T("Y:") << m_PointLights[i].position.Y << _T(" ");
 			stream << _T("Z:") << m_PointLights[i].position.Z << _T("\n   ");
+			stream << _T("R:") << static_cast<int>(m_PointLights[i].color.R*255) << _T(" ");
+			stream << _T("G:") << static_cast<int>(m_PointLights[i].color.G*255) << _T(" ");
+			stream << _T("B:") << static_cast<int>(m_PointLights[i].color.B*255) << _T("\n   ");
 			stream << _T("Multiplier: ") << m_PointLights[i].multiplier << _T("\n   ");
 			stream << _T("Attenuation end: ") << m_PointLights[i].AttenuationEnd << _T("\n\n");
 		}
@@ -181,6 +184,12 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 			BLOX_2D->DrawString(_T("P"),
 				RectF(temp.x-((size/l)/2),temp.y-((size/l)/2),temp.x+(size/l)-((size/l)/2),temp.y+(size/l)-((size/l)/2)),
 				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
+		}
+		else
+		{
+			// HITRECTS
+			m_pHitRectLights[i]->SetSize(1,1);
+			m_pHitRectLights[i]->SetPosition(-10,-10);
 		}
 
 		// MOVE

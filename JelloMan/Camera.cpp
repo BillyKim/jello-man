@@ -3,8 +3,8 @@
 #define CONTROLS (Controls::GetSingleton())
 
 // CONSTRUCTOR - DESTRUCTOR
-Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(50.0f),
-													m_FastForward(10.0f),
+Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(200.0f),
+													m_FastForward(4.0f),
 													m_MouseSensitivity(100),
 													m_FOV(PiOver4),
 													m_AspectRatio(4.0f/3.0f),
