@@ -60,6 +60,7 @@ private:
 	bool      m_Maximized;
 	bool      m_Resizing;
 	bool	  m_bInitialized;
+	bool	  m_bMouseMoving;
 
 	MainGame* m_pGame;
  

@@ -112,32 +112,37 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 
 		ColorF col(m_PointLights[i].color.R,m_PointLights[i].color.G,m_PointLights[i].color.B,0.4f/l);
 
-		// HITRECTS
-		m_pHitRectLights[i]->SetSize(static_cast<int>(size/l),static_cast<int>(size/l));
-		m_pHitRectLights[i]->SetPosition(static_cast<int>(temp.x),static_cast<int>(temp.y));
+		Vector3 lo = pCamera->GetLook();
 
-		// DRAW
-		if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()) || m_LightsSelected[i] == true)
+		if (lo.Dot(length) < 0)
 		{
-			BLOX_2D->SetColor(255,255,255,0.4f/l);
-			BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l));
+			// HITRECTS
+			m_pHitRectLights[i]->SetSize(static_cast<int>(size/l),static_cast<int>(size/l));
+			m_pHitRectLights[i]->SetPosition(static_cast<int>(temp.x),static_cast<int>(temp.y));
+
+			// DRAW
+			if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()) || m_LightsSelected[i] == true)
+			{
+				BLOX_2D->SetColor(255,255,255,0.4f/l);
+				BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l));
+				BLOX_2D->SetColor(0,0,0,0.4f/l);
+				BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),3.0f/l);
+			}
+			else
+			{
+				BLOX_2D->SetColor(col);
+				BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>((size/l)));
+				BLOX_2D->SetColor(255,255,255,0.4f/l);
+				BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),2.0f);
+			}
+
 			BLOX_2D->SetColor(0,0,0,0.4f/l);
-			BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),3.0f/l);
-		}
-		else
-		{
-			BLOX_2D->SetColor(col);
-			BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>((size/l)));
-			BLOX_2D->SetColor(255,255,255,0.4f/l);
-			BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),2.0f);
-		}
-
-		BLOX_2D->SetColor(0,0,0,0.4f/l);
-		BLOX_2D->SetFont(_T("Arial"),true,false,(size/2)/(l/2));
+			BLOX_2D->SetFont(_T("Arial"),true,false,(size/2)/(l/2));
 			
-		BLOX_2D->DrawString(_T("P"),
-			RectF(temp.x-((size/l)/2),temp.y-((size/l)/2),temp.x+(size/l)-((size/l)/2),temp.y+(size/l)-((size/l)/2)),
-			Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
+			BLOX_2D->DrawString(_T("P"),
+				RectF(temp.x-((size/l)/2),temp.y-((size/l)/2),temp.x+(size/l)-((size/l)/2),temp.y+(size/l)-((size/l)/2)),
+				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
+		}
 
 		// MOVE
 		Vector3 look = pCamera->GetLook();

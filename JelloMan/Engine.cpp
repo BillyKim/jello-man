@@ -192,6 +192,19 @@ void Engine::OnRender()
 		m_pBackBufferRT->EndDraw();
 	}
 
+	if (CONTROLS->LeftMBDown())
+	{
+		if (m_bMouseMoving)
+		{
+			POINT pt;
+			pt.x = m_ClientWidth/2;
+			pt.y = m_ClientHeight/2;
+			ClientToScreen(GetMainWnd(),&pt);
+			SetCursorPos(pt.x,pt.y);
+			CONTROLS->SetOldMousePos(Point2F(m_ClientWidth/2,m_ClientHeight/2));
+		}
+	}
+
 	// displaying backbuffer - vsync on
 	m_pSwapChain->Present(1, 0);
 }
@@ -313,16 +326,19 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		currentpos = MAKEPOINTS(lParam);
 		CONTROLS->SetMousePos(Point2F(currentpos.x,currentpos.y));
+		m_bMouseMoving = true;
 		return 0;
 
 	case WM_LBUTTONDOWN:
 		CONTROLS->SetOldMousePos(CONTROLS->GetMousePos());
 		CONTROLS->SetLeftMBDown(true);
+		ShowCursor(false);
 		return 0;
 
 	case WM_LBUTTONUP:
 		CONTROLS->SetLeftMBClicked(true);
 		CONTROLS->SetLeftMBDown(false);
+		ShowCursor(true);
 		return 0;
 
 	case WM_RBUTTONDOWN:
@@ -340,6 +356,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		CONTROLS->SetMouseWheelPos(zPos);
 		return 0;
 	}
+	m_bMouseMoving = false;
 	return DefWindowProc(m_hMainWnd, msg, wParam, lParam);
 }
 
