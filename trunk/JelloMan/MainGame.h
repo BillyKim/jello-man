@@ -36,6 +36,8 @@ private:
 	bool m_bResourcesLoaded;
 	bool m_bDebug;
 
+	Bitmap* m_bmpCamera;
+
 	Level* m_pLevel;
 	Camera* m_pCamera;
     LightController* m_pLightController;

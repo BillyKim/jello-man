@@ -8,6 +8,8 @@
 
 #define BLOX_2D (Blox2D::GetSingleton())
 
+class Bitmap;
+
 //-----------------------------------------------------
 // Blox2D Class									
 //-----------------------------------------------------
@@ -37,6 +39,13 @@ public:
 	
 	virtual ~Blox2D();
 	static Blox2D* GetSingleton();
+
+	HRESULT Blox2D::LoadBitmapFromFile(
+    PCWSTR uri,
+    UINT destinationWidth,
+    UINT destinationHeight,
+    ID2D1Bitmap **ppBitmap
+    );
 
 	// SETTERS
 	void SetColor(int r, int g, int b, float a = 1.0f);
@@ -81,7 +90,7 @@ public:
 	void FillBlock(D2D1_POINT_2F coord, int size, D2D1_COLOR_F color1, D2D1_COLOR_F color2);
 	void DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize) const;
 	void FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const;
-	//void DrawBitmap(Bitmap* bitmap, int x, int y, float opacity = 1.0f, int width = 0, int height = 0);
+	void DrawBitmap(Bitmap* bitmap, int x, int y, float opacity = 1.0f, int width = 0, int height = 0);
 
 private:
 
@@ -90,6 +99,7 @@ private:
 	IDWriteFactory* m_pDWriteFactory;
 	ID2D1SolidColorBrush* m_pColorBrush;
 	IDWriteTextFormat* m_pTextFormat;
+	IWICImagingFactory *m_pWICFactory;
 
 	vector<int> m_fpsHistory;
 	vector<float> m_dtimeHistory;
@@ -159,5 +169,37 @@ private:
 	int m_Height;
 
 	D2D1_POINT_2F m_CurrentPos;
+};
+
+//-----------------------------------------------------------------
+// Bitmap Class
+//-----------------------------------------------------------------
+
+struct BITMAP_INFO
+{
+	tstring filepath;
+	ID2D1Bitmap* bitmap;
+};
+
+class Bitmap
+{
+public:
+	// constructors
+	Bitmap(tstring filepath);
+	Bitmap(int IDBitmap);
+
+	// destructor
+	virtual  ~Bitmap();
+
+	// getters
+	D2D1_SIZE_F GetSize();
+	BITMAP_INFO GetInfo();
+	bool Exists();
+
+private:
+	tstring m_FilePath;
+	bool m_bExists;
+
+	ID2D1Bitmap* m_pBitmap;
 };
  

@@ -13,7 +13,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pAudioEngine(0),
 							m_pTestSound(0),
 							m_bResourcesLoaded(false),
-							m_bDebug(false)
+							m_bDebug(false),
+							m_bmpCamera(0)
 {
 
 }
@@ -24,6 +25,7 @@ MainGame::~MainGame()
     delete m_pLightController;
 	delete m_pAudioEngine;
 	delete m_pTestSound;
+	delete m_bmpCamera;
 
 	SafeDelete(m_pLevel);
 }
@@ -49,6 +51,8 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
+
+	m_bmpCamera = new Bitmap(_T("Content/Images/cam.png"));
 
     PointLight pl;
         //Omni 1
@@ -212,13 +216,14 @@ void MainGame::DrawScene()
 		}
 		else
 		{
-			BLOX_2D->DrawStringCentered(_T("PRESS SPACE"),0,-300);
+			BLOX_2D->DrawString(_T("PRESS SPACE"),2,130);
 		}
 
-		BLOX_2D->SetFont(_T("Arial"),false,false,12);
-		tstringstream stream;
-		stream << _T("Nr. lights: ") << m_pLightController->GetPointLights().size();
-		BLOX_2D->DrawString(stream.str(),2,150);
+		// if using camera
+		if (CONTROLS->LeftMBDown())
+		{
+			BLOX_2D->DrawBitmap(m_bmpCamera,BLOX_2D->GetWindowSize().width-70,20,0.8f);
+		}
 	}
 	else
 	{

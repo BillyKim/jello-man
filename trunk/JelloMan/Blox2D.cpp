@@ -21,14 +21,22 @@ Blox2D::Blox2D()	:	m_pRenderTarget(0),
 						m_TBase(0),
 						m_GameTime(0),
 						m_FPS(0),
-						m_DTimeS(0)
+						m_DTimeS(0),
+						m_pWICFactory(0)
 {
-	// nothing to create
+	CoCreateInstance(
+			CLSID_WICImagingFactory,
+			NULL,
+			CLSCTX_INPROC_SERVER,
+			IID_IWICImagingFactory,
+			(LPVOID*)&m_pWICFactory
+			);
 }
 
 Blox2D::~Blox2D()
 {
 	m_pSingleton = 0;
+	SafeRelease(m_pWICFactory);
 }
 
 // STATIC METHOD
@@ -407,12 +415,12 @@ void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const
 	SafeRelease(pPathGeometry);
 }
 
-/*void Blox2D::DrawBitmap(Bitmap* bitmap, int x, int y, float opacity, int width, int height)
+void Blox2D::DrawBitmap(Bitmap* bitmap, int x, int y, float opacity, int width, int height)
 {
 	D2D1_RECT_F rect;
 
-	rect.left = static_cast<float>x;
-	rect.top = static_cast<float>y;
+	rect.left = static_cast<float>(x);
+	rect.top = static_cast<float>(y);
 
 	if (width == 0 && height == 0)
 	{
@@ -442,12 +450,133 @@ void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const
 		tstringstream stream;
 		stream << _T("Can't draw bitmap: ") << info.filepath;
 
-		BLOX_2D->MsgBox(stream.str().c_str(),_T("ERROR"));
+		//BLOX_2D->MsgBox(stream.str().c_str(),_T("ERROR"));
 		return;
 	}
 	else 
 		m_pRenderTarget->DrawBitmap(info.bitmap,rect,opacity);
-}*/
+}
+
+HRESULT Blox2D::LoadBitmapFromFile(
+    PCWSTR uri,
+    UINT destinationWidth,
+    UINT destinationHeight,
+    ID2D1Bitmap **ppBitmap
+    )
+{
+    IWICBitmapDecoder *pDecoder = NULL;
+    IWICBitmapFrameDecode *pSource = NULL;
+    IWICStream *pStream = NULL;
+    IWICFormatConverter *pConverter = NULL;
+    IWICBitmapScaler *pScaler = NULL;
+
+    HRESULT hr = m_pWICFactory->CreateDecoderFromFilename(
+        uri,
+        NULL,
+        GENERIC_READ,
+        WICDecodeMetadataCacheOnLoad,
+        &pDecoder
+        );
+        
+    if (SUCCEEDED(hr))
+    {
+        // Create the initial frame.
+        hr = pDecoder->GetFrame(0, &pSource);
+    }
+	else
+	{
+		tstringstream stream;
+		stream << _T("Can't create bitmap: ") << uri;
+		
+		//MsgBox(stream.str(),_T("ERROR"));
+	}
+    if (SUCCEEDED(hr))
+    {
+
+        // Convert the image format to 32bppPBGRA
+        // (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
+        hr = m_pWICFactory->CreateFormatConverter(&pConverter);
+
+    }
+ 
+ 
+    if (SUCCEEDED(hr))
+    {
+        // If a new width or height was specified, create an
+        // IWICBitmapScaler and use it to resize the image.
+        if (destinationWidth != 0 || destinationHeight != 0)
+        {
+            UINT originalWidth, originalHeight;
+            hr = pSource->GetSize(&originalWidth, &originalHeight);
+            if (SUCCEEDED(hr))
+            {
+                if (destinationWidth == 0)
+                {
+                    FLOAT scalar = static_cast<FLOAT>(destinationHeight) / static_cast<FLOAT>(originalHeight);
+                    destinationWidth = static_cast<UINT>(scalar * static_cast<FLOAT>(originalWidth));
+                }
+                else if (destinationHeight == 0)
+                {
+                    FLOAT scalar = static_cast<FLOAT>(destinationWidth) / static_cast<FLOAT>(originalWidth);
+                    destinationHeight = static_cast<UINT>(scalar * static_cast<FLOAT>(originalHeight));
+                }
+
+                hr = m_pWICFactory->CreateBitmapScaler(&pScaler);
+                if (SUCCEEDED(hr))
+                {
+                    hr = pScaler->Initialize(
+                            pSource,
+                            destinationWidth,
+                            destinationHeight,
+                            WICBitmapInterpolationModeCubic
+                            );
+                }
+                if (SUCCEEDED(hr))
+                {
+                    hr = pConverter->Initialize(
+                        pScaler,
+                        GUID_WICPixelFormat32bppPBGRA,
+                        WICBitmapDitherTypeNone,
+                        NULL,
+                        0.f,
+                        WICBitmapPaletteTypeMedianCut
+                        );
+                }
+            }
+        }
+        else // Don't scale the image.
+        {
+            hr = pConverter->Initialize(
+                pSource,
+                GUID_WICPixelFormat32bppPBGRA,
+                WICBitmapDitherTypeNone,
+                NULL,
+                0.f,
+                WICBitmapPaletteTypeMedianCut
+                );
+        }
+    }
+    if (SUCCEEDED(hr))
+    {
+    
+        // Create a Direct2D bitmap from the WIC bitmap.
+        hr = m_pRenderTarget->CreateBitmapFromWicBitmap(
+            pConverter,
+            NULL,
+            ppBitmap
+            );
+    }
+
+    SafeRelease(pDecoder);
+    SafeRelease(pSource);
+    SafeRelease(pStream);
+    SafeRelease(pConverter);
+    SafeRelease(pScaler);
+
+    return hr;
+}
+
+
 
 //-----------------------------------------------------------------
 // HitRegion Class
@@ -892,4 +1021,95 @@ void HitRegion::Draw(bool fill)
 
 		//BLOX_2D->FillPolygon
 	}
+}
+
+//-----------------------------------------------------------------
+// Bitmap Class
+//-----------------------------------------------------------------
+// constructors
+Bitmap::Bitmap(tstring filePath)
+{
+	HRESULT hr;
+	hr = BLOX_2D->LoadBitmapFromFile(
+		filePath.c_str(),
+		0,
+		0,
+		&m_pBitmap
+		);
+
+	if (SUCCEEDED(hr))
+	{
+		m_FilePath = filePath;
+		m_bExists = true;
+	}
+	else 
+	{
+		tstringstream stream;
+		stream << _T("Can't create bitmap: ") << filePath;
+
+		//GAME_ENGINE->MsgBox(stream.str().c_str(),_T("ERROR"));
+
+		m_FilePath = _T("");
+		m_bExists = false;
+	}
+}
+
+Bitmap::Bitmap(int IDBitmap)
+{
+	/*HRESULT hr;
+	hr = BLOX_2D->LoadResourceBitmap(
+		MAKEINTRESOURCE(IDBitmap),
+		L"Image",
+		0,
+		0,
+		&m_pBitmap
+		);
+
+	if (SUCCEEDED(hr))
+	{
+		m_FilePath = _T("EMBEDDED");
+		m_bExists = true;
+	}
+	else 
+	{
+		m_FilePath = _T("");
+		m_bExists = false;
+	}*/
+}
+
+// destructor
+Bitmap::~Bitmap()
+{
+	SafeRelease(m_pBitmap);
+}
+
+// getters
+
+D2D1_SIZE_F Bitmap::GetSize()
+{
+	if (m_bExists)
+		return m_pBitmap->GetSize();
+	else
+	{
+		D2D1_SIZE_F temp;
+		temp.width = 0;
+		temp.height = 0;
+
+		return temp;
+	}
+}
+
+BITMAP_INFO Bitmap::GetInfo()
+{
+	BITMAP_INFO info;
+
+	info.filepath = m_FilePath;
+	info.bitmap = m_pBitmap;
+
+	return info;
+}
+
+bool Bitmap::Exists()
+{
+	return m_bExists;
 }
