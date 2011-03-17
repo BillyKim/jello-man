@@ -35,12 +35,6 @@ struct VertexShaderOutput
 	float2 texCoord : TEXCOORD0;
 };
 
-RasterizerState RState
-{
-	FillMode = Solid;
-	CullMode = None;
-};
-
 VertexShaderOutput  VS(VertexShaderInput input) 
 {
     VertexShaderOutput output;
@@ -67,8 +61,11 @@ float4  PS(VertexShaderOutput input) : SV_TARGET
 	{
 		float3 vLightDir = pointLights[i].Position - posGloss.xyz;
 		float dist = length(vLightDir);
+
+		if (dist > pointLights[i].AttenuationEnd)
+			continue;
+
 		vLightDir /= dist;
-		dist = max(dist, 1) / 10;
 
 		//DiffuseLight
 		float3 color = saturate(dot(normal, vLightDir)) * pointLights[i].Color;
@@ -77,15 +74,16 @@ float4  PS(VertexShaderOutput input) : SV_TARGET
 		//color *= col.rgb;
 
 		//Phong
-		float y = saturate(dot(normal, vLightDir));
-		float3 reflect = normalize(normal * y * 2 - vLightDir);
-		float spec = saturate(dot(vCamDir, reflect));
-		spec = pow(spec, posGloss.a * 1.0f);
-		spec *= pointLights[i].Color * normalSpec.a;
+		//float y = max(dot(normal, vLightDir), 0);
+		//float3 reflect = normalize(normal * y * 2 - vLightDir);
+		//float spec = saturate(dot(vCamDir, reflect));
+		//spec = pow(spec, posGloss.a * 25.0f);
+		//spec *= pointLights[i].Color * normalSpec.a;
 
-		color += spec;
+		//color += spec;
 
-		color = color / (dist /* dist*/);
+		color *= 1 - (max(dist - pointLights[i].AttenuationStart, 1) / (pointLights[i].AttenuationEnd - pointLights[i].AttenuationStart));
+		//color = color / dist;
 
 		endColor += color * pointLights[i].Multiplier;
 	}
@@ -103,7 +101,5 @@ technique10 tech1
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader ( ps_4_0, PS() ));
-
-		SetRasterizerState(RState);
 	}
 }

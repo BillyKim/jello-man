@@ -123,9 +123,9 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
                 m_NormalData[data[i][2] - 1],
                m_TextureData[data[i][1] - 1]));
     
-    m_IndexData.push_back(index + 0);
-    m_IndexData.push_back(index + 1);
     m_IndexData.push_back(index + 2);
+    m_IndexData.push_back(index + 1);
+    m_IndexData.push_back(index + 0);
 }
 
 void ModelLoader::FlushMesh()

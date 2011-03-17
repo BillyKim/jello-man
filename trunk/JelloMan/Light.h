@@ -97,9 +97,9 @@ struct PointLight
     Vector3 position;
     float multiplier;
 
-
-    //float m_AttenuationStart;
-    //float m_AttenuationEnd;
+    float AttenuationStart;
+    float AttenuationEnd;
+	Vector2 padding;
 
     //bool m_Enabled;
 };
