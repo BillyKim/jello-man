@@ -57,13 +57,42 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 	viewP.TopLeftY = 0;
 	viewP.Width = (UINT)BLOX_2D->GetWindowSize().width;
 	viewP.Height = (UINT)BLOX_2D->GetWindowSize().height;
-	viewP.MinDepth = 1;
-	viewP.MaxDepth = 10000;
+	viewP.MinDepth = 0;
+	viewP.MaxDepth = 1;
 
 	Matrix ident;
 	D3DXMatrixIdentity(&ident);
 
 	int size = 10;
+
+	// DEBUG INFO
+	BLOX_2D->SetFont(_T("Arial"),false,false,12);
+	tstringstream stream;
+	stream << _T("Nr. lights in scene: ") << GetPointLights().size() << _T("\n");
+	
+	int b = 0;
+	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
+	{
+		if (m_LightsSelected[i] == true)
+			++b;
+	}
+
+	stream << _T("Nr. lights selected: ") << b << _T("\n\n");
+
+	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
+	{
+		if (m_LightsSelected[i] == true)
+		{
+			stream << _T("PointLight ") << i << _T(":\n   ");
+			stream << _T("X:") << m_PointLights[i].position.X << _T(" ");
+			stream << _T("Y:") << m_PointLights[i].position.Y << _T(" ");
+			stream << _T("Z:") << m_PointLights[i].position.Z << _T("\n   ");
+			stream << _T("Multiplier: ") << m_PointLights[i].multiplier << _T("\n   ");
+			stream << _T("Attenuation end: ") << m_PointLights[i].AttenuationEnd << _T("\n\n");
+		}
+	}
+
+	BLOX_2D->DrawString(stream.str(),2,160);
 
 	if (CONTROLS->LeftMBClicked())
 	{
@@ -127,6 +156,15 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 				BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l));
 				BLOX_2D->SetColor(0,0,0,0.4f/l);
 				BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),3.0f/l);
+
+				BLOX_2D->SetColor(255,255,255,0.4f/l);
+				BLOX_2D->SetFont(_T("Arial"),true,false,(size/4)/(l/2));
+
+				tstringstream s;
+				s << _T("PointLight ") << i;
+				BLOX_2D->DrawString(s.str(),
+				RectF(temp.x-(((size-40)/l)/2),temp.y-(((size+40)/l)/2),temp.x+(size/l)-(((size+40)/l)/2),temp.y+(size/l)-(((size+40)/l)/2)),
+				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
 			}
 			else
 			{
