@@ -33,7 +33,7 @@ void LightController::AddLight(const SpotLight& light)
     m_SpotLights.push_back(light);
 }
 
-const vector<PointLight>& LightController::GetPointLights() const
+vector<PointLight>& LightController::GetPointLights()
 {
     return m_PointLights;
 }

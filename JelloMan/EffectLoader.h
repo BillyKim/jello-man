@@ -33,7 +33,7 @@ public:
 			    dwShaderFlags |= D3D10_SHADER_DEBUG;
 			    dwShaderFlags |= D3D10_SHADER_SKIP_OPTIMIZATION;
 			    dwShaderFlags |= D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY;//allow dx9 fx file 
-			    //dwShaderFlags |= D3D10_SHADER_WARNINGS_ARE_ERRORS;
+			    dwShaderFlags |= D3D10_SHADER_WARNINGS_ARE_ERRORS;
 		    #endif
 
 		    // Create the effect

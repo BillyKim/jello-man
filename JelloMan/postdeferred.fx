@@ -46,10 +46,13 @@ VertexShaderOutput  VS(VertexShaderInput input)
     return output;	
 };
 
-float4  PS(VertexShaderOutput input) : SV_TARGET
+float3  PS(VertexShaderOutput input) : SV_TARGET
 {
-	float4 posGloss = positionGlossMap.Sample(mapSampler, input.texCoord);
 	float4 col = colorMap.Sample(mapSampler, input.texCoord);
+	if (col.r == 0.0f && col.g == 0.0f && col.b == 0.0f)
+		return col.xyz;
+
+	float4 posGloss = positionGlossMap.Sample(mapSampler, input.texCoord);
 	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
 	float3 vCamDir = normalize(vCamPos - posGloss.xyz);
 
@@ -57,40 +60,48 @@ float4  PS(VertexShaderOutput input) : SV_TARGET
 	
 	float3 endColor = float3(0, 0, 0);
 
+	[loop]
 	for (int i = 0; i < pointLightCount; ++i)
 	{
 		float3 vLightDir = pointLights[i].Position - posGloss.xyz;
 		float dist = length(vLightDir);
 
-		if (dist > pointLights[i].AttenuationEnd)
-			continue;
+		[branch]
+		if (dist < pointLights[i].AttenuationEnd)
+		{
+			vLightDir /= dist;
 
-		vLightDir /= dist;
+			//DiffuseLight
+			float diff = dot(normal, vLightDir);
+			
+			[branch]
+			if (diff > 0)
+			{
+				float3 color = diff * pointLights[i].Color;
 
-		//DiffuseLight
-		float3 color = saturate(dot(normal, vLightDir)) * pointLights[i].Color;
+				//DiffuseColor
+				//color *= col.rgb;
 
-		//DiffuseColor
-		//color *= col.rgb;
+				//Phong
+				float y = max(dot(normal, vLightDir), 0);
+				float3 reflect = normalize(normal * y * 2 - vLightDir);
+				float spec = saturate(dot(vCamDir, reflect));
+				spec = pow(spec, posGloss.a * 25.0f);
+				spec *= pointLights[i].Color * normalSpec.a;
 
-		//Phong
-		//float y = max(dot(normal, vLightDir), 0);
-		//float3 reflect = normalize(normal * y * 2 - vLightDir);
-		//float spec = saturate(dot(vCamDir, reflect));
-		//spec = pow(spec, posGloss.a * 25.0f);
-		//spec *= pointLights[i].Color * normalSpec.a;
+				color += spec;
 
-		//color += spec;
+				color *= 1 - (max(dist - pointLights[i].AttenuationStart, 0) / (pointLights[i].AttenuationEnd - pointLights[i].AttenuationStart));
+				//color = color / dist;
 
-		color *= 1 - (max(dist - pointLights[i].AttenuationStart, 1) / (pointLights[i].AttenuationEnd - pointLights[i].AttenuationStart));
-		//color = color / dist;
-
-		endColor += color * pointLights[i].Multiplier;
+				endColor += color * pointLights[i].Multiplier;
+			}
+		}
 	}
 
 	endColor = saturate(endColor);
 
-    return float4(endColor, 1);
+    return endColor;
 };
 
 
