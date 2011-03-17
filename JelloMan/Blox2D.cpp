@@ -47,10 +47,12 @@ void Blox2D::SetColor(int r, int g, int b, float a)
 	temp.b = (static_cast<float>(b/255));
 	temp.a = a;
 
-	if (m_pColorBrush->GetColor().r != temp.r ||
+	/*if (m_pColorBrush->GetColor().r != temp.r ||
 		m_pColorBrush->GetColor().g != temp.g || 
 		m_pColorBrush->GetColor().b != temp.b ||
-		m_pColorBrush->GetColor().a != temp.a)	m_pColorBrush->SetColor(temp);
+		m_pColorBrush->GetColor().a != temp.a)*/
+	
+	m_pColorBrush->SetColor(temp);
 }
 
 void Blox2D::SetColor(D2D1_COLOR_F color)

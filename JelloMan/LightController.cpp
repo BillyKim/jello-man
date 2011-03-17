@@ -59,6 +59,8 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 	Matrix ident;
 	D3DXMatrixIdentity(&ident);
 
+	int size = 10;
+
 	// POINTLIGHTS
 	for (unsigned int i = 0; i < m_PointLights.size(); ++i)
 	{
@@ -70,15 +72,17 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 		float l = length.Length();
 		l *= 0.001f;
 
-		BLOX_2D->SetColor(255,255,0,0.4f/l);
-		BLOX_2D->FillEllipse((int)temp.x,(int)temp.y,(int)(20/l),(int)(20/l));
+		ColorF col(m_PointLights[i].color.R,m_PointLights[i].color.G,m_PointLights[i].color.B,0.4f/l);
+
+		BLOX_2D->SetColor(col);
+		BLOX_2D->FillEllipse((int)temp.x,(int)temp.y,(int)(size/l),(int)(size/l));
 		BLOX_2D->SetColor(255,255,255,0.4f/l);
-		BLOX_2D->DrawEllipse((int)temp.x,(int)temp.y,(int)(20/l),(int)(20/l),2.0f);
+		BLOX_2D->DrawEllipse((int)temp.x,(int)temp.y,(int)(size/l),(int)(size/l),2.0f);
 		BLOX_2D->SetColor(0,0,0,0.4f/l);
-		BLOX_2D->SetFont(_T("Arial"),true,false,10/(l/2));
+		BLOX_2D->SetFont(_T("Arial"),true,false,(size/2)/(l/2));
 			
 		BLOX_2D->DrawString(_T("P"),
-			RectF(temp.x-((20/l)/2),temp.y-((20/l)/2),temp.x+(20/l)-((20/l)/2),temp.y+(20/l)-((20/l)/2)),
+			RectF(temp.x-((size/l)/2),temp.y-((size/l)/2),temp.x+(size/l)-((size/l)/2),temp.y+(size/l)-((size/l)/2)),
 			Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
 	}
 }
