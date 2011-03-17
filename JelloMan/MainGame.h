@@ -35,9 +35,6 @@ private:
 	float m_dTtime;
 	bool m_bResourcesLoaded;
 
-	vector<Matrix> m_LightWorldVec;
-	vector<D3DXVECTOR3> m_LightPosvec;
-
 	Level* m_pLevel;
 	Camera* m_pCamera;
     LightController* m_pLightController;

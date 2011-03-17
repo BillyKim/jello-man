@@ -2,6 +2,8 @@
 #include "D3DUtil.h"
 #include <vector>
 #include "Light.h"
+#include "Blox2D.h"
+#include "Camera.h"
 
 class LightController
 {
@@ -16,6 +18,8 @@ public:
     const vector<PointLight>& GetPointLights() const;
     const vector<DirectionalLight>& GetDirectionalLights() const;
     const vector<SpotLight>& GetSpotLights() const;
+
+	void VisualLightDebugger(const Camera* pCamera);
 
 private:
     vector<PointLight> m_PointLights;
