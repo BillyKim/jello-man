@@ -34,6 +34,7 @@ private:
 	// DATAMEMBERS
 	float m_dTtime;
 	bool m_bResourcesLoaded;
+	bool m_bDebug;
 
 	Level* m_pLevel;
 	Camera* m_pCamera;

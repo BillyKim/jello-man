@@ -12,7 +12,8 @@ MainGame::MainGame()	:	m_dTtime(0),
                             m_pLightController(0),
 							m_pAudioEngine(0),
 							m_pTestSound(0),
-							m_bResourcesLoaded(false)
+							m_bResourcesLoaded(false),
+							m_bDebug(false)
 {
 
 }
@@ -31,8 +32,8 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 {
 	// TEST - gameconfig word nog file!
 	refGameConfig.SetTitle(_T("Happy Engine"));
-	refGameConfig.SetWindowWidth(1280);
-	refGameConfig.SetWindowHeight(720);
+	refGameConfig.SetWindowWidth(1440);
+	refGameConfig.SetWindowHeight(800);
 	refGameConfig.SetBlox2DAntiAliasing(true);
 }
 
@@ -146,6 +147,11 @@ void MainGame::UpdateScene(const float dTime)
 		{
 			m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
 		}
+
+		if (CONTROLS->IsKeyPressed('L'))
+		{
+			m_bDebug = !m_bDebug;
+		}
 	}
 }
 
@@ -155,7 +161,9 @@ void MainGame::DrawScene()
 	{
 		RenderContext renderContext(m_pCamera, m_pLightController);
 		m_pLevel->Draw(&renderContext);
-		m_pLightController->VisualLightDebugger(m_pCamera);
+
+		if (m_bDebug)
+			m_pLightController->VisualLightDebugger(m_pCamera);
 
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->ShowFPS(m_dTtime,true,0.5f);
@@ -187,8 +195,22 @@ void MainGame::DrawScene()
 									  BLOX_2D->GetWindowSize().height));
 
 		BLOX_2D->SetFont(_T("Arial"),true,false,30);
+		BLOX_2D->SetColor(80,80,80);
+		BLOX_2D->DrawString(_T("Loading Resources..."),RectF(10,0,BLOX_2D->GetWindowSize().width,
+																 BLOX_2D->GetWindowSize().height-10),
+																 Blox2D::HORIZONTAL_ALIGN_LEFT,
+																 Blox2D::VERTICAL_ALIGN_BOTTOM);
+
+		D2D1_MATRIX_3X2_F rot;
+		D2D1MakeRotateMatrix(90,Point2F(BLOX_2D->GetWindowSize().width/2,
+										BLOX_2D->GetWindowSize().height/2),&rot);
+		BLOX_2D->SetTransform(rot);
+
 		BLOX_2D->SetColor(255,255,255);
-		BLOX_2D->DrawStringCentered(_T("Loading Resources..."));
+		BLOX_2D->SetFont(_T("Arial"),true,false,200);
+		BLOX_2D->DrawStringCentered(_T(":D"),-20);
+
+		BLOX_2D->ResetTransform();
 	}
 }
 

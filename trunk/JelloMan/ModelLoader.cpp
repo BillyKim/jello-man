@@ -92,11 +92,15 @@ void ModelLoader::ReadObj(const tstring& assetName)
 
 void ModelLoader::AddVertex(const Vector3& v)
 {
-    m_VertexData.push_back(v);
+	Vector3 copy = v;
+	copy.Z *= -1;
+    m_VertexData.push_back(copy);
 }
 void ModelLoader::AddNormal(const Vector3& v)
 {
-    m_NormalData.push_back(v);
+	Vector3 copy = v;
+	copy.Z *= -1;
+    m_NormalData.push_back(copy);
 }
 void ModelLoader::AddTexCoord(const Vector2& v)
 {
