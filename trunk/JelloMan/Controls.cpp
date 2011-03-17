@@ -17,7 +17,9 @@ Controls::Controls()	:	m_bLMBClicked(false),
 							m_bRMBDown(false),
 							m_MouseWheelPos(0),
 							m_MousePos(Point2F(0,0)),
-							m_OldMousePos(Point2F(400,300))
+							m_OldMousePos(Point2F(400,300)),
+							m_bLC(false),
+							m_bRC(false)
 {
 	for(int i = 0; i < NUMKEYS; ++i)
 	{
@@ -89,6 +91,28 @@ short Controls::GetMouseWheelPos()
 	return mwPos;
 }
 
+bool Controls::LeftMBClicked()
+{
+	if (!m_bLC && m_bLMBClicked)
+	{
+		m_bLC = true;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool Controls::RightMBClicked()
+{
+	if (!m_bRC && m_bRMBClicked)
+	{
+		m_bRC = true;
+		return true;
+	}
+	else
+		return false;
+}
+
 // SETTERS
 void Controls::SetMousePos(Point2D pos)
 {
@@ -99,4 +123,16 @@ void Controls::SetOldMousePos(Point2D oldPos)
 {
 	m_OldMousePos.x = oldPos.x;
 	m_OldMousePos.y = oldPos.y;
+}
+void Controls::SetLeftMBDown(bool down)
+{
+	m_bLMBDown = down;
+	if (down == true)
+		m_bLC = false;
+}
+void Controls::SetRightMBDown(bool down)
+{
+	m_bRMBDown = down;
+	if (down == true)
+		m_bRC = false;
 }

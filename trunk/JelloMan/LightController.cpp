@@ -19,6 +19,10 @@ LightController::~LightController(void)
 void LightController::AddLight(const PointLight& light)
 {
     m_PointLights.push_back(light);
+
+	// DEBUG
+	m_pHitRectLights.push_back(new HitRegion(HitRegion::TYPE_ELLIPSE,0,0,20,20));
+	m_LightsSelected.push_back(false);
 }
 void LightController::AddLight(const DirectionalLight& light)
 {
@@ -61,9 +65,21 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 
 	int size = 10;
 
+	if (CONTROLS->LeftMBClicked())
+	{
+		for (unsigned int i = 0; i < m_pHitRectLights.size(); ++i)
+		{
+			if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()))
+			{
+				m_LightsSelected[i] = !m_LightsSelected[i];
+			}
+		}
+	}
+
 	// POINTLIGHTS
 	for (unsigned int i = 0; i < m_PointLights.size(); ++i)
 	{
+		// VIEWPORT PROJECTION
 		D3DXVECTOR3 temp;
 		D3DXVECTOR3 pos = m_PointLights[i].position.ToD3DVector3();
 		D3DXVec3Project(&temp,&pos,&viewP,&matProj,&matView,&ident);
@@ -74,15 +90,74 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 
 		ColorF col(m_PointLights[i].color.R,m_PointLights[i].color.G,m_PointLights[i].color.B,0.4f/l);
 
-		BLOX_2D->SetColor(col);
-		BLOX_2D->FillEllipse((int)temp.x,(int)temp.y,(int)(size/l),(int)(size/l));
-		BLOX_2D->SetColor(255,255,255,0.4f/l);
-		BLOX_2D->DrawEllipse((int)temp.x,(int)temp.y,(int)(size/l),(int)(size/l),2.0f);
+		// HITRECTS
+		m_pHitRectLights[i]->SetSize(static_cast<int>(size/l),static_cast<int>(size/l));
+		m_pHitRectLights[i]->SetPosition(static_cast<int>(temp.x),static_cast<int>(temp.y));
+
+		// DRAW
+		if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()) || m_LightsSelected[i] == true)
+		{
+			BLOX_2D->SetColor(255,255,255,0.4f/l);
+			BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l));
+			BLOX_2D->SetColor(0,0,0,0.4f/l);
+			BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),3.0f/l);
+		}
+		else
+		{
+			BLOX_2D->SetColor(col);
+			BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>((size/l)));
+			BLOX_2D->SetColor(255,255,255,0.4f/l);
+			BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),2.0f);
+		}
+
 		BLOX_2D->SetColor(0,0,0,0.4f/l);
 		BLOX_2D->SetFont(_T("Arial"),true,false,(size/2)/(l/2));
 			
 		BLOX_2D->DrawString(_T("P"),
 			RectF(temp.x-((size/l)/2),temp.y-((size/l)/2),temp.x+(size/l)-((size/l)/2),temp.y+(size/l)-((size/l)/2)),
 			Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
+
+		// MOVE
+		Vector3 look = pCamera->GetLook();
+		look.Normalize();
+		Vector3 right = pCamera->GetRight();
+		right.Normalize();
+
+		if (m_LightsSelected[i] == true)
+		{
+			if (CONTROLS->IsKeyDown(VK_NUMPAD8))
+			{
+				m_PointLights[i].position.X += look.X*5;
+				m_PointLights[i].position.Z += look.Z*5;
+			}
+			else if (CONTROLS->IsKeyDown(VK_NUMPAD2))
+			{
+				m_PointLights[i].position.X -= look.X*5;
+				m_PointLights[i].position.Z -= look.Z*5;
+			}
+			if (CONTROLS->IsKeyDown(VK_NUMPAD6))
+			{
+				m_PointLights[i].position.X += right.X*5;
+				m_PointLights[i].position.Z += right.Z*5;
+			}
+			else if (CONTROLS->IsKeyDown(VK_NUMPAD4))
+			{
+				m_PointLights[i].position.X -= right.X*5;
+				m_PointLights[i].position.Z -= right.Z*5;
+			}
+			if (CONTROLS->IsKeyDown(VK_NUMPAD9))
+				m_PointLights[i].position.Y += 2;
+			else if (CONTROLS->IsKeyDown(VK_NUMPAD7))
+				m_PointLights[i].position.Y -= 2;
+			if (CONTROLS->IsKeyDown(VK_ADD))
+				m_PointLights[i].multiplier += 0.1f;
+			else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
+				m_PointLights[i].multiplier -= 0.1f;
+			if (CONTROLS->IsKeyDown(VK_NUMPAD3))
+				m_PointLights[i].AttenuationEnd += 20;
+			else if (CONTROLS->IsKeyDown(VK_NUMPAD1))
+				m_PointLights[i].AttenuationEnd -= 20;
+		}
 	}
+
 }

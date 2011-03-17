@@ -27,8 +27,8 @@ public:
 
 	Point2D GetMousePos() const {return m_MousePos;}
 	short GetMouseWheelPos();
-	bool LeftMBClicked() const { return m_bLMBClicked; }
-	bool RightMBClicked() const { return m_bRMBClicked; }
+	bool LeftMBClicked();
+	bool RightMBClicked();
 	bool LeftMBDown() const { return m_bLMBDown; }
 	bool RightMBDown() const { return m_bRMBDown; }
 	Point2D GetMouseMovement();
@@ -38,8 +38,8 @@ public:
 	void SetOldMousePos(Point2D oldPos);
 	void SetLeftMBClicked(bool clicked) {m_bLMBClicked = clicked;}
 	void SetRightMBClicked(bool clicked) {m_bRMBClicked = clicked;}
-	void SetLeftMBDown(bool down) {m_bLMBDown = down;}
-	void SetRightMBDown(bool down) {m_bRMBDown = down;}
+	void SetLeftMBDown(bool down);
+	void SetRightMBDown(bool down);
 	void SetMouseWheelPos(short pos) {m_MouseWheelPos = pos;}
 
 	// CONSTANTS
@@ -48,6 +48,7 @@ public:
 private:
 
 	bool m_bLMBClicked, m_bRMBClicked;
+	bool m_bLC, m_bRC;
 	bool m_bLMBDown, m_bRMBDown;
 	short m_MouseWheelPos;
 	Point2D m_MousePos;
