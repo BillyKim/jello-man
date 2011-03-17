@@ -31,7 +31,7 @@ public:
 	//	camera params
 	void SetLens(	float aspectRatio = (4.0f/3.0f),
 					float fov = PiOver4,
-					float nearZ = 1.0f,
+					float nearZ = 10.0f,
 					float farZ = 10000.0f	);
 
 	void SetAspectRatio(float aspectRatio = (4.0f/3.0f))

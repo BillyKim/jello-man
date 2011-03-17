@@ -68,6 +68,7 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 	// DEBUG INFO
 	BLOX_2D->SetFont(_T("Arial"),false,false,12);
 	tstringstream stream;
+	stream << _T("::VISUAL LIGHT DEBUGGER::\n---------------------------------\n");
 	stream << _T("Nr. lights in scene: ") << GetPointLights().size() << _T("\n");
 	
 	int b = 0;

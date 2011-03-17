@@ -8,8 +8,8 @@ Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(50.0f),
 													m_MouseSensitivity(100),
 													m_FOV(PiOver4),
 													m_AspectRatio(4.0f/3.0f),
-													m_NearClippingPlane(1.0f),
-													m_FarClippingPlane(1000.0f),
+													m_NearClippingPlane(10.0f),
+													m_FarClippingPlane(10000.0f),
 													m_bIsActive(true)
 {
 	D3DXMatrixIdentity(&m_matView);
