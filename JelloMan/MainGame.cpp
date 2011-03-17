@@ -150,6 +150,26 @@ void MainGame::UpdateScene(const float dTime)
 		{
 			m_bDebug = !m_bDebug;
 		}
+
+		if (CONTROLS->IsKeyPressed(VK_RETURN))
+		{
+			Vector3 look = m_pCamera->GetLook();
+			look.Normalize();
+
+			PointLight pl;
+			pl = PointLight();
+			pl.position = (m_pCamera->GetPosition() + look*200);
+
+			int r = rand() % 255;
+			int g = rand() % 255;
+			int b = rand() % 255;
+
+			pl.color = Vector4(r/255.f, g/255.f, b/255.f, 1);
+			pl.multiplier = 1.0f;
+			pl.AttenuationStart = 0;
+			pl.AttenuationEnd = 200;
+			m_pLightController->AddLight(pl);
+		}
 	}
 }
 
@@ -182,6 +202,10 @@ void MainGame::DrawScene()
 			BLOX_2D->DrawStringCentered(_T("PRESS SPACE"),0,-300);
 		}
 
+		BLOX_2D->SetFont(_T("Arial"),false,false,12);
+		tstringstream stream;
+		stream << _T("Nr. lights: ") << m_pLightController->GetPointLights().size();
+		BLOX_2D->DrawString(stream.str(),2,150);
 	}
 	else
 	{

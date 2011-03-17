@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Blox2D.h"
 #include "Camera.h"
+#include "Controls.h"
 
 class LightController
 {
@@ -25,5 +26,8 @@ private:
     vector<PointLight> m_PointLights;
     vector<DirectionalLight> m_DirectionalLights;
 	vector<SpotLight> m_SpotLights;
+
+	vector<HitRegion*> m_pHitRectLights;
+	vector<bool> m_LightsSelected;
 };
 

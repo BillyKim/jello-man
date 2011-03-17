@@ -112,7 +112,7 @@ Size2D Blox2D::GetWindowSize() const
 }
 
 // -------------------------------------
-// GAME_ENGINE DRAW METHODS	
+// BLOX_2D DRAW METHODS	
 // -------------------------------------
 void Blox2D::DrawGrid(int stepsize, D2D1_RECT_F area) const
 {
@@ -251,7 +251,7 @@ void Blox2D::DrawString(tstring const& text, D2D1_RECT_F rect, HORIZONTAL_ALIGN 
 	tstringstream stream;
 	stream << nr;
 
-	GAME_ENGINE->DrawString(stream.str(),rect,textAlignment,paragraphAlignment);
+	BLOX_2D->DrawString(stream.str(),rect,textAlignment,paragraphAlignment);
 }*/
 
 void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
@@ -442,9 +442,454 @@ void Blox2D::FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const
 		tstringstream stream;
 		stream << _T("Can't draw bitmap: ") << info.filepath;
 
-		GAME_ENGINE->MsgBox(stream.str().c_str(),_T("ERROR"));
+		BLOX_2D->MsgBox(stream.str().c_str(),_T("ERROR"));
 		return;
 	}
 	else 
 		m_pRenderTarget->DrawBitmap(info.bitmap,rect,opacity);
 }*/
+
+//-----------------------------------------------------------------
+// HitRegion Class
+//-----------------------------------------------------------------
+
+HitRegion::HitRegion()
+{
+	m_pHitRegionRECT = NULL;
+	m_pHitRegionELLIPSE = NULL;
+	m_pHitRegionPOLYGON = NULL;
+
+	m_Type = 0;
+	m_Width = 0;
+	m_Height = 0;
+
+	m_CurrentPos.x = 0.0f;
+	m_CurrentPos.y = 0.0f;
+}
+
+HitRegion::HitRegion(int type, int x, int y, int width, int height)
+{
+	m_Type = type;
+	m_Width = width;
+	m_Height = height;
+
+	m_CurrentPos.x = (float)x;
+	m_CurrentPos.y = (float)y;
+
+	if (type == TYPE_RECTANGLE)
+		BLOX_2D->GetFactory()->CreateRectangleGeometry(
+		RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),&m_pHitRegionRECT);
+	else if
+		(type == TYPE_ELLIPSE) BLOX_2D->GetFactory()->CreateEllipseGeometry(
+		Ellipse(Point2F((float)x,(float)y),(float)width,(float)height),&m_pHitRegionELLIPSE);
+}
+
+HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)
+{
+	if (type == TYPE_POLYGON)
+	{
+		BLOX_2D->GetFactory()->CreatePathGeometry(&m_pHitRegionPOLYGON);
+
+		ID2D1GeometrySink* pSink = NULL;
+		m_pHitRegionPOLYGON->Open(&pSink);
+
+		pSink->BeginFigure(points[0],D2D1_FIGURE_BEGIN_FILLED);
+
+		pSink->AddLines(points,nrPoints);
+
+		pSink->EndFigure(D2D1_FIGURE_END_CLOSED);
+	
+		pSink->Close();
+		SafeRelease(pSink);
+	}
+}
+
+HitRegion::~HitRegion()
+{
+	SafeRelease(m_pHitRegionELLIPSE);
+	SafeRelease(m_pHitRegionRECT);
+	SafeRelease(m_pHitRegionPOLYGON);
+}
+
+// default copy constructor
+HitRegion::HitRegion(const HitRegion& second)
+{
+	if (second.m_Type == TYPE_RECTANGLE)
+	{
+		BLOX_2D->GetFactory()->CreateRectangleGeometry
+			(RectF((float)second.m_CurrentPos.x,(float)second.m_CurrentPos.y,
+			(float)(second.m_CurrentPos.x+second.m_Width),
+			(float)(second.m_CurrentPos.x+second.m_Height)),&this->m_pHitRegionRECT);
+		
+		this->m_Type = TYPE_RECTANGLE;
+		this->m_CurrentPos = second.m_CurrentPos;
+		this->m_Width = second.m_Width;
+		this->m_Height = second.m_Height;
+	}
+
+	else if (second.m_Type == TYPE_ELLIPSE)
+	{
+		BLOX_2D->GetFactory()->CreateEllipseGeometry
+			(Ellipse(Point2F((float)second.m_CurrentPos.x,(float)second.m_CurrentPos.y),
+			(float)second.m_Width,(float)second.m_Height),&this->m_pHitRegionELLIPSE);
+	
+		this->m_Type = TYPE_ELLIPSE;
+		this->m_CurrentPos = second.m_CurrentPos;
+		this->m_Width = second.m_Width;
+		this->m_Height = second.m_Height;
+	}
+
+	/*else if (second.m_Type == TYPE_RECTANGLE)
+	{
+
+	}*/
+}
+
+// dafault assignment operator
+HitRegion& HitRegion::operator=(const HitRegion& second)
+{
+	if (second.m_Type == TYPE_RECTANGLE)
+	{
+		BLOX_2D->GetFactory()->CreateRectangleGeometry
+			(RectF((float)second.m_CurrentPos.x,(float)second.m_CurrentPos.y,
+			(float)(second.m_CurrentPos.x+second.m_Width),
+			(float)(second.m_CurrentPos.x+second.m_Height)),&this->m_pHitRegionRECT);
+		
+		this->m_Type = TYPE_RECTANGLE;
+		this->m_CurrentPos = second.m_CurrentPos;
+		this->m_Width = second.m_Width;
+		this->m_Height = second.m_Height;
+
+		return *this;
+	}
+
+	else if (second.m_Type == TYPE_ELLIPSE)
+	{
+		BLOX_2D->GetFactory()->CreateEllipseGeometry
+			(Ellipse(Point2F((float)second.m_CurrentPos.x,(float)second.m_CurrentPos.y),
+			(float)second.m_Width,(float)second.m_Height),&this->m_pHitRegionELLIPSE);
+	
+		this->m_Type = TYPE_ELLIPSE;
+		this->m_CurrentPos = second.m_CurrentPos;
+		this->m_Width = second.m_Width;
+		this->m_Height = second.m_Height;
+
+		return *this;
+	}
+
+	else return *this;
+}
+
+// getters
+bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
+{
+	if (m_Type == TYPE_RECTANGLE)
+	{
+		if (hitRect->m_Type == TYPE_RECTANGLE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),10.0f,&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
+			else return true;
+		}
+
+		else if (hitRect->m_Type == TYPE_ELLIPSE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
+			else return true;
+		}
+	}
+
+	if (m_Type == TYPE_ELLIPSE)
+	{
+		if (hitRect->m_Type == TYPE_RECTANGLE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
+			else return true;
+		}
+
+		else if (hitRect->m_Type == TYPE_ELLIPSE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
+			else return true;
+		}
+	}
+
+	return false;
+}
+
+bool HitRegion::HitTest(D2D1_POINT_2F pos)
+{
+	if (m_Type == TYPE_ELLIPSE)
+	{
+		BOOL contains;
+		D2D1_MATRIX_3X2_F ident = IdentityMatrix();
+
+		m_pHitRegionELLIPSE->FillContainsPoint(pos,&ident,&contains);
+
+		if (contains == TRUE) return true;
+		else return false;
+	}
+
+	if (m_Type == TYPE_RECTANGLE)
+	{
+		BOOL contains;
+		D2D1_MATRIX_3X2_F ident = IdentityMatrix();
+
+		m_pHitRegionRECT->FillContainsPoint(pos,&ident,&contains);
+
+		if (contains == TRUE) return true;
+		else return false;
+	}
+
+	return false;
+}
+
+D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
+{
+	ID2D1GeometrySink* pGeometrySink = NULL;
+	ID2D1PathGeometry* pPathGeometryUnion = NULL;
+
+	BLOX_2D->GetFactory()->CreatePathGeometry(&pPathGeometryUnion);
+
+	if (m_Type == TYPE_RECTANGLE)
+	{
+		if (hitRect->m_Type == TYPE_RECTANGLE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
+			else
+			{
+				pPathGeometryUnion->Open(&pGeometrySink);
+
+				m_pHitRegionRECT->CombineWithGeometry(hitRect->m_pHitRegionRECT,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+
+				pGeometrySink->Close();
+				SafeRelease(pGeometrySink);
+
+				D2D1_RECT_F rect;
+				pPathGeometryUnion->GetBounds(NULL,&rect);
+
+				D2D1_POINT_2F point;
+				point.x = (rect.left + ((rect.right - rect.left)/2));
+				point.y = (rect.top + ((rect.bottom - rect.top)/2));
+
+				return point;
+			}
+		}
+
+		else if (hitRect->m_Type == TYPE_ELLIPSE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
+			else
+			{
+				pPathGeometryUnion->Open(&pGeometrySink);
+
+				m_pHitRegionRECT->CombineWithGeometry(hitRect->m_pHitRegionELLIPSE,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+
+				pGeometrySink->Close();
+				SafeRelease(pGeometrySink);
+
+				D2D1_RECT_F rect;
+				pPathGeometryUnion->GetBounds(NULL,&rect);
+
+				D2D1_POINT_2F point;
+				point.x = (rect.left + (rect.right - rect.left));
+				point.y = (rect.top + (rect.bottom - rect.top));
+
+				return point;
+			}
+		}
+	}
+
+	if (m_Type == TYPE_ELLIPSE)
+	{
+		if (hitRect->m_Type == TYPE_RECTANGLE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
+			else
+			{
+				pPathGeometryUnion->Open(&pGeometrySink);
+
+				m_pHitRegionELLIPSE->CombineWithGeometry(hitRect->m_pHitRegionRECT,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+
+				pGeometrySink->Close();
+				SafeRelease(pGeometrySink);
+
+				D2D1_RECT_F rect;
+				pPathGeometryUnion->GetBounds(NULL,&rect);
+
+				D2D1_POINT_2F point;
+				point.x = (rect.left + (rect.right - rect.left));
+				point.y = (rect.top + (rect.bottom - rect.top));
+
+				return point;
+			}
+		}
+
+		else if (hitRect->m_Type == TYPE_ELLIPSE)
+		{
+			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+
+			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
+			else
+			{
+				pPathGeometryUnion->Open(&pGeometrySink);
+
+				m_pHitRegionELLIPSE->CombineWithGeometry(hitRect->m_pHitRegionELLIPSE,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+
+				pGeometrySink->Close();
+				SafeRelease(pGeometrySink);
+
+				D2D1_RECT_F rect;
+				pPathGeometryUnion->GetBounds(NULL,&rect);
+
+				D2D1_POINT_2F point;
+				point.x = (rect.left + (rect.right - rect.left));
+				point.y = (rect.top + (rect.bottom - rect.top));
+
+				return point;
+			}
+		}
+	}
+
+	return Point2F(-999999,-999999);
+}
+
+D2D1_RECT_F HitRegion::GetDimension()
+{
+	D2D1_RECT_F rect;
+	rect.left = 0;
+	rect.right = 0;
+	rect.top = 0;
+	rect.bottom = 0;
+
+	if (m_Type == TYPE_RECTANGLE)
+	{
+		m_pHitRegionRECT->GetBounds(NULL,&rect);
+		return rect;
+	}
+	else if (m_Type == TYPE_ELLIPSE)
+	{
+		m_pHitRegionELLIPSE->GetBounds(NULL,&rect);
+		return rect;
+	}
+
+	return rect;
+}
+
+// setters
+void HitRegion::SetPosition(int x, int y)
+{
+	m_CurrentPos.x = (float)x;
+	m_CurrentPos.y = (float)y;
+
+	m_pHitRegionRECT = NULL;
+	m_pHitRegionELLIPSE = NULL;
+	m_pHitRegionPOLYGON = NULL;
+
+	if (m_Type == TYPE_RECTANGLE)
+		BLOX_2D->GetFactory()->CreateRectangleGeometry(
+		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)m_CurrentPos.x+m_Width,(float)m_CurrentPos.y+m_Height),&m_pHitRegionRECT);
+	else if
+		(m_Type == TYPE_ELLIPSE) BLOX_2D->GetFactory()->CreateEllipseGeometry(
+		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
+}
+
+void HitRegion::SetPosition(D2D1_POINT_2F pos)
+{
+	m_CurrentPos.x = pos.x;
+	m_CurrentPos.y = pos.y;
+
+	m_pHitRegionRECT = NULL;
+	m_pHitRegionELLIPSE = NULL;
+	m_pHitRegionPOLYGON = NULL;
+
+	if (m_Type == TYPE_RECTANGLE)
+		BLOX_2D->GetFactory()->CreateRectangleGeometry(
+		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)m_CurrentPos.x+m_Width,(float)m_CurrentPos.y+m_Height),&m_pHitRegionRECT);
+	else if
+		(m_Type == TYPE_ELLIPSE) BLOX_2D->GetFactory()->CreateEllipseGeometry(
+		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
+}
+
+void HitRegion::Move(int x, int y)
+{
+	m_CurrentPos.x += x;
+	m_CurrentPos.y += y;
+
+	m_pHitRegionRECT = NULL;
+	m_pHitRegionELLIPSE = NULL;
+	m_pHitRegionPOLYGON = NULL;
+
+	if (m_Type == TYPE_RECTANGLE)
+		BLOX_2D->GetFactory()->CreateRectangleGeometry(
+		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)(m_CurrentPos.x+m_Width),(float)(m_CurrentPos.y+m_Height)),&m_pHitRegionRECT);
+	else if
+		(m_Type == TYPE_ELLIPSE) BLOX_2D->GetFactory()->CreateEllipseGeometry(
+		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
+}
+void HitRegion::SetSize(int width, int height)
+{
+	m_Width = width;
+	m_Height = height;
+
+	SetPosition(static_cast<int>(m_CurrentPos.x), static_cast<int>(m_CurrentPos.y));
+}
+
+// general
+void HitRegion::Draw(bool fill)
+{
+	BLOX_2D->SetColor(255,0,0);
+
+	if (m_Type == TYPE_RECTANGLE)
+	{
+		D2D1_RECT_F rect;
+		m_pHitRegionRECT->GetBounds(NULL,&rect);
+
+		if (fill) BLOX_2D->FillRect(rect);
+		else BLOX_2D->DrawRect(rect);
+	}
+	else if (m_Type == TYPE_ELLIPSE)
+	{
+		D2D1_ELLIPSE ellipse;
+		m_pHitRegionELLIPSE->GetEllipse(&ellipse);
+
+		if (fill) BLOX_2D->FillEllipse(ellipse);
+		else BLOX_2D->DrawEllipse(ellipse);
+	}
+	else if (m_Type == TYPE_POLYGON)
+	{
+		
+		//m_pHitRegionPOLYGON->Stream(
+
+		//BLOX_2D->FillPolygon
+	}
+}
