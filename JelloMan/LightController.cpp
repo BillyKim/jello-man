@@ -69,9 +69,21 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 	{
 		for (unsigned int i = 0; i < m_pHitRectLights.size(); ++i)
 		{
-			if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()))
+			if (CONTROLS->IsKeyDown(VK_LCONTROL))
 			{
-				m_LightsSelected[i] = !m_LightsSelected[i];
+				if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()))
+				{
+					m_LightsSelected[i] = !m_LightsSelected[i];
+				}
+			}
+			else
+			{
+				if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()))
+				{
+					m_LightsSelected[i] = !m_LightsSelected[i];
+				}
+				else
+					m_LightsSelected[i] = false;
 			}
 		}
 	}
@@ -153,10 +165,13 @@ void LightController::VisualLightDebugger(const Camera* pCamera)
 				m_PointLights[i].multiplier += 0.1f;
 			else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
 				m_PointLights[i].multiplier -= 0.1f;
-			if (CONTROLS->IsKeyDown(VK_NUMPAD3))
+			if (CONTROLS->IsKeyDown(VK_NUMPAD3))				
 				m_PointLights[i].AttenuationEnd += 20;
 			else if (CONTROLS->IsKeyDown(VK_NUMPAD1))
-				m_PointLights[i].AttenuationEnd -= 20;
+				if (m_PointLights[i].AttenuationEnd > 0)
+				{
+					m_PointLights[i].AttenuationEnd -= 20;
+				}
 		}
 	}
 

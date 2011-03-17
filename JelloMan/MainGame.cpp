@@ -169,6 +169,8 @@ void MainGame::UpdateScene(const float dTime)
 			pl.AttenuationStart = 0;
 			pl.AttenuationEnd = 200;
 			m_pLightController->AddLight(pl);
+
+			cout << "Added pointlight";
 		}
 	}
 }
