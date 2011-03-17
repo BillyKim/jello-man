@@ -192,7 +192,7 @@ void Engine::OnRender()
 		m_pBackBufferRT->EndDraw();
 	}
 
-	if (CONTROLS->LeftMBDown())
+	/*if (CONTROLS->LeftMBDown())
 	{
 		if (m_bMouseMoving)
 		{
@@ -203,7 +203,7 @@ void Engine::OnRender()
 			SetCursorPos(pt.x,pt.y);
 			CONTROLS->SetOldMousePos(Point2F(m_ClientWidth/2,m_ClientHeight/2));
 		}
-	}
+	}*/
 
 	// displaying backbuffer - vsync on
 	m_pSwapChain->Present(1, 0);
@@ -332,13 +332,13 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		CONTROLS->SetOldMousePos(CONTROLS->GetMousePos());
 		CONTROLS->SetLeftMBDown(true);
-		ShowCursor(false);
+		//ShowCursor(false);
 		return 0;
 
 	case WM_LBUTTONUP:
 		CONTROLS->SetLeftMBClicked(true);
 		CONTROLS->SetLeftMBDown(false);
-		ShowCursor(true);
+		//ShowCursor(true);
 		return 0;
 
 	case WM_RBUTTONDOWN:

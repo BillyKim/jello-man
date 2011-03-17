@@ -47,7 +47,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 							static_cast<int>(BLOX_2D->GetWindowSize().height)	);
     m_pCamera->LookAt(Vector3(-225, 115, -205), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	m_pCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height);
+	m_pCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
@@ -204,7 +204,7 @@ void MainGame::DrawScene()
 		BLOX_2D->ShowFPS(m_dTtime,true,0.5f);
 
 		BLOX_2D->SetColor(255,255,255);
-		BLOX_2D->SetFont(_T("Arial"),true,false,16);
+		BLOX_2D->SetFont(_T("Arial"),true,false,12);
 
 		if (m_pTestSound->IsPlaying())
 		{
