@@ -5,8 +5,8 @@ struct PointLight
     float Multiplier;
 
 
-    //float AttenuationStart;
-    //float AttenuationEnd;
+    float AttenuationStart;
+    float AttenuationEnd;
 
     //bool Enabled;
 };

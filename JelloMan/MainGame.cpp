@@ -55,48 +55,46 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
         pl = PointLight();
         pl.position = Vector3(109.888f,0.0f,-80.406f);
         pl.color = Vector4(240/255.f, 203/255.f, 104/255.f, 1);
-        pl.multiplier = 4.0f;
+        pl.multiplier = 1.0f;
+		pl.AttenuationStart = 0;
+		pl.AttenuationEnd = 500;
         m_pLightController->AddLight(pl);
 
         //Omni 2
         pl = PointLight();
         pl.position = Vector3(-104.53f,0.0f,317.178f);
         pl.color = Vector4(255/255.f, 54/255.f, 54/255.f, 1);
-        pl.multiplier = 2.0f;
+        pl.multiplier = 1.0f;
+		pl.AttenuationStart = 0;
+		pl.AttenuationEnd = 500;
         m_pLightController->AddLight(pl);
 
-  //      //Omni 3
-  //      pl = PointLight();
-  //      pl.position = Vector3(-36.82f, 13.95f, 61.24f);
-  //      pl.color = Vector4(85/255.f, 151/255.f, 249/255.f, 1);
-  //      pl.multiplier = 2.0f;
-		//m_pLightController->AddLight(pl);
-		//
-		//	m_LightPosvec.push_back(D3DXVECTOR3(-36.82f, 13.95f, 61.24f));
-		//	m_LightWorldVec.push_back(Matrix());
-		//	D3DXMatrixTranslation(&m_LightWorldVec[2],-36.82f, 13.95f, 61.24f);
+        //Omni 3
+        pl = PointLight();
+        pl.position = Vector3(-36.82f, 13.95f, 61.24f);
+        pl.color = Vector4(85/255.f, 151/255.f, 249/255.f, 1);
+        pl.multiplier = 1.0f;
+		pl.AttenuationStart = 0;
+		pl.AttenuationEnd = 200;
+		m_pLightController->AddLight(pl);
 
-  //      //Omni 4
-  //      pl = PointLight();
-  //      pl.position = Vector3(154.73f, 13.95f, 207.77f);
-  //      pl.color = Vector4(100/255.f, 253/255.f, 100/255.f, 1);
-  //      pl.multiplier = 10.0f;
-  //      m_pLightController->AddLight(pl);
-		//
-		//	m_LightPosvec.push_back(D3DXVECTOR3(154.73f, 13.95f, 207.77f));
-		//	m_LightWorldVec.push_back(Matrix());
-		//	D3DXMatrixTranslation(&m_LightWorldVec[3],154.73f, 13.95f, 207.77f);
-  //    
-		////Omni 5
-  //      pl = PointLight();
-  //      pl.position = Vector3(154.73f, -43.72f, 68.5f);
-  //      pl.color = Vector4(249/255.f, 69/255.f, 141/255.f, 1);
-  //      pl.multiplier = 10.0f;
-  //      m_pLightController->AddLight(pl);
-		//
-		//	m_LightPosvec.push_back(D3DXVECTOR3(154.73f, -43.72f, 68.5f));
-		//	m_LightWorldVec.push_back(Matrix());
-		//	D3DXMatrixTranslation(&m_LightWorldVec[4],154.73f, -43.72f, 68.5f);
+        //Omni 4
+        pl = PointLight();
+        pl.position = Vector3(154.73f, 13.95f, 207.77f);
+        pl.color = Vector4(100/255.f, 253/255.f, 100/255.f, 1);
+        pl.multiplier = 1.0f;
+		pl.AttenuationStart = 0;
+		pl.AttenuationEnd = 800;
+        m_pLightController->AddLight(pl);
+      
+		//Omni 5
+        pl = PointLight();
+        pl.position = Vector3(154.73f, -43.72f, 68.5f);
+        pl.color = Vector4(249/255.f, 69/255.f, 141/255.f, 1);
+        pl.multiplier = 1.0f;
+		pl.AttenuationStart = 0;
+		pl.AttenuationEnd = 800;
+        m_pLightController->AddLight(pl);
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);

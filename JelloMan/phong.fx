@@ -4,13 +4,6 @@ cbuffer cbPerObject
 	matrix mtxWorld : World;
 };
 
-RasterizerState RState
-{
-	FillMode = Solid;
-	CullMode = Back;
-	FrontCounterClockwise = false;
-};
-
 struct VertexShaderInput
 {
     float3 position : POSITION0;
@@ -51,7 +44,5 @@ technique10 tech1
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader ( ps_4_0, PS() ));
-
-		SetRasterizerState(RState);
 	}
 }

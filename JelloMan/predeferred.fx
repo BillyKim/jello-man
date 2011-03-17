@@ -9,13 +9,6 @@ Texture2D diffuseMap : DiffuseMap;
 Texture2D specMap : SpecMap;
 Texture2D glossMap : GlossMap;
 
-RasterizerState RState
-{
-	FillMode = Solid;
-	CullMode = None;
-	FrontCounterClockwise = false;
-};
-
 SamplerState mapSampler
 {
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -81,6 +74,5 @@ technique10 tech1
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader ( ps_4_0, PS() ));
-		SetRasterizerState(RState);
 	}
 }
