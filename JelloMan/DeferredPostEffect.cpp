@@ -5,15 +5,13 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pColorMap(GetVariableBySemantic("ColorMap")->AsShaderResource()), 
                     m_pNormalSpecMap(GetVariableBySemantic("NormalSpecMap")->AsShaderResource()), 
                     m_pPosGlossMap(GetVariableBySemantic("PositionGlossMap")->AsShaderResource()),
-                    m_pPointLightArr(GetVariableBySemantic("PointLightArr")),
-                    m_pPointLightCount(GetVariableBySemantic("PointLightCount")->AsScalar()),
+                    m_pPointLight(GetVariableBySemantic("PointLight")),
                     m_pCamPos(GetVariableBySemantic("CameraPosition")->AsVector())
 {
     ASSERT(m_pColorMap->IsValid());
     ASSERT(m_pNormalSpecMap->IsValid());
     ASSERT(m_pPosGlossMap->IsValid());
-    ASSERT(m_pPointLightArr->IsValid());
-    ASSERT(m_pPointLightCount->IsValid());
+    ASSERT(m_pPointLight->IsValid());
     ASSERT(m_pCamPos->IsValid());
 }
 
@@ -22,11 +20,9 @@ DeferredPostEffect::~DeferredPostEffect(void)
 {
 }
 
-void DeferredPostEffect::SetPointLights(const vector<PointLight>& lights)
+void DeferredPostEffect::SetPointLight(const PointLight& light)
 {
-    PointLight* p = const_cast<vector<PointLight>&>(lights).data();
-    m_pPointLightArr->SetRawValue(reinterpret_cast<void*>(p), 0, sizeof(PointLight) * lights.size());
-    m_pPointLightCount->SetInt(lights.size());
+    m_pPointLight->SetRawValue(reinterpret_cast<void*>(&const_cast<PointLight&>(light)), 0, sizeof(PointLight));
 }
 
 void DeferredPostEffect::SetColorMap(ID3D10ShaderResourceView* map)

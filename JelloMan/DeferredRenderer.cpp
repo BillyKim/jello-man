@@ -85,8 +85,8 @@ void DeferredRenderer::OnResized(UINT width, UINT height, ID3D10RenderTargetView
     m_pBackbuffer = pBackbuffer;
 
     CreateColorMap(DeferredRenderMap_Color, DXGI_FORMAT_R8G8B8A8_UNORM); //R G B A
-	CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z Spec
-    CreateColorMap(DeferredRenderMap_Position, DXGI_FORMAT_R32G32B32A32_FLOAT); //X Y Z gloss
+	CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R16G16B16A16_FLOAT); //X Y Z Spec
+    CreateColorMap(DeferredRenderMap_Position, DXGI_FORMAT_R16G16B16A16_FLOAT); //X Y Z gloss
 
     CreateDepthMap();
 }
@@ -183,8 +183,8 @@ void DeferredRenderer::Begin() const
     m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
 
     float c[4] = { 0, 0, 0, 1};
-    for (int i = 0; i < MAXRENDERTARGETS; ++i)
-        m_pDevice->ClearRenderTargetView(m_RenderTargets[i], c);
+    //for (int i = 0; i < MAXRENDERTARGETS; ++i)
+    //    m_pDevice->ClearRenderTargetView(m_RenderTargets[i], c);
 }
 
 void DeferredRenderer::End(const RenderContext* pRenderContext) const
@@ -219,17 +219,59 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
     m_pDevice->RSSetViewports(1, &m_Viewport);
 
     //m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH|D3D10_CLEAR_STENCIL, 1.0f, 0);
-    m_pDevice->ClearRenderTargetView(m_pBackbuffer, m_ClearColor);
+    float c[4] = { 0, 0, 0, 1};
+    m_pDevice->ClearRenderTargetView(m_pBackbuffer, c);
 
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
 	m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);
 	m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
 
-    m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());
+    m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());	
 
-    m_pEffect->SetPointLights(pRenderContext->GetLightController()->GetPointLights());
+	D3D10_TECHNIQUE_DESC techDesc;
+    m_pEffect->GetCurrentTechnique()->GetDesc(&techDesc);
 
-	m_pScreenMesh->Draw();
+	vector<PointLight>::const_iterator it = pRenderContext->GetLightController()->GetPointLights().cbegin();
+
+	for (; it != pRenderContext->GetLightController()->GetPointLights().cend(); ++it)
+	{
+		D3DXVECTOR4 pos;
+        D3DXVec3Transform(&pos, &it->position.ToD3DVector3(), &pRenderContext->GetCamera()->GetViewProjection());
+
+        float len = abs(pos.w);
+		len *= 0.001f;
+        float size = it->AttenuationEnd / len * 1.1f;//len.Length();
+
+		pos.x /= pos.w;
+		pos.y /= pos.w;
+
+		pos.x += 1.f; pos.x /= 2;
+		pos.y += 1.f; pos.y /= 2; pos.y = 1 - pos.y;
+
+		D3D10_RECT r;
+		r.left = pos.x * m_Width - size;
+		r.right =  r.left + size * 2;
+		r.top = pos.y * m_Height - size;
+		r.bottom = r.top + size * 2;
+
+        //BLOX_2D->SetColor(255,255,255,1.0f);
+        //BLOX_2D->DrawRect(r.left, r.top, r.right - r.left, r.bottom - r.top, 1.0f);
+
+		m_pDevice->RSSetScissorRects(1, &r);
+
+		m_pEffect->SetPointLight(*it);
+
+        if (it == pRenderContext->GetLightController()->GetPointLights().cbegin())
+            m_pScreenMesh->Draw();
+        else
+            for(UINT p = 0; p < techDesc.Passes; ++p)
+            {
+                m_pEffect->GetCurrentTechnique()->GetPassByIndex(p)->Apply(0);
+		        m_pDevice->DrawIndexed(6, 0, 0); 
+	        }
+	}
+	
+	m_pDevice->RSSetScissorRects(0, NULL);
 
 	m_pEffect->SetColorMap(0);
 	m_pEffect->SetNormalSpecMap(0);

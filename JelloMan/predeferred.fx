@@ -9,6 +9,22 @@ Texture2D diffuseMap : DiffuseMap;
 Texture2D specMap : SpecMap;
 Texture2D glossMap : GlossMap;
 
+RasterizerState rState
+{
+	FillMode = Solid;
+	ScissorEnable = false;
+};
+
+BlendState blend
+{
+	BlendEnable[0] = FALSE;
+	SrcBlend = ONE;
+	DestBlend = ZERO;
+	BlendOp = ADD;
+	SrcBlendAlpha = ZERO;
+	DestBlendAlpha = ZERO;
+};
+
 SamplerState mapSampler
 {
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -74,5 +90,7 @@ technique10 tech1
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader ( ps_4_0, PS() ));
+		SetBlendState(blend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+		SetRasterizerState(rState);
 	}
 }

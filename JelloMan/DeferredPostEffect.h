@@ -15,7 +15,7 @@ public:
 	void SetNormalSpecMap(ID3D10ShaderResourceView* map);
 	void SetPosGlossMap(ID3D10ShaderResourceView* map);
 
-    void SetPointLights(const vector<PointLight>& lights);
+    void SetPointLight(const PointLight& light);
 
     void SetCameraPosition(const Vector3& camPos);
 
@@ -24,8 +24,7 @@ private:
 									   *m_pNormalSpecMap, 
 									   *m_pPosGlossMap;
 
-    ID3D10EffectVariable* m_pPointLightArr;
-    ID3D10EffectScalarVariable* m_pPointLightCount;
+    ID3D10EffectVariable* m_pPointLight;
 
     ID3D10EffectVectorVariable* m_pCamPos;
 };
