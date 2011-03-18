@@ -10,6 +10,7 @@ public:
 	Vector4(float r, float g, float b, float a);
 	Vector4(const Vector3& v3, float w);
 	Vector4(const D3DXCOLOR& color);
+    Vector4(const D3DXVECTOR4& v4);
 
 	//Copy en assignment
 	Vector4(const Vector4& v);

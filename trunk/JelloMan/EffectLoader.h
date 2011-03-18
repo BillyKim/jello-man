@@ -30,10 +30,10 @@ public:
 			    // Setting this flag improves the shader debugging experience, but still allows 
 			    // the shaders to be optimized and to run exactly the way they will run in 
 			    // the release configuration of this program.
-			    dwShaderFlags |= D3D10_SHADER_DEBUG;
-			    dwShaderFlags |= D3D10_SHADER_SKIP_OPTIMIZATION;
-			    dwShaderFlags |= D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY;//allow dx9 fx file 
-			    dwShaderFlags |= D3D10_SHADER_WARNINGS_ARE_ERRORS;
+			    //dwShaderFlags |= D3D10_SHADER_DEBUG;
+			    //dwShaderFlags |= D3D10_SHADER_SKIP_OPTIMIZATION;
+			    //dwShaderFlags |= D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY;//allow dx9 fx file 
+			    //dwShaderFlags |= D3D10_SHADER_WARNINGS_ARE_ERRORS;
 		    #endif
 
 		    // Create the effect
