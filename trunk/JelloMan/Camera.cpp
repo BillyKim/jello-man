@@ -67,7 +67,7 @@ void Camera::Tick(const float dTime)
 		BuildProjectionMatrix();
 	}
 
-	if (CONTROLS->LeftMBDown())
+	if (CONTROLS->RightMBDown())
 	{
 		Point2D mouseMovement = CONTROLS->GetMouseMovement();
 		float pitch = mouseMovement.y / m_MouseSensitivity;

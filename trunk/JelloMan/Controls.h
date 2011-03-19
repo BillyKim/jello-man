@@ -42,6 +42,8 @@ public:
 	void SetRightMBDown(bool down);
 	void SetMouseWheelPos(short pos) {m_MouseWheelPos = pos;}
 
+	void ResetMouse();
+
 	// CONSTANTS
 	static const int NUMKEYS = 256;
 
