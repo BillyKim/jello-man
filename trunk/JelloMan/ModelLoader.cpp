@@ -104,6 +104,8 @@ void ModelLoader::AddNormal(const Vector3& v)
 }
 void ModelLoader::AddTexCoord(const Vector2& v)
 {
+	Vector2 copy = v;
+	copy.Y *= -1;
     m_TextureData.push_back(v);
 }
 void ModelLoader::AddMesh(const tstring& name)
