@@ -93,9 +93,8 @@ short Controls::GetMouseWheelPos()
 
 bool Controls::LeftMBClicked()
 {
-	if (!m_bLC && m_bLMBClicked)
+	if (m_bLC && m_bLMBClicked)
 	{
-		m_bLC = true;
 		return true;
 	}
 	else
@@ -104,13 +103,13 @@ bool Controls::LeftMBClicked()
 
 bool Controls::RightMBClicked()
 {
-	if (!m_bRC && m_bRMBClicked)
+	if (m_bRC && m_bRMBClicked)
 	{
-		m_bRC = true;
 		return true;
 	}
 	else
 		return false;
+
 }
 
 // SETTERS
@@ -128,11 +127,22 @@ void Controls::SetLeftMBDown(bool down)
 {
 	m_bLMBDown = down;
 	if (down == true)
-		m_bLC = false;
+	{
+		m_bLC = true;
+	}
 }
 void Controls::SetRightMBDown(bool down)
 {
 	m_bRMBDown = down;
 	if (down == true)
+	{
+		m_bRC = true;
+	}
+}
+void Controls::ResetMouse()
+{
+	if (m_bRC && m_bRMBClicked)
 		m_bRC = false;
+	if (m_bLC && m_bLMBClicked)
+		m_bLC = false;
 }

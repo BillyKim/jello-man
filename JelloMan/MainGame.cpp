@@ -14,7 +14,7 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pTestSound(0),
 							m_bResourcesLoaded(false),
 							m_bDebug(false),
-							m_bmpCamera(0)
+							m_pEditorGUI(0)
 {
 
 }
@@ -25,7 +25,7 @@ MainGame::~MainGame()
     delete m_pLightController;
 	delete m_pAudioEngine;
 	delete m_pTestSound;
-	delete m_bmpCamera;
+	delete m_pEditorGUI;
 
 	SafeDelete(m_pLevel);
 }
@@ -51,8 +51,6 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
-
-	m_bmpCamera = new Bitmap(_T("Content/Images/cam.png"));
 
     PointLight pl;
         //Omni 1
@@ -123,6 +121,10 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pTestSound->PreLoad();
 	m_pTestSound->SetLoopCount(1);
 	m_pTestSound->SetVolume(90);
+
+	// GUI
+	m_pEditorGUI = new EditorGUI();
+	m_pEditorGUI->Initialize();
 }
 
 void MainGame::UpdateScene(const float dTime)
@@ -138,7 +140,7 @@ void MainGame::UpdateScene(const float dTime)
 		m_pAudioEngine->DoWork();
 		m_pTestSound->Tick();
 
-		
+		m_pEditorGUI->Tick();
 
 		if (CONTROLS->IsKeyPressed(VK_SPACE))
 		{
@@ -159,11 +161,6 @@ void MainGame::UpdateScene(const float dTime)
 		else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
 		{
 			m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
-		}
-
-		if (CONTROLS->IsKeyPressed('L'))
-		{
-			m_bDebug = !m_bDebug;
 		}
 
 		if (CONTROLS->IsKeyPressed(VK_RETURN))
@@ -197,8 +194,14 @@ void MainGame::DrawScene()
 		RenderContext renderContext(m_pCamera, m_pLightController);
 		m_pLevel->Draw(&renderContext);
 
-		if (m_bDebug)
+		if (m_pEditorGUI->GetLightButton()->IsActive())
 			m_pLightController->VisualLightDebugger(m_pCamera);
+		if (m_pEditorGUI->GetMoveButton()->IsActive())
+			m_pLightController->MoveAble(true);
+		else
+			m_pLightController->MoveAble(false);
+
+		m_pEditorGUI->Draw();
 
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->ShowFPS(m_dTtime,true,0.5f);
@@ -206,7 +209,7 @@ void MainGame::DrawScene()
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->SetFont(_T("Arial"),true,false,12);
 
-		if (m_pTestSound->IsPlaying())
+		/*if (m_pTestSound->IsPlaying())
 		{
 			BLOX_2D->DrawString(	m_pTestSound->GetSoundInfo(),
 									RectF(0,0,BLOX_2D->GetWindowSize().width,
@@ -217,13 +220,9 @@ void MainGame::DrawScene()
 		else
 		{
 			BLOX_2D->DrawString(_T("PRESS SPACE"),2,130);
-		}
+		}*/
 
-		// if using camera
-		if (CONTROLS->LeftMBDown())
-		{
-			BLOX_2D->DrawBitmap(m_bmpCamera,static_cast<int>(BLOX_2D->GetWindowSize().width-70),20,0.8f);
-		}
+		CONTROLS->ResetMouse();
 	}
 	else
 	{
@@ -235,7 +234,7 @@ void MainGame::DrawScene()
 									  BLOX_2D->GetWindowSize().height));
 
 		BLOX_2D->SetFont(_T("Arial"),true,false,30);
-		BLOX_2D->SetColor(80,80,80);
+		BLOX_2D->SetColor(0,0,0);
 		BLOX_2D->DrawString(_T("Loading Resources..."),RectF(10,0,BLOX_2D->GetWindowSize().width,
 																 BLOX_2D->GetWindowSize().height-10),
 																 Blox2D::HORIZONTAL_ALIGN_LEFT,

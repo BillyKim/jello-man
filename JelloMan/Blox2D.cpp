@@ -50,9 +50,9 @@ Blox2D* Blox2D::GetSingleton()
 void Blox2D::SetColor(int r, int g, int b, float a)
 {
 	D2D_COLOR_F temp;
-	temp.r = (static_cast<float>(r/255));
-	temp.g = (static_cast<float>(g/255));
-	temp.b = (static_cast<float>(b/255));
+	temp.r = (static_cast<float>(r/255.0f));
+	temp.g = (static_cast<float>(g/255.0f));
+	temp.b = (static_cast<float>(b/255.0f));
 	temp.a = a;
 
 	/*if (m_pColorBrush->GetColor().r != temp.r ||
@@ -111,6 +111,14 @@ void Blox2D::SetParams(	ID2D1RenderTarget* pRenderTarget,
 	m_pDWriteFactory = pDWriteFactory;
 	m_pColorBrush = pColorBrush;
 	m_pTextFormat = pTextFormat;
+}
+
+void Blox2D::SetAntiAliasing(bool AA)
+{
+	if (AA)
+		m_pRenderTarget->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
+	else
+		m_pRenderTarget->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 }
 
 // GETTERS
@@ -299,12 +307,12 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 	outs << L"DeltaTime: " << m_DTimeS << L" ms\n";
 
 	SetFont(_T("Consolas"),true,false,14);
-	DrawString(outs.str(),2,0);
+	DrawString(outs.str(),2,70);
 
 	if (showGraph && m_GameTime > 1)
 	{
 		SetColor(255,255,255,0.4f);
-		FillRect(2,40,200,80);
+		FillRect(2,110,200,80);
 
 		if (m_fpsHistory.size() > 26) m_fpsHistory.erase(m_fpsHistory.begin());
 		if (m_dtimeHistory.size() > 26) m_dtimeHistory.erase(m_dtimeHistory.begin());
@@ -312,19 +320,19 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 		SetColor(255,0,0,0.5f);
 		for (unsigned int i = 0; i < m_fpsHistory.size()-1; ++i)
 		{
-			DrawLine(202-(i*8),120-(m_fpsHistory.at(i)),202-((i+1)*8),120-(m_fpsHistory.at(i+1)),2.0f);
+			DrawLine(202-(i*8),190-(m_fpsHistory.at(i)),202-((i+1)*8),190-(m_fpsHistory.at(i+1)),2.0f);
 		}
-		DrawString(_T("fps"),174,65);
+		DrawString(_T("fps"),174,135);
 
 		SetColor(255,255,0,0.5f);
 		for (unsigned int i = 0; i < m_dtimeHistory.size()-1; ++i)
 		{
-			DrawLine(202-(i*8),static_cast<int>((120-(m_dtimeHistory.at(i)))),(202-(i+1)*8),static_cast<int>((120-(m_dtimeHistory.at(i+1)))),2.0f);
+			DrawLine(202-(i*8),static_cast<int>((190-(m_dtimeHistory.at(i)))),(202-(i+1)*8),static_cast<int>((190-(m_dtimeHistory.at(i+1)))),2.0f);
 		}
-		DrawString(_T("dt"),174,80);	
+		DrawString(_T("dt"),174,150);	
 
 		SetColor(43,43,43,0.5f);
-		DrawRect(2,40,200,80);
+		DrawRect(2,110,200,80);
 	}
 }
 
@@ -635,9 +643,9 @@ HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)
 
 HitRegion::~HitRegion()
 {
-	SafeRelease(m_pHitRegionELLIPSE);
-	SafeRelease(m_pHitRegionRECT);
-	SafeRelease(m_pHitRegionPOLYGON);
+	//delete m_pHitRegionELLIPSE;
+	//delete m_pHitRegionRECT;
+	//delete m_pHitRegionPOLYGON;
 }
 
 // default copy constructor
@@ -947,8 +955,8 @@ void HitRegion::SetPosition(int x, int y)
 	if (m_Type == TYPE_RECTANGLE)
 		BLOX_2D->GetFactory()->CreateRectangleGeometry(
 		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)m_CurrentPos.x+m_Width,(float)m_CurrentPos.y+m_Height),&m_pHitRegionRECT);
-	else if
-		(m_Type == TYPE_ELLIPSE) BLOX_2D->GetFactory()->CreateEllipseGeometry(
+	else if (m_Type == TYPE_ELLIPSE)
+		BLOX_2D->GetFactory()->CreateEllipseGeometry(
 		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
 }
 
@@ -964,8 +972,8 @@ void HitRegion::SetPosition(D2D1_POINT_2F pos)
 	if (m_Type == TYPE_RECTANGLE)
 		BLOX_2D->GetFactory()->CreateRectangleGeometry(
 		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)m_CurrentPos.x+m_Width,(float)m_CurrentPos.y+m_Height),&m_pHitRegionRECT);
-	else if
-		(m_Type == TYPE_ELLIPSE) BLOX_2D->GetFactory()->CreateEllipseGeometry(
+	else if (m_Type == TYPE_ELLIPSE)
+		BLOX_2D->GetFactory()->CreateEllipseGeometry(
 		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
 }
 
@@ -981,8 +989,8 @@ void HitRegion::Move(int x, int y)
 	if (m_Type == TYPE_RECTANGLE)
 		BLOX_2D->GetFactory()->CreateRectangleGeometry(
 		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)(m_CurrentPos.x+m_Width),(float)(m_CurrentPos.y+m_Height)),&m_pHitRegionRECT);
-	else if
-		(m_Type == TYPE_ELLIPSE) BLOX_2D->GetFactory()->CreateEllipseGeometry(
+	else if (m_Type == TYPE_ELLIPSE)
+		BLOX_2D->GetFactory()->CreateEllipseGeometry(
 		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
 }
 void HitRegion::SetSize(int width, int height)
@@ -1047,7 +1055,7 @@ Bitmap::Bitmap(tstring filePath)
 		tstringstream stream;
 		stream << _T("Can't create bitmap: ") << filePath;
 
-		//GAME_ENGINE->MsgBox(stream.str().c_str(),_T("ERROR"));
+		//BLOX_2D->MsgBox(stream.str().c_str(),_T("ERROR"));
 
 		m_FilePath = _T("");
 		m_bExists = false;
@@ -1112,4 +1120,219 @@ BITMAP_INFO Bitmap::GetInfo()
 bool Bitmap::Exists()
 {
 	return m_bExists;
+}
+
+//-----------------------------------------------------------------
+// Button Class
+//-----------------------------------------------------------------
+
+// constructor
+Button::Button()	:	m_bClicked(false),
+						m_pNormalBitmap(0),
+						m_pHoverBitmap(0),
+						m_pDownBitmap(0),
+						m_pDeactivatedBitmap(0),
+						m_pDeactivatedHoverBitmap(0),
+						m_pDeactivatedDownBitmap(0)
+{
+	m_Pos.x = 0;
+	m_Pos.y = 0;
+
+	m_Size.width = 0;
+	m_Size.height = 0;
+
+	m_State = STATE_DEACTIVATED;
+	m_Mode = MODE_MOUSE;
+
+	m_Opacity = 1.0f;
+}
+
+Button::Button(int posX, int posY, int width, int height, bool bToggleable)	:	m_bClicked(false),
+																				m_pNormalBitmap(0),
+																				m_pHoverBitmap(0),
+																				m_pDownBitmap(0),
+																				m_pDeactivatedBitmap(0),
+																				m_pDeactivatedHoverBitmap(0),
+																				m_pDeactivatedDownBitmap(0),
+																				m_bToggleable(bToggleable),
+																				m_bActivated(false),
+																				m_bHover(false),
+																				m_bClick(false)
+{
+	m_Pos.x = (float)posX;
+	m_Pos.y = (float)posY;
+
+	m_Size.width = (float)width;
+	m_Size.height = (float)height;
+
+	m_State = STATE_NORMAL;
+	m_Mode = MODE_MOUSE;
+
+	m_Opacity = 1.0f;
+
+	m_pHitRect = new HitRegion(HitRegion::TYPE_RECTANGLE,posX,posY,width,height);
+}
+
+// destructor
+Button::~Button()
+{
+	delete m_pHitRect;
+}
+
+// general
+void Button::Tick()
+{
+	Point2D mousePos = CONTROLS->GetMousePos();
+
+	if (CONTROLS->LeftMBDown())
+	{
+		if (m_pHitRect->HitTest(mousePos) && !m_bClick)
+		{
+			m_bClicked = true;
+
+			if (m_bToggleable)
+				m_bActivated = !m_bActivated;
+
+			m_bClick = true;
+		}
+	}
+	else
+	{
+		m_bClicked = false;
+		m_bClick = false;
+	}
+
+	// setting states
+	if (m_Mode == MODE_MOUSE) // if state has been set manual, don't check with mouseaction
+	{
+		if (m_bActivated)
+		{
+			if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == false)
+			{
+				m_State = STATE_HOVER;
+				m_bHover = true;
+			}
+			else if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == true)
+			{
+				m_State = STATE_DOWN;
+			}
+			else
+			{
+				m_State = STATE_NORMAL;
+				m_bHover = false;
+			}
+		}
+		else
+		{
+			if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == false)
+			{
+				m_State = STATE_DEACTIVATED_HOVER;
+				m_bHover = true;
+			}
+			else if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == true)
+			{
+				m_State = STATE_DEACTIVATED_DOWN;
+			}
+			else
+			{
+				m_State = STATE_DEACTIVATED;
+				m_bHover = false;
+			}
+		}
+	}
+}
+
+void Button::Show()
+{
+	Tick();
+
+	if (m_State == STATE_NORMAL)
+	{
+		if (m_pNormalBitmap != 0 && m_pNormalBitmap->Exists())
+			BLOX_2D->DrawBitmap(m_pNormalBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+	}
+	else if (m_State == STATE_HOVER)
+	{
+		if (m_pHoverBitmap != 0 && m_pHoverBitmap->Exists())
+			BLOX_2D->DrawBitmap(m_pHoverBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+	}
+	else if (m_State == STATE_DOWN)
+	{
+		if (m_pDownBitmap != 0 && m_pDownBitmap->Exists())
+			BLOX_2D->DrawBitmap(m_pDownBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+	}
+	else if (m_State == STATE_DEACTIVATED)
+	{
+		if (m_pDeactivatedBitmap != 0 && m_pDeactivatedBitmap->Exists())
+			BLOX_2D->DrawBitmap(m_pDeactivatedBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+	}
+	else if (m_State == STATE_DEACTIVATED_HOVER)
+	{
+		if (m_pDeactivatedHoverBitmap != 0 && m_pDeactivatedHoverBitmap->Exists())
+			BLOX_2D->DrawBitmap(m_pDeactivatedHoverBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+	}
+	else if (m_State == STATE_DEACTIVATED_DOWN)
+	{
+		if (m_pDeactivatedDownBitmap != 0 && m_pDeactivatedDownBitmap->Exists())
+			BLOX_2D->DrawBitmap(m_pDeactivatedDownBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+	}
+}
+
+void Button::ShowHitRegion(bool fill)
+{
+	if (fill)
+	{
+		D2D1_RECT_F rect = m_pHitRect->GetDimension();
+		BLOX_2D->FillRect(rect);
+	}
+	else
+	{
+		D2D1_RECT_F rect = m_pHitRect->GetDimension();
+		BLOX_2D->DrawRect(rect);
+	}
+}
+
+// setters
+void Button::SetNormalState(Bitmap* normalState)
+{
+	m_pNormalBitmap = normalState;
+}
+void Button::SetHoverState(Bitmap* hoverState)
+{
+	m_pHoverBitmap = hoverState;
+}
+void Button::SetDownState(Bitmap* downState)
+{
+	m_pDownBitmap = downState;
+}
+void Button::SetDeactivatedState(Bitmap* deacivatedState)
+{
+	m_pDeactivatedBitmap = deacivatedState;
+}
+void Button::SetDeactivatedStateHover(Bitmap* deactivatedHover)
+{
+	m_pDeactivatedHoverBitmap = deactivatedHover;
+}
+void Button::SetDeactivatedStateDown(Bitmap* deactivatedDown)
+{
+	m_pDeactivatedDownBitmap = deactivatedDown;
+}
+void Button::SetState(BUTTON_STATE state)
+{
+	m_State = state;
+}
+void Button::SetMode(BUTTON_MODE mode)
+{
+	m_Mode = mode;
+}
+void Button::SetPosition(int x, int y)
+{
+	m_Pos.x = (float)x;
+	m_Pos.y = (float)y;
+}
+
+// getters
+bool Button::Clicked()
+{
+	return m_bClicked;
 }

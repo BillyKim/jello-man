@@ -10,6 +10,7 @@
 #include "LightController.h"
 #include "Matrix.h"
 #include <vector>
+#include "EditorGUI.h"
 
 class AudioEngine;
 
@@ -36,7 +37,7 @@ private:
 	bool m_bResourcesLoaded;
 	bool m_bDebug;
 
-	Bitmap* m_bmpCamera;
+	EditorGUI* m_pEditorGUI;
 
 	Level* m_pLevel;
 	Camera* m_pCamera;

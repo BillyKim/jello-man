@@ -22,10 +22,22 @@ public:
 
 	void VisualLightDebugger(const Camera* pCamera);
 
+	void MoveAble(bool m) { m_bMoveable = m; }
+
 private:
     vector<PointLight> m_PointLights;
     vector<DirectionalLight> m_DirectionalLights;
 	vector<SpotLight> m_SpotLights;
+
+	Vector3 m_MousePos;
+
+	vector<D3DXVECTOR3> m_MPos;
+
+	bool m_bLockX;
+	bool m_bLockY;
+	bool m_bLockZ;
+	bool m_bMoveable;
+	bool m_bClick;
 
 	vector<HitRegion*> m_pHitRectLights;
 	vector<bool> m_LightsSelected;
