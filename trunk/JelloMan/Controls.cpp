@@ -91,25 +91,14 @@ short Controls::GetMouseWheelPos()
 	return mwPos;
 }
 
-bool Controls::LeftMBClicked()
+bool Controls::LeftMBUp()
 {
-	if (m_bLC && m_bLMBClicked)
-	{
-		return true;
-	}
-	else
-		return false;
+	return m_bLMBClicked;
 }
 
-bool Controls::RightMBClicked()
+bool Controls::RightMBUp()
 {
-	if (m_bRC && m_bRMBClicked)
-	{
-		return true;
-	}
-	else
-		return false;
-
+	return m_bRMBClicked;
 }
 
 // SETTERS

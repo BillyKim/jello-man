@@ -258,6 +258,8 @@ public:
 	bool Clicked();
 	bool Hover() const
 	{ return m_bHover; }
+	bool Down() const
+	{ return m_bDown; }
 	int GetWith()
 	{return (int)m_Size.width;}
 	int GetHeight()
@@ -286,6 +288,7 @@ private:
 	bool m_bActivated;
 	bool m_bHover;
 	bool m_bClick;
+	bool m_bDown;
 
 	float m_Opacity;
 };

@@ -81,6 +81,8 @@ private:
 	int m_CurrentBackbufferWidth;
 	int m_CurrentBackbufferHeight;
 
+	int m_Angle;
+
 	ContentManager *m_pContentManager;
 
 	// Direct2D

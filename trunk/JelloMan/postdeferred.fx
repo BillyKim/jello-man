@@ -59,6 +59,14 @@ VertexShaderOutput  VS(VertexShaderInput input)
     return output;	
 };
 
+float3  PS_UNLIT(VertexShaderOutput input) : SV_TARGET
+{
+	float4 col = colorMap.Sample(mapSampler, input.texCoord);
+	float3 endColor = float3(col.r,col.g,col.b);
+
+	return endColor;
+}
+
 float3  PS(VertexShaderOutput input) : SV_TARGET
 {
 	float4 col = colorMap.Sample(mapSampler, input.texCoord);
@@ -126,5 +134,15 @@ technique10 tech1
 		SetPixelShader( CompileShader ( ps_4_0, PS() ));
 		SetBlendState(blend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		SetRasterizerState(rState);
+	}
+}
+
+technique10 tech2
+{
+	pass p0
+	{
+		SetVertexShader( CompileShader ( vs_4_0, VS() ));
+		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader ( ps_4_0, PS_UNLIT() ));
 	}
 }

@@ -13,6 +13,12 @@ enum DeferredRenderMap
     DeferredRenderMap_Position  = 2,
     DeferredRenderMap_Depth     = 3
 };
+
+enum LightMode
+{
+	LIGHT_MODE_LIT = 0,
+	LIGHT_MODE_UNLIT = 1
+};
 class DeferredRenderer
 {
 public:
@@ -33,6 +39,7 @@ public:
     ID3D10DepthStencilView* GetDepthbuffer() const;
 
     void SetClearColor(const Vector4& color);
+	void SetLightMode(LightMode lMode);
 
 private:
 
@@ -58,6 +65,8 @@ private:
 	DeferredPostEffect* m_pEffect;
 
     Matrix m_mtxOrthoProjection;
+
+	LightMode m_LightMode;
 };
 
 

@@ -27,8 +27,8 @@ public:
 
 	Point2D GetMousePos() const {return m_MousePos;}
 	short GetMouseWheelPos();
-	bool LeftMBClicked();
-	bool RightMBClicked();
+	bool LeftMBUp();
+	bool RightMBUp();
 	bool LeftMBDown() const { return m_bLMBDown; }
 	bool RightMBDown() const { return m_bRMBDown; }
 	Point2D GetMouseMovement();

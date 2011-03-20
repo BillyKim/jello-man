@@ -22,6 +22,7 @@ public:
 	void Draw(const RenderContext* pRenderContext);
 	void OnResize(ID3D10RenderTargetView* pRTView);
 	void Release();
+	void SetLightMode(LightMode lMode);
 
 private:
 

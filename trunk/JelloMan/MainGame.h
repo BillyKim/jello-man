@@ -30,12 +30,16 @@ public:
 	void OnResize(ID3D10RenderTargetView* pRTView);
 	void Release();
 
+	void LoadScreen();
+
 private:
 
 	// DATAMEMBERS
 	float m_dTtime;
 	bool m_bResourcesLoaded;
 	bool m_bDebug;
+
+	int m_Angle;
 
 	EditorGUI* m_pEditorGUI;
 
