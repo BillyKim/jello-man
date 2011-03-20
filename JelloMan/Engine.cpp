@@ -56,6 +56,7 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pDWriteFactory(0)
 ,m_pTextFormat(0)
 ,m_bInitialized(false)
+,m_Angle(0)
 {
 	m_GameTimer.Reset();
 }
@@ -114,9 +115,9 @@ int Engine::Run()
 				OnRender();
 
 				if (!m_bInitialized)
-				{
+				{					
 					m_pGame->LoadResources(m_pDXDevice);
-
+		
 					#if defined DEBUG || _DEBUG
 					cout << "---------------------------\n";
                     cout << ":::Resources Initialized:::\n";
@@ -332,6 +333,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		CONTROLS->SetOldMousePos(CONTROLS->GetMousePos());
 		CONTROLS->SetLeftMBDown(true);
+		CONTROLS->SetLeftMBClicked(false);
 		//ShowCursor(false);
 		return 0;
 
@@ -344,6 +346,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_RBUTTONDOWN:
 		CONTROLS->SetOldMousePos(CONTROLS->GetMousePos());
 		CONTROLS->SetRightMBDown(true);
+		CONTROLS->SetRightMBClicked(false);
 		return 0;
 
 	case WM_RBUTTONUP:

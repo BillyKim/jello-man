@@ -304,15 +304,15 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 	outs.precision(5);
 
 	outs << L"FPS: " << m_FPS << L"\n";
-	outs << L"DeltaTime: " << m_DTimeS << L" ms\n";
+	outs << L"DTime: " << m_DTimeS << L" ms\n";
 
-	SetFont(_T("Consolas"),true,false,14);
-	DrawString(outs.str(),2,70);
+	SetFont(_T("Consolas"),true,false,12);
+	DrawString(outs.str(),RectF(GetWindowSize().width-110,0,GetWindowSize().width,95),HORIZONTAL_ALIGN_LEFT,VERTICAL_ALIGN_BOTTOM);
 
 	if (showGraph && m_GameTime > 1)
 	{
 		SetColor(255,255,255,0.4f);
-		FillRect(2,110,200,80);
+		FillRect(GetWindowSize().width-105,5,100,40);
 
 		if (m_fpsHistory.size() > 26) m_fpsHistory.erase(m_fpsHistory.begin());
 		if (m_dtimeHistory.size() > 26) m_dtimeHistory.erase(m_dtimeHistory.begin());
@@ -320,19 +320,19 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 		SetColor(255,0,0,0.5f);
 		for (unsigned int i = 0; i < m_fpsHistory.size()-1; ++i)
 		{
-			DrawLine(202-(i*8),190-(m_fpsHistory.at(i)),202-((i+1)*8),190-(m_fpsHistory.at(i+1)),2.0f);
+			DrawLine((GetWindowSize().width-5)-(i*4),45-(m_fpsHistory.at(i)/2),(GetWindowSize().width-5)-((i+1)*4),45-(m_fpsHistory.at(i+1)/2),2.0f);
 		}
-		DrawString(_T("fps"),174,135);
+		DrawString(_T("fps"),GetWindowSize().width-128,10);
 
 		SetColor(255,255,0,0.5f);
 		for (unsigned int i = 0; i < m_dtimeHistory.size()-1; ++i)
 		{
-			DrawLine(202-(i*8),static_cast<int>((190-(m_dtimeHistory.at(i)))),(202-(i+1)*8),static_cast<int>((190-(m_dtimeHistory.at(i+1)))),2.0f);
+			DrawLine((GetWindowSize().width-5)-(i*4),static_cast<int>((45-(m_dtimeHistory.at(i)/2))),((GetWindowSize().width-5)-(i+1)*4),static_cast<int>((45-(m_dtimeHistory.at(i+1)/2))),2.0f);
 		}
-		DrawString(_T("dt"),174,150);	
+		DrawString(_T("dt"),GetWindowSize().width-122,25);	
 
 		SetColor(43,43,43,0.5f);
-		DrawRect(2,110,200,80);
+		DrawRect(GetWindowSize().width-105,5,100,40);
 	}
 }
 
@@ -1155,9 +1155,10 @@ Button::Button(int posX, int posY, int width, int height, bool bToggleable)	:	m_
 																				m_pDeactivatedHoverBitmap(0),
 																				m_pDeactivatedDownBitmap(0),
 																				m_bToggleable(bToggleable),
-																				m_bActivated(false),
+																				m_bActivated(true),
 																				m_bHover(false),
-																				m_bClick(false)
+																				m_bClick(false),
+																				m_bDown(false)
 {
 	m_Pos.x = (float)posX;
 	m_Pos.y = (float)posY;
@@ -1195,6 +1196,10 @@ void Button::Tick()
 
 			m_bClick = true;
 		}
+		else
+		{
+			m_bClicked = false;
+		}
 	}
 	else
 	{
@@ -1207,36 +1212,44 @@ void Button::Tick()
 	{
 		if (m_bActivated)
 		{
-			if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == false)
+			if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBDown() == false)
 			{
 				m_State = STATE_HOVER;
 				m_bHover = true;
+				m_bDown = false;
 			}
-			else if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == true)
+			else if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBDown() == true)
 			{
 				m_State = STATE_DOWN;
+				m_bDown = true;
+				m_bHover = false;
 			}
 			else
 			{
 				m_State = STATE_NORMAL;
 				m_bHover = false;
+				m_bDown = false;
 			}
 		}
 		else
 		{
-			if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == false)
+			if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBDown() == false)
 			{
 				m_State = STATE_DEACTIVATED_HOVER;
 				m_bHover = true;
+				m_bDown = false;
 			}
-			else if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBClicked() == false && CONTROLS->LeftMBDown() == true)
+			else if (m_pHitRect->HitTest(mousePos) && CONTROLS->LeftMBDown() == true)
 			{
 				m_State = STATE_DEACTIVATED_DOWN;
+				m_bDown = true;
+				m_bHover = false;
 			}
 			else
 			{
 				m_State = STATE_DEACTIVATED;
 				m_bHover = false;
+				m_bDown = false;
 			}
 		}
 	}
@@ -1320,6 +1333,8 @@ void Button::SetDeactivatedStateDown(Bitmap* deactivatedDown)
 void Button::SetState(BUTTON_STATE state)
 {
 	m_State = state;
+	if (state == STATE_DEACTIVATED)
+		m_bActivated = false;
 }
 void Button::SetMode(BUTTON_MODE mode)
 {
@@ -1329,6 +1344,8 @@ void Button::SetPosition(int x, int y)
 {
 	m_Pos.x = (float)x;
 	m_Pos.y = (float)y;
+
+	m_pHitRect->SetPosition(Point2F((float)x,(float)y));
 }
 
 // getters

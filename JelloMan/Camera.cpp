@@ -39,14 +39,17 @@ void Camera::Tick(const float dTime)
 	// camera controls
 	Vector3 dir(0.0f,0.0f,0.0f);
 
-	if (CONTROLS->IsKeyDown('Z'))
-		dir += m_LookWorld;
-	if (CONTROLS->IsKeyDown('S'))
-		dir -= m_LookWorld;
-	if (CONTROLS->IsKeyDown('Q'))
-		dir -= m_RightWorld;
-	if (CONTROLS->IsKeyDown('D'))
-		dir += m_RightWorld;
+	if (!CONTROLS->IsKeyDown(VK_LCONTROL))
+	{
+		if (CONTROLS->IsKeyDown('Z'))
+			dir += m_LookWorld;
+		if (CONTROLS->IsKeyDown('S'))
+			dir -= m_LookWorld;
+		if (CONTROLS->IsKeyDown('Q'))
+			dir -= m_RightWorld;
+		if (CONTROLS->IsKeyDown('D'))
+			dir += m_RightWorld;
+	}
 
 	// fast forward
 	if (CONTROLS->IsKeyDown(VK_LSHIFT))
@@ -63,8 +66,17 @@ void Camera::Tick(const float dTime)
 
 	if (angle != 0)
 	{
-		m_FOV += angle;
-		BuildProjectionMatrix();
+		if (CONTROLS->RightMBDown())
+		{
+			m_FOV += angle;
+
+			BuildProjectionMatrix();
+		}
+
+		m_Speed += angle*500;
+
+		if (m_Speed < 10)
+			m_Speed = 10;
 	}
 
 	if (CONTROLS->RightMBDown())
@@ -91,7 +103,10 @@ void Camera::Tick(const float dTime)
 		m_LookWorld = Vector3(lookWorld);
 		m_UpWorld = Vector3(upWorld);
 	}
+	else
+		m_FOV = PiOver4;
 
+	BuildProjectionMatrix();
 	BuildViewMatrix();
 	m_matViewProjection = m_matView * m_matProjection;
 }

@@ -14,7 +14,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pTestSound(0),
 							m_bResourcesLoaded(false),
 							m_bDebug(false),
-							m_pEditorGUI(0)
+							m_pEditorGUI(0),
+							m_Angle(0)
 {
 
 }
@@ -55,57 +56,12 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
     PointLight pl;
         //Omni 1
         pl = PointLight();
-        pl.position = Vector3(109.888f,50.0f,-80.406f);
-        pl.color = Vector4(240/255.f, 203/255.f, 104/255.f, 1);
-        pl.multiplier = 1.0f;
+        pl.position = Vector3(0.0f,100.0f,0.0f);
+        pl.color = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
+        pl.multiplier = 1.5f;
 		pl.AttenuationStart = 0;
 		pl.AttenuationEnd = 1000;
         m_pLightController->AddLight(pl);
-
-  //      //Omni 2
-  //      pl = PointLight();
-  //      pl.position = Vector3(-104.53f,0.0f,317.178f);
-  //      pl.color = Vector4(255/255.f, 54/255.f, 54/255.f, 1);
-  //      pl.multiplier = 1.0f;
-		//pl.AttenuationStart = 0;
-		//pl.AttenuationEnd = 500;
-  //      m_pLightController->AddLight(pl);
-
-  //      //Omni 3
-  //      pl = PointLight();
-  //      pl.position = Vector3(300.f, 200.95f, -300.24f);
-  //      pl.color = Vector4(85/255.f, 151/255.f, 249/255.f, 1);
-  //      pl.multiplier = 2.0f;
-		//pl.AttenuationStart = 10;
-		//pl.AttenuationEnd = 400;
-		//m_pLightController->AddLight(pl);
-
-  //      //Omni 4
-  //      pl = PointLight();
-  //      pl.position = Vector3(154.73f, 13.95f, 207.77f);
-  //      pl.color = Vector4(100/255.f, 253/255.f, 100/255.f, 1);
-  //      pl.multiplier = 1.0f;
-		//pl.AttenuationStart = 0;
-		//pl.AttenuationEnd = 800;
-  //      m_pLightController->AddLight(pl);
-  //    
-		////Omni 5
-  //      pl = PointLight();
-  //      pl.position = Vector3(154.73f, -43.72f, 68.5f);
-  //      pl.color = Vector4(249/255.f, 69/255.f, 141/255.f, 1);
-  //      pl.multiplier = 1.0f;
-		//pl.AttenuationStart = 0;
-		//pl.AttenuationEnd = 800;
-  //      m_pLightController->AddLight(pl);
-
-		////Omni 6
-  //      pl = PointLight();
-  //      pl.position = Vector3(0.f, 300.0f, 0.f);
-  //      pl.color = Vector4(128/255.f, 128/255.f, 250/255.f, 1);
-  //      pl.multiplier = 0.3f;
-		//pl.AttenuationStart = 0;
-		//pl.AttenuationEnd = 500;
-  //      m_pLightController->AddLight(pl);
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
@@ -140,8 +96,6 @@ void MainGame::UpdateScene(const float dTime)
 		m_pAudioEngine->DoWork();
 		m_pTestSound->Tick();
 
-		m_pEditorGUI->Tick();
-
 		if (CONTROLS->IsKeyPressed(VK_SPACE))
 		{
 			if (!m_pTestSound->IsPlaying())
@@ -163,27 +117,10 @@ void MainGame::UpdateScene(const float dTime)
 			m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
 		}
 
-		if (CONTROLS->IsKeyPressed(VK_RETURN))
-		{
-			Vector3 look = m_pCamera->GetLook();
-			look.Normalize();
-
-			PointLight pl;
-			pl = PointLight();
-			pl.position = (m_pCamera->GetPosition() + look*200);
-
-			int r = rand() % 255;
-			int g = rand() % 255;
-			int b = rand() % 255;
-
-			pl.color = Vector4(r/255.f, g/255.f, b/255.f, 1);
-			pl.multiplier = 1.0f;
-			pl.AttenuationStart = 0;
-			pl.AttenuationEnd = 200;
-			m_pLightController->AddLight(pl);
-
-			cout << "Added pointlight";
-		}
+		if (m_pEditorGUI->GetLightButton()->IsActive())
+			m_pLevel->SetLightMode(LIGHT_MODE_LIT);
+		else
+			m_pLevel->SetLightMode(LIGHT_MODE_UNLIT);
 	}
 }
 
@@ -194,13 +131,7 @@ void MainGame::DrawScene()
 		RenderContext renderContext(m_pCamera, m_pLightController);
 		m_pLevel->Draw(&renderContext);
 
-		if (m_pEditorGUI->GetLightButton()->IsActive())
-			m_pLightController->VisualLightDebugger(m_pCamera);
-		if (m_pEditorGUI->GetMoveButton()->IsActive())
-			m_pLightController->MoveAble(true);
-		else
-			m_pLightController->MoveAble(false);
-
+		m_pEditorGUI->Tick(&renderContext);
 		m_pEditorGUI->Draw();
 
 		BLOX_2D->SetColor(255,255,255);
@@ -208,19 +139,6 @@ void MainGame::DrawScene()
 
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->SetFont(_T("Arial"),true,false,12);
-
-		/*if (m_pTestSound->IsPlaying())
-		{
-			BLOX_2D->DrawString(	m_pTestSound->GetSoundInfo(),
-									RectF(0,0,BLOX_2D->GetWindowSize().width,
-									BLOX_2D->GetWindowSize().height),
-									Blox2D::HORIZONTAL_ALIGN_RIGHT,
-									Blox2D::VERTICAL_ALIGN_TOP);
-		}
-		else
-		{
-			BLOX_2D->DrawString(_T("PRESS SPACE"),2,130);
-		}*/
 
 		CONTROLS->ResetMouse();
 	}
@@ -231,14 +149,14 @@ void MainGame::DrawScene()
 
 		BLOX_2D->SetColor(ColorF(ColorF::LightGray));
 		BLOX_2D->DrawGrid(3,RectF(0,0,BLOX_2D->GetWindowSize().width,
-									  BLOX_2D->GetWindowSize().height));
+										BLOX_2D->GetWindowSize().height));
 
 		BLOX_2D->SetFont(_T("Arial"),true,false,30);
 		BLOX_2D->SetColor(0,0,0);
 		BLOX_2D->DrawString(_T("Loading Resources..."),RectF(10,0,BLOX_2D->GetWindowSize().width,
-																 BLOX_2D->GetWindowSize().height-10),
-																 Blox2D::HORIZONTAL_ALIGN_LEFT,
-																 Blox2D::VERTICAL_ALIGN_BOTTOM);
+																	BLOX_2D->GetWindowSize().height-10),
+																	Blox2D::HORIZONTAL_ALIGN_LEFT,
+																	Blox2D::VERTICAL_ALIGN_BOTTOM);
 
 		D2D1_MATRIX_3X2_F rot;
 		D2D1MakeRotateMatrix(90,Point2F(BLOX_2D->GetWindowSize().width/2,

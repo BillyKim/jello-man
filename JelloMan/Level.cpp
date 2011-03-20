@@ -72,3 +72,8 @@ void Level::Release()
 	m_pDeferredRenderer->End(m_pRenderContext);
 	m_pDeferredRenderer->OnResize();
 }
+
+void Level::SetLightMode(LightMode lMode)
+{
+	m_pDeferredRenderer->SetLightMode(lMode);
+}
