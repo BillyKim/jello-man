@@ -477,7 +477,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 				if (m_bMoveable)
 				{
 					// X
-					HitRegion* hitX = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp2.x),static_cast<int>(temp2.y),size,size);
+					HitRegion hitX(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp2.x),static_cast<int>(temp2.y),size,size);
 					BLOX_2D->SetColor(255,0,0);
 					BLOX_2D->DrawLine(static_cast<int>(temp5.x),static_cast<int>(temp5.y),static_cast<int>(temp2.x),static_cast<int>(temp2.y),2.0f);
 					BLOX_2D->FillEllipse(static_cast<int>(temp2.x),static_cast<int>(temp2.y),static_cast<int>(size/2),static_cast<int>(size/2));
@@ -504,7 +504,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					BLOX_2D->DrawLine(r[2],r[3]);
 					BLOX_2D->DrawLine(r[3],r[0]);
 
-					if (hitX->HitTest(CONTROLS->GetMousePos()))
+					if (hitX.HitTest(CONTROLS->GetMousePos()))
 					{
 						BLOX_2D->SetColor(255,255,255);
 						BLOX_2D->DrawEllipse(static_cast<int>(temp2.x),static_cast<int>(temp2.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
@@ -550,7 +550,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 				if (m_bMoveable)
 				{
 					// Y
-					HitRegion* hitY = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp3.x),static_cast<int>(temp3.y),size,size);
+					HitRegion hitY(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp3.x),static_cast<int>(temp3.y),size,size);
 					BLOX_2D->SetColor(0,255,0);
 					BLOX_2D->DrawLine(static_cast<int>(temp6.x),static_cast<int>(temp6.y),static_cast<int>(temp3.x),static_cast<int>(temp3.y),2.0f);
 					BLOX_2D->FillEllipse(static_cast<int>(temp3.x),static_cast<int>(temp3.y),static_cast<int>(size/2),static_cast<int>(size/2));
@@ -576,7 +576,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					BLOX_2D->DrawLine(r[2],r[3]);
 					BLOX_2D->DrawLine(r[3],r[0]);
 
-					if (hitY->HitTest(CONTROLS->GetMousePos()))
+					if (hitY.HitTest(CONTROLS->GetMousePos()))
 					{
 						BLOX_2D->SetColor(255,255,255);
 						BLOX_2D->DrawEllipse(static_cast<int>(temp3.x),static_cast<int>(temp3.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
@@ -614,7 +614,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 				if (m_bMoveable)
 				{
 					// Z
-					HitRegion* hitZ = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp4.x),static_cast<int>(temp4.y),size,size);
+					HitRegion hitZ(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp4.x),static_cast<int>(temp4.y),size,size);
 					BLOX_2D->SetColor(255,255,0);
 					BLOX_2D->DrawLine(static_cast<int>(temp7.x),static_cast<int>(temp7.y),static_cast<int>(temp4.x),static_cast<int>(temp4.y),2.0f);
 					BLOX_2D->FillEllipse(static_cast<int>(temp4.x),static_cast<int>(temp4.y),static_cast<int>(size/2),static_cast<int>(size/2));
@@ -640,7 +640,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					BLOX_2D->DrawLine(r[2],r[3]);
 					BLOX_2D->DrawLine(r[3],r[0]);
 
-					if (hitZ->HitTest(CONTROLS->GetMousePos()))
+					if (hitZ.HitTest(CONTROLS->GetMousePos()))
 					{
 						BLOX_2D->SetColor(255,255,255);
 						BLOX_2D->DrawEllipse(static_cast<int>(temp4.x),static_cast<int>(temp4.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
