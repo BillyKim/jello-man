@@ -328,11 +328,11 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 		pl = PointLight();
 		pl.position = (pRenderContext->GetCamera()->GetPosition() + look*200);
 
-		int r = rand() % 255;
-		int g = rand() % 255;
-		int b = rand() % 255;
+		BYTE r = rand() % 255;
+		BYTE g = rand() % 255;
+		BYTE b = rand() % 255;
 
-		pl.color = Vector4(r/255.0f, g/255.0f, b/255.0f, 1);
+		pl.color = Color(r, g, b, 1);
 		pl.multiplier = 1.0f;
 		pl.AttenuationStart = 0;
 		pl.AttenuationEnd = 200;
@@ -410,8 +410,8 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 {
 	// LIGHT DEBUG
-	Matrix matProj = pCamera->GetProjection();
-	Matrix matView = pCamera->GetView();
+	D3DXMATRIX matProj = pCamera->GetProjection();
+	D3DXMATRIX matView = pCamera->GetView();
 	
 	D3D10_VIEWPORT viewP;
 	viewP.TopLeftX = 0;
@@ -421,7 +421,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 	viewP.MinDepth = 0;
 	viewP.MaxDepth = 1;
 
-	Matrix ident;
+	D3DXMATRIX ident;
 	D3DXMatrixIdentity(&ident);
 
 	int size = 10;
@@ -431,7 +431,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 	{
 		D3DXVECTOR3 pos = m_pRenderContext->GetLightController()->GetPointLights()[i].position.ToD3DVector3();
 
-		Vector3 length = pCamera->GetPosition() - pos;
+		Vector3 length = pCamera->GetPosition() - Vector3(pos);
 		float l = length.Length();
 		l *= 0.001f;
 

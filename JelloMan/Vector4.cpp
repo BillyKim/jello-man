@@ -4,38 +4,33 @@
 
 
 //-------------------Constructors-&-Destructor-------------------->
-Vector4::Vector4(): R(0.f), G(0.f), B(0.f)
+Vector4::Vector4(): X(0.f), Y(0.f), Z(0.f), W(0.f)
 {
 }
-Vector4::Vector4(float r, float g, float b, float a): R(r), G(g), B(b), A(a)
+Vector4::Vector4(float x, float y, float z, float w): X(x), Y(y), Z(z), W(w)
 {
 }
-Vector4::Vector4(const Vector3& v3, float a): R(v3.X), G(v3.Y), B(v3.Z), A(a)
+Vector4::Vector4(const Vector3& v3, float w): X(v3.X), Y(v3.Y), Z(v3.Z), W(w)
 {
 }
-Vector4::Vector4(const D3DXCOLOR& color): R(color.r), G(color.g), B(color.b), A(color.a)
+Vector4::Vector4(const D3DXCOLOR& color): X(color.r), Y(color.g), Z(color.b), W(color.a)
 {
 }
-Vector4::Vector4(const D3DXVECTOR4& v4): R(v4.x), G(v4.y), B(v4.z), A(v4.w) 
+Vector4::Vector4(const D3DXVECTOR4& v4): X(v4.x), Y(v4.y), Z(v4.z), W(v4.w) 
 {
 }
 
 //Copy en assignment
-Vector4::Vector4(const Vector4& v4) : R(v4.R), G(v4.G), B(v4.B), A(v4.A)
+Vector4::Vector4(const Vector4& v4) : X(v4.X), Y(v4.Y), Z(v4.Z), W(v4.W)
 {
 }
 Vector4& Vector4::operator=(const Vector4& v)
 {
-	R = v.R;
-	G = v.G;
-	B = v.B;
-	A = v.A;
+	X = v.X;
+	Y = v.Y;
+	Z = v.Z;
+	W = v.W;
 	return *this;
-}
-
-//Destructor
-Vector4::~Vector4(void)
-{
 }
 
 //<-----------------------------------------------------------------
@@ -44,18 +39,18 @@ Vector4::~Vector4(void)
 //----------Getters----------------------->
 Vector3 Vector4::XYZ() const
 {
-    return Vector3(R, G, B);
+    return Vector3(X, Y, Z);
 }
 void Vector4::ToFloat4(float* float4) const
 {
-    float4[0] = R;
-    float4[1] = G;
-    float4[2] = B;
-    float4[3] = A;
+    float4[0] = X;
+    float4[1] = Y;
+    float4[2] = Z;
+    float4[3] = W;
 }
 D3DXCOLOR Vector4::ToD3DColor() const
 {
-    return D3DXCOLOR(R, G, B, A);
+    return D3DXCOLOR(X, Y, Z, W);
 }
 //<-----------------------------------------
 
@@ -67,58 +62,58 @@ Vector4 Vector4::operator-() const
 
 Vector4 Vector4::operator*(float a) const
 {
-	return Vector4(R * a, G * a, B * a, A * a);
+	return Vector4(X * a, Y * a, Z * a, W * a);
 }
 Vector4 Vector4::operator/(float a) const
 {
-	return Vector4(R / a, G / a, B / a, A / a);
+	return Vector4(X / a, Y / a, Z / a, W / a);
 }
 
 Vector4 Vector4::operator+(const Vector4& v) const
 {
-    return Vector4(R + v.R, G + v.G, B + v.B, A +  v.A);
+    return Vector4(X + v.X, Y + v.Y, Z + v.Z, W +  v.W);
 }
 Vector4 Vector4::operator-(const Vector4& v) const
 {
-    return Vector4(R - v.R, G - v.G, B - v.B, A - v.A);
+    return Vector4(X - v.X, Y - v.Y, Z - v.Z, W - v.W);
 }
 
 Vector4& Vector4::operator+=(const Vector4& v)
 {
-	R += v.R;
-	G += v.G;
-	B += v.B;
-    A += v.A;
+	X += v.X;
+	Y += v.Y;
+	Z += v.Z;
+    W += v.W;
 	return *this;
 }
 Vector4& Vector4::operator-=(const Vector4& v)
 {
-	R -= v.R;
-	G -= v.G;
-	B -= v.B;
-    A -= v.A;
+	X -= v.X;
+	Y -= v.Y;
+	Z -= v.Z;
+    W -= v.W;
 	return *this;
 }
 Vector4& Vector4::operator*=(float a)
 {
-	R *= a;
-	G *= a;
-	B *= a;
-    A *= a;
+	X *= a;
+	Y *= a;
+	Z *= a;
+    W *= a;
 	return *this;
 }
 Vector4& Vector4::operator/=(float a)
 {
-	R /= a;
-	G /= a;
-	B /= a;
-    A /= a;
+	X /= a;
+	Y /= a;
+	Z /= a;
+    W /= a;
 	return *this;
 }
 
 bool Vector4::operator==(const Vector4& v) const
 {
-    return R == v.R && G == v.G && B == v.B && A == v.A;
+    return X == v.X && Y == v.Y && Z == v.Z && W == v.W;
 }
 bool Vector4::operator!=(const Vector4& v) const
 {

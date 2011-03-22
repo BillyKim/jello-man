@@ -12,6 +12,12 @@ Vector2::Vector2(const D3DXVECTOR2& v2): X(v2.x), Y(v2.y)
 {
 }
 
+//Static
+const Vector2 Vector2::One = Vector2(1, 1);
+const Vector2 Vector2::Zero = Vector2(0, 0);
+const Vector2 Vector2::UnitX = Vector2(1, 0);
+const Vector2 Vector2::UnitY = Vector2(0, 1);
+
 //Copy en assignment
 Vector2::Vector2(const Vector2& v2) : X(v2.X), Y(v2.Y)
 {
@@ -21,11 +27,6 @@ Vector2& Vector2::operator=(const Vector2& v)
 	X = v.X;
 	Y = v.Y;
 	return *this;
-}
-
-//Destructor
-Vector2::~Vector2(void)
-{
 }
 
 //<-----------------------------------------------------------------
@@ -77,6 +78,14 @@ Vector2 Vector2::operator+(const Vector2& v) const
 Vector2 Vector2::operator-(const Vector2& v) const
 {
 	return Vector2(X - v.X, Y - v.Y);
+}
+Vector2 Vector2::operator*(const Vector2& v) const
+{
+	return Vector2(X * v.X, Y * v.Y);
+}
+Vector2 Vector2::operator/(const Vector2& v) const
+{
+	return Vector2(X / v.X, Y / v.Y);
 }
 
 float Vector2::Dot(const Vector2& v) const

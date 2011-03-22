@@ -1,9 +1,8 @@
 #include "TestObject.h"
 #include "ContentManager.h"
 
-TestObject::TestObject(void): m_pModel(0), m_pEffect(0), m_pDiffuseMap(0), m_pSpecMap(0) ,m_pGlossMap(0)
+TestObject::TestObject(void): m_pModel(0), m_pEffect(0), m_mtxWorld(Matrix::Identity), m_pDiffuseMap(0), m_pSpecMap(0) ,m_pGlossMap(0)
 {
-    D3DXMatrixIdentity(&m_mtxWorld);
 }
 
 

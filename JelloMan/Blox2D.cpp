@@ -311,7 +311,7 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 	if (showGraph && m_GameTime > 1)
 	{
 		SetColor(255,255,255,0.4f);
-		FillRect(GetWindowSize().width-105,5,100,40);
+		FillRect(static_cast<int>(GetWindowSize().width) - 105, 5, 100, 40);
 
 		if (m_fpsHistory.size() > 26) m_fpsHistory.erase(m_fpsHistory.begin());
 		if (m_dtimeHistory.size() > 26) m_dtimeHistory.erase(m_dtimeHistory.begin());

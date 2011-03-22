@@ -57,7 +57,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
         //Omni 1
         pl = PointLight();
         pl.position = Vector3(0.0f,100.0f,0.0f);
-        pl.color = Vector4(0.8f, 0.8f, 0.5f, 1.0f);
+        pl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
         pl.multiplier = 1.5f;
 		pl.AttenuationStart = 0;
 		pl.AttenuationEnd = 1000;

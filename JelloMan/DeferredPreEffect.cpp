@@ -23,7 +23,8 @@ DeferredPreEffect::~DeferredPreEffect(void)
 
 void DeferredPreEffect::SetWorld(const Matrix& world)
 {
-    m_pWorld->SetMatrix((float*)const_cast<Matrix&>(world));
+    float* p = (float*)const_cast<Matrix&>(world);
+    m_pWorld->SetMatrix(p);
 }
 void DeferredPreEffect::SetWorldViewProjection(const Matrix& wvp)
 {

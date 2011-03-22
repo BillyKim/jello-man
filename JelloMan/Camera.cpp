@@ -37,7 +37,7 @@ void Camera::Tick(const float dTime)
 	bool bRunning = false;
 
 	// camera controls
-	Vector3 dir(0.0f,0.0f,0.0f);
+	Vector3 dir(0.0f, 0.0f, 0.0f);
 
 	if (!CONTROLS->IsKeyDown(VK_LCONTROL))
 	{
@@ -85,7 +85,7 @@ void Camera::Tick(const float dTime)
 		float pitch = mouseMovement.y / m_MouseSensitivity;
 		float yAngle = mouseMovement.x / m_MouseSensitivity;
 
-		Matrix R;
+		D3DXMATRIX R;
 		D3DXVECTOR3 rightWorld = m_RightWorld.ToD3DVector3();
 		D3DXVECTOR3 lookWorld = m_LookWorld.ToD3DVector3();
 		D3DXVECTOR3 upWorld = m_UpWorld.ToD3DVector3();
