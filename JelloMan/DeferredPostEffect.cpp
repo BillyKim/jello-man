@@ -6,6 +6,7 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pNormalSpecMap(GetVariableBySemantic("NormalSpecMap")->AsShaderResource()), 
                     m_pPosGlossMap(GetVariableBySemantic("PositionGlossMap")->AsShaderResource()),
                     m_pPointLight(GetVariableBySemantic("PointLight")),
+                    m_pSpotLight(GetVariableBySemantic("SpotLight")),
                     m_pCamPos(GetVariableBySemantic("CameraPosition")->AsVector())
 {
     ASSERT(m_pColorMap->IsValid());
@@ -23,6 +24,10 @@ DeferredPostEffect::~DeferredPostEffect(void)
 void DeferredPostEffect::SetPointLight(const PointLight& light)
 {
     m_pPointLight->SetRawValue(reinterpret_cast<void*>(&const_cast<PointLight&>(light)), 0, sizeof(PointLight));
+}
+void DeferredPostEffect::SetSpotLight(const SpotLight& light)
+{
+    m_pPointLight->SetRawValue(reinterpret_cast<void*>(&const_cast<SpotLight&>(light)), 0, sizeof(SpotLight));
 }
 
 void DeferredPostEffect::SetColorMap(ID3D10ShaderResourceView* map)

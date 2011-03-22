@@ -5,6 +5,7 @@ cbuffer cbPerFrame
 };
 
 PointLight pointLight : PointLight;
+SpotLight spotLight : SpotLight;
 
 float3 vCamPos : CameraPosition;
 
@@ -67,7 +68,7 @@ float3  PS_UNLIT(VertexShaderOutput input) : SV_TARGET
 	return endColor;
 }
 
-float3  PS(VertexShaderOutput input) : SV_TARGET
+float3  PS_Point(VertexShaderOutput input) : SV_TARGET
 {
 	float4 col = colorMap.Sample(mapSampler, input.texCoord);
 	if (col.r == 0.0f && col.g == 0.0f && col.b == 0.0f)
@@ -123,21 +124,71 @@ float3  PS(VertexShaderOutput input) : SV_TARGET
 
     return endColor;
 };
+float3  PS_Spot(VertexShaderOutput input) : SV_TARGET
+{
+	float4 col = colorMap.Sample(mapSampler, input.texCoord);
+	float4 posGloss = positionGlossMap.Sample(mapSampler, input.texCoord);
+	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
+	float3 vCamDir = normalize(vCamPos - posGloss.xyz);
 
+	float3 normal = normalize(normalSpec.xyz);
+	float3 vLightDir = spotLight.Position - posGloss.xyz;
+	float dist = length(vLightDir);
+	vLightDir /= dist;
 
-technique10 tech1
+	float s = dot(-vLightDir, spotLight.Direction);
+	clip(s <= 0? -1 : 1); //clip if <= 0
+
+	s = pow(s, spotLight.Radius);
+	
+	float diff = dot(normal, vLightDir);
+	float3 color = diff * pointLight.Color.rgb;
+
+	//DiffuseColor
+	color *= col.rgb;
+
+	//Phong
+	float y = max(dot(normal, vLightDir), 0);
+	float3 reflect = normalize(normal * y * 2 - vLightDir);
+	float spec = saturate(dot(vCamDir, reflect));
+	spec = pow(spec, posGloss.a * 25.0f);
+	spec *= normalSpec.a;
+
+	color += spec * pointLight.Color.rgb;
+
+	color *= 1 - (max(dist - pointLight.AttenuationStart, 0) / (pointLight.AttenuationEnd - pointLight.AttenuationStart));
+	//color = color / dist;
+
+	color = color * pointLight.Multiplier;
+
+	return saturate(color);
+}
+
+technique10 tech_PointLight
 {
 	pass p0
 	{
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
 		SetGeometryShader(NULL);
-		SetPixelShader( CompileShader ( ps_4_0, PS() ));
+		SetPixelShader( CompileShader ( ps_4_0, PS_Point() ));
+
 		SetBlendState(blend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
 		SetRasterizerState(rState);
 	}
 }
+technique10 tech_SpotLight
+{
+	pass p0
+	{
+		SetVertexShader( CompileShader ( vs_4_0, VS() ));
+		SetGeometryShader(NULL);
+		SetPixelShader( CompileShader ( ps_4_0, PS_Spot() ));
 
-technique10 tech2
+		SetBlendState(blend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+		SetRasterizerState(rState);
+	}
+}
+technique10 tech_UNLIT
 {
 	pass p0
 	{
