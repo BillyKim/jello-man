@@ -171,6 +171,7 @@ private:
 	int m_Height;
 
 	D2D1_POINT_2F m_CurrentPos;
+	D2D1_MATRIX_3X2_F m_matWorld;
 };
 
 //-----------------------------------------------------------------
