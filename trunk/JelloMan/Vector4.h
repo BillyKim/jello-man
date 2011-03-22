@@ -1,23 +1,20 @@
 #pragma once
-#include "Vector3.h"
 #include "D3DUtil.h"
+#include "Vector3.h"
 
 struct Vector4
 {
 public:
 	//Constructors
 	Vector4();
-	Vector4(float r, float g, float b, float a);
+	Vector4(float x, float y, float z, float w);
 	Vector4(const Vector3& v3, float w);
-	Vector4(const D3DXCOLOR& color);
-    Vector4(const D3DXVECTOR4& v4);
+	explicit Vector4(const D3DXCOLOR& color);
+    explicit Vector4(const D3DXVECTOR4& v4);
 
 	//Copy en assignment
 	Vector4(const Vector4& v);
 	Vector4& operator=(const Vector4& v);
-
-	//Destructor
-	~Vector4(void);
 
 	//---Getters--------->
     Vector3 XYZ() const;
@@ -45,10 +42,10 @@ public:
 	//<-----------------------------------------
 
 	//---Public Datamembers--->
-	float R;
-    float G;
-    float B;
-    float A;
+	float X;
+    float Y;
+    float Z;
+    float W;
 	//<------------------------
 };
 

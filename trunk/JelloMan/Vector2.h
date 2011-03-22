@@ -7,14 +7,17 @@ public:
 	//Constructors
 	Vector2();
 	Vector2(float x, float y);
-	Vector2(const D3DXVECTOR2& v2);
+	explicit Vector2(const D3DXVECTOR2& v2);
+
+    //Static
+    static const Vector2 One;     //Vector2(1, 1);
+    static const Vector2 Zero;    //Vector2(0, 0);
+    static const Vector2 UnitX;   //Vector2(1, 0);
+    static const Vector2 UnitY;   //Vector2(0, 1);
 
 	//Copy en assignment
 	Vector2(const Vector2& v);
 	Vector2& operator=(const Vector2& v);
-
-	//Destructor
-	~Vector2(void);
 
 	//---Getters--------->
 	float Length() const; 
@@ -33,6 +36,8 @@ public:
 
 	Vector2 operator+(const Vector2& v) const;
 	Vector2 operator-(const Vector2& v) const;
+	Vector2 operator*(const Vector2& a) const;
+	Vector2 operator/(const Vector2& a) const;
 
 	float Dot(const Vector2& v) const;
 

@@ -81,6 +81,7 @@
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="DeferredPostEffect.h" />
@@ -122,6 +123,7 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
     <ClCompile Include="DeferredPostEffect.cpp" />

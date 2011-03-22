@@ -2,7 +2,6 @@
 
 #include "D3DUtil.h"
 #include "Vector4.h"
-#include "Matrix.h"
 #include "Controls.h"
 #include "Blox2D.h"
 
@@ -47,21 +46,21 @@ public:
 
 	// GETTERS
 	//	matrices
-	const Matrix& GetView() const
-	{ return m_matView; }
-	const Matrix& GetProjection() const
-	{ return m_matProjection; }
-	const Matrix& GetViewProjection() const
-	{ return m_matViewProjection; }
+	Matrix GetView() const
+	{ return Matrix(m_matView); }
+	Matrix GetProjection() const
+	{ return Matrix(m_matProjection); }
+	Matrix GetViewProjection() const
+	{ return Matrix(m_matViewProjection); }
 
 	//	vectors
-	const Vector3& GetRight() const
+	Vector3 GetRight() const
 	{ return m_RightWorld; }
-	const Vector3& GetUp() const
+	Vector3 GetUp() const
 	{ return m_UpWorld; }
-	const Vector3& GetLook() const
+	Vector3 GetLook() const
 	{ return m_LookWorld; }
-	const Vector3& GetPosition() const
+	Vector3 GetPosition() const
 	{ return m_PosWorld; }
 
 private:
@@ -71,10 +70,10 @@ private:
 	void BuildProjectionMatrix();
 
 	// DATAMEMBERS
-	Matrix m_matView;
-	Matrix m_matProjection;
-	Matrix m_matViewProjection;
-	Matrix m_World;
+	D3DXMATRIX m_matView;
+	D3DXMATRIX m_matProjection;
+	D3DXMATRIX m_matViewProjection;
+	D3DXMATRIX m_World;
 
 	Vector3 m_PosWorld;
 	Vector3 m_RightWorld;

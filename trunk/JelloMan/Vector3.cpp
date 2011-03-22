@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Vector3.h"
 #include "MathHelper.h"
+#include "Vector4.h"
 
 
 //-------------------Constructors-&-Destructor-------------------->
@@ -18,6 +19,13 @@ Vector3::Vector3(const D3DXVECTOR3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
 }
 //Vector3(const NxVec3& v3);
 
+//Static
+const Vector3 Vector3::Up = Vector3(0, 1, 0);
+const Vector3 Vector3::Right = Vector3(1, 0, 0);
+const Vector3 Vector3::Forward = Vector3(0, 0, -1);
+const Vector3 Vector3::One = Vector3(1, 1, 1);
+const Vector3 Vector3::Zero = Vector3(0, 0, 0);
+
 //Copy en assignment
 Vector3::Vector3(const Vector3& v3) : X(v3.X), Y(v3.Y), Z(v3.Z)
 {
@@ -28,11 +36,6 @@ Vector3& Vector3::operator=(const Vector3& v)
 	Y = v.Y;
 	Z = v.Z;
 	return *this;
-}
-
-//Destructor
-Vector3::~Vector3(void)
-{
 }
 
 //<-----------------------------------------------------------------
@@ -132,6 +135,20 @@ Vector3& Vector3::operator-=(const Vector3& v)
 	Z -= v.Z;
 	return *this;
 }
+Vector3& Vector3::operator*=(const Vector3& v)
+{
+    X *= v.X;
+    Y *= v.Y;
+    Z *= v.Z;
+	return *this;
+}
+Vector3& Vector3::operator/=(const Vector3& v)
+{
+    X /= v.X;
+    Y /= v.Y;
+    Z /= v.Z;
+	return *this;
+}
 Vector3& Vector3::operator*=(float a)
 {
 	X *= a;
@@ -156,3 +173,36 @@ bool Vector3::operator!=(const Vector3& v) const
 	return !operator==(v);
 }
 //<--------------------------------------------------
+
+//Static
+Vector4 Vector3::Transform(const Vector3& vec, const Matrix& matrix)
+{
+    D3DXVECTOR4 temp;
+    D3DXMATRIX m = (D3DXMATRIX)matrix;
+    D3DXVECTOR3 v = vec.ToD3DVector3();
+    D3DXVec3Transform(&temp, &v, &m);
+
+    return Vector4(temp);
+}
+Vector3 Vector3::Project(const Vector3& vec, CONST D3D10_VIEWPORT *pViewport,
+                           const Matrix& projection, const Matrix& view, const Matrix& world)
+{
+    D3DXVECTOR3 temp;
+    D3DXMATRIX pr = (D3DXMATRIX)projection, 
+               vw = (D3DXMATRIX)view, 
+               wd = (D3DXMATRIX)world;
+    D3DXVECTOR3 v = vec.ToD3DVector3();
+    D3DXVec3Project(&temp, &v, pViewport, &pr, &vw, &wd);
+    return Vector3(temp);
+}
+Vector3 Vector3::UnProject(const Vector3& vec, CONST D3D10_VIEWPORT *pViewport,
+                        const Matrix& projection, const Matrix& view, const Matrix& world)
+{
+    D3DXVECTOR3 temp;
+    D3DXMATRIX pr = (D3DXMATRIX)projection, 
+               vw = (D3DXMATRIX)view, 
+               wd = (D3DXMATRIX)world;
+    D3DXVECTOR3 v = vec.ToD3DVector3();
+    D3DXVec3Unproject(&temp, &v, pViewport, &pr, &vw, &wd);
+    return Vector3(temp);
+}
