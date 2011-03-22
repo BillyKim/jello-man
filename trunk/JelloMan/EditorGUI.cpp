@@ -334,43 +334,6 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 
 	int size = 10;
 
-	BLOX_2D->SetColor(100,100,100,0.6f);
-	BLOX_2D->FillRect(0,0,220,static_cast<int>(BLOX_2D->GetWindowSize().height));
-
-	BLOX_2D->SetColor(255,255,255);
-	// DEBUG INFO
-	BLOX_2D->SetFont(_T("Arial"),false,false,12);
-	tstringstream stream;
-	stream << _T("::VISUAL LIGHT DEBUGGER::\n---------------------------------\n");
-	stream << _T("Nr. lights in scene: ") << m_pRenderContext->GetLightController()->GetPointLights().size() << _T("\n");
-	
-	int b = 0;
-	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
-	{
-		if (m_LightsSelected[i] == true)
-			++b;
-	}
-
-	stream << _T("Nr. lights selected: ") << b << _T("\n\n");
-
-	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
-	{
-		if (m_LightsSelected[i] == true)
-		{
-			stream << _T("PointLight ") << i << _T(":\n   ");
-			stream << _T("X:") << m_pRenderContext->GetLightController()->GetPointLights()[i].position.X << _T(" ");
-			stream << _T("Y:") << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y << _T(" ");
-			stream << _T("Z:") << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z << _T("\n   ");
-			stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R*255) << _T(" ");
-			stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G*255) << _T(" ");
-			stream << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B*255) << _T("\n   ");
-			stream << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier << _T("\n   ");
-			stream << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd << _T("\n\n");
-		}
-	}
-
-	BLOX_2D->DrawString(stream.str(),2,60);
-
 	// POINTLIGHTS
 	for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetPointLights().size(); ++i)
 	{
@@ -477,7 +440,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 				if (m_bMoveable)
 				{
 					// X
-					HitRegion hitX(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp2.x),static_cast<int>(temp2.y),size,size);
+					HitRegion* hitX = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp2.x),static_cast<int>(temp2.y),size,size);
 					BLOX_2D->SetColor(255,0,0);
 					BLOX_2D->DrawLine(static_cast<int>(temp5.x),static_cast<int>(temp5.y),static_cast<int>(temp2.x),static_cast<int>(temp2.y),2.0f);
 					BLOX_2D->FillEllipse(static_cast<int>(temp2.x),static_cast<int>(temp2.y),static_cast<int>(size/2),static_cast<int>(size/2));
@@ -485,8 +448,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					BLOX_2D->SetFont(_T("Verdana"),false,false,14);
 					BLOX_2D->DrawString(_T("X"),static_cast<int>(temp2.x-5),static_cast<int>(temp2.y) - 25);
 
-					BLOX_2D->SetColor(50,50,255,0.4f);
-					D2D1_POINT_2F r[4];
+					D2D1_POINT_2F r[5];
 					r[0].x = temp8.x;
 					r[0].y = temp8.y;
 					r[1].x = temp6.x;
@@ -495,6 +457,15 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					r[2].y = temp.y;
 					r[3].x = temp5.x;
 					r[3].y = temp5.y;
+					r[4].x = temp8.x;
+					r[4].y = temp8.y;
+
+					HitRegion* hitXY = new HitRegion(HitRegion::TYPE_POLYGON,&r[0],5);
+						
+					if (hitXY->HitTest(CONTROLS->GetMousePos()))
+						BLOX_2D->SetColor(100,100,255,0.4f);
+					else
+						BLOX_2D->SetColor(50,50,255,0.4f);
 
 					BLOX_2D->FillPolygon(r,4);
 
@@ -504,7 +475,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					BLOX_2D->DrawLine(r[2],r[3]);
 					BLOX_2D->DrawLine(r[3],r[0]);
 
-					if (hitX.HitTest(CONTROLS->GetMousePos()))
+					if (hitX->HitTest(CONTROLS->GetMousePos()))
 					{
 						BLOX_2D->SetColor(255,255,255);
 						BLOX_2D->DrawEllipse(static_cast<int>(temp2.x),static_cast<int>(temp2.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
@@ -550,7 +521,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 				if (m_bMoveable)
 				{
 					// Y
-					HitRegion hitY(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp3.x),static_cast<int>(temp3.y),size,size);
+					HitRegion* hitY = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp3.x),static_cast<int>(temp3.y),size,size);
 					BLOX_2D->SetColor(0,255,0);
 					BLOX_2D->DrawLine(static_cast<int>(temp6.x),static_cast<int>(temp6.y),static_cast<int>(temp3.x),static_cast<int>(temp3.y),2.0f);
 					BLOX_2D->FillEllipse(static_cast<int>(temp3.x),static_cast<int>(temp3.y),static_cast<int>(size/2),static_cast<int>(size/2));
@@ -576,7 +547,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					BLOX_2D->DrawLine(r[2],r[3]);
 					BLOX_2D->DrawLine(r[3],r[0]);
 
-					if (hitY.HitTest(CONTROLS->GetMousePos()))
+					if (hitY->HitTest(CONTROLS->GetMousePos()))
 					{
 						BLOX_2D->SetColor(255,255,255);
 						BLOX_2D->DrawEllipse(static_cast<int>(temp3.x),static_cast<int>(temp3.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
@@ -614,7 +585,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 				if (m_bMoveable)
 				{
 					// Z
-					HitRegion hitZ(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp4.x),static_cast<int>(temp4.y),size,size);
+					HitRegion* hitZ = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp4.x),static_cast<int>(temp4.y),size,size);
 					BLOX_2D->SetColor(255,255,0);
 					BLOX_2D->DrawLine(static_cast<int>(temp7.x),static_cast<int>(temp7.y),static_cast<int>(temp4.x),static_cast<int>(temp4.y),2.0f);
 					BLOX_2D->FillEllipse(static_cast<int>(temp4.x),static_cast<int>(temp4.y),static_cast<int>(size/2),static_cast<int>(size/2));
@@ -640,7 +611,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					BLOX_2D->DrawLine(r[2],r[3]);
 					BLOX_2D->DrawLine(r[3],r[0]);
 
-					if (hitZ.HitTest(CONTROLS->GetMousePos()))
+					if (hitZ->HitTest(CONTROLS->GetMousePos()))
 					{
 						BLOX_2D->SetColor(255,255,255);
 						BLOX_2D->DrawEllipse(static_cast<int>(temp4.x),static_cast<int>(temp4.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
@@ -789,6 +760,53 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 				}
 		}
 	}
+
+	BLOX_2D->SetColor(100,100,100);
+	BLOX_2D->FillRect(0,50,150,static_cast<int>(BLOX_2D->GetWindowSize().height));
+	BLOX_2D->SetColor(60,60,60);
+	BLOX_2D->DrawLine(149,50,149,static_cast<int>(BLOX_2D->GetWindowSize().height),2.0f);
+
+	BLOX_2D->SetColor(255,255,255);
+	// DEBUG INFO
+	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+	tstringstream stream;
+	stream << _T("Nr. lights in scene: ") << m_pRenderContext->GetLightController()->GetPointLights().size() << _T("\n");
+	
+	int b = 0;
+	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
+	{
+		if (m_LightsSelected[i] == true)
+			++b;
+	}
+
+	stream << _T("Nr. lights selected: ") << b << _T("\n-------------------------\n\n");
+
+	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
+	{
+		if (m_LightsSelected[i] == true)
+		{
+			stream << _T("PointLight ") << i << _T(":\n   ");
+			tstringstream strm;
+			strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.X;
+			tstring t = strm.str();
+			stream << _T("X: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+			tstringstream strm1;
+			strm1 << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y;
+			t = strm1.str();
+			stream << _T("Y: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+			tstringstream strm2;
+			strm2 << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z;
+			t = strm2.str();
+			stream << _T("Z: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+			stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R*255) << _T(" ");
+			stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G*255) << _T(" ");
+			stream << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B*255) << _T("\n   ");
+			stream << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier << _T("\n   ");
+			stream << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd << _T("\n\n");
+		}
+	}
+
+	BLOX_2D->DrawString(stream.str(),2,60);
 }
 
 // GETTERS
