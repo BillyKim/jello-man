@@ -20,6 +20,8 @@ public:
 	void Draw();
 	void Tick(const RenderContext* pRenderContext);
 
+	void ColorPicker(PointLight* pointLight);
+
 	// GETTERS
 	Button* GetLightButton() const
 	{ return m_pLightButton; }
@@ -32,6 +34,9 @@ public:
 private:
 
 	void VisualLightDebugger(const Camera* pCamera);
+	Vector3 GetHue(int i);
+	Vector3 HsvToRgb(double h, double S, double V);
+	void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
 
 	// DATAMEMBERS
 
@@ -48,16 +53,28 @@ private:
 	vector<Bitmap*> m_pPointlightButtonBitmaps;
 	Button* m_pSpotlightButton;
 	vector<Bitmap*> m_pSpotlightButtonBitmaps;
+	Button* m_pColorPickerButton;
+	vector<Bitmap*> m_pColorPickerButtonBitmaps;
+	Button* m_pApplyButton;
+	vector<Bitmap*> m_pApplyButtonBitmaps;
 
 	Bitmap* m_pCameraBitmap;
 
 	bool m_bUsingCamera;
 	bool m_bGameModeDown;
 	bool m_bEditorModeDown;
+	bool m_bPreviousColorSet;
 
 	int m_GameEditorModeSelect;
 
 	const RenderContext* m_pRenderContext;
+
+	Vector3 m_PreviousColor;
+	Vector3 m_CurrentColor;
+	Vector3 m_HueColor;
+	Point2D m_ColorPickerPos;
+	Point2D m_ColorPickerSelectPos;
+	int m_Hue;
 
 	// VISUAL LIGHT DEBUGGER
 	bool m_bLockX;

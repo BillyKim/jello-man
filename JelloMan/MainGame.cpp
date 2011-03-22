@@ -140,7 +140,7 @@ void MainGame::DrawScene()
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->SetFont(_T("Arial"),true,false,12);
 
-		CONTROLS->ResetMouse();
+		CONTROLS->ResetMouse();		
 	}
 	else
 	{
