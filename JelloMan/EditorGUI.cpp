@@ -1096,12 +1096,14 @@ void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 	r[4].x = posLineXY_2D.x;
 	r[4].y = posLineXY_2D.y;
 
-	HitRegion hitRectXY(HitRegion::TYPE_POLYGON, &r[0], 5);
+	/*HitRegion hitRectXY(HitRegion::TYPE_POLYGON, &r[0], 5);
 						
 	if (hitRectXY.HitTest(CONTROLS->GetMousePos()))
 		BLOX_2D->SetColor(100, 100, 255, 0.4f);
 	else
-		BLOX_2D->SetColor(50, 50, 255, 0.4f);
+		BLOX_2D->SetColor(50, 50, 255, 0.4f);*/
+
+	BLOX_2D->SetColor(50, 50, 255, 0.4f);
 
 	BLOX_2D->FillPolygon(r, 4);
 
@@ -1128,13 +1130,13 @@ void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 	if (!CONTROLS->LeftMBDown())
 		m_bLockX = m_bLockY = m_bLockZ = false;
 
+	D3DXVECTOR3 mousePosPlusZX(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.z);
+	D3DXVECTOR3 mousePosPlusZX_3D;
+	D3DXVec3Unproject(&mousePosPlusZX_3D, &mousePosPlusZX, &viewP, &matProj, &matView, &matIdent);
+	mousePosPlusZX_3D.x -= l*100;
+
 	if (m_bLockX)
 	{
-		D3DXVECTOR3 mousePosPlusZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.z);
-		D3DXVECTOR3 mousePosPlusZ_3D;
-		D3DXVec3Unproject(&mousePosPlusZ_3D, &mousePosPlusZ, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZ_3D.x -= l*100;
-
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->DrawEllipse(
 			static_cast<int>(posLineX_2D.x),
@@ -1143,11 +1145,15 @@ void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 			static_cast<int>(size/2),
 			2.0f);
 
-		float diff = m_MPos[id].x - mousePosPlusZ_3D.x;
+		float diff = m_MPos[id].x - mousePosPlusZX_3D.x;
 
 		pointLight->position.X -= diff;
 
-		m_MPos[id] = mousePosPlusZ_3D;
+		m_MPos[id].x = mousePosPlusZX_3D.x;
+	}
+	else
+	{
+		m_MPos[id].x = mousePosPlusZX_3D.x;
 	}
 
 	// Y
@@ -1212,13 +1218,13 @@ void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 		}
 	}
 
+	D3DXVECTOR3 mousePosPlusZY(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.z);
+	D3DXVECTOR3 mousePosPlusZY_3D;
+	D3DXVec3Unproject(&mousePosPlusZY_3D, &mousePosPlusZX, &viewP, &matProj, &matView, &matIdent);
+	mousePosPlusZY_3D.y -= l*100;
+
 	if (m_bLockY)
 	{
-		D3DXVECTOR3 mousePosPlusZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.z);
-		D3DXVECTOR3 mousePosPlusZ_3D;
-		D3DXVec3Unproject(&mousePosPlusZ_3D, &mousePosPlusZ, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZ_3D.y -= l*100;
-
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->DrawEllipse(
 			static_cast<int>(posLineY_2D.x),
@@ -1227,11 +1233,15 @@ void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 			static_cast<int>(size/2),
 			2.0f);
 					
-		float diff = m_MPos[id].y - mousePosPlusZ_3D.y;
+		float diff = m_MPos[id].y - mousePosPlusZY_3D.y;
 
 		pointLight->position.Y -= diff;
 
-		m_MPos[id] = mousePosPlusZ_3D;
+		m_MPos[id].y = mousePosPlusZY_3D.y;
+	}
+	else
+	{
+		m_MPos[id].y = mousePosPlusZY_3D.y;
 	}
 	
 	// Z
@@ -1297,13 +1307,13 @@ void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 		}
 	}
 
+	D3DXVECTOR3 mousePosPlusZZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.z);
+	D3DXVECTOR3 mousePosPlusZZ_3D;
+	D3DXVec3Unproject(&mousePosPlusZZ_3D, &mousePosPlusZZ, &viewP, &matProj, &matView, &matIdent);
+	mousePosPlusZZ_3D.z -= l*100;
+
 	if (m_bLockZ)
 	{
-		D3DXVECTOR3 mousePosPlusZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.z);
-		D3DXVECTOR3 mousePosPlusZ_3D;
-		D3DXVec3Unproject(&mousePosPlusZ_3D, &mousePosPlusZ, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZ_3D.z -= l*100;
-
 		BLOX_2D->SetColor(255,255,255);
 		BLOX_2D->DrawEllipse(
 			static_cast<int>(posLineZ_2D.x),
@@ -1312,11 +1322,15 @@ void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 			static_cast<int>(size/2),
 			2.0f);
 
-		float diff = m_MPos[id].z - mousePosPlusZ_3D.z;
+		float diff = m_MPos[id].z - mousePosPlusZZ_3D.z;
 
 		pointLight->position.Z -= diff;
 
-		m_MPos[id] = mousePosPlusZ_3D;
+		m_MPos[id].z = mousePosPlusZZ_3D.z;
+	}
+	else
+	{
+		m_MPos[id].z = mousePosPlusZZ_3D.z;
 	}
 }
 
