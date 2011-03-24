@@ -271,7 +271,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 
 		    if (itSpot == pRenderContext->GetLightController()->GetSpotLights().cbegin()) //first time only
             {         
-			    m_pScreenMesh->Draw(); //sets vertexbuffer 'n stuff
+			    m_pScreenMesh->Draw(); //sets vertexbuffer
             }
 		    else //other times
             {
