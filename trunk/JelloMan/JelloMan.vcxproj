@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Camera.h" />
@@ -106,6 +107,8 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="PhongEffect.h" />
+    <ClInclude Include="PhysX.h" />
+    <ClInclude Include="PhysXShape.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="stdafx.h" />
@@ -120,6 +123,7 @@
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -146,6 +150,8 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelMesh.cpp" />
     <ClCompile Include="PhongEffect.cpp" />
+    <ClCompile Include="PhysX.cpp" />
+    <ClCompile Include="PhysXShape.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="stdafx.cpp" />

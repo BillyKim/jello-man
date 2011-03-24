@@ -22,12 +22,13 @@ PhongEffect::~PhongEffect(void)
 
 void PhongEffect::SetWorldViewProjection(const Matrix& wvp)
 {
-    float* fWvp = (float*)&wvp;
-    m_pMtxWVP->SetMatrix(fWvp);
+	D3DXMATRIX mat = (D3DXMATRIX)wvp;
+    m_pMtxWVP->SetMatrix((float*)mat);
 }
 void PhongEffect::SetWorld(const Matrix& world)
 {
-    m_pMtxWorld->SetMatrix((float*)&world);
+	D3DXMATRIX mat = (D3DXMATRIX)world;
+    m_pMtxWorld->SetMatrix((float*)mat);
 }
 
 //void PhongEffect::SetLightDirection(const Vector3& v)

@@ -27,7 +27,7 @@ void DeferredPostEffect::SetPointLight(const PointLight& light)
 }
 void DeferredPostEffect::SetSpotLight(const SpotLight& light)
 {
-    m_pPointLight->SetRawValue(reinterpret_cast<void*>(&const_cast<SpotLight&>(light)), 0, sizeof(SpotLight));
+    m_pSpotLight->SetRawValue(reinterpret_cast<void*>(&const_cast<SpotLight&>(light)), 0, sizeof(SpotLight));
 }
 
 void DeferredPostEffect::SetColorMap(ID3D10ShaderResourceView* map)

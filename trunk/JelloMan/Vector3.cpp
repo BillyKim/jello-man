@@ -172,6 +172,16 @@ bool Vector3::operator!=(const Vector3& v) const
 {
 	return !operator==(v);
 }
+
+//cast
+Vector3::operator NxVec3() const
+{
+	return NxVec3(X, Y, Z);
+}
+Vector3::operator D3DXVECTOR3() const
+{
+	return D3DXVECTOR3(X, Y, Z);
+}
 //<--------------------------------------------------
 
 //Static

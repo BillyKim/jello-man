@@ -46,6 +46,15 @@
     <Filter Include="Engine Files\Graphics\GUI">
       <UniqueIdentifier>{cd5725f0-9cd6-41aa-998d-d1f6c055e59e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\PhysX">
+      <UniqueIdentifier>{3ef049bb-cde5-4831-9aeb-7dc8700a2dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\PhysX\Shapes">
+      <UniqueIdentifier>{7eaf0945-42cd-4d97-a2a7-5d4e57741fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\PhysX\Shapes\base">
+      <UniqueIdentifier>{0297a0f8-ac21-4e19-993b-44d77f65865e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -168,6 +177,15 @@
     <ClInclude Include="Color.h">
       <Filter>Engine Files\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysX.h">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXShape.h">
+      <Filter>Engine Files\PhysX\Shapes\base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -283,6 +301,15 @@
     </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Engine Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysX.cpp">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXShape.cpp">
+      <Filter>Engine Files\PhysX\Shapes\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

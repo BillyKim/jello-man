@@ -7,6 +7,7 @@ struct SpotLight
     SpotLight();
 
     Color color;
+
     Vector3 position;
     float multiplier;
 
@@ -16,8 +17,10 @@ struct SpotLight
     float padding;
 
     Vector3 direction;
-    float padding2;
-    //bool m_Enabled;
+    //float padding2;
+    bool shadowsEnabled;
+	bool lightEnabled;
+	short shadowMapSize;
 };
 //<-------------------------------------
 
@@ -47,7 +50,8 @@ struct PointLight
 
     float AttenuationStart;
     float AttenuationEnd;
-	Vector2 padding;
+	bool lightEnabled;
+	bool padding;
 
     //bool m_Enabled;
 };

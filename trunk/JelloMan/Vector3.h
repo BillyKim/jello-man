@@ -2,6 +2,7 @@
 #include "Vector2.h"
 #include "D3DUtil.h"
 #include "Matrix.h"
+#include "PhysX.h"
 
 struct Vector4;
 
@@ -62,6 +63,10 @@ public:
 
 	bool operator==(const Vector3& v) const;
 	bool operator!=(const Vector3& v) const;
+
+	//cast
+	operator NxVec3() const;
+	operator D3DXVECTOR3() const;
 
 	//<-----------------------------------------
 

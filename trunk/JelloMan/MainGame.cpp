@@ -53,15 +53,17 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
 
-    PointLight pl;
+    SpotLight sl;
         //Omni 1
-        pl = PointLight();
-        pl.position = Vector3(0.0f,100.0f,0.0f);
-        pl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
-        pl.multiplier = 1.5f;
-		pl.AttenuationStart = 0;
-		pl.AttenuationEnd = 1000;
-        m_pLightController->AddLight(pl);
+        sl = SpotLight();
+        sl.position = Vector3(0.0f,100.0f,0.0f);
+        sl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
+        sl.multiplier = 1.5f;
+		sl.AttenuationStart = 0;
+		sl.AttenuationEnd = 1000;
+		sl.direction = Vector3(0, -1, 0);
+		sl.radius = 1.5f;
+        m_pLightController->AddLight(sl);
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);

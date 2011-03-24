@@ -56,6 +56,12 @@ Matrix::operator const D3DXMATRIX() const
 {
     return m_Matrix;
 }
+Matrix::operator NxMat34() const
+{
+	NxMat34 mat;
+	mat.setColumnMajor44(m_Matrix);
+	return mat;
+}
 
 // assignment operators
 Matrix& Matrix::operator*= (const Matrix& mat)

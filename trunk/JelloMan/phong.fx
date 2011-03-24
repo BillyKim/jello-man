@@ -4,6 +4,22 @@ cbuffer cbPerObject
 	matrix mtxWorld : World;
 };
 
+RasterizerState rState
+{
+	FillMode = Solid;
+	ScissorEnable = false;
+};
+
+BlendState blend
+{
+	BlendEnable[0] = FALSE;
+	SrcBlend = ONE;
+	DestBlend = ZERO;
+	BlendOp = ADD;
+	SrcBlendAlpha = ZERO;
+	DestBlendAlpha = ZERO;
+};
+
 struct VertexShaderInput
 {
     float3 position : POSITION0;
@@ -44,5 +60,7 @@ technique10 tech1
 		SetVertexShader( CompileShader ( vs_4_0, VS() ));
 		SetGeometryShader(NULL);
 		SetPixelShader( CompileShader ( ps_4_0, PS() ));
+		SetBlendState(blend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+		SetRasterizerState(rState);
 	}
 }
