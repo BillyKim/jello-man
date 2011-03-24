@@ -21,7 +21,7 @@ public:
 	void Tick(const RenderContext* pRenderContext);
 
 	void ColorPicker(PointLight* pointLight);
-	void MoveGizmo(PointLight* pointLight);
+	void MoveGizmo(PointLight* pointLight, int id);
 
 	// GETTERS
 	Button* GetLightButton() const
@@ -86,8 +86,11 @@ private:
 	bool m_bMoveable;
 	bool m_bClick;
 
-	vector<HitRegion*> m_pHitRectLights;
+	vector<HitRegion*> m_pLightHitRects;
 	vector<bool> m_LightsSelected;
+
+	int m_SelectedLights;
+	int m_TotalLights;
 
 	Vector3 m_MousePos;
 	vector<D3DXVECTOR3> m_MPos;
