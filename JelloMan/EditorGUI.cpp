@@ -138,7 +138,7 @@ void EditorGUI::Initialize()
 	m_pEditorModeButton->SetDownState(m_pEditorModeButtonBitmaps[1]);
 
 	// POINTLIGHT BUTTON
-	m_pPointlightButton = new Button(180,7,36,36);
+	m_pPointlightButton = new Button(216,7,36,36);
 
 	m_pPointlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/pointlight_normal.png")));
 	m_pPointlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/pointlight_hover.png")));
@@ -148,7 +148,7 @@ void EditorGUI::Initialize()
 	m_pPointlightButton->SetDownState(m_pPointlightButtonBitmaps[1]);
 
 	// SPOTLIGHT BUTTON
-	m_pSpotlightButton = new Button(214,7,36,36);
+	m_pSpotlightButton = new Button(250,7,36,36);
 
 	m_pSpotlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/spotlight_normal.png")));
 	m_pSpotlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/spotlight_hover.png")));
@@ -158,7 +158,7 @@ void EditorGUI::Initialize()
 	m_pSpotlightButton->SetDownState(m_pSpotlightButtonBitmaps[1]);
 
 	// COLOR PICKER BUTTON
-	m_pColorPickerButton = new Button(274,7,36,36,true);
+	m_pColorPickerButton = new Button(310,7,36,36,true);
 
 	m_pColorPickerButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/colorpicker_normal.png")));
 	m_pColorPickerButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/colorpicker_hover.png")));
@@ -191,7 +191,7 @@ void EditorGUI::Initialize()
 	m_pSpotLightBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/slight_hover.png")));
 
 	// ROTATE BUTTON
-	m_pRotateButton = new Button(300,7,36,36,true);
+	m_pRotateButton = new Button(155,7,36,36,true);
 
 	m_pRotateButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/rotate_on_normal.png")));
 	m_pRotateButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/rotate_on_hover.png")));
@@ -412,8 +412,9 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 		pl.multiplier = 1.0f;
 		pl.AttenuationStart = 0;
 		pl.AttenuationEnd = 200;
-		pRenderContext->GetLightController()->AddLight(pl);
 		pl.lightEnabled = true;
+
+		pRenderContext->GetLightController()->AddLight(pl);
 
 		cout << "Added pointlight\n";
 	}
@@ -781,9 +782,9 @@ void EditorGUI::VisualPointLightDebugger()
 		if (m_PLightsSelected[i] == true)
 		{
 			if (m_bMoveable)
-				MoveGizmo(m_pRenderContext->GetLightController()->GetPointLights()[i].position,i);
+				MoveGizmo(m_pRenderContext->GetLightController()->GetPointLights()[i].position,TYPE_POINTLIGHT,i);
 			else if (m_bRotateable)
-				RotateGizmo(m_pRenderContext->GetLightController()->GetPointLights()[i].position,i);
+				RotateGizmo(m_pRenderContext->GetLightController()->GetPointLights()[i].position,TYPE_POINTLIGHT,i);
 		}
 	}
 }
@@ -1015,8 +1016,13 @@ void EditorGUI::VisualSpotLightDebugger()
 	// MOVE GIZMO
 	for (unsigned int i = 0; i < m_SLightsSelected.size(); ++i)
 	{
-		if (m_bMoveable && m_SLightsSelected[i] == true)
-			MoveGizmo(m_pRenderContext->GetLightController()->GetSpotLights()[i].position,i);
+		if (m_SLightsSelected[i] == true)
+		{
+			if (m_bMoveable)
+				MoveGizmo(m_pRenderContext->GetLightController()->GetSpotLights()[i].position,TYPE_SPOTLIGHT,i);
+			else if (m_bRotateable)
+				RotateGizmo(m_pRenderContext->GetLightController()->GetSpotLights()[i].position,TYPE_SPOTLIGHT,i);
+		}
 	}
 }
 
@@ -1300,7 +1306,7 @@ void EditorGUI::RGBtoHSV( float r, float g, float b, float *h, float *s, float *
 		*h += 360;
 }
 
-void EditorGUI::MoveGizmo(Vector3& position, int id)
+void EditorGUI::MoveGizmo(Vector3& position, TYPE type, int id)
 {
 	// MATRIX
 	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -1472,15 +1478,29 @@ void EditorGUI::MoveGizmo(Vector3& position, int id)
 			static_cast<int>(size/2),
 			2.0f);
 
-		float diff = m_OldPointLightPos[id].x - mousePosPlusZX_3D.x;
+		if (type == TYPE_POINTLIGHT)
+		{
+			float diff = m_OldPointLightPos[id].x - mousePosPlusZX_3D.x;
 
-		position.X -= diff;
+			position.X -= diff;
 
-		m_OldPointLightPos[id].x = mousePosPlusZX_3D.x;
+			m_OldPointLightPos[id].x = mousePosPlusZX_3D.x;
+		}
+		else if (type == TYPE_SPOTLIGHT)
+		{
+			float diff = m_OldSpotLightPos[id].x - mousePosPlusZX_3D.x;
+
+			position.X -= diff;
+
+			m_OldSpotLightPos[id].x = mousePosPlusZX_3D.x;
+		}
 	}
 	else
 	{
-		m_OldPointLightPos[id].x = mousePosPlusZX_3D.x;
+		if (type == TYPE_POINTLIGHT)
+			m_OldPointLightPos[id].x = mousePosPlusZX_3D.x;
+		else if (type == TYPE_SPOTLIGHT)
+			m_OldSpotLightPos[id].x = mousePosPlusZX_3D.x;
 	}
 
 	// Y
@@ -1573,16 +1593,30 @@ void EditorGUI::MoveGizmo(Vector3& position, int id)
 			static_cast<int>(size/2),
 			static_cast<int>(size/2),
 			2.0f);
-					
-		float diff = m_OldPointLightPos[id].y - mousePosPlusZY_3D.y;
+			
+		if (type == TYPE_POINTLIGHT)
+		{
+			float diff = m_OldPointLightPos[id].y - mousePosPlusZY_3D.y;
 
-		position.Y -= diff;
+			position.Y -= diff;
 
-		m_OldPointLightPos[id].y = mousePosPlusZY_3D.y;
+			m_OldPointLightPos[id].y = mousePosPlusZY_3D.y;
+		}
+		else if (type == TYPE_SPOTLIGHT)
+		{
+			float diff = m_OldSpotLightPos[id].y - mousePosPlusZY_3D.y;
+
+			position.Y -= diff;
+
+			m_OldSpotLightPos[id].y = mousePosPlusZY_3D.y;
+		}
 	}
 	else
 	{
-		m_OldPointLightPos[id].y = mousePosPlusZY_3D.y;
+		if (type == TYPE_POINTLIGHT)
+			m_OldPointLightPos[id].y = mousePosPlusZY_3D.y;
+		else if (type == TYPE_SPOTLIGHT)
+			m_OldSpotLightPos[id].y = mousePosPlusZY_3D.y;
 	}
 	
 	// Z
@@ -1677,19 +1711,33 @@ void EditorGUI::MoveGizmo(Vector3& position, int id)
 			static_cast<int>(size/2),
 			2.0f);
 
-		float diff = m_OldPointLightPos[id].z - mousePosPlusZZ_3D.z;
+		if (type == TYPE_POINTLIGHT)
+		{
+			float diff = m_OldPointLightPos[id].z - mousePosPlusZZ_3D.z;
 
-		position.Z -= diff;
+			position.Z -= diff;
 
-		m_OldPointLightPos[id].z = mousePosPlusZZ_3D.z;
+			m_OldPointLightPos[id].z = mousePosPlusZZ_3D.z;
+		}
+		else if (type == TYPE_SPOTLIGHT)
+		{
+			float diff = m_OldSpotLightPos[id].z - mousePosPlusZZ_3D.z;
+
+			position.Z -= diff;
+
+			m_OldSpotLightPos[id].z = mousePosPlusZZ_3D.z;
+		}
 	}
 	else
 	{
-		m_OldPointLightPos[id].z = mousePosPlusZZ_3D.z;
+		if (type == TYPE_POINTLIGHT)
+			m_OldPointLightPos[id].z = mousePosPlusZZ_3D.z;
+		else if (type == TYPE_SPOTLIGHT)
+			m_OldSpotLightPos[id].z = mousePosPlusZZ_3D.z;
 	}
 }
 
-void EditorGUI::RotateGizmo(Vector3& position, int id)
+void EditorGUI::RotateGizmo(Vector3& position, TYPE type, int id)
 {
 	// MATRIX
 	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
