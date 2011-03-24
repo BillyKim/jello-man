@@ -641,7 +641,8 @@ HitRegion::HitRegion(int type, int x, int y, int width, int height)	:	m_pHitRect
 	SetPosition(x,y);
 }
 
-HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)
+HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)	:	m_pHitRect(0),
+																		m_pTransformedGeometry(0)
 {
 	if (type == TYPE_POLYGON)
 	{
@@ -661,7 +662,7 @@ HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)
 		pSink->Close();
 		SafeRelease(pSink);
 
-		SafeRelease(m_pHitRect);
+		SafeDelete(m_pHitRect);
 		m_pHitRect = PG;
 
 		SetPosition(0,0);
