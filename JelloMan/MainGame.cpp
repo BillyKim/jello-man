@@ -63,6 +63,8 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 		sl.AttenuationEnd = 1000;
 		sl.direction = Vector3(0, -1, 0);
 		sl.radius = 1.5f;
+		sl.shadowsEnabled = false;
+		sl.lightEnabled = true;
         m_pLightController->AddLight(sl);
 
 	// LEVEL

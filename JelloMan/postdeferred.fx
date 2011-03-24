@@ -68,7 +68,11 @@ float3  PS_UNLIT(VertexShaderOutput input) : SV_TARGET
 	return endColor;
 }
 
-float ShadowCheck()
+float PointShadowCheck()
+{
+	return 1.0f;
+}
+float SpotShadowCheck()
 {
 	return 1.0f;
 }

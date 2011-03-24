@@ -7,7 +7,7 @@
 #include <vector>
 #include "D3DUtil.h"
 
-class Character;
+//class Character;
 
 class DAEAllocator : public NxUserAllocator
 {
@@ -57,7 +57,7 @@ public:
 	* Creates a new character controller at the specified location
 	* @param player the player character.
 	*/
-	NxController *CreateController(Character* player);
+	//NxController *CreateController(Character* player);
 	/**
 	* Implementation of the NxUserTriggerReport class.
 	* Called when a shape is triggered.
@@ -72,7 +72,7 @@ private:
 	NxPhysicsSDK *m_pPhysicsSDK;
 	NxScene *m_pScene;
 
-	std::vector<NxController*> m_Controllers;
+	//std::vector<NxController*> m_Controllers;
 	NxControllerManager* m_pControllerManager;
 	DAEAllocator *m_pAllocator;
 private:
