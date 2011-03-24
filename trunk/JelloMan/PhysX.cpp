@@ -3,7 +3,7 @@
 #include "NxCapsuleController.h"
 
 #pragma comment(lib, "PhysXLoader.lib")
-#pragma comment(lib, "NxCharacter.lib")
+//#pragma comment(lib, "NxCharacter.lib")
 
 PhysX::PhysX():m_pPhysicsSDK(0),m_pScene(0), m_pControllerManager(0)
 {
@@ -12,14 +12,13 @@ PhysX::PhysX():m_pPhysicsSDK(0),m_pScene(0), m_pControllerManager(0)
 
 PhysX::~PhysX(void)
 {
-	NxReleaseControllerManager(m_pControllerManager);
+	//NxReleaseControllerManager(m_pControllerManager);
 	if(m_pScene)m_pPhysicsSDK->releaseScene(*m_pScene);
 	if(m_pPhysicsSDK)m_pPhysicsSDK->release();
 	if(m_pAllocator) delete m_pAllocator;
 }
 bool PhysX::Init(void)
 {
-
 	//create PhysicsSDK object
 	m_pPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, NULL);
 	if(!m_pPhysicsSDK)
@@ -27,6 +26,7 @@ bool PhysX::Init(void)
 		OutputDebugString(_T("Wrong SDK DLL version?"));
 		return false;
 	}
+	//(if debug?)
 	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
 	//create a scene object
 	NxSceneDesc sceneDesc;
@@ -55,7 +55,7 @@ bool PhysX::Init(void)
 	m_pScene->setUserTriggerReport(this);
 
 	m_pAllocator = new DAEAllocator();
-	m_pControllerManager = NxCreateControllerManager(m_pAllocator);
+	//m_pControllerManager = NxCreateControllerManager(m_pAllocator);
 	
 	return true;
 }
@@ -75,26 +75,26 @@ void PhysX::FetchResults(void)
 	m_pScene->fetchResults(NX_ALL_FINISHED ,true);
 }
 
-NxController* PhysX::CreateController(Character* player)
-{
-	NxCapsuleControllerDesc desc;
-	//desc.radius = player->GetRadius();
-	//desc.height = player->GetHeight();
-	//D3DXVECTOR3 pos = player->GetPosition();
-	//desc.position = NxExtendedVec3( pos.x, pos.y, pos.z);
-	desc.climbingMode = CLIMB_EASY ;
-	desc.upDirection = NX_Y;
-
-	NxController* c = m_pControllerManager->createController(m_pScene, desc);
-
-	c->setCollision(true);
-	c->getActor()->setGroup(1);
-	c->getActor()->userData=player;
-	c->getActor()->setName("character");
-
-	m_Controllers.push_back(c);
-	return c;
-}
+//NxController* PhysX::CreateController(Character* player)
+//{
+//	NxCapsuleControllerDesc desc;
+//	//desc.radius = player->GetRadius();
+//	//desc.height = player->GetHeight();
+//	//D3DXVECTOR3 pos = player->GetPosition();
+//	//desc.position = NxExtendedVec3( pos.x, pos.y, pos.z);
+//	desc.climbingMode = CLIMB_EASY ;
+//	desc.upDirection = NX_Y;
+//
+//	NxController* c = m_pControllerManager->createController(m_pScene, desc);
+//
+//	c->setCollision(true);
+//	c->getActor()->setGroup(1);
+//	c->getActor()->userData=player;
+//	c->getActor()->setName("character");
+//
+//	m_Controllers.push_back(c);
+//	return c;
+//}
 NxShape *PhysX::GetClosestShape(NxRay& ray,float distance){
 	NxRaycastHit hit;
 	NxShape* result = m_pScene->raycastClosestShape(ray,NX_STATIC_SHAPES,hit,1,distance);
@@ -107,7 +107,7 @@ void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag 
 	NxActor& otherActor = otherShape.getActor();
 	if (triggerActor.userData == NULL || otherActor.userData == NULL)
 		return;
-	Character* player = (Character*)otherActor.userData;
+	//Character* player = (Character*)otherActor.userData;
 	//LevelElement* object = (LevelElement*)triggerActor.userData;
 	
 	//if(status & NX_TRIGGER_ON_ENTER)

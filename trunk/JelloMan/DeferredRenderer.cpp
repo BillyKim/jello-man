@@ -232,6 +232,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 	    m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);
 	    m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
         
+		bool first = true;
         //Loop PointLights
         vector<PointLight>::const_iterator itPoint = pRenderContext->GetLightController()->GetPointLights().cbegin();
 	    for (; itPoint != pRenderContext->GetLightController()->GetPointLights().cend(); ++itPoint)
@@ -239,7 +240,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 			if (itPoint->lightEnabled == false)
 				continue;
 
-			m_pEffect->SetTechnique("tech_PointLight_NoShadows");
+			m_pEffect->SetTechnique("tech_PointLightNoShadows");
 
             D3D10_RECT r = CalcScissorRect(itPoint->position, itPoint->AttenuationEnd, pRenderContext->GetCamera()->GetViewProjection(),
                                             m_Width, m_Height);
@@ -251,8 +252,9 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 
 		    m_pEffect->SetPointLight(*itPoint);
 
-		    if (itPoint == pRenderContext->GetLightController()->GetPointLights().cbegin()) //first time only
-            {         
+		    if (first) //first time only
+            {     
+				first = false;
 			    m_pScreenMesh->Draw(); //sets vertexbuffer 'n stuff
             }
 		    else //other times
@@ -263,18 +265,17 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 	    }
 
 	    //Loop SpotLights
-		m_pEffect->SetTechnique("tech_SpotLight");
         vector<SpotLight>::const_iterator itSpot = pRenderContext->GetLightController()->GetSpotLights().cbegin();
 	    for (; itSpot != pRenderContext->GetLightController()->GetSpotLights().cend(); ++itSpot)
 	    {
 			if (itSpot->lightEnabled == false)
 				continue;
 		
-			if (itSpot->shadowsEnabled == true)
-				m_pEffect->SetTechnique("tech_SpotLight_NoShadows");
+			if (itSpot->shadowsEnabled == false)
+				m_pEffect->SetTechnique("tech_SpotLightNoShadows");
 			else		
 			{
-				m_pEffect->SetTechnique("tech_SpotLight_Shadows");
+				m_pEffect->SetTechnique("tech_SpotLightShadows");
 				//m_pEffect->SetShadowMap(
 			}
 
@@ -284,8 +285,9 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 
 		    m_pEffect->SetSpotLight(*itSpot);
 
-		    if (itSpot == pRenderContext->GetLightController()->GetSpotLights().cbegin()) //first time only
-            {         
+		    if (first) //first time only
+            {        			
+				first = false;
 			    m_pScreenMesh->Draw(); //sets vertexbuffer
             }
 		    else //other times
