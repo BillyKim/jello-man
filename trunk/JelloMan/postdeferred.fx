@@ -115,10 +115,53 @@ float3  PS_Point(VertexShaderOutput input) : SV_TARGET
 };
 float3  PS_Spot(VertexShaderOutput input) : SV_TARGET
 {
+	//Check if light is not too far from pixel or receives no ligth
+	//else clip
+	float4 posGloss = positionGlossMap.Sample(mapSampler, input.texCoord);
+	float3 vLightDir = pointLight.Position - posGloss.xyz;
+	float dist = length(vLightDir);
+
+	clip(dist >= pointLight.AttenuationEnd? -1 : 1);
+
+	//calc diffuse light if <= 0 clip
+	//DiffuseLight
+	vLightDir /= dist; //normalize
+
 	float s = dot(-vLightDir, spotLight.Direction);
 	clip(s <= 0? -1 : 1); //clip if <= 0
-
 	s = pow(s, spotLight.Radius);
+
+	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
+	float3 normal = normalize(normalSpec.xyz);
+	float diff = dot(normal, vLightDir);
+				
+	clip(diff <= 0? -1 : 1);
+
+	//DiffuseColor
+	float3 color = diff * pointLight.Color.rgb;
+	float4 col = colorMap.Sample(mapSampler, input.texCoord);
+	color *= col.rgb;
+
+
+	//Phong
+	float3 vCamDir = normalize(vCamPos - posGloss.xyz);
+
+	float y = max(dot(normal, vLightDir), 0);
+	float3 reflect = normalize(normal * y * 2 - vLightDir);
+	float spec = saturate(dot(vCamDir, reflect));
+	spec = pow(spec, posGloss.a * 25.0f);
+	spec *= normalSpec.a;
+
+	color += spec * pointLight.Color.rgb;
+
+	//attenuation
+	color *= 1 - (max(dist - pointLight.AttenuationStart, 0) / (pointLight.AttenuationEnd - pointLight.AttenuationStart));
+
+	color *= pointLight.Multiplier;
+
+	color = saturate(color);
+
+    return color;
 }
 technique10 tech_PointLight
 {
