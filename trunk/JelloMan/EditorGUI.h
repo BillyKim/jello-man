@@ -7,6 +7,14 @@
 #include "RenderContext.h"
 #include "LightController.h"
 
+enum TYPE
+{
+	TYPE_POINTLIGHT = 0,
+	TYPE_SPOTLIGHT = 1,
+	TYPE_DIRECTIONALLIGHT = 2,
+	TYPE_MODEL = 3
+};
+
 class EditorGUI
 {
 public:
@@ -25,9 +33,9 @@ public:
 
 	void ColorPicker(Color& color);
 
-	void MoveGizmo(Vector3& position, int id);
+	void MoveGizmo(Vector3& position, TYPE type, int id);
 
-	void RotateGizmo(Vector3& position, int id);
+	void RotateGizmo(Vector3& position, TYPE type, int id);
 
 	// GETTERS
 	Button* GetLightButton() const
