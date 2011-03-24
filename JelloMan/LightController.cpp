@@ -33,11 +33,11 @@ vector<PointLight>& LightController::GetPointLights()
 {
     return m_PointLights;
 }
-const vector<DirectionalLight>& LightController::GetDirectionalLights() const
+vector<DirectionalLight>& LightController::GetDirectionalLights()
 {
     return m_DirectionalLights;
 }
-const vector<SpotLight>& LightController::GetSpotLights() const
+vector<SpotLight>& LightController::GetSpotLights()
 {
     return m_SpotLights;
 }

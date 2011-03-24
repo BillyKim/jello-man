@@ -19,8 +19,8 @@ public:
     void AddLight(const SpotLight& light);
 
     vector<PointLight>& GetPointLights();
-    const vector<DirectionalLight>& GetDirectionalLights() const;
-    const vector<SpotLight>& GetSpotLights() const;
+    vector<DirectionalLight>& GetDirectionalLights();
+    vector<SpotLight>& GetSpotLights();
 
 private:
     vector<PointLight> m_PointLights;
