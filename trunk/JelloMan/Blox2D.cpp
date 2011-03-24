@@ -31,6 +31,9 @@ Blox2D::Blox2D()	:	m_pRenderTarget(0),
 			IID_IWICImagingFactory,
 			(LPVOID*)&m_pWICFactory
 			);
+
+	m_HorizontalAlignment = HORIZONTAL_ALIGN_CENTER;
+	m_VerticalAlignment = VERTICAL_ALIGN_MIDDLE;
 }
 
 Blox2D::~Blox2D()
@@ -242,8 +245,8 @@ void Blox2D::DrawString(tstring const& text, int x, int y) const
 	// Retrieve the size of the render target.
     D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
 
-	m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 	m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 
 	m_pRenderTarget->DrawTextW(text.c_str(),text.size(),m_pTextFormat,RectF(static_cast<float>(x),static_cast<float>(y),rtSize.width,rtSize.height),m_pColorBrush);
 }
@@ -589,11 +592,10 @@ HRESULT Blox2D::LoadBitmapFromFile(
 // HitRegion Class
 //-----------------------------------------------------------------
 
-HitRegion::HitRegion()
+HitRegion::HitRegion()	:	m_pHitRect(0),
+							m_pTransformedGeometry(0)
 {
-	m_pHitRegionRECT = NULL;
-	m_pHitRegionELLIPSE = NULL;
-	m_pHitRegionPOLYGON = NULL;
+	m_pHitRect = NULL;
 
 	m_Type = 0;
 	m_Width = 0;
@@ -602,35 +604,53 @@ HitRegion::HitRegion()
 	m_CurrentPos.x = 0.0f;
 	m_CurrentPos.y = 0.0f;
 
-	m_matWorld = IdentityMatrix();
+	m_matWorld.Identity();
 }
 
-HitRegion::HitRegion(int type, int x, int y, int width, int height)
+HitRegion::HitRegion(int type, int x, int y, int width, int height)	:	m_pHitRect(0),
+																		m_pTransformedGeometry(0)
 {
 	m_Type = type;
 	m_Width = width;
 	m_Height = height;
 
-	m_CurrentPos.x = (float)x;
-	m_CurrentPos.y = (float)y;
+	m_CurrentPos.x = x;
+	m_CurrentPos.y = y;
 
 	if (type == TYPE_RECTANGLE)
-		BLOX_2D->GetFactory()->CreateRectangleGeometry(
-		RectF((float)x,(float)y,(float)(x+width),(float)(y+height)),&m_pHitRegionRECT);
-	else if (type == TYPE_ELLIPSE)
-		BLOX_2D->GetFactory()->CreateEllipseGeometry(
-		Ellipse(Point2F((float)x,(float)y),(float)width,(float)height),&m_pHitRegionELLIPSE);
+	{
+		ID2D1RectangleGeometry* RG = dynamic_cast<ID2D1RectangleGeometry*>(m_pHitRect);
 
+		BLOX_2D->GetFactory()->CreateRectangleGeometry(
+		RectF(0,0,(float)(width),(float)(height)),&RG);
+
+		SafeRelease(m_pHitRect);
+		m_pHitRect = RG;
+	}
+	else if (type == TYPE_ELLIPSE)
+	{
+		ID2D1EllipseGeometry* EG = dynamic_cast<ID2D1EllipseGeometry*>(m_pHitRect);
+
+		BLOX_2D->GetFactory()->CreateEllipseGeometry(
+		Ellipse(Point2F(0,0),(float)width,(float)height),&EG);
+
+		SafeRelease(m_pHitRect);
+		m_pHitRect = EG;
+	}
+
+	SetPosition(x,y);
 }
 
 HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)
 {
 	if (type == TYPE_POLYGON)
 	{
-		BLOX_2D->GetFactory()->CreatePathGeometry(&m_pHitRegionPOLYGON);
+		ID2D1PathGeometry* PG = dynamic_cast<ID2D1PathGeometry*>(m_pHitRect);
+
+		BLOX_2D->GetFactory()->CreatePathGeometry(&PG);
 
 		ID2D1GeometrySink* pSink = NULL;
-		m_pHitRegionPOLYGON->Open(&pSink);
+		PG->Open(&pSink);
 
 		pSink->BeginFigure(points[0],D2D1_FIGURE_BEGIN_FILLED);
 
@@ -640,20 +660,24 @@ HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)
 	
 		pSink->Close();
 		SafeRelease(pSink);
+
+		SafeRelease(m_pHitRect);
+		m_pHitRect = PG;
+
+		SetPosition(0,0);
 	}
 }
 
 HitRegion::~HitRegion()
 {
-	//delete m_pHitRegionELLIPSE;
-	//delete m_pHitRegionRECT;
-	//delete m_pHitRegionPOLYGON;
+	SafeRelease(m_pHitRect);
+	SafeRelease(m_pTransformedGeometry);
 }
 
 // default copy constructor
 HitRegion::HitRegion(const HitRegion& second)
 {
-	if (second.m_Type == TYPE_RECTANGLE)
+	/*if (second.m_Type == TYPE_RECTANGLE)
 	{
 		m_pHitRegionRECT = second.m_pHitRegionRECT;
 		
@@ -681,13 +705,13 @@ HitRegion::HitRegion(const HitRegion& second)
 		m_CurrentPos = second.m_CurrentPos;
 		m_Width = 0;
 		m_Height = 0;
-	}
+	}*/
 }
 
 // dafault assignment operator
 HitRegion& HitRegion::operator=(const HitRegion& second)
 {
-	if (second.m_Type == TYPE_RECTANGLE)
+	/*if (second.m_Type == TYPE_RECTANGLE)
 	{
 		BLOX_2D->GetFactory()->CreateRectangleGeometry
 			(RectF((float)second.m_CurrentPos.x,(float)second.m_CurrentPos.y,
@@ -714,21 +738,21 @@ HitRegion& HitRegion::operator=(const HitRegion& second)
 		this->m_Height = second.m_Height;
 
 		return *this;
-	}
+	}*/
 
-	else return *this;
+	return *this;
 }
 
 // getters
 bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 {
-	if (m_Type == TYPE_RECTANGLE)
+	/*if (m_Type == TYPE_RECTANGLE)
 	{
 		if (hitRect->m_Type == TYPE_RECTANGLE)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),10.0f,&result);
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionRECT,m_matWorld,10.0f,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -738,7 +762,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -748,7 +772,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionPOLYGON,IdentityMatrix(),&result);
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionPOLYGON,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -761,7 +785,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),&result);
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionRECT,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -771,7 +795,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -781,7 +805,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionPOLYGON,IdentityMatrix(),&result);
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionPOLYGON,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -794,7 +818,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionPOLYGON->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),&result);
+			m_pHitRegionPOLYGON->CompareWithGeometry(hitRect->m_pHitRegionRECT,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -804,7 +828,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionPOLYGON->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+			m_pHitRegionPOLYGON->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
@@ -814,24 +838,30 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionPOLYGON->CompareWithGeometry(hitRect->m_pHitRegionPOLYGON,IdentityMatrix(),&result);
+			m_pHitRegionPOLYGON->CompareWithGeometry(hitRect->m_pHitRegionPOLYGON,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 			else return true;
 		}
 	}
 
-	return false;
+	return false;*/
+
+	D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+	m_pHitRect->CompareWithGeometry(hitRect->m_pHitRect,Matrix3x2F::Identity(),0.0f,&result);
+
+	if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
+	else return true;
 }
 
 bool HitRegion::HitTest(D2D1_POINT_2F pos)
 {
-	if (m_Type == TYPE_ELLIPSE)
+	/*if (m_Type == TYPE_ELLIPSE)
 	{
 		BOOL contains;
-		D2D1_MATRIX_3X2_F ident = IdentityMatrix();
 
-		m_pHitRegionELLIPSE->FillContainsPoint(pos,&ident,&contains);
+		m_pHitRegionELLIPSE->FillContainsPoint(pos,&m_matWorld,&contains);
 
 		if (contains == TRUE) return true;
 		else return false;
@@ -840,9 +870,8 @@ bool HitRegion::HitTest(D2D1_POINT_2F pos)
 	else if (m_Type == TYPE_RECTANGLE)
 	{
 		BOOL contains;
-		D2D1_MATRIX_3X2_F ident = IdentityMatrix();
 
-		m_pHitRegionRECT->FillContainsPoint(pos,&ident,&contains);
+		m_pHitRegionRECT->FillContainsPoint(pos,&m_matWorld,&contains);
 
 		if (contains == TRUE) return true;
 		else return false;
@@ -851,15 +880,21 @@ bool HitRegion::HitTest(D2D1_POINT_2F pos)
 	else if (m_Type == TYPE_POLYGON)
 	{
 		BOOL contains;
-		D2D1_MATRIX_3X2_F ident = IdentityMatrix();
 
-		m_pHitRegionPOLYGON->FillContainsPoint(pos,&ident,&contains);
+		m_pHitRegionPOLYGON->FillContainsPoint(pos,&m_matWorld,&contains);
 
 		if (contains == TRUE) return true;
 		else return false;
 	}
 
-	return false;
+	return false;*/
+
+	BOOL contains;
+
+	m_pTransformedGeometry->FillContainsPoint(pos,Matrix3x2F::Identity(),&contains);
+
+	if (contains == TRUE) return true;
+	else return false;
 }
 
 D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
@@ -869,20 +904,20 @@ D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
 
 	BLOX_2D->GetFactory()->CreatePathGeometry(&pPathGeometryUnion);
 
-	if (m_Type == TYPE_RECTANGLE)
+	/*if (m_Type == TYPE_RECTANGLE)
 	{
 		if (hitRect->m_Type == TYPE_RECTANGLE)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),&result);
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionRECT,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
 			else
 			{
 				pPathGeometryUnion->Open(&pGeometrySink);
 
-				m_pHitRegionRECT->CombineWithGeometry(hitRect->m_pHitRegionRECT,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+				m_pHitRegionRECT->CombineWithGeometry(hitRect->m_pHitRegionRECT,D2D1_COMBINE_MODE_UNION,m_matWorld,NULL,pGeometrySink);
 
 				pGeometrySink->Close();
 				SafeRelease(pGeometrySink);
@@ -902,14 +937,14 @@ D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+			m_pHitRegionRECT->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
 			else
 			{
 				pPathGeometryUnion->Open(&pGeometrySink);
 
-				m_pHitRegionRECT->CombineWithGeometry(hitRect->m_pHitRegionELLIPSE,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+				m_pHitRegionRECT->CombineWithGeometry(hitRect->m_pHitRegionELLIPSE,D2D1_COMBINE_MODE_UNION,m_matWorld,NULL,pGeometrySink);
 
 				pGeometrySink->Close();
 				SafeRelease(pGeometrySink);
@@ -932,14 +967,14 @@ D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionRECT,IdentityMatrix(),&result);
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionRECT,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
 			else
 			{
 				pPathGeometryUnion->Open(&pGeometrySink);
 
-				m_pHitRegionELLIPSE->CombineWithGeometry(hitRect->m_pHitRegionRECT,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+				m_pHitRegionELLIPSE->CombineWithGeometry(hitRect->m_pHitRegionRECT,D2D1_COMBINE_MODE_UNION,m_matWorld,NULL,pGeometrySink);
 
 				pGeometrySink->Close();
 				SafeRelease(pGeometrySink);
@@ -959,14 +994,14 @@ D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
 		{
 			D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,IdentityMatrix(),&result);
+			m_pHitRegionELLIPSE->CompareWithGeometry(hitRect->m_pHitRegionELLIPSE,m_matWorld,&result);
 
 			if (result == D2D1_GEOMETRY_RELATION_DISJOINT ||result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
 			else
 			{
 				pPathGeometryUnion->Open(&pGeometrySink);
 
-				m_pHitRegionELLIPSE->CombineWithGeometry(hitRect->m_pHitRegionELLIPSE,D2D1_COMBINE_MODE_UNION,NULL,NULL,pGeometrySink);
+				m_pHitRegionELLIPSE->CombineWithGeometry(hitRect->m_pHitRegionELLIPSE,D2D1_COMBINE_MODE_UNION,m_matWorld,NULL,pGeometrySink);
 
 				pGeometrySink->Close();
 				SafeRelease(pGeometrySink);
@@ -981,6 +1016,30 @@ D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
 				return point;
 			}
 		}
+	}*/
+
+	D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
+
+	m_pHitRect->CompareWithGeometry(hitRect->m_pHitRect,Matrix3x2F::Identity(),&result);
+
+	if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
+	else
+	{
+		pPathGeometryUnion->Open(&pGeometrySink);
+
+		m_pHitRect->CombineWithGeometry(hitRect->m_pHitRect,D2D1_COMBINE_MODE_UNION,Matrix3x2F::Identity(),NULL,pGeometrySink);
+
+		pGeometrySink->Close();
+		SafeRelease(pGeometrySink);
+
+		D2D1_RECT_F rect;
+		pPathGeometryUnion->GetBounds(NULL, &rect);
+
+		D2D1_POINT_2F point;
+		point.x = (rect.left + (rect.right - rect.left));
+		point.y = (rect.top + (rect.bottom - rect.top));
+
+		return point;
 	}
 
 	return Point2F(-999999,-999999);
@@ -994,21 +1053,7 @@ D2D1_RECT_F HitRegion::GetDimension()
 	rect.top = 0;
 	rect.bottom = 0;
 
-	if (m_Type == TYPE_RECTANGLE)
-	{
-		m_pHitRegionRECT->GetBounds(NULL,&rect);
-		return rect;
-	}
-	else if (m_Type == TYPE_ELLIPSE)
-	{
-		m_pHitRegionELLIPSE->GetBounds(NULL,&rect);
-		return rect;
-	}
-	else if (m_Type == TYPE_POLYGON)
-	{
-		m_pHitRegionPOLYGON->GetBounds(NULL,&rect);
-		return rect;
-	}
+	m_pTransformedGeometry->GetBounds(Matrix3x2F::Identity(),&rect);
 
 	return rect;
 }
@@ -1016,82 +1061,85 @@ D2D1_RECT_F HitRegion::GetDimension()
 // setters
 void HitRegion::SetPosition(int x, int y)
 {
-	m_CurrentPos.x = (float)x;
-	m_CurrentPos.y = (float)y;
+	Matrix3x2F temp = Matrix3x2F::Translation(x,y);
 
-	m_pHitRegionRECT = NULL;
-	m_pHitRegionELLIPSE = NULL;
-	m_pHitRegionPOLYGON = NULL;
+	SafeRelease(m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
 
-	if (m_Type == TYPE_RECTANGLE)
-		BLOX_2D->GetFactory()->CreateRectangleGeometry(
-		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)m_CurrentPos.x+m_Width,(float)m_CurrentPos.y+m_Height),&m_pHitRegionRECT);
-	else if (m_Type == TYPE_ELLIPSE)
-		BLOX_2D->GetFactory()->CreateEllipseGeometry(
-		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
+	m_CurrentPos.x = x;
+	m_CurrentPos.y = y;
 }
 
 void HitRegion::SetPosition(D2D1_POINT_2F pos)
 {
+	Matrix3x2F temp = Matrix3x2F::Translation(pos.x,pos.y);
+
+	SafeRelease(m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
+
 	m_CurrentPos.x = pos.x;
 	m_CurrentPos.y = pos.y;
-
-	m_pHitRegionRECT = NULL;
-	m_pHitRegionELLIPSE = NULL;
-	m_pHitRegionPOLYGON = NULL;
-
-	if (m_Type == TYPE_RECTANGLE)
-		BLOX_2D->GetFactory()->CreateRectangleGeometry(
-		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)m_CurrentPos.x+m_Width,(float)m_CurrentPos.y+m_Height),&m_pHitRegionRECT);
-	else if (m_Type == TYPE_ELLIPSE)
-		BLOX_2D->GetFactory()->CreateEllipseGeometry(
-		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
 }
 
 void HitRegion::Move(int x, int y)
 {
+	Matrix3x2F temp = Matrix3x2F::Translation(m_CurrentPos.x + x, m_CurrentPos.y + y);
+
+	SafeRelease(m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
+
 	m_CurrentPos.x += x;
 	m_CurrentPos.y += y;
-
-	m_pHitRegionRECT = NULL;
-	m_pHitRegionELLIPSE = NULL;
-	m_pHitRegionPOLYGON = NULL;
-
-	if (m_Type == TYPE_RECTANGLE)
-		BLOX_2D->GetFactory()->CreateRectangleGeometry(
-		RectF((float)m_CurrentPos.x,(float)m_CurrentPos.y,(float)(m_CurrentPos.x+m_Width),(float)(m_CurrentPos.y+m_Height)),&m_pHitRegionRECT);
-	else if (m_Type == TYPE_ELLIPSE)
-		BLOX_2D->GetFactory()->CreateEllipseGeometry(
-		Ellipse(Point2F((float)m_CurrentPos.x,(float)m_CurrentPos.y),(float)m_Width,(float)m_Height),&m_pHitRegionELLIPSE);
 }
 void HitRegion::SetSize(int width, int height)
 {
+	Size2D s;
+	s.width = (float)width/m_Width;
+	s.height = (float)height/m_Height;
+
+	Matrix3x2F temp = D2D1::Matrix3x2F::Translation(
+                    m_CurrentPos.x,
+					m_CurrentPos.y
+                    ) *
+                D2D1::Matrix3x2F::Scale(
+					s.width,
+					s.height
+                    );
+
+	SafeRelease(m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
+
+	/*if (m_Type == TYPE_RECTANGLE)
+		BLOX_2D->GetFactory()->CreateRectangleGeometry(
+		RectF(0.0f,0.0f,(float)(width),(float)(height)),&m_pHitRegionRECT);
+	else if (m_Type == TYPE_ELLIPSE)
+		BLOX_2D->GetFactory()->CreateEllipseGeometry(
+		Ellipse(Point2F(0.0f,0.0f),(float)width,(float)height),&m_pHitRegionELLIPSE);
+
+	m_matWorld.Identity();
+	m_matWorld = m_matWorld.Translation(m_CurrentPos.x,m_CurrentPos.y);*/
+
 	m_Width = width;
 	m_Height = height;
-
-	SetPosition(static_cast<int>(m_CurrentPos.x), static_cast<int>(m_CurrentPos.y));
 }
 
 // general
 void HitRegion::Draw(bool fill)
 {
-	BLOX_2D->SetColor(255,0,0);
+	BLOX_2D->SetColor(255,0,0,0.5f);
+
+	D2D1_RECT_F rect;
+	m_pTransformedGeometry->GetBounds(Matrix3x2F::Identity(),&rect);
 
 	if (m_Type == TYPE_RECTANGLE)
 	{
-		D2D1_RECT_F rect;
-		m_pHitRegionRECT->GetBounds(NULL,&rect);
-
 		if (fill) BLOX_2D->FillRect(rect);
 		else BLOX_2D->DrawRect(rect);
 	}
 	else if (m_Type == TYPE_ELLIPSE)
 	{
-		D2D1_ELLIPSE ellipse;
-		m_pHitRegionELLIPSE->GetEllipse(&ellipse);
-
-		if (fill) BLOX_2D->FillEllipse(ellipse);
-		else BLOX_2D->DrawEllipse(ellipse);
+		if (fill) BLOX_2D->FillEllipse(rect.left+((rect.right-rect.left)/2),rect.top+((rect.bottom-rect.top)/2),(rect.right-rect.left)/2,(rect.bottom-rect.top)/2);
+		else BLOX_2D->DrawEllipse(rect.left+((rect.right-rect.left)/2),rect.top+((rect.bottom-rect.top)/2),rect.right-rect.left,rect.bottom-rect.top);
 	}
 	else if (m_Type == TYPE_POLYGON)
 	{
