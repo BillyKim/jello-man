@@ -21,6 +21,7 @@ public:
 	void Tick(const RenderContext* pRenderContext);
 
 	void ColorPicker(PointLight* pointLight);
+	void MoveGizmo(PointLight* pointLight);
 
 	// GETTERS
 	Button* GetLightButton() const
@@ -57,6 +58,8 @@ private:
 	vector<Bitmap*> m_pColorPickerButtonBitmaps;
 	Button* m_pApplyButton;
 	vector<Bitmap*> m_pApplyButtonBitmaps;
+
+	vector<Bitmap*> m_pPointLightBitmaps;
 
 	Bitmap* m_pCameraBitmap;
 

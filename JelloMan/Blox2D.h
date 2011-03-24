@@ -103,6 +103,9 @@ private:
 	IDWriteTextFormat* m_pTextFormat;
 	IWICImagingFactory *m_pWICFactory;
 
+	HORIZONTAL_ALIGN m_HorizontalAlignment;
+	VERTICAL_ALIGN m_VerticalAlignment;
+
 	vector<int> m_fpsHistory;
 	vector<float> m_dtimeHistory;
 
@@ -162,16 +165,16 @@ public:
 	static const int TYPE_POLYGON = 2;
 
 private:
-	ID2D1RectangleGeometry* m_pHitRegionRECT;
-	ID2D1EllipseGeometry* m_pHitRegionELLIPSE;
-	ID2D1PathGeometry* m_pHitRegionPOLYGON;
+	ID2D1Geometry* m_pHitRect;
+
+	ID2D1TransformedGeometry* m_pTransformedGeometry;
 
 	int m_Type;
 	int m_Width;
 	int m_Height;
 
 	D2D1_POINT_2F m_CurrentPos;
-	D2D1_MATRIX_3X2_F m_matWorld;
+	Matrix3x2F m_matWorld;
 };
 
 //-----------------------------------------------------------------
@@ -267,6 +270,8 @@ public:
 	{return (int)m_Size.height;}
 	bool IsActive() const
 	{ return m_bActivated; }
+	HitRegion* GetHitRect() const
+	{ return m_pHitRect; }
 
 private:
 	Bitmap* m_pNormalBitmap;

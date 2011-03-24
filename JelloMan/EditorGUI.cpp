@@ -65,6 +65,9 @@ EditorGUI::~EditorGUI()
 	for (vector<Bitmap*>::iterator it = m_pApplyButtonBitmaps.begin(); it != m_pApplyButtonBitmaps.end(); ++it)
 		delete (*it);
 
+	for (vector<Bitmap*>::iterator it = m_pPointLightBitmaps.begin(); it != m_pPointLightBitmaps.end(); ++it)
+		delete (*it);
+
 	delete m_pCameraBitmap;
 }
 
@@ -168,6 +171,9 @@ void EditorGUI::Initialize()
 	m_pApplyButton->SetHoverState(m_pApplyButtonBitmaps[1]);
 	m_pApplyButton->SetDownState(m_pApplyButtonBitmaps[1]);
 
+	// POINT LIGHT
+	m_pPointLightBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/plight_normal.png")));
+
 	// CAMERA
 	m_pCameraBitmap = new Bitmap(_T("Content/Images/Editor/camera.png"));
 }
@@ -176,20 +182,29 @@ void EditorGUI::Draw()
 	BLOX_2D->SetAntiAliasing(false);
 
 	// BACKGROUND
-	BLOX_2D->SetColor(70,70,70);
-	BLOX_2D->FillRect(0,0,static_cast<int>(BLOX_2D->GetWindowSize().width),50);
+	BLOX_2D->SetColor(70, 70, 70);
+	BLOX_2D->FillRect(0, 0, static_cast<int>(BLOX_2D->GetWindowSize().width), 50);
 
-	BLOX_2D->SetColor(90,90,90);
-	BLOX_2D->DrawLine(0,50,static_cast<int>(BLOX_2D->GetWindowSize().width),50);
+	BLOX_2D->SetColor(90, 90, 90);
+	BLOX_2D->DrawLine(0, 50, static_cast<int>(BLOX_2D->GetWindowSize().width), 50);
 
-	BLOX_2D->SetColor(40,40,40);
-	BLOX_2D->FillRect(0,static_cast<int>(BLOX_2D->GetWindowSize().height)-20,static_cast<int>(BLOX_2D->GetWindowSize().width),20);
+	BLOX_2D->SetColor(70, 70, 70);
+	BLOX_2D->FillRect(	0,
+						static_cast<int>(BLOX_2D->GetWindowSize().height) - 20,
+						static_cast<int>(BLOX_2D->GetWindowSize().width),
+						20);
+	
+	BLOX_2D->SetColor(90, 90, 90);
+	BLOX_2D->DrawLine(	0,
+						static_cast<int>(BLOX_2D->GetWindowSize().height) - 20,
+						static_cast<int>(BLOX_2D->GetWindowSize().width),
+						static_cast<int>(BLOX_2D->GetWindowSize().height) - 20);
 
 	// BUTTONS
 	m_pLightButton->Show();
 	if (m_pLightButton->Hover() || m_pMoveButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
+		BLOX_2D->SetColor(255, 255, 255, 0.5f);
 		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
 		BLOX_2D->DrawString(_T("Switch between lit and unlit mode."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
 	}
@@ -197,15 +212,15 @@ void EditorGUI::Draw()
 	m_pMoveButton->Show();
 	if (m_pMoveButton->Hover() || m_pMoveButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Move objects and lights present in the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BLOX_2D->SetColor(255, 255, 255, 0.5f);
+		BLOX_2D->SetFont(_T("Verdana"), false, false, 10);
+		BLOX_2D->DrawString(_T("Move objects and lights present in the scene."), 20, static_cast<int>(BLOX_2D->GetWindowSize().height) - 16);
 	}
 
 	if (m_GameEditorModeSelect == 0)
 	{
-		m_pGameModeButton->SetPosition(20,7);
-		m_pEditorModeButton->SetPosition(20,43);
+		m_pGameModeButton->SetPosition(20, 7);
+		m_pEditorModeButton->SetPosition(20, 43);
 
 		if (CONTROLS->LeftMBUp() && m_bGameModeDown)
 		{
@@ -302,11 +317,16 @@ void EditorGUI::Draw()
 		BLOX_2D->DrawString(_T("Change the color of the selected light."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
 	}
 
+	//m_pColorPickerButton->GetHitRect()->Draw(true);
+
 	// CAMERA
 	if (m_bUsingCamera)
 		BLOX_2D->DrawBitmap(m_pCameraBitmap,static_cast<int>(BLOX_2D->GetWindowSize().width-70),90,0.8f);
 
 	BLOX_2D->SetAntiAliasing(true);
+
+	if (m_GameEditorModeSelect == 1)
+		VisualLightDebugger(m_pRenderContext->GetCamera());
 }
 void EditorGUI::Tick(const RenderContext* pRenderContext)
 {
@@ -326,11 +346,11 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 
 		PointLight pl;
 		pl = PointLight();
-		pl.position = (pRenderContext->GetCamera()->GetPosition() + look*200);
+		pl.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
 
-		BYTE r = rand() % 255;
-		BYTE g = rand() % 255;
-		BYTE b = rand() % 255;
+		BYTE r = 180;
+		BYTE g = 180;
+		BYTE b = 200;
 
 		pl.color = Color(r, g, b, 1);
 		pl.multiplier = 1.0f;
@@ -338,7 +358,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 		pl.AttenuationEnd = 200;
 		pRenderContext->GetLightController()->AddLight(pl);
 
-		cout << "Added pointlight";
+		cout << "Added pointlight\n";
 	}
 
 	// CAMERA
@@ -358,8 +378,6 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 		m_MPos.push_back(D3DXVECTOR3(0.0f,0.0f,0.0f));
 	}
 
-	if (m_GameEditorModeSelect == 1)
-		VisualLightDebugger(pRenderContext->GetCamera());
 	if (m_pMoveButton->IsActive())
 		m_bMoveable = true;
 	else 
@@ -386,9 +404,9 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 					
 					if (m_pApplyButton->Clicked())
 					{
-						pRenderContext->GetLightController()->GetPointLights()[i].color.R = (float)(m_CurrentColor.X/255.0f);
-						pRenderContext->GetLightController()->GetPointLights()[i].color.G = (float)(m_CurrentColor.Y/255.0f);
-						pRenderContext->GetLightController()->GetPointLights()[i].color.B = (float)(m_CurrentColor.Z/255.0f);
+						pRenderContext->GetLightController()->GetPointLights()[i].color.R = (float)(m_CurrentColor.X / 255.0f);
+						pRenderContext->GetLightController()->GetPointLights()[i].color.G = (float)(m_CurrentColor.Y / 255.0f);
+						pRenderContext->GetLightController()->GetPointLights()[i].color.B = (float)(m_CurrentColor.Z / 255.0f);
 
 						m_bPreviousColorSet = false;
 					}
@@ -409,10 +427,16 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 
 void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 {
-	// LIGHT DEBUG
+	// MATRIX
 	D3DXMATRIX matProj = pCamera->GetProjection();
 	D3DXMATRIX matView = pCamera->GetView();
-	
+
+	D3DXMATRIX matIdent;
+	D3DXMatrixIdentity(&matIdent);
+
+	Vector3 vLook = pCamera->GetLook();
+	Vector3 vRight = pCamera->GetRight();
+
 	D3D10_VIEWPORT viewP;
 	viewP.TopLeftX = 0;
 	viewP.TopLeftY = 0;
@@ -420,9 +444,6 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 	viewP.Height = (UINT)BLOX_2D->GetWindowSize().height;
 	viewP.MinDepth = 0;
 	viewP.MaxDepth = 1;
-
-	D3DXMATRIX ident;
-	D3DXMatrixIdentity(&ident);
 
 	int size = 10;
 
@@ -436,352 +457,110 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 		l *= 0.001f;
 
 		// VIEWPORT PROJECTION
-		D3DXVECTOR3 temp;
-		D3DXVECTOR3 temp2;
-		D3DXVECTOR3 temp3;
-		D3DXVECTOR3 temp4;
+		D3DXVECTOR3 pos2D;
+		D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
 
-		D3DXVECTOR3 temp5;
-		D3DXVECTOR3 temp6;
-		D3DXVECTOR3 temp7;
+		ColorF col(
+			m_pRenderContext->GetLightController()->GetPointLights()[i].color.R
+			,m_pRenderContext->GetLightController()->GetPointLights()[i].color.G,
+			m_pRenderContext->GetLightController()->GetPointLights()[i].color.B,
+			0.4f / l);
 
-		D3DXVECTOR3 temp8;
-		D3DXVECTOR3 temp9;
-		D3DXVECTOR3 temp10;
-	
-		D3DXVECTOR3 posLineX = pos;
-		posLineX.x += l*100;
-
-		D3DXVECTOR3 posLineY = pos;
-		posLineY.y += l*100;
-
-		D3DXVECTOR3 posLineZ = pos;
-		posLineZ.z += l*100;
-
-		D3DXVECTOR3 posLineX2 = pos;
-		posLineX2.x += l*50;
-
-		D3DXVECTOR3 posLineY2 = pos;
-		posLineY2.y += l*50;
-
-		D3DXVECTOR3 posLineZ2 = pos;
-		posLineZ2.z += l*50;
-
-		D3DXVECTOR3 posLineXY = pos;
-		posLineXY.x += l*50;
-		posLineXY.y += l*50;
-
-		D3DXVECTOR3 posLineYZ = pos;
-		posLineYZ.y += l*50;
-		posLineYZ.z += l*50;
-
-		D3DXVECTOR3 posLineZX = pos;
-		posLineZX.z += l*50;
-		posLineZX.x += l*50;
-
-		D3DXVec3Project(&temp,&pos,&viewP,&matProj,&matView,&ident);
-		D3DXVec3Project(&temp2,&posLineX,&viewP,&matProj,&matView,&ident);
-		D3DXVec3Project(&temp3,&posLineY,&viewP,&matProj,&matView,&ident);
-		D3DXVec3Project(&temp4,&posLineZ,&viewP,&matProj,&matView,&ident);
-
-		D3DXVec3Project(&temp5,&posLineX2,&viewP,&matProj,&matView,&ident);
-		D3DXVec3Project(&temp6,&posLineY2,&viewP,&matProj,&matView,&ident);
-		D3DXVec3Project(&temp7,&posLineZ2,&viewP,&matProj,&matView,&ident);
-
-		D3DXVec3Project(&temp8,&posLineXY,&viewP,&matProj,&matView,&ident);
-		D3DXVec3Project(&temp9,&posLineYZ,&viewP,&matProj,&matView,&ident);
-		D3DXVec3Project(&temp10,&posLineZX,&viewP,&matProj,&matView,&ident);
-
-		ColorF col(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R,m_pRenderContext->GetLightController()->GetPointLights()[i].color.G,m_pRenderContext->GetLightController()->GetPointLights()[i].color.B,0.4f/l);
-
-		Vector3 lo = pCamera->GetLook();
-
-		if (lo.Dot(length) < 0)
+		if (vLook.Dot(length) < 0)
 		{
 			// HITRECTS
-			m_pHitRectLights[i]->SetSize(static_cast<int>(size/l),static_cast<int>(size/l));
-			m_pHitRectLights[i]->SetPosition(static_cast<int>(temp.x),static_cast<int>(temp.y));
+			m_pHitRectLights[i]->SetSize(
+				static_cast<int>(size / l),
+				static_cast<int>(size / l));
 
-			BLOX_2D->SetColor(0,0,0,0.4f/l);
-			BLOX_2D->SetFont(_T("Arial"),true,false,(size/2)/(l/2));
+			m_pHitRectLights[i]->SetPosition(
+				static_cast<int>(pos2D.x),
+				static_cast<int>(pos2D.y));
+
+			BLOX_2D->SetColor(0, 0, 0, 0.4f / l);
+			BLOX_2D->SetFont(_T("Arial"), true, false, (size / 2) / (l / 2));
 
 			// DRAW
 			if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()) || m_LightsSelected[i] == true)
 			{
-				BLOX_2D->SetColor(255,255,255,0.4f/l);
-				BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l));
+			BLOX_2D->SetColor(255, 255, 255, 0.4f / l);
+				BLOX_2D->FillEllipse(
+					static_cast<int>(pos2D.x),
+					static_cast<int>(pos2D.y),
+					static_cast<int>(size/l),
+					static_cast<int>(size/l));
+
 				BLOX_2D->SetColor(0,0,0,0.4f/l);
-				BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),3.0f/l);
+				BLOX_2D->DrawEllipse(
+					static_cast<int>(pos2D.x),
+					static_cast<int>(pos2D.y),
+					static_cast<int>(size / l),
+					static_cast<int>(size / l),
+					3.0f / l);
 
-				BLOX_2D->DrawString(_T("P"),
-				RectF(temp.x-((size/l)/2),temp.y-((size/l)/2),temp.x+(size/l)-((size/l)/2),temp.y+(size/l)-((size/l)/2)),
-				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
+				BLOX_2D->DrawBitmap(m_pPointLightBitmaps[0],
+									pos2D.x - ((m_pPointLightBitmaps[0]->GetSize().width / (8 * l)) / 2) + (1 / l),
+									pos2D.y - (m_pPointLightBitmaps[0]->GetSize().height / (8 * l)) / 2,
+									1.0f / l,
+									m_pPointLightBitmaps[0]->GetSize().width / (8 * l),
+									m_pPointLightBitmaps[0]->GetSize().height / (8 * l));
 
-				BLOX_2D->SetColor(255,255,255,0.4f/l);
-				BLOX_2D->SetFont(_T("Arial"),true,false,(size/4)/(l/2));
-
-				tstringstream s;
-				s << _T("PointLight ") << i;
-				BLOX_2D->DrawString(s.str(),
-				RectF(temp.x-(((size-40)/l)/2),temp.y-(((size+40)/l)/2),temp.x+(size/l)-(((size+40)/l)/2),temp.y+(size/l)-(((size+40)/l)/2)),
-				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
-
-				BLOX_2D->SetColor(255,255,255);
-				BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd/l),static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd/l),2);
-
-				if (m_bMoveable)
-				{
-					// X
-					HitRegion* hitX = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp2.x),static_cast<int>(temp2.y),size,size);
-					BLOX_2D->SetColor(255,0,0);
-					BLOX_2D->DrawLine(static_cast<int>(temp5.x),static_cast<int>(temp5.y),static_cast<int>(temp2.x),static_cast<int>(temp2.y),2.0f);
-					BLOX_2D->FillEllipse(static_cast<int>(temp2.x),static_cast<int>(temp2.y),static_cast<int>(size/2),static_cast<int>(size/2));
-					BLOX_2D->SetColor(255,0,0);
-					BLOX_2D->SetFont(_T("Verdana"),false,false,14);
-					BLOX_2D->DrawString(_T("X"),static_cast<int>(temp2.x-5),static_cast<int>(temp2.y) - 25);
-
-					D2D1_POINT_2F r[5];
-					r[0].x = temp8.x;
-					r[0].y = temp8.y;
-					r[1].x = temp6.x;
-					r[1].y = temp6.y;
-					r[2].x = temp.x;
-					r[2].y = temp.y;
-					r[3].x = temp5.x;
-					r[3].y = temp5.y;
-					r[4].x = temp8.x;
-					r[4].y = temp8.y;
-
-					HitRegion* hitXY = new HitRegion(HitRegion::TYPE_POLYGON,&r[0],5);
-						
-					if (hitXY->HitTest(CONTROLS->GetMousePos()))
-						BLOX_2D->SetColor(100,100,255,0.4f);
-					else
-						BLOX_2D->SetColor(50,50,255,0.4f);
-
-					BLOX_2D->FillPolygon(r,4);
-
-					BLOX_2D->SetColor(100,100,255,0.8f);
-					BLOX_2D->DrawLine(r[0],r[1]);
-					BLOX_2D->DrawLine(r[1],r[2]);
-					BLOX_2D->DrawLine(r[2],r[3]);
-					BLOX_2D->DrawLine(r[3],r[0]);
-
-					if (hitX->HitTest(CONTROLS->GetMousePos()))
-					{
-						BLOX_2D->SetColor(255,255,255);
-						BLOX_2D->DrawEllipse(static_cast<int>(temp2.x),static_cast<int>(temp2.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
-
-						if (CONTROLS->LeftMBDown() && !m_bLockY && !m_bLockZ)
-						{
-							m_bLockX = true;
-						}
-					}
-
-					if (!CONTROLS->LeftMBDown())
-					{
-						m_bLockX = false;
-						m_bLockY = false;
-						m_bLockZ = false;
-					}
-
-					D3DXVECTOR3 testt(CONTROLS->GetMousePos().x,CONTROLS->GetMousePos().y,temp2.z);
-					D3DXVECTOR3 ttempp;
-					D3DXVec3Unproject(&ttempp,&testt,&viewP,&matProj,&matView,&ident);
-					ttempp.x -= l*100;
-					D3DXVECTOR3 ttempp2;
-					D3DXVec3Project(&ttempp2,&ttempp,&viewP,&matProj,&matView,&ident);
-					D3DXVECTOR3 ttempp3;
-					D3DXVec3Unproject(&ttempp3,&ttempp2,&viewP,&matProj,&matView,&ident);
-
-					if (m_bLockX)
-					{
-						BLOX_2D->SetColor(255,255,255);
-						BLOX_2D->DrawEllipse(static_cast<int>(temp2.x),static_cast<int>(temp2.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
-
-						float difX = m_MPos[i].x - ttempp3.x;
-						m_pRenderContext->GetLightController()->GetPointLights()[i].position.X -= difX;
-
-						m_MPos[i].x = ttempp3.x;
-					}
-					else
-					{
-						m_MPos[i].x = ttempp3.x;
-					}
-				}
-
-				if (m_bMoveable)
-				{
-					// Y
-					HitRegion* hitY = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp3.x),static_cast<int>(temp3.y),size,size);
-					BLOX_2D->SetColor(0,255,0);
-					BLOX_2D->DrawLine(static_cast<int>(temp6.x),static_cast<int>(temp6.y),static_cast<int>(temp3.x),static_cast<int>(temp3.y),2.0f);
-					BLOX_2D->FillEllipse(static_cast<int>(temp3.x),static_cast<int>(temp3.y),static_cast<int>(size/2),static_cast<int>(size/2));
-					BLOX_2D->SetColor(0,255,0);
-					BLOX_2D->SetFont(_T("Verdana"),false,false,14);
-					BLOX_2D->DrawString(_T("Y"),static_cast<int>(temp3.x-5),static_cast<int>(temp3.y) - 25);
-					BLOX_2D->SetColor(50,50,255,0.4f);
-					D2D1_POINT_2F r[4];
-					r[0].x = temp6.x;
-					r[0].y = temp6.y;
-					r[1].x = temp9.x;
-					r[1].y = temp9.y;
-					r[2].x = temp7.x;
-					r[2].y = temp7.y;
-					r[3].x = temp.x;
-					r[3].y = temp.y;
-
-					BLOX_2D->FillPolygon(r,4);
-
-					BLOX_2D->SetColor(100,100,255,0.8f);
-					BLOX_2D->DrawLine(r[0],r[1]);
-					BLOX_2D->DrawLine(r[1],r[2]);
-					BLOX_2D->DrawLine(r[2],r[3]);
-					BLOX_2D->DrawLine(r[3],r[0]);
-
-					if (hitY->HitTest(CONTROLS->GetMousePos()))
-					{
-						BLOX_2D->SetColor(255,255,255);
-						BLOX_2D->DrawEllipse(static_cast<int>(temp3.x),static_cast<int>(temp3.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
-
-						if (CONTROLS->LeftMBDown() && !m_bLockX && !m_bLockZ)
-						{
-							m_bLockY = true;
-						}
-					}
-
-					D3DXVECTOR3 testt(CONTROLS->GetMousePos().x,CONTROLS->GetMousePos().y,temp3.z);
-					D3DXVECTOR3 ttempp;
-					D3DXVec3Unproject(&ttempp,&testt,&viewP,&matProj,&matView,&ident);
-					ttempp.y -= l*100;
-					D3DXVECTOR3 ttempp2;
-					D3DXVec3Project(&ttempp2,&ttempp,&viewP,&matProj,&matView,&ident);
-					D3DXVECTOR3 ttempp3;
-					D3DXVec3Unproject(&ttempp3,&ttempp2,&viewP,&matProj,&matView,&ident);
-
-					if (m_bLockY)
-					{
-						BLOX_2D->SetColor(255,255,255);
-						BLOX_2D->DrawEllipse(static_cast<int>(temp3.x),static_cast<int>(temp3.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
-					
-						float difY = m_MPos[i].y - ttempp3.y;
-						m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y -= difY;
-
-						m_MPos[i].y = ttempp3.y;
-					}
-					else
-					{
-						m_MPos[i].y = ttempp3.y;
-					}
-				}
-				if (m_bMoveable)
-				{
-					// Z
-					HitRegion* hitZ = new HitRegion(HitRegion::TYPE_ELLIPSE,static_cast<int>(temp4.x),static_cast<int>(temp4.y),size,size);
-					BLOX_2D->SetColor(255,255,0);
-					BLOX_2D->DrawLine(static_cast<int>(temp7.x),static_cast<int>(temp7.y),static_cast<int>(temp4.x),static_cast<int>(temp4.y),2.0f);
-					BLOX_2D->FillEllipse(static_cast<int>(temp4.x),static_cast<int>(temp4.y),static_cast<int>(size/2),static_cast<int>(size/2));
-					BLOX_2D->SetColor(255,255,0);
-					BLOX_2D->SetFont(_T("Verdana"),false,false,14);
-					BLOX_2D->DrawString(_T("Z"),static_cast<int>(temp4.x-5),static_cast<int>(temp4.y) - 25);
-					BLOX_2D->SetColor(50,50,255,0.4f);
-					D2D1_POINT_2F r[4];
-					r[0].x = temp10.x;
-					r[0].y = temp10.y;
-					r[1].x = temp5.x;
-					r[1].y = temp5.y;
-					r[2].x = temp.x;
-					r[2].y = temp.y;
-					r[3].x = temp7.x;
-					r[3].y = temp7.y;
-
-					BLOX_2D->FillPolygon(r,4);
-
-					BLOX_2D->SetColor(100,100,255,0.8f);
-					BLOX_2D->DrawLine(r[0],r[1]);
-					BLOX_2D->DrawLine(r[1],r[2]);
-					BLOX_2D->DrawLine(r[2],r[3]);
-					BLOX_2D->DrawLine(r[3],r[0]);
-
-					if (hitZ->HitTest(CONTROLS->GetMousePos()))
-					{
-						BLOX_2D->SetColor(255,255,255);
-						BLOX_2D->DrawEllipse(static_cast<int>(temp4.x),static_cast<int>(temp4.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
-
-						if (CONTROLS->LeftMBDown() && !m_bLockX && !m_bLockY)
-						{
-							m_bLockZ = true;
-						}
-					}
-
-					D3DXVECTOR3 testt(CONTROLS->GetMousePos().x,CONTROLS->GetMousePos().y,temp4.z);
-					D3DXVECTOR3 ttempp;
-					D3DXVec3Unproject(&ttempp,&testt,&viewP,&matProj,&matView,&ident);
-					ttempp.z -= l*100;
-					D3DXVECTOR3 ttempp2;
-					D3DXVec3Project(&ttempp2,&ttempp,&viewP,&matProj,&matView,&ident);
-					D3DXVECTOR3 ttempp3;
-					D3DXVec3Unproject(&ttempp3,&ttempp2,&viewP,&matProj,&matView,&ident);
-
-					if (m_bLockZ)
-					{
-						BLOX_2D->SetColor(255,255,255);
-						BLOX_2D->DrawEllipse(static_cast<int>(temp4.x),static_cast<int>(temp4.y),static_cast<int>(size/2),static_cast<int>(size/2),2.0f);
-
-						float difZ = m_MPos[i].z - ttempp3.z;
-						m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z -= difZ;
-
-						m_MPos[i].z = ttempp3.z;
-					}
-					else
-					{
-						m_MPos[i].z = ttempp3.z;
-					}
-				}
+				// MOVE GIZMO
+				if (m_bMoveable && m_LightsSelected[i] == true)
+					MoveGizmo(&m_pRenderContext->GetLightController()->GetPointLights()[i]);
 			}
 			else
 			{
 				BLOX_2D->SetColor(col);
-				BLOX_2D->FillEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>((size/l)));
-				BLOX_2D->SetColor(255,255,255,0.4f/l);
-				BLOX_2D->DrawEllipse(static_cast<int>(temp.x),static_cast<int>(temp.y),static_cast<int>(size/l),static_cast<int>(size/l),2.0f);
+				BLOX_2D->FillEllipse(
+					static_cast<int>(pos2D.x),
+					static_cast<int>(pos2D.y),
+					static_cast<int>((size) / (l)),
+					static_cast<int>(((size) / (l))));
 
-				BLOX_2D->DrawString(_T("P"),
-				RectF(temp.x-((size/l)/2),temp.y-((size/l)/2),temp.x+(size/l)-((size/l)/2),temp.y+(size/l)-((size/l)/2)),
-				Blox2D::HORIZONTAL_ALIGN_CENTER,Blox2D::VERTICAL_ALIGN_MIDDLE);
+				BLOX_2D->SetColor(255, 255, 255, 0.4f / l);
+				BLOX_2D->DrawEllipse(
+					static_cast<int>(pos2D.x),
+					static_cast<int>(pos2D.y),
+					static_cast<int>(size / l),
+					static_cast<int>(size / l),
+					1/l);
+
+				BLOX_2D->DrawBitmap(m_pPointLightBitmaps[0],
+									pos2D.x - ((m_pPointLightBitmaps[0]->GetSize().width / (8 * l)) / 2) + (1 / l),
+									pos2D.y - (m_pPointLightBitmaps[0]->GetSize().height / (8 * l)) / 2,
+									1.0f / l,
+									m_pPointLightBitmaps[0]->GetSize().width / (8 * l),
+									m_pPointLightBitmaps[0]->GetSize().height / (8 * l));
 			}
-
-		
 		}
 		else
 		{
 			// HITRECTS
-			m_pHitRectLights[i]->SetSize(1,1);
-			m_pHitRectLights[i]->SetPosition(-10,-10);
+			m_pHitRectLights[i]->SetSize(1, 1);
+			m_pHitRectLights[i]->SetPosition(-10, -10);
 		}
 
 		if (CONTROLS->LeftMBDown())
 		{
 			if (!m_bClick)
 			{
-				for (unsigned int i = 0; i < m_pHitRectLights.size(); ++i)
+				for (unsigned int i3 = 0; i3 < m_pHitRectLights.size(); ++i3)
 				{
 					if (CONTROLS->IsKeyDown(VK_LCONTROL))
 					{
-						if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()))
-						{
-							m_LightsSelected[i] = !m_LightsSelected[i];
-						}
+						if (m_pHitRectLights[i3]->HitTest(CONTROLS->GetMousePos()))
+							m_LightsSelected[i3] = !m_LightsSelected[i3];
 					}
 					else
 					{
-						if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()))
+						if (m_pHitRectLights[i3]->HitTest(CONTROLS->GetMousePos()))
 						{
-							m_LightsSelected[i] = !m_LightsSelected[i];
+							m_LightsSelected[i3] = !m_LightsSelected[i3];
 					
 							for (unsigned int i2 = 0; i2 < m_pHitRectLights.size(); ++i2)
 							{
-								if (i != i2)
+								if (i3 != i2)
 									m_LightsSelected[i2] = false;
 							}
 						}
@@ -804,32 +583,30 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 		}
 
 		// MOVE
-		Vector3 look = pCamera->GetLook();
-		look.Normalize();
-		Vector3 right = pCamera->GetRight();
-		right.Normalize();
+		vLook.Normalize();
+		vRight.Normalize();
 
 		if (m_LightsSelected[i] == true && m_bMoveable)
 		{
 			if (CONTROLS->IsKeyDown(VK_NUMPAD8))
 			{
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X += look.X*5;
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z += look.Z*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X += vLook.X*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z += vLook.Z*5;
 			}
 			else if (CONTROLS->IsKeyDown(VK_NUMPAD2))
 			{
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X -= look.X*5;
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z -= look.Z*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X -= vLook.X*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z -= vLook.Z*5;
 			}
 			if (CONTROLS->IsKeyDown(VK_NUMPAD6))
 			{
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X += right.X*5;
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z += right.Z*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X += vRight.X*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z += vRight.Z*5;
 			}
 			else if (CONTROLS->IsKeyDown(VK_NUMPAD4))
 			{
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X -= right.X*5;
-				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z -= right.Z*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.X -= vRight.X*5;
+				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z -= vRight.Z*5;
 			}
 			if (CONTROLS->IsKeyDown(VK_NUMPAD9))
 				m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y += 2;
@@ -841,10 +618,13 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 		{
 			if (CONTROLS->IsKeyDown(VK_ADD))
 				m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier += 0.1f;
+
 			else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
 				m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier -= 0.1f;
+
 			if (CONTROLS->IsKeyDown(VK_NUMPAD3))				
 				m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd += 20;
+
 			else if (CONTROLS->IsKeyDown(VK_NUMPAD1))
 				if (m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd > 0)
 				{
@@ -853,17 +633,18 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 		}
 	}
 
-	BLOX_2D->SetColor(100,100,100);
-	BLOX_2D->FillRect(0,50,150,static_cast<int>(BLOX_2D->GetWindowSize().height));
-	BLOX_2D->SetColor(60,60,60);
-	BLOX_2D->DrawLine(149,50,149,static_cast<int>(BLOX_2D->GetWindowSize().height),2.0f);
+	BLOX_2D->SetColor(100, 100, 100);
+	BLOX_2D->FillRect(0, 50, 150, static_cast<int>(BLOX_2D->GetWindowSize().height)-70);
 
-	BLOX_2D->SetColor(255,255,255);
+	BLOX_2D->SetColor(60, 60, 60);
+	BLOX_2D->DrawLine(149, 50, 149, static_cast<int>(BLOX_2D->GetWindowSize().height)-20, 2.0f);
+
 	// DEBUG INFO
+	BLOX_2D->SetColor(255, 255, 255,0.5f);
 	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+
 	tstringstream stream;
-	stream << _T("Nr. lights in scene: ") << m_pRenderContext->GetLightController()->GetPointLights().size() << _T("\n");
-	
+
 	int b = 0;
 	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
 	{
@@ -871,59 +652,69 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 			++b;
 	}
 
-	stream << _T("Nr. lights selected: ") << b << _T("\n-------------------------\n\n");
+	stream << _T("lights: ") << b << _T(" / ");
+	stream << m_pRenderContext->GetLightController()->GetPointLights().size();
+
+	BLOX_2D->DrawString(stream.str(),RectF(0.0f,0.0f,BLOX_2D->GetWindowSize().width-4,BLOX_2D->GetWindowSize().height-4),Blox2D::HORIZONTAL_ALIGN_RIGHT, Blox2D::VERTICAL_ALIGN_BOTTOM);
+
+	tstringstream stream2;
 
 	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
 	{
 		if (m_LightsSelected[i] == true)
 		{
-			stream << _T("PointLight ") << i << _T(":\n   ");
+			stream2 << _T("PointLight ") << i << _T(":\n   ");
 			tstringstream strm;
 			strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.X;
 			tstring t = strm.str();
-			stream << _T("X: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+			stream2 << _T("X: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+
 			tstringstream strm1;
 			strm1 << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y;
 			t = strm1.str();
-			stream << _T("Y: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+			stream2 << _T("Y: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+
 			tstringstream strm2;
 			strm2 << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z;
 			t = strm2.str();
-			stream << _T("Z: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
-			stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R*255) << _T(" ");
-			stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G*255) << _T(" ");
-			stream << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B*255) << _T("\n   ");
-			stream << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier << _T("\n   ");
-			stream << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd << _T("\n\n");
+			stream2 << _T("Z: ") << t.substr(0, t.find(_T(".")) + 4) << _T("\n   ");
+
+			stream2 << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R * 255) << _T(" ");
+			stream2 << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G * 255) << _T(" ");
+			stream2 << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B * 255) << _T("\n   ");
+
+			stream2 << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier << _T("\n   ");
+			stream2 << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd << _T("\n\n");
 		}
 	}
 
-	BLOX_2D->DrawString(stream.str(),2,60);
+	BLOX_2D->DrawString(stream2.str(),2,60);
 }
 
 void EditorGUI::ColorPicker(PointLight* pointLight)
 {
 	if (!m_bPreviousColorSet)
 	{
-		m_PreviousColor.X = (pointLight->color.R*255);
-		m_PreviousColor.Y = (pointLight->color.G*255);
-		m_PreviousColor.Z = (pointLight->color.B*255);
+		m_PreviousColor.X = (pointLight->color.R * 255);
+		m_PreviousColor.Y = (pointLight->color.G * 255);
+		m_PreviousColor.Z = (pointLight->color.B * 255);
 
 		m_CurrentColor = m_PreviousColor;
 
-		float *h,*s,*v;
+		float *h,*s, *v;
 		h = new float(0.0f);
 		s = new float(0.0f);
 		v = new float(0.0f);
-		RGBtoHSV(pointLight->color.R,pointLight->color.G,pointLight->color.B,h,s,v);
 
-		m_HueColor.X = GetHue((int)((255-((*h/360)*255)))).X;
-		m_HueColor.Y = GetHue((int)((255-((*h/360)*255)))).Y;
-		m_HueColor.Z = GetHue((int)((255-((*h/360)*255)))).Z;
+		RGBtoHSV(pointLight->color.R, pointLight->color.G, pointLight->color.B, h, s, v);
+
+		m_HueColor.X = GetHue((int)((255 - ((*h / 360) * 255)))).X;
+		m_HueColor.Y = GetHue((int)((255 - ((*h / 360) * 255)))).Y;
+		m_HueColor.Z = GetHue((int)((255 - ((*h / 360) * 255)))).Z;
 
 		m_Hue = (int)(*h);
 
-		m_ColorPickerSelectPos = Point2F(m_ColorPickerPos.x+(*s*255), m_ColorPickerPos.y+(255-(*v*255)));
+		m_ColorPickerSelectPos = Point2F(m_ColorPickerPos.x + (*s * 255), m_ColorPickerPos.y + (255 - (*v * 255)));
 
 		delete h;
 		delete s;
@@ -935,13 +726,19 @@ void EditorGUI::ColorPicker(PointLight* pointLight)
 	// DRAW
 	BLOX_2D->SetAntiAliasing(false);
 
-	BLOX_2D->SetColor(43,43,43);
-	BLOX_2D->FillRect((int)(m_ColorPickerPos.x-5),(int)(m_ColorPickerPos.y-5),405,265);
-	BLOX_2D->SetColor(120,120,120);
-	BLOX_2D->DrawRect((int)(m_ColorPickerPos.x-5),(int)(m_ColorPickerPos.y-5),405,265);
+	BLOX_2D->SetColor(43, 43, 43);
+	BLOX_2D->FillRect((int)(m_ColorPickerPos.x - 5), (int)(m_ColorPickerPos.y - 5), 405, 265);
+	BLOX_2D->SetColor(120, 120, 120);
+	BLOX_2D->DrawRect((int)(m_ColorPickerPos.x - 5), (int)(m_ColorPickerPos.y - 5), 405, 265);
 
-	HitRegion hHitrect(HitRegion::TYPE_RECTANGLE,(int)(m_ColorPickerPos.x+280),(int)(m_ColorPickerPos.y+1),20,255);
-	if (hHitrect.HitTest(CONTROLS->GetMousePos()) && CONTROLS->LeftMBDown())
+	HitRegion hHitRect(
+		HitRegion::TYPE_RECTANGLE,
+		(int)(m_ColorPickerPos.x + 280),
+		(int)(m_ColorPickerPos.y + 1),
+		20,
+		255);
+
+	if (hHitRect.HitTest(CONTROLS->GetMousePos()) && CONTROLS->LeftMBDown())
 	{
 		m_HueColor.X = GetHue((int)(CONTROLS->GetMousePos().y - m_ColorPickerPos.y)).X;
 		m_HueColor.Y = GetHue((int)(CONTROLS->GetMousePos().y - m_ColorPickerPos.y)).Y;
@@ -954,11 +751,17 @@ void EditorGUI::ColorPicker(PointLight* pointLight)
 		m_CurrentColor = rgb;
 	}
 
-	BLOX_2D->SetColor((int)m_HueColor.X,(int)m_HueColor.Y,(int)m_HueColor.Z);
+	BLOX_2D->SetColor((int)m_HueColor.X, (int)m_HueColor.Y, (int)m_HueColor.Z);
 	BLOX_2D->FillRect((int)m_ColorPickerPos.x,(int)m_ColorPickerPos.y,255,255);
 
-	HitRegion cHitrect(HitRegion::TYPE_RECTANGLE,(int)m_ColorPickerPos.x,(int)m_ColorPickerPos.y,255,255);
-	if (cHitrect.HitTest(CONTROLS->GetMousePos()) && CONTROLS->LeftMBDown())
+	HitRegion cHitRect(
+		HitRegion::TYPE_RECTANGLE,
+		(int)m_ColorPickerPos.x,
+		(int)m_ColorPickerPos.y,
+		255,
+		255);
+
+	if (cHitRect.HitTest(CONTROLS->GetMousePos()) && CONTROLS->LeftMBDown())
 	{
 		Vector3 rgb = HsvToRgb(m_Hue,(double)((CONTROLS->GetMousePos().x - m_ColorPickerPos.x)/255.0f), (double)((255-(CONTROLS->GetMousePos().y - m_ColorPickerPos.y))/255.0f));
 
@@ -1166,6 +969,340 @@ void EditorGUI::RGBtoHSV( float r, float g, float b, float *h, float *s, float *
 	*h *= 60;				// degrees
 	if( *h < 0 )
 		*h += 360;
+}
+
+void EditorGUI::MoveGizmo(PointLight* pointLight)
+{
+	// MATRIX
+	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
+	D3DXMATRIX matView = m_pRenderContext->GetCamera()->GetView();
+
+	D3DXMATRIX matIdent;
+	D3DXMatrixIdentity(&matIdent);
+
+	// VIEWPORT
+	D3D10_VIEWPORT viewP;
+	viewP.TopLeftX = 0;
+	viewP.TopLeftY = 0;
+	viewP.Width = (UINT)BLOX_2D->GetWindowSize().width;
+	viewP.Height = (UINT)BLOX_2D->GetWindowSize().height;
+	viewP.MinDepth = 0;
+	viewP.MaxDepth = 1;
+
+	// POSITION
+	D3DXVECTOR3 pos = pointLight->position.ToD3DVector3();
+
+	Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - Vector3(pos);
+	float l = length.Length();
+	l *= 0.001f;
+
+	// VIEWPORT PROJECTION
+	D3DXVECTOR3 pos2D;
+	D3DXVECTOR3 posLineX_2D;
+	D3DXVECTOR3 posLineY_2D;
+	D3DXVECTOR3 posLineZ_2D;
+
+	D3DXVECTOR3 posLineX2_2D;
+	D3DXVECTOR3 posLineY2_2D;
+	D3DXVECTOR3 posLineZ2_2D;
+
+	D3DXVECTOR3 posLineXY_2D;
+	D3DXVECTOR3 posLineYZ_2D;
+	D3DXVECTOR3 posLineZX_2D;
+	
+	D3DXVECTOR3 posLineX = pos;
+	posLineX.x += l*100;
+	D3DXVECTOR3 posLineY = pos;
+	posLineY.y += l*100;
+	D3DXVECTOR3 posLineZ = pos;
+	posLineZ.z += l*100;
+
+	D3DXVECTOR3 posLineX2 = pos;
+	posLineX2.x += l*50;
+	D3DXVECTOR3 posLineY2 = pos;
+	posLineY2.y += l*50;
+	D3DXVECTOR3 posLineZ2 = pos;
+	posLineZ2.z += l*50;
+
+	D3DXVECTOR3 posLineXY = pos;
+	posLineXY.x += l*50;
+	posLineXY.y += l*50;
+	D3DXVECTOR3 posLineYZ = pos;
+	posLineYZ.y += l*50;
+	posLineYZ.z += l*50;
+	D3DXVECTOR3 posLineZX = pos;
+	posLineZX.z += l*50;
+	posLineZX.x += l*50;
+
+	D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
+
+	D3DXVec3Project(&posLineX_2D, &posLineX, &viewP, &matProj, &matView, &matIdent);
+	D3DXVec3Project(&posLineY_2D, &posLineY, &viewP, &matProj, &matView, &matIdent);
+	D3DXVec3Project(&posLineZ_2D, &posLineZ, &viewP, &matProj, &matView, &matIdent);
+
+	D3DXVec3Project(&posLineX2_2D, &posLineX2, &viewP, &matProj, &matView, &matIdent);
+	D3DXVec3Project(&posLineY2_2D, &posLineY2, &viewP, &matProj, &matView, &matIdent);
+	D3DXVec3Project(&posLineZ2_2D, &posLineZ2, &viewP, &matProj, &matView, &matIdent);
+
+	D3DXVec3Project(&posLineXY_2D, &posLineXY, &viewP, &matProj, &matView, &matIdent);
+	D3DXVec3Project(&posLineYZ_2D, &posLineYZ, &viewP, &matProj, &matView, &matIdent);
+	D3DXVec3Project(&posLineZX_2D, &posLineZX, &viewP, &matProj, &matView, &matIdent);
+
+	int size = 10;
+
+	// X
+	HitRegion hitRectX(
+		HitRegion::TYPE_ELLIPSE,
+		static_cast<int>(posLineX_2D.x),
+		static_cast<int>(posLineX_2D.y),
+		size,size);
+
+	BLOX_2D->SetColor(255, 0, 0);
+	BLOX_2D->DrawLine(
+		static_cast<int>(posLineX2_2D.x),
+		static_cast<int>(posLineX2_2D.y),
+		static_cast<int>(posLineX_2D.x),
+		static_cast<int>(posLineX_2D.y),
+		2.0f);
+
+	BLOX_2D->FillEllipse(
+		static_cast<int>(posLineX_2D.x),
+		static_cast<int>(posLineX_2D.y),
+		static_cast<int>(size/2),
+		static_cast<int>(size/2));
+	
+	BLOX_2D->SetColor(255, 0, 0);
+	BLOX_2D->SetFont(_T("Verdana"), false, false, 14);
+	BLOX_2D->DrawString(_T("X"),
+		static_cast<int>(posLineX_2D.x-5),
+		static_cast<int>(posLineX_2D.y) - 25);
+
+	// XY
+	D2D1_POINT_2F r[5];
+	r[0].x = posLineXY_2D.x;
+	r[0].y = posLineXY_2D.y;
+	r[1].x = posLineY2_2D.x;
+	r[1].y = posLineY2_2D.y;
+	r[2].x = pos2D.x;
+	r[2].y = pos2D.y;
+	r[3].x = posLineX2_2D.x;
+	r[3].y = posLineX2_2D.y;
+	r[4].x = posLineXY_2D.x;
+	r[4].y = posLineXY_2D.y;
+
+	HitRegion hitRectXY(HitRegion::TYPE_POLYGON, &r[0], 5);
+						
+	if (hitRectXY.HitTest(CONTROLS->GetMousePos()))
+		BLOX_2D->SetColor(100, 100, 255, 0.4f);
+	else
+		BLOX_2D->SetColor(50, 50, 255, 0.4f);
+
+	BLOX_2D->FillPolygon(r, 4);
+
+	BLOX_2D->SetColor(100, 100, 255, 0.8f);
+	BLOX_2D->DrawLine(r[0], r[1]);
+	BLOX_2D->DrawLine(r[1], r[2]);
+	BLOX_2D->DrawLine(r[2], r[3]);
+	BLOX_2D->DrawLine(r[3], r[0]);
+
+	if (hitRectX.HitTest(CONTROLS->GetMousePos()))
+	{
+		BLOX_2D->SetColor(255, 255, 255);
+		BLOX_2D->DrawEllipse(
+			static_cast<int>(posLineX_2D.x),
+			static_cast<int>(posLineX_2D.y),
+			static_cast<int>(size/2),
+			static_cast<int>(size/2),
+			2.0f);
+
+		if (CONTROLS->LeftMBDown() && !m_bLockY && !m_bLockZ)
+			m_bLockX = true;
+	}
+
+	if (!CONTROLS->LeftMBDown())
+		m_bLockX = m_bLockY = m_bLockZ = false;
+
+	if (m_bLockX)
+	{
+		D3DXVECTOR3 mousePosPlusZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.z);
+		D3DXVECTOR3 mousePosPlusZ_3D;
+		D3DXVec3Unproject(&mousePosPlusZ_3D, &mousePosPlusZ, &viewP, &matProj, &matView, &matIdent);
+		mousePosPlusZ_3D.x -= l*100;
+
+		BLOX_2D->SetColor(255,255,255);
+		BLOX_2D->DrawEllipse(
+			static_cast<int>(posLineX_2D.x),
+			static_cast<int>(posLineX_2D.y),
+			static_cast<int>(size/2),
+			static_cast<int>(size/2),
+			2.0f);
+
+		float diff = m_MPos[i].x - mousePosPlusZ_3D.x;
+
+		pointLight->position.X += diff;
+
+	}
+
+	// Y
+	HitRegion hitRectY(
+		HitRegion::TYPE_ELLIPSE,
+		static_cast<int>(posLineY_2D.x),
+		static_cast<int>(posLineY_2D.y),
+		size,
+		size);
+
+	BLOX_2D->SetColor(0, 255, 0);
+	BLOX_2D->DrawLine(static_cast<int>(posLineY2_2D.x),
+		static_cast<int>(posLineY2_2D.y),
+		static_cast<int>(posLineY_2D.x),
+		static_cast<int>(posLineY_2D.y),
+		2.0f);
+
+	BLOX_2D->FillEllipse(
+		static_cast<int>(posLineY_2D.x),
+		static_cast<int>(posLineY_2D.y),
+		static_cast<int>(size/2),
+		static_cast<int>(size/2));
+
+	BLOX_2D->SetColor(0, 255, 0);
+	BLOX_2D->SetFont(_T("Verdana"), false, false, 14);
+	BLOX_2D->DrawString(_T("Y"),
+		static_cast<int>(posLineY_2D.x-5),
+		static_cast<int>(posLineY_2D.y) - 25);
+	
+	BLOX_2D->SetColor(50, 50, 255, 0.4f);
+	//D2D1_POINT_2F r[4];
+	r[0].x = posLineY2_2D.x;
+	r[0].y = posLineY2_2D.y;
+	r[1].x = posLineYZ_2D.x;
+	r[1].y = posLineYZ_2D.y;
+	r[2].x = posLineZ2_2D.x;
+	r[2].y = posLineZ2_2D.y;
+	r[3].x = pos2D.x;
+	r[3].y = pos2D.y;
+
+	BLOX_2D->FillPolygon(r,4);
+
+	BLOX_2D->SetColor(100, 100, 255, 0.8f);
+	BLOX_2D->DrawLine(r[0],r[1]);
+	BLOX_2D->DrawLine(r[1],r[2]);
+	BLOX_2D->DrawLine(r[2],r[3]);
+	BLOX_2D->DrawLine(r[3],r[0]);
+
+	if (hitRectY.HitTest(CONTROLS->GetMousePos()))
+	{
+		BLOX_2D->SetColor(255,255,255);
+		BLOX_2D->DrawEllipse(
+			static_cast<int>(posLineY_2D.x),
+			static_cast<int>(posLineY_2D.y),
+			static_cast<int>(size/2),
+			static_cast<int>(size/2),
+			2.0f);
+
+		if (CONTROLS->LeftMBDown() && !m_bLockX && !m_bLockZ)
+		{
+			m_bLockY = true;
+		}
+	}
+
+	if (m_bLockY)
+	{
+		D3DXVECTOR3 mousePosPlusZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.z);
+		D3DXVECTOR3 mousePosPlusZ_3D;
+		D3DXVec3Unproject(&mousePosPlusZ_3D, &mousePosPlusZ, &viewP, &matProj, &matView, &matIdent);
+		mousePosPlusZ_3D.y -= l*100;
+
+		BLOX_2D->SetColor(255,255,255);
+		BLOX_2D->DrawEllipse(
+			static_cast<int>(posLineY_2D.x),
+			static_cast<int>(posLineY_2D.y),
+			static_cast<int>(size/2),
+			static_cast<int>(size/2),
+			2.0f);
+					
+		pointLight->position.Y = mousePosPlusZ_3D.y;
+	}
+	
+	// Z
+	HitRegion hitRectZ(
+		HitRegion::TYPE_ELLIPSE,
+		static_cast<int>(posLineZ_2D.x),
+		static_cast<int>(posLineZ_2D.y),
+		size,
+		size);
+
+	BLOX_2D->SetColor(255, 255, 0);
+	BLOX_2D->DrawLine(
+		static_cast<int>(posLineZ2_2D.x),
+		static_cast<int>(posLineZ2_2D.y),
+		static_cast<int>(posLineZ_2D.x),
+		static_cast<int>(posLineZ_2D.y),
+		2.0f);
+
+	BLOX_2D->FillEllipse(
+		static_cast<int>(posLineZ_2D.x),
+		static_cast<int>(posLineZ_2D.y),
+		static_cast<int>(size/2),
+		static_cast<int>(size/2));
+
+	BLOX_2D->SetColor(255, 255, 0);
+	BLOX_2D->SetFont(_T("Verdana"), false, false, 14);
+	BLOX_2D->DrawString(_T("Z"),
+		static_cast<int>(posLineZ_2D.x-5),
+		static_cast<int>(posLineZ_2D.y) - 25);
+
+	BLOX_2D->SetColor(50, 50, 255, 0.4f);
+	//D2D1_POINT_2F r[4];
+	r[0].x = posLineZX_2D.x;
+	r[0].y = posLineZX_2D.y;
+	r[1].x = posLineX2_2D.x;
+	r[1].y = posLineX2_2D.y;
+	r[2].x = pos2D.x;
+	r[2].y = pos2D.y;
+	r[3].x = posLineZ2_2D.x;
+	r[3].y = posLineZ2_2D.y;
+
+	BLOX_2D->FillPolygon(r,4);
+
+	BLOX_2D->SetColor(100, 100, 255, 0.8f);
+	BLOX_2D->DrawLine(r[0],r[1]);
+	BLOX_2D->DrawLine(r[1],r[2]);
+	BLOX_2D->DrawLine(r[2],r[3]);
+	BLOX_2D->DrawLine(r[3],r[0]);
+
+	if (hitRectZ.HitTest(CONTROLS->GetMousePos()))
+	{
+		BLOX_2D->SetColor(255,255,255);
+		BLOX_2D->DrawEllipse(
+			static_cast<int>(posLineZ_2D.x),
+			static_cast<int>(posLineZ_2D.y),
+			static_cast<int>(size/2),
+			static_cast<int>(size/2),
+			2.0f);
+
+		if (CONTROLS->LeftMBDown() && !m_bLockX && !m_bLockY)
+		{
+			m_bLockZ = true;
+		}
+	}
+
+	if (m_bLockZ)
+	{
+		D3DXVECTOR3 mousePosPlusZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.z);
+		D3DXVECTOR3 mousePosPlusZ_3D;
+		D3DXVec3Unproject(&mousePosPlusZ_3D, &mousePosPlusZ, &viewP, &matProj, &matView, &matIdent);
+		mousePosPlusZ_3D.z -= l*100;
+
+		BLOX_2D->SetColor(255,255,255);
+		BLOX_2D->DrawEllipse(
+			static_cast<int>(posLineZ_2D.x),
+			static_cast<int>(posLineZ_2D.y),
+			static_cast<int>(size/2),
+			static_cast<int>(size/2),
+			2.0f);
+
+		pointLight->position.Z = mousePosPlusZ_3D.z;
+	}
 }
 
 // GETTERS
