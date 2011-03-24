@@ -13,7 +13,7 @@ struct SpotLight
 
     float AttenuationStart;
     float AttenuationEnd;
-    float radius;
+    float power;
     float padding;
 
     Vector3 direction;

@@ -1306,24 +1306,27 @@ void Button::Tick()
 	Point2D mousePos = CONTROLS->GetMousePos();
 
 	if (CONTROLS->LeftMBDown())
+		m_bClick = true;
+
+	if (CONTROLS->LeftMBUp())
 	{
-		if (m_pHitRect->HitTest(mousePos) && !m_bClick)
+		if (m_bClick)
 		{
-			m_bClicked = true;
+			if (m_pHitRect->HitTest(mousePos))
+			{
+				m_bClicked = true;
 
-			if (m_bToggleable)
-				m_bActivated = !m_bActivated;
-
-			m_bClick = true;
+				if (m_bToggleable)
+					m_bActivated = !m_bActivated;
+			}
+			else
+			{
+				m_bClicked = false;
+			}			
 		}
 		else
-		{
 			m_bClicked = false;
-		}
-	}
-	else
-	{
-		m_bClicked = false;
+
 		m_bClick = false;
 	}
 

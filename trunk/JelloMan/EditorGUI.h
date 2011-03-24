@@ -20,8 +20,14 @@ public:
 	void Draw();
 	void Tick(const RenderContext* pRenderContext);
 
-	void ColorPicker(PointLight* pointLight);
-	void MoveGizmo(PointLight* pointLight, int id);
+	void VisualPointLightDebugger();
+	void VisualSpotLightDebugger();
+
+	void ColorPicker(Color& color);
+
+	void MoveGizmo(Vector3& position, int id);
+
+	void RotateGizmo(Vector3& position, int id);
 
 	// GETTERS
 	Button* GetLightButton() const
@@ -34,7 +40,6 @@ public:
 
 private:
 
-	void VisualLightDebugger(const Camera* pCamera);
 	Vector3 GetHue(int i);
 	Vector3 HsvToRgb(double h, double S, double V);
 	void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
@@ -58,8 +63,11 @@ private:
 	vector<Bitmap*> m_pColorPickerButtonBitmaps;
 	Button* m_pApplyButton;
 	vector<Bitmap*> m_pApplyButtonBitmaps;
+	Button* m_pRotateButton;
+	vector<Bitmap*> m_pRotateButtonBitmaps;
 
 	vector<Bitmap*> m_pPointLightBitmaps;
+	vector<Bitmap*> m_pSpotLightBitmaps;
 
 	Bitmap* m_pCameraBitmap;
 
@@ -79,21 +87,29 @@ private:
 	Point2D m_ColorPickerSelectPos;
 	int m_Hue;
 
+	// VISUAL POINTLIGHT DEBUGGER
+	vector<HitRegion*> m_pPLightHitRects;
+	vector<bool> m_PLightsSelected;
+
+	vector<D3DXVECTOR3> m_OldPointLightPos;
+
+	// VISUAL SPOTLIGHT DEBUGGER
+	vector<HitRegion*> m_pSLightHitRects;
+	vector<bool> m_SLightsSelected;
+
+	vector<D3DXVECTOR3> m_OldSpotLightPos;
+
 	// VISUAL LIGHT DEBUGGER
 	bool m_bLockX;
 	bool m_bLockY;
 	bool m_bLockZ;
 	bool m_bMoveable;
+	bool m_bRotateable;
 	bool m_bClick;
-
-	vector<HitRegion*> m_pLightHitRects;
-	vector<bool> m_LightsSelected;
+	bool m_bClick2;
 
 	int m_SelectedLights;
 	int m_TotalLights;
-
-	Vector3 m_MousePos;
-	vector<D3DXVECTOR3> m_MPos;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);
