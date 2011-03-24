@@ -233,10 +233,14 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 	    m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
         
         //Loop PointLights
-		m_pEffect->SetTechnique("tech_PointLight");
         vector<PointLight>::const_iterator itPoint = pRenderContext->GetLightController()->GetPointLights().cbegin();
 	    for (; itPoint != pRenderContext->GetLightController()->GetPointLights().cend(); ++itPoint)
 	    {
+			if (itPoint->lightEnabled == false)
+				continue;
+
+			m_pEffect->SetTechnique("tech_PointLight_NoShadows");
+
             D3D10_RECT r = CalcScissorRect(itPoint->position, itPoint->AttenuationEnd, pRenderContext->GetCamera()->GetViewProjection(),
                                             m_Width, m_Height);
 
@@ -263,6 +267,17 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
         vector<SpotLight>::const_iterator itSpot = pRenderContext->GetLightController()->GetSpotLights().cbegin();
 	    for (; itSpot != pRenderContext->GetLightController()->GetSpotLights().cend(); ++itSpot)
 	    {
+			if (itSpot->lightEnabled == false)
+				continue;
+		
+			if (itSpot->shadowsEnabled == true)
+				m_pEffect->SetTechnique("tech_SpotLight_NoShadows");
+			else		
+			{
+				m_pEffect->SetTechnique("tech_SpotLight_Shadows");
+				//m_pEffect->SetShadowMap(
+			}
+
             D3D10_RECT r = CalcScissorRect(itSpot->position, itSpot->AttenuationEnd, pRenderContext->GetCamera()->GetViewProjection(),
                                             m_Width, m_Height);
 		    m_pDevice->RSSetScissorRects(1, &r);

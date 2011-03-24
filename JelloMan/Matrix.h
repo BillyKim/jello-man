@@ -1,5 +1,6 @@
 #pragma once
 #include "D3DUtil.h"
+#include "PhysX.h"
 
 struct Matrix
 {
@@ -26,6 +27,7 @@ public:
     operator const float*() const;
     operator D3DXMATRIX() const;
     operator const D3DXMATRIX() const;
+	operator NxMat34() const;
 
     // assignment operators
     Matrix& operator*= (const Matrix& mat);
