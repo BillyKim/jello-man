@@ -21,7 +21,9 @@ EditorGUI::EditorGUI()	:	m_pLightButton(0),
 							m_bClick(false),
 							m_pColorPickerButton(0),
 							m_bPreviousColorSet(false),
-							m_pApplyButton(0)
+							m_pApplyButton(0),
+							m_TotalLights(0),
+							m_SelectedLights(0)
 {
 	m_PreviousColor = Vector3(0.0f,0.0f,0.0f);
 	m_CurrentColor = Vector3(0.0f,0.0f,0.0f);
@@ -173,12 +175,16 @@ void EditorGUI::Initialize()
 
 	// POINT LIGHT
 	m_pPointLightBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/plight_normal.png")));
+	m_pPointLightBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/plight_hover.png")));
 
 	// CAMERA
 	m_pCameraBitmap = new Bitmap(_T("Content/Images/Editor/camera.png"));
 }
 void EditorGUI::Draw()
 {
+	if (m_GameEditorModeSelect == 1)
+		VisualLightDebugger(m_pRenderContext->GetCamera());
+
 	BLOX_2D->SetAntiAliasing(false);
 
 	// BACKGROUND
@@ -317,16 +323,24 @@ void EditorGUI::Draw()
 		BLOX_2D->DrawString(_T("Change the color of the selected light."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
 	}
 
-	//m_pColorPickerButton->GetHitRect()->Draw(true);
-
 	// CAMERA
 	if (m_bUsingCamera)
 		BLOX_2D->DrawBitmap(m_pCameraBitmap,static_cast<int>(BLOX_2D->GetWindowSize().width-70),90,0.8f);
 
 	BLOX_2D->SetAntiAliasing(true);
 
-	if (m_GameEditorModeSelect == 1)
-		VisualLightDebugger(m_pRenderContext->GetCamera());
+	BLOX_2D->SetColor(255,255,255,0.8f);
+	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+
+	tstringstream stream;
+	stream << _T("Lights: ") << m_SelectedLights << _T(" / ") << m_TotalLights;
+	BLOX_2D->DrawString(
+		stream.str(),
+		RectF(0.0f, 0.0f,
+		BLOX_2D->GetWindowSize().width - 4,
+		BLOX_2D->GetWindowSize().height - 4),
+		Blox2D::HORIZONTAL_ALIGN_RIGHT,
+		Blox2D::VERTICAL_ALIGN_BOTTOM);
 }
 void EditorGUI::Tick(const RenderContext* pRenderContext)
 {
@@ -371,9 +385,9 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	m_pRenderContext = pRenderContext;
 
 	// VISUAL LIGHT DEBUGGER
-	if (pRenderContext->GetLightController()->GetPointLights().size() > m_pHitRectLights.size())
+	if (pRenderContext->GetLightController()->GetPointLights().size() > m_LightsSelected.size())
 	{
-		m_pHitRectLights.push_back(new HitRegion(HitRegion::TYPE_ELLIPSE,0,0,20,20));
+		m_pLightHitRects.push_back(new HitRegion(HitRegion::TYPE_ELLIPSE, -10 ,-10, 10, 10));
 		m_LightsSelected.push_back(false);
 		m_MPos.push_back(D3DXVECTOR3(0.0f,0.0f,0.0f));
 	}
@@ -451,7 +465,7 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 	for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetPointLights().size(); ++i)
 	{
 		D3DXVECTOR3 pos = m_pRenderContext->GetLightController()->GetPointLights()[i].position.ToD3DVector3();
-
+	
 		Vector3 length = pCamera->GetPosition() - Vector3(pos);
 		float l = length.Length();
 		l *= 0.001f;
@@ -466,24 +480,24 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 			m_pRenderContext->GetLightController()->GetPointLights()[i].color.B,
 			0.4f / l);
 
+		// HITRECT
+		SafeDelete(m_pLightHitRects[i]);
+		m_pLightHitRects[i] = new HitRegion(	
+			HitRegion::TYPE_ELLIPSE,
+			static_cast<float>(pos2D.x),
+			static_cast<float>(pos2D.y), 
+			static_cast<int>(m_pPointLightBitmaps[0]->GetSize().width / (16 * l)),
+			static_cast<int>(m_pPointLightBitmaps[0]->GetSize().height / (16 * l)));
+
 		if (vLook.Dot(length) < 0)
 		{
-			// HITRECTS
-			m_pHitRectLights[i]->SetSize(
-				static_cast<int>(size / l),
-				static_cast<int>(size / l));
-
-			m_pHitRectLights[i]->SetPosition(
-				static_cast<int>(pos2D.x),
-				static_cast<int>(pos2D.y));
-
 			BLOX_2D->SetColor(0, 0, 0, 0.4f / l);
 			BLOX_2D->SetFont(_T("Arial"), true, false, (size / 2) / (l / 2));
 
 			// DRAW
-			if (m_pHitRectLights[i]->HitTest(CONTROLS->GetMousePos()) || m_LightsSelected[i] == true)
+			if (m_pLightHitRects[i]->HitTest(CONTROLS->GetMousePos()) || m_LightsSelected[i] == true)
 			{
-			BLOX_2D->SetColor(255, 255, 255, 0.4f / l);
+				/*BLOX_2D->SetColor(255, 255, 255, 0.4f / l);
 				BLOX_2D->FillEllipse(
 					static_cast<int>(pos2D.x),
 					static_cast<int>(pos2D.y),
@@ -496,22 +510,22 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					static_cast<int>(pos2D.y),
 					static_cast<int>(size / l),
 					static_cast<int>(size / l),
-					3.0f / l);
+					3.0f / l);*/
 
-				BLOX_2D->DrawBitmap(m_pPointLightBitmaps[0],
-									pos2D.x - ((m_pPointLightBitmaps[0]->GetSize().width / (8 * l)) / 2) + (1 / l),
-									pos2D.y - (m_pPointLightBitmaps[0]->GetSize().height / (8 * l)) / 2,
+				BLOX_2D->DrawBitmap(m_pPointLightBitmaps[1],
+									static_cast<int>(pos2D.x - ((m_pPointLightBitmaps[0]->GetSize().width / (8 * l)) / 2)),
+									static_cast<int>(pos2D.y - (m_pPointLightBitmaps[0]->GetSize().height / (8 * l)) / 2),
 									1.0f / l,
-									m_pPointLightBitmaps[0]->GetSize().width / (8 * l),
-									m_pPointLightBitmaps[0]->GetSize().height / (8 * l));
+									static_cast<int>(m_pPointLightBitmaps[0]->GetSize().width / (8 * l)),
+									static_cast<int>(m_pPointLightBitmaps[0]->GetSize().height / (8 * l)));
 
 				// MOVE GIZMO
 				if (m_bMoveable && m_LightsSelected[i] == true)
-					MoveGizmo(&m_pRenderContext->GetLightController()->GetPointLights()[i]);
+					MoveGizmo(&m_pRenderContext->GetLightController()->GetPointLights()[i],i);
 			}
 			else
 			{
-				BLOX_2D->SetColor(col);
+				/*BLOX_2D->SetColor(col);
 				BLOX_2D->FillEllipse(
 					static_cast<int>(pos2D.x),
 					static_cast<int>(pos2D.y),
@@ -524,59 +538,20 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 					static_cast<int>(pos2D.y),
 					static_cast<int>(size / l),
 					static_cast<int>(size / l),
-					1/l);
+					1/l);*/
 
 				BLOX_2D->DrawBitmap(m_pPointLightBitmaps[0],
-									pos2D.x - ((m_pPointLightBitmaps[0]->GetSize().width / (8 * l)) / 2) + (1 / l),
-									pos2D.y - (m_pPointLightBitmaps[0]->GetSize().height / (8 * l)) / 2,
+									static_cast<int>(pos2D.x - ((m_pPointLightBitmaps[0]->GetSize().width / (8 * l)) / 2)),
+									static_cast<int>(pos2D.y - (m_pPointLightBitmaps[0]->GetSize().height / (8 * l)) / 2),
 									1.0f / l,
-									m_pPointLightBitmaps[0]->GetSize().width / (8 * l),
-									m_pPointLightBitmaps[0]->GetSize().height / (8 * l));
+									static_cast<int>(m_pPointLightBitmaps[0]->GetSize().width / (8 * l)),
+									static_cast<int>(m_pPointLightBitmaps[0]->GetSize().height / (8 * l)));
 			}
 		}
-		else
-		{
-			// HITRECTS
-			m_pHitRectLights[i]->SetSize(1, 1);
-			m_pHitRectLights[i]->SetPosition(-10, -10);
-		}
-
-		if (CONTROLS->LeftMBDown())
-		{
-			if (!m_bClick)
-			{
-				for (unsigned int i3 = 0; i3 < m_pHitRectLights.size(); ++i3)
-				{
-					if (CONTROLS->IsKeyDown(VK_LCONTROL))
-					{
-						if (m_pHitRectLights[i3]->HitTest(CONTROLS->GetMousePos()))
-							m_LightsSelected[i3] = !m_LightsSelected[i3];
-					}
-					else
-					{
-						if (m_pHitRectLights[i3]->HitTest(CONTROLS->GetMousePos()))
-						{
-							m_LightsSelected[i3] = !m_LightsSelected[i3];
-					
-							for (unsigned int i2 = 0; i2 < m_pHitRectLights.size(); ++i2)
-							{
-								if (i3 != i2)
-									m_LightsSelected[i2] = false;
-							}
-						}
-					}
-				}
-
-			m_bClick = true;
-
-			}
-		}
-		else
-			m_bClick = false;
 
 		if (CONTROLS->IsKeyDown(VK_LCONTROL) && CONTROLS->IsKeyDown('D'))
 		{
-			for (unsigned int i2 = 0; i2 < m_pHitRectLights.size(); ++i2)
+			for (unsigned int i2 = 0; i2 < m_LightsSelected.size(); ++i2)
 			{
 				m_LightsSelected[i2] = false;
 			}
@@ -633,6 +608,41 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 		}
 	}
 
+	// CONTROLS
+	if (CONTROLS->LeftMBDown())
+	{
+		if (!m_bClick)
+		{
+			for (unsigned int i = 0; i < m_pLightHitRects.size(); ++i)
+			{
+				if (CONTROLS->IsKeyDown(VK_LCONTROL))
+				{
+					if (m_pLightHitRects[i]->HitTest(CONTROLS->GetMousePos()))
+						m_LightsSelected[i] = !m_LightsSelected[i];
+				}
+				else
+				{
+					if (m_pLightHitRects[i]->HitTest(CONTROLS->GetMousePos()))
+					{
+						m_LightsSelected[i] = !m_LightsSelected[i];
+						m_bPreviousColorSet = false;
+					
+						for (unsigned int i2 = 0; i2 < m_LightsSelected.size(); ++i2)
+						{
+							if (i != i2)
+								m_LightsSelected[i2] = false;
+						}
+					}
+				}
+			}
+
+		m_bClick = true;
+
+		}
+	}
+	else
+		m_bClick = false;
+
 	BLOX_2D->SetColor(100, 100, 100);
 	BLOX_2D->FillRect(0, 50, 150, static_cast<int>(BLOX_2D->GetWindowSize().height)-70);
 
@@ -640,10 +650,8 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 	BLOX_2D->DrawLine(149, 50, 149, static_cast<int>(BLOX_2D->GetWindowSize().height)-20, 2.0f);
 
 	// DEBUG INFO
-	BLOX_2D->SetColor(255, 255, 255,0.5f);
+	BLOX_2D->SetColor(255, 255, 255);
 	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-
-	tstringstream stream;
 
 	int b = 0;
 	for (unsigned int i = 0; i < m_LightsSelected.size(); ++i)
@@ -652,10 +660,8 @@ void EditorGUI::VisualLightDebugger(const Camera* pCamera)
 			++b;
 	}
 
-	stream << _T("lights: ") << b << _T(" / ");
-	stream << m_pRenderContext->GetLightController()->GetPointLights().size();
-
-	BLOX_2D->DrawString(stream.str(),RectF(0.0f,0.0f,BLOX_2D->GetWindowSize().width-4,BLOX_2D->GetWindowSize().height-4),Blox2D::HORIZONTAL_ALIGN_RIGHT, Blox2D::VERTICAL_ALIGN_BOTTOM);
+	m_SelectedLights = b;
+	m_TotalLights = m_pRenderContext->GetLightController()->GetPointLights().size();
 
 	tstringstream stream2;
 
@@ -971,7 +977,7 @@ void EditorGUI::RGBtoHSV( float r, float g, float b, float *h, float *s, float *
 		*h += 360;
 }
 
-void EditorGUI::MoveGizmo(PointLight* pointLight)
+void EditorGUI::MoveGizmo(PointLight* pointLight, int id)
 {
 	// MATRIX
 	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -1137,10 +1143,11 @@ void EditorGUI::MoveGizmo(PointLight* pointLight)
 			static_cast<int>(size/2),
 			2.0f);
 
-		float diff = m_MPos[i].x - mousePosPlusZ_3D.x;
+		float diff = m_MPos[id].x - mousePosPlusZ_3D.x;
 
-		pointLight->position.X += diff;
+		pointLight->position.X -= diff;
 
+		m_MPos[id] = mousePosPlusZ_3D;
 	}
 
 	// Y
@@ -1220,7 +1227,11 @@ void EditorGUI::MoveGizmo(PointLight* pointLight)
 			static_cast<int>(size/2),
 			2.0f);
 					
-		pointLight->position.Y = mousePosPlusZ_3D.y;
+		float diff = m_MPos[id].y - mousePosPlusZ_3D.y;
+
+		pointLight->position.Y -= diff;
+
+		m_MPos[id] = mousePosPlusZ_3D;
 	}
 	
 	// Z
@@ -1301,7 +1312,11 @@ void EditorGUI::MoveGizmo(PointLight* pointLight)
 			static_cast<int>(size/2),
 			2.0f);
 
-		pointLight->position.Z = mousePosPlusZ_3D.z;
+		float diff = m_MPos[id].z - mousePosPlusZ_3D.z;
+
+		pointLight->position.Z -= diff;
+
+		m_MPos[id] = mousePosPlusZ_3D;
 	}
 }
 
