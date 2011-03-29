@@ -6,7 +6,7 @@ class Texture2D
 {
 public:
 	Texture2D(ID3D10ShaderResourceView* pTex);
-    Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap = true, DXGI_FORMAT colorFormat = DXGI_FORMAT_B8G8R8A8_UNORM);
+    Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap = true, bool mips = true, DXGI_FORMAT colorFormat = DXGI_FORMAT_B8G8R8A8_UNORM);
 
 	virtual ~Texture2D(void);
 
@@ -26,6 +26,8 @@ private:
     UINT m_Height;
     DXGI_FORMAT m_ColorFormat;
     ID3D10Device* m_pDevice;
+
+    bool m_MakeMips;
 
     ID3D10ShaderResourceView* m_pColorMapSRV;
     ID3D10RenderTargetView* m_pColorMapRTV;

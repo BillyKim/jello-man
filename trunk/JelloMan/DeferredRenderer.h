@@ -25,13 +25,13 @@ public:
     DeferredRenderer(ID3D10Device* device);
     virtual ~DeferredRenderer(void);
 
-    void Init(UINT width, UINT height, ID3D10RenderTargetView* backbuffer);
+    void Init(UINT width, UINT height);
 
     void OnResize();
-    void OnResized(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer);
+    void OnResized(UINT width, UINT height);
 
-    void Begin() const;
-    void End(const RenderContext* pRenderContext) const;
+    void Begin();
+    void End(const RenderContext* pRenderContext);
 
     UINT GetBackbufferWidth() const;
     UINT GetBackbufferHeight() const;
@@ -49,7 +49,8 @@ private:
     UINT m_Width, m_Height;
 
     ID3D10Device* m_pDevice;
-    ID3D10RenderTargetView* m_pBackbuffer;
+    ID3D10RenderTargetView* m_pPrevBackbuffer;
+    ID3D10DepthStencilView* m_pPrevDepthStencil;
     
     static const int MAXRENDERTARGETS = 3;
     ID3D10ShaderResourceView* m_pSRV[MAXRENDERTARGETS + 1];    //Color, Normal(+spec), Position(+gloss), Depth

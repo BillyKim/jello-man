@@ -55,6 +55,12 @@
     <Filter Include="Engine Files\PhysX\Shapes\base">
       <UniqueIdentifier>{0297a0f8-ac21-4e19-993b-44d77f65865e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Graphics\Effect\deferred">
+      <UniqueIdentifier>{d8e72431-beaa-4886-a851-b9c5bc8d2d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\Effect\post">
+      <UniqueIdentifier>{82ac807e-d9c4-4c50-bd9c-473734e12159}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -138,14 +144,8 @@
     <ClInclude Include="Blox2D.h">
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredPostEffect.h">
-      <Filter>Engine Files\Graphics\Effect</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Engine Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="DeferredPreEffect.h">
-      <Filter>Engine Files\Graphics\Effect</Filter>
     </ClInclude>
     <ClInclude Include="TestObject.h">
       <Filter>Game Files</Filter>
@@ -185,6 +185,36 @@
     </ClInclude>
     <ClInclude Include="PhysXShape.h">
       <Filter>Engine Files\PhysX\Shapes\base</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXMesh.h">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXSphere.h">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysXBox.h">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="TestPhysXBox.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredPreEffect.h">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredPostEffect.h">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="EdgeDetectionPostEffect.h">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessor.h">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessEffect.h">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClInclude>
+    <ClInclude Include="CookingStream.h">
+      <Filter>Engine Files\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,17 +290,11 @@
     <ClCompile Include="Blox2D.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="DeferredPostEffect.cpp">
-      <Filter>Engine Files\Graphics\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="vertex.cpp">
       <Filter>Engine Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="DeferredPreEffect.cpp">
-      <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
     <ClCompile Include="TestObject.cpp">
       <Filter>Game Files</Filter>
@@ -311,6 +335,36 @@
     <ClCompile Include="PhysXShape.cpp">
       <Filter>Engine Files\PhysX\Shapes\base</Filter>
     </ClCompile>
+    <ClCompile Include="PhysXSphere.cpp">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXBox.cpp">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysXMesh.cpp">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPhysXBox.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredPostEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredPreEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="EdgeDetectionPostEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessor.cpp">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClCompile>
+    <ClCompile Include="CookingStream.cpp">
+      <Filter>Engine Files\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx">
@@ -323,6 +377,9 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="lights.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="postEdgeDetection.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

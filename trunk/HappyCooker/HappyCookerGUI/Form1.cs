@@ -33,8 +33,8 @@ namespace HappyCookerGUI
             p.StartInfo.FileName = "HappyCooker.exe";
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.RedirectStandardOutput = false;
+            p.StartInfo.RedirectStandardError = false;
             p.StartInfo.UseShellExecute = false;
             p.Start();
 
@@ -77,8 +77,11 @@ namespace HappyCookerGUI
                 pIn.WriteLine("-1");
                 state = CookerState.File;
             }
+            m_OpenFileDialog.FileName = "";
             if (m_OpenFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.Cancel)
             {
+                m_OpenFileDialog.InitialDirectory = m_OpenFileDialog.FileName;
+                m_SaveFileDialog.InitialDirectory = m_OpenFileDialog.InitialDirectory;
                 pB_LoadObj.Value = 0;
 
                 pIn.WriteLine(m_OpenFileDialog.FileName);
@@ -92,18 +95,23 @@ namespace HappyCookerGUI
             m_SaveFileDialog.Title = title;
             m_SaveFileDialog.DefaultExt = extension;
             m_SaveFileDialog.Filter = "*" + extension + "|*" + extension;
+            m_SaveFileDialog.InitialDirectory = m_OpenFileDialog.InitialDirectory;
+            m_SaveFileDialog.FileName = "";
 
             if (m_SaveFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.Cancel)
             {
+                m_SaveFileDialog.InitialDirectory = m_SaveFileDialog.FileName;
+                m_OpenFileDialog.InitialDirectory = m_SaveFileDialog.InitialDirectory;
                 return m_SaveFileDialog.FileName;
             }
             else
                 return "";
+
         }
 
         private void btn_CookBin_Click(object sender, EventArgs e)
         {
-            string name = GetSaveName("Save to binary obj", ".bobj");
+            string name = GetSaveName("Save to binary obj", ".binobj");
 
             pB_LoadObj.Value = 0;
             if (name != "")
@@ -116,7 +124,7 @@ namespace HappyCookerGUI
 
         private void btn_CookConvex_Click(object sender, EventArgs e)
         {
-            string name = GetSaveName("Save convex physX mesh", ".cxpm");
+            string name = GetSaveName("Save convex physX mesh", ".nxconvex");
 
             pB_LoadObj.Value = 0;
             if (name != "")
@@ -129,7 +137,7 @@ namespace HappyCookerGUI
 
         private void btn_CookConcave_Click(object sender, EventArgs e)
         {
-            string name = GetSaveName("Save concave physX mesh", ".ccpm");
+            string name = GetSaveName("Save concave physX mesh", ".nxconcave");
 
             pB_LoadObj.Value = 0;
             if (name != "")
