@@ -1,7 +1,7 @@
 #include "Actor.h"
 
 
-Actor::Actor(void)
+Actor::Actor(void): m_WorldMatrix(Matrix::Identity), m_pActor(0), m_pPhysX(0)
 {
 }
 
@@ -11,7 +11,7 @@ Actor::~Actor(void)
 	m_pPhysX->GetScene()->releaseActor(*m_pActor);
 }
 
-void Actor::InitActor(PhysX* pPhysX, bool moveable, const PhysXShape& shape)
+void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 {
 	ASSERT(m_pActor == 0); //would be weird if the actor is already intialized
 
@@ -23,10 +23,7 @@ void Actor::InitActor(PhysX* pPhysX, bool moveable, const PhysXShape& shape)
 	
 	if(moveable == true)
 	{
-		//bodyNx
 		NxBodyDesc bodyDesc;
-		bodyDesc.angularDamping	= 0.9f;
-		bodyDesc.linearVelocity = NxVec3(0,0,0);
 		ActorDesc.body = &bodyDesc;
 	}
 	else 
@@ -34,15 +31,21 @@ void Actor::InitActor(PhysX* pPhysX, bool moveable, const PhysXShape& shape)
 		ActorDesc.body = 0;
 	}
 
-	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
-	ActorDesc.globalPose = mat;
-	ActorDesc.density = 10.0f;
+	ActorDesc.globalPose = static_cast<NxMat34>(m_WorldMatrix);
 	m_pActor = m_pPhysX->GetScene()->createActor(ActorDesc);
+
+    ASSERT(m_pActor != 0);
+}
+
+void Actor::Update(float dTime)
+{
+    m_WorldMatrix = m_pActor->getGlobalPose();
 }
 
 void Actor::Translate(const Vector3& pos)
 {
 	ASSERT(m_pActor == 0);
+    m_WorldMatrix *= Matrix::CreateTranslation(pos);
 
 	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
 	m_pActor->setGlobalPose(mat);

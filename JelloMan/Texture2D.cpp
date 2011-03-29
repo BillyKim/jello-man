@@ -12,13 +12,14 @@ Texture2D::Texture2D(ID3D10ShaderResourceView* pTex):
 {
     ZeroMemory(&m_Viewport, sizeof(D3D10_VIEWPORT)); 
 }
-Texture2D::Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap, DXGI_FORMAT colorFormat):  
+Texture2D::Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap, bool mips, DXGI_FORMAT colorFormat):  
     m_Width(width),
     m_Height(height),
     m_ColorFormat(colorFormat),
     m_pDevice(device),
     m_pColorMapSRV(0), m_pColorMapRTV(0),
-    m_pDepthMapSRV(0), m_pDepthMapDSV(0)
+    m_pDepthMapSRV(0), m_pDepthMapDSV(0),
+    m_MakeMips(mips)
 {
     m_Viewport.TopLeftX = 0;
     m_Viewport.TopLeftY = 0;
@@ -115,7 +116,7 @@ void Texture2D::BeginDraw()
 }
 void Texture2D::EndDraw()
 {
-    if (m_pColorMapSRV)
+    if (m_pColorMapSRV && m_MakeMips)
         m_pDevice->GenerateMips(m_pColorMapSRV);
 }
 void Texture2D::Clear(const Vector4& color)

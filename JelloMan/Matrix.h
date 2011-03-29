@@ -2,6 +2,8 @@
 #include "D3DUtil.h"
 #include "PhysX.h"
 
+struct Vector3;
+
 struct Matrix
 {
 public:
@@ -12,10 +14,21 @@ public:
             float _41, float _42, float _43, float _44 );
 	explicit Matrix(const float* mat);
 	explicit Matrix(const D3DXMATRIX& mat);
+    explicit Matrix(const NxMat34& mat);
 	
+    //Static
+    static Matrix CreateTranslation(const Vector3& v);
+    static Matrix CreateRotationX(float f);
+    static Matrix CreateRotationY(float f);
+    static Matrix CreateRotationZ(float f);
+    static Matrix CreateScale(float f);
+    static Matrix CreateScale(const Vector3& f);
+
     //copy & assignment
     Matrix(const Matrix& mat);
     Matrix& operator=(const Matrix& mat);
+    Matrix& operator=(const NxMat34& mat);
+	Matrix& operator=(const D3DXMATRIX& mat);
 
     //Static
     static const Matrix Identity;

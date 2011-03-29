@@ -132,10 +132,9 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
     unsigned int index[3];
     if (m_pCurrentDrawMesh != 0)
     {
-        index[0] = m_VPNTData.size();
         for (int i = 0; i < 3; ++i)
         {
-            index[i] = index[0] + i;
+            index[i] = m_VPNTData.size();
             VertexPosNormTex vpnt(
                     m_VertexData[data[i][0] - 1],
                     m_NormalData[data[i][2] - 1],
@@ -156,10 +155,9 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
     }
     else
     {  
-        index[0] = m_VPData.size();
         for (int i = 0; i < 3; ++i)
         {
-            index[i] = index[0] + i;
+            index[i] = m_VPData.size();
             VertexPos vp(
                     m_VertexData[data[i][0] - 1]
                         );
@@ -178,9 +176,9 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
         }
     }
     
-    m_IndexData.push_back(index[0]);
-    m_IndexData.push_back(index[1]);
     m_IndexData.push_back(index[2]);
+    m_IndexData.push_back(index[1]);
+    m_IndexData.push_back(index[0]);
 }
 
 void ModelLoader::FlushMesh()

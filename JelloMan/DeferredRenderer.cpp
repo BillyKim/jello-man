@@ -10,7 +10,8 @@ DeferredRenderer::DeferredRenderer(ID3D10Device* device):
 	m_pScreenMesh(new ModelMesh<VertexPosTex>(device, _T("screenMesh"))),
 	m_pEffect(0),
     m_Width(0), m_Height(0),
-    m_pBackbuffer(0)
+    m_pPrevBackbuffer(0),
+    m_pPrevDepthStencil(0)
 {
     ZeroMemory(&m_Viewport, sizeof(D3D10_VIEWPORT));
     Vector4(0.f, 0.f, 0.f, 0.f).ToFloat4(m_ClearColor);
@@ -35,9 +36,9 @@ DeferredRenderer::~DeferredRenderer(void)
 	delete m_pScreenMesh;
 }
 
-void DeferredRenderer::Init(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer)
+void DeferredRenderer::Init(UINT width, UINT height)
 {
-    OnResized(width, height, pBackbuffer);
+    OnResized(width, height);
 
 	m_pEffect = ContentManager::GetSingleton()->LoadEffect<DeferredPostEffect>(_T("postdeferred.fx"));
 
@@ -70,7 +71,7 @@ void DeferredRenderer::OnResize()
         SafeRelease(m_pSRV[i]);
     SafeRelease(m_pDepthDSV);
 }
-void DeferredRenderer::OnResized(UINT width, UINT height, ID3D10RenderTargetView* pBackbuffer)
+void DeferredRenderer::OnResized(UINT width, UINT height)
 {
     ASSERT(m_pDepthDSV == 0 && m_RenderTargets[0] == 0 && m_pSRV[0] == 0, _T("OnResize() must be called first!"));
 
@@ -83,8 +84,6 @@ void DeferredRenderer::OnResized(UINT width, UINT height, ID3D10RenderTargetView
     m_Viewport.Height = m_Height;
     m_Viewport.MinDepth = 0.f;
     m_Viewport.MaxDepth = 1.f;
-
-    m_pBackbuffer = pBackbuffer;
 
     CreateColorMap(DeferredRenderMap_Color, DXGI_FORMAT_R8G8B8A8_UNORM); //R G B A
 	CreateColorMap(DeferredRenderMap_Normal, DXGI_FORMAT_R16G16B16A16_FLOAT); //X Y Z Spec
@@ -103,7 +102,7 @@ UINT DeferredRenderer::GetBackbufferHeight() const
 }
 ID3D10RenderTargetView* DeferredRenderer::GetBackbuffer() const
 {
-    return m_pBackbuffer;
+    return m_pPrevBackbuffer;
 }
 ID3D10DepthStencilView* DeferredRenderer::GetDepthbuffer() const
 {
@@ -177,14 +176,16 @@ void DeferredRenderer::CreateDepthMap()
 }
 
 
-void DeferredRenderer::Begin() const
+void DeferredRenderer::Begin()
 { 
+    m_pDevice->OMGetRenderTargets(1, &m_pPrevBackbuffer, &m_pPrevDepthStencil);
+
     m_pDevice->OMSetRenderTargets(MAXRENDERTARGETS, m_RenderTargets, m_pDepthDSV);
     m_pDevice->RSSetViewports(1, &m_Viewport);
 
     m_pDevice->ClearDepthStencilView(m_pDepthDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
 
-    float c[4] = { 0, 0, 0, 1};
+    float c[4] = { 0, 0, 0, 1 };
     for (int i = 0; i < MAXRENDERTARGETS; ++i)
         m_pDevice->ClearRenderTargetView(m_RenderTargets[i], c);
 }
@@ -212,20 +213,22 @@ inline D3D10_RECT CalcScissorRect(const Vector3& center, float length, const Mat
 
     return r;
 }
-void DeferredRenderer::End(const RenderContext* pRenderContext) const
+void DeferredRenderer::End(const RenderContext* pRenderContext)
 { 
-    ASSERT(m_pBackbuffer != 0 && m_pDepthDSV != 0);
-    m_pDevice->OMSetRenderTargets(1, &m_pBackbuffer, NULL); //depth = 0, no depthbuffer needed in postprocessing
+    ASSERT(m_pPrevBackbuffer != 0, _T("Begin has not been called or backbuffer got lost"));
+    ASSERT(m_pDepthDSV != 0);
+    m_pDevice->OMSetRenderTargets(1, &m_pPrevBackbuffer, NULL); //depth = 0, no depthbuffer needed in postprocessing
     m_pDevice->RSSetViewports(1, &m_Viewport);
 
     //Clear Backbuffer
     float c[4] = { 0, 0, 0, 1 };
-    m_pDevice->ClearRenderTargetView(m_pBackbuffer, c);
+    m_pDevice->ClearRenderTargetView(m_pPrevBackbuffer, c);
 
     //Set vars needed for UNLIT && LIT
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
     m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());	
 	
+#pragma region LightMode LIT
 	if(m_LightMode == LIGHT_MODE_LIT)
 	{
         //Set vars needed for LIT
@@ -299,12 +302,19 @@ void DeferredRenderer::End(const RenderContext* pRenderContext) const
 
 	    m_pDevice->RSSetScissorRects(0, NULL);
 	}
+#pragma endregion
+#pragma region LightMode UNLIT
 	else
 	{
 		m_pEffect->SetTechnique("tech_UNLIT");
 		m_pScreenMesh->Draw();
 	}
+#pragma endregion
 
+    m_pDevice->OMSetRenderTargets(1, &m_pPrevBackbuffer, m_pPrevDepthStencil);
+
+    m_pPrevBackbuffer = 0;
+    m_pPrevDepthStencil = 0;
 	m_pEffect->SetColorMap(0);
 	m_pEffect->SetNormalSpecMap(0);
 	m_pEffect->SetPosGlossMap(0);

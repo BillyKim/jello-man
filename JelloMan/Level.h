@@ -7,6 +7,9 @@
 #include "TestObject2.h"
 #include "Blox2D.h"
 #include "RenderContext.h"
+#include "PostProcessor.h"
+#include "EdgeDetectionPostEffect.h"
+
 
 class Level
 {
@@ -30,6 +33,9 @@ private:
 	ID3D10Device* m_pDXDevice;
     DeferredRenderer* m_pDeferredRenderer;
     ForwardRenderer* m_pForwardRenderer;
+    PostProcessor* m_pPostProcessor;
+
+    EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
 
     TestObject* m_pTestObject;
     TestObject2* m_pTestObject2;

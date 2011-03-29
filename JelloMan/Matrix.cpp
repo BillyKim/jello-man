@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include "Vector3.h"
 
 Matrix::Matrix(void): m_Matrix()
 {
@@ -19,12 +20,66 @@ Matrix::Matrix(const float* mat): m_Matrix(mat)
 Matrix::Matrix(const D3DXMATRIX& mat): m_Matrix(mat)
 {
 }
+Matrix::Matrix(const NxMat34& mat)
+{
+    mat.getColumnMajor44(m_Matrix);
+}
+
+
+Matrix Matrix::CreateTranslation(const Vector3& v)
+{
+    Matrix m;
+    D3DXMatrixTranslation(&m.m_Matrix, v.X, v.Y, v.Z);
+    return m;
+}
+Matrix Matrix::CreateRotationX(float f)
+{
+    Matrix m;
+    D3DXMatrixRotationX(&m.m_Matrix, f);
+    return m;
+}
+Matrix Matrix::CreateRotationY(float f)
+{
+    Matrix m;
+    D3DXMatrixRotationY(&m.m_Matrix, f);
+    return m;
+}
+Matrix Matrix::CreateRotationZ(float f)
+{
+    Matrix m;
+    D3DXMatrixRotationZ(&m.m_Matrix, f);
+    return m;
+}
+Matrix Matrix::CreateScale(float f)
+{
+    Matrix m;
+    D3DXMatrixScaling(&m.m_Matrix, f, f, f);
+    return m;
+}
+Matrix Matrix::CreateScale(const Vector3& f)
+{
+    Matrix m;
+    D3DXMatrixScaling(&m.m_Matrix, f.X, f.Y, f.Z);
+    return m;
+}
+
+
 Matrix::Matrix(const Matrix& mat): m_Matrix(mat)
 {
 }
 Matrix& Matrix::operator=(const Matrix& mat)
 {
     m_Matrix = mat.m_Matrix;
+    return *this;
+}
+Matrix& Matrix::operator=(const NxMat34& mat)
+{
+    mat.getColumnMajor44(m_Matrix);
+    return *this;
+}
+Matrix& Matrix::operator=(const D3DXMATRIX& mat)
+{
+    m_Matrix = mat;
     return *this;
 }
 

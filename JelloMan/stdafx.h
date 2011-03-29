@@ -43,7 +43,7 @@ struct LocalAssert \
     { \
 		if ( !isOK ) \
         { \
-			cout << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
+			tcout << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
 			__asm { int 3 } \
 		} \
 	} \
