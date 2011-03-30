@@ -12,6 +12,8 @@ public:
 	Color(const Vector3& rgb, float a = 1.0f);
 	explicit Color(const D3DXCOLOR& color);
 
+    ~Color() {};
+
 	//Copy en assignment
 	Color(const Color& rgba);
 	Color& operator=(const Color& rgba);

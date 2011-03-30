@@ -19,6 +19,9 @@ public:
 	Vector2(const Vector2& v);
 	Vector2& operator=(const Vector2& v);
 
+    //Destructor
+    ~Vector2() {}
+
 	//---Getters--------->
 	float Length() const; 
 	D3DXVECTOR2 ToD3DVector2() const;

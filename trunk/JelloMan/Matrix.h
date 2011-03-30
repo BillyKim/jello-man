@@ -33,7 +33,8 @@ public:
     //Static
     static const Matrix Identity;
 
-	virtual ~Matrix(void);
+    //Destructor
+	~Matrix(void);
 
     // casting operators
     operator float*();
