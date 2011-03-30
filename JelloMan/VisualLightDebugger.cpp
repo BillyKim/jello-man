@@ -247,8 +247,8 @@ void VisualLightDebugger::Draw()
 		SafeDelete(m_pPLightHitRects[i]);
 		m_pPLightHitRects[i] = new HitRegion(	
 			HitRegion::TYPE_ELLIPSE,
-			static_cast<float>(pos2D.x),
-			static_cast<float>(pos2D.y), 
+			static_cast<int>(pos2D.x),
+			static_cast<int>(pos2D.y), 
 			static_cast<int>(m_pPointLightBitmaps[0]->GetSize().width / (16 * l)),
 			static_cast<int>(m_pPointLightBitmaps[0]->GetSize().height / (16 * l)));
 
@@ -293,8 +293,8 @@ void VisualLightDebugger::Draw()
 		SafeDelete(m_pSLightHitRects[i]);
 		m_pSLightHitRects[i] = new HitRegion(	
 			HitRegion::TYPE_ELLIPSE,
-			static_cast<float>(pos2D.x),
-			static_cast<float>(pos2D.y), 
+			static_cast<int>(pos2D.x),
+			static_cast<int>(pos2D.y), 
 			static_cast<int>(m_pPointLightBitmaps[0]->GetSize().width / (16 * l)),
 			static_cast<int>(m_pPointLightBitmaps[0]->GetSize().height / (16 * l)));
 
