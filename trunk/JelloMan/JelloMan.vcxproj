@@ -83,6 +83,7 @@
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="CookingStream.h" />
@@ -108,6 +109,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelMesh.h" />
+    <ClInclude Include="MoveGizmo.h" />
     <ClInclude Include="PhongEffect.h" />
     <ClInclude Include="PhysX.h" />
     <ClInclude Include="PhysXBox.h" />
@@ -117,6 +119,7 @@
     <ClInclude Include="PostProcessEffect.h" />
     <ClInclude Include="PostProcessor.h" />
     <ClInclude Include="RenderContext.h" />
+    <ClInclude Include="RotateGizmo.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
@@ -129,6 +132,7 @@
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="vertex.h" />
+    <ClInclude Include="VisualLightDebugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
@@ -136,6 +140,7 @@
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
     <ClCompile Include="CookingStream.cpp" />
@@ -159,6 +164,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelMesh.cpp" />
+    <ClCompile Include="MoveGizmo.cpp" />
     <ClCompile Include="PhongEffect.cpp" />
     <ClCompile Include="PhysX.cpp" />
     <ClCompile Include="PhysXBox.cpp" />
@@ -168,6 +174,7 @@
     <ClCompile Include="PostProcessEffect.cpp" />
     <ClCompile Include="PostProcessor.cpp" />
     <ClCompile Include="RenderContext.cpp" />
+    <ClCompile Include="RotateGizmo.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
@@ -180,6 +187,7 @@
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="vertex.cpp" />
+    <ClCompile Include="VisualLightDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lights.fx" />

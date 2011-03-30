@@ -92,6 +92,11 @@ void Blox2D::SetFont(tstring const& fontName, bool bold, bool italic, float size
             );
 }
 
+void Blox2D::SetFont(IDWriteTextFormat* textFormat)
+{
+	m_pTextFormat = textFormat;
+}
+
 void Blox2D::SetTransform(D2D1_MATRIX_3X2_F transform)
 {
 	m_pRenderTarget->SetTransform(transform);
@@ -322,19 +327,29 @@ void Blox2D::ShowFPS(float dTime, bool showGraph, float delayInterval)
 		SetColor(255,0,0,0.5f);
 		for (unsigned int i = 0; i < m_fpsHistory.size()-1; ++i)
 		{
-			DrawLine((GetWindowSize().width-5)-(i*4),45-(m_fpsHistory.at(i)/2),(GetWindowSize().width-5)-((i+1)*4),45-(m_fpsHistory.at(i+1)/2),2.0f);
+			DrawLine(
+				static_cast<int>((GetWindowSize().width-5)-(i*4)),
+				static_cast<int>(45-(m_fpsHistory.at(i)/2)),
+				static_cast<int>((GetWindowSize().width-5)-((i+1)*4)),
+				static_cast<int>(45-(m_fpsHistory.at(i+1)/2)),
+				2.0f);
 		}
-		DrawString(_T("fps"),GetWindowSize().width-128,10);
+		DrawString(_T("fps"),static_cast<int>(GetWindowSize().width-128),10);
 
 		SetColor(255,255,0,0.5f);
 		for (unsigned int i = 0; i < m_dtimeHistory.size()-1; ++i)
 		{
-			DrawLine((GetWindowSize().width-5)-(i*4),static_cast<int>((45-(m_dtimeHistory.at(i)/2))),((GetWindowSize().width-5)-(i+1)*4),static_cast<int>((45-(m_dtimeHistory.at(i+1)/2))),2.0f);
+			DrawLine(
+				static_cast<int>((GetWindowSize().width-5)-(i*4)),
+				static_cast<int>((45-(m_dtimeHistory.at(i)/2))),
+				static_cast<int>(((GetWindowSize().width-5)-(i+1)*4)),
+				static_cast<int>((45-(m_dtimeHistory.at(i+1)/2))),
+				2.0f);
 		}
-		DrawString(_T("dt"),GetWindowSize().width-122,25);	
+		DrawString(_T("dt"),static_cast<int>(GetWindowSize().width-122),25);	
 
 		SetColor(43,43,43,0.5f);
-		DrawRect(GetWindowSize().width-105,5,100,40);
+		DrawRect(static_cast<int>(GetWindowSize().width-105),5,100,40);
 	}
 }
 
@@ -467,6 +482,50 @@ void Blox2D::DrawBitmap(Bitmap* bitmap, int x, int y, float opacity, int width, 
 		m_pRenderTarget->DrawBitmap(info.bitmap,rect,opacity);
 }
 
+void Blox2D::DrawRoundRect(int x, int y, int width, int height, int radius, float strokeSize) const
+{
+	D2D1_ROUNDED_RECT roundRect;
+	D2D1_RECT_F rect;
+
+	rect.left = static_cast<float>(x);
+	rect.right = static_cast<float>(x + width);
+	rect.top = static_cast<float>(y);
+	rect.bottom = static_cast<float>(y + height);
+
+	roundRect.radiusX = static_cast<float>(radius);
+	roundRect.radiusY = static_cast<float>(radius);
+	roundRect.rect = rect;
+
+	m_pRenderTarget->DrawRoundedRectangle(roundRect, m_pColorBrush, strokeSize);
+}
+
+void Blox2D::DrawRoundRect(D2D1_ROUNDED_RECT roundRect, float strokeSize) const
+{
+	m_pRenderTarget->DrawRoundedRectangle(roundRect, m_pColorBrush, strokeSize);
+}
+
+void Blox2D::FillRoundRect(int x, int y, int width, int height, int radius) const
+{
+	D2D1_ROUNDED_RECT roundRect;
+	D2D1_RECT_F rect;
+
+	rect.left = static_cast<float>(x);
+	rect.right = static_cast<float>(x + width);
+	rect.top = static_cast<float>(y);
+	rect.bottom = static_cast<float>(y + height);
+
+	roundRect.radiusX = static_cast<float>(radius);
+	roundRect.radiusY = static_cast<float>(radius);
+	roundRect.rect = rect;
+
+	m_pRenderTarget->FillRoundedRectangle(roundRect, m_pColorBrush);
+}
+
+void Blox2D::FillRoundRect(D2D1_ROUNDED_RECT roundRect) const
+{
+	m_pRenderTarget->FillRoundedRectangle(roundRect, m_pColorBrush);
+}
+
 HRESULT Blox2D::LoadBitmapFromFile(
     PCWSTR uri,
     UINT destinationWidth,
@@ -591,62 +650,46 @@ HRESULT Blox2D::LoadBitmapFromFile(
 //-----------------------------------------------------------------
 // HitRegion Class
 //-----------------------------------------------------------------
-
-HitRegion::HitRegion()	:	m_pHitRect(0),
-							m_pTransformedGeometry(0)
-{
-	m_pHitRect = NULL;
-
-	m_Type = 0;
-	m_Width = 0;
-	m_Height = 0;
-
-	m_CurrentPos.x = 0.0f;
-	m_CurrentPos.y = 0.0f;
-
-	m_matWorld.Identity();
-}
-
-HitRegion::HitRegion(int type, int x, int y, int width, int height)	:	m_pHitRect(0),
+HitRegion::HitRegion(int type, int x, int y, int width, int height)	:	m_pGeometry(0),
 																		m_pTransformedGeometry(0)
 {
 	m_Type = type;
 	m_Width = width;
 	m_Height = height;
 
-	m_CurrentPos.x = x;
-	m_CurrentPos.y = y;
+	m_CurrentPos.x = static_cast<float>(x);
+	m_CurrentPos.y = static_cast<float>(y);
 
 	if (type == TYPE_RECTANGLE)
 	{
-		ID2D1RectangleGeometry* RG = dynamic_cast<ID2D1RectangleGeometry*>(m_pHitRect);
+		ID2D1RectangleGeometry* RG = dynamic_cast<ID2D1RectangleGeometry*>(m_pGeometry);
 
 		BLOX_2D->GetFactory()->CreateRectangleGeometry(
 		RectF(0,0,(float)(width),(float)(height)),&RG);
 
-		SafeRelease(m_pHitRect);
-		m_pHitRect = RG;
+		SafeRelease(m_pGeometry);
+		m_pGeometry = RG;
 	}
 	else if (type == TYPE_ELLIPSE)
 	{
-		ID2D1EllipseGeometry* EG = dynamic_cast<ID2D1EllipseGeometry*>(m_pHitRect);
+		ID2D1EllipseGeometry* EG = dynamic_cast<ID2D1EllipseGeometry*>(m_pGeometry);
 
 		BLOX_2D->GetFactory()->CreateEllipseGeometry(
 		Ellipse(Point2F(0,0),(float)width,(float)height),&EG);
 
-		SafeRelease(m_pHitRect);
-		m_pHitRect = EG;
+		SafeRelease(m_pGeometry);
+		m_pGeometry = EG;
 	}
 
 	SetPosition(x,y);
 }
 
-HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)	:	m_pHitRect(0),
+HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)	:	m_pGeometry(0),
 																		m_pTransformedGeometry(0)
 {
 	if (type == TYPE_POLYGON)
 	{
-		ID2D1PathGeometry* PG = dynamic_cast<ID2D1PathGeometry*>(m_pHitRect);
+		ID2D1PathGeometry* PG = dynamic_cast<ID2D1PathGeometry*>(m_pGeometry);
 
 		BLOX_2D->GetFactory()->CreatePathGeometry(&PG);
 
@@ -662,8 +705,8 @@ HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)	:	m_pHitRect
 		pSink->Close();
 		SafeRelease(pSink);
 
-		SafeDelete(m_pHitRect);
-		m_pHitRect = PG;
+		SafeDelete(m_pGeometry);
+		m_pGeometry = PG;
 
 		SetPosition(0,0);
 	}
@@ -671,7 +714,7 @@ HitRegion::HitRegion(int type, D2D1_POINT_2F* points, int nrPoints)	:	m_pHitRect
 
 HitRegion::~HitRegion()
 {
-	SafeRelease(m_pHitRect);
+	SafeRelease(m_pGeometry);
 	SafeRelease(m_pTransformedGeometry);
 }
 
@@ -850,7 +893,7 @@ bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
 
 	D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-	m_pHitRect->CompareWithGeometry(hitRect->m_pHitRect,Matrix3x2F::Identity(),0.0f,&result);
+	m_pGeometry->CompareWithGeometry(hitRect->m_pGeometry,Matrix3x2F::Identity(),0.0f,&result);
 
 	if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return false;
 	else return true;
@@ -1021,14 +1064,14 @@ D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
 
 	D2D1_GEOMETRY_RELATION result = D2D1_GEOMETRY_RELATION_UNKNOWN;
 
-	m_pHitRect->CompareWithGeometry(hitRect->m_pHitRect,Matrix3x2F::Identity(),&result);
+	m_pGeometry->CompareWithGeometry(hitRect->m_pGeometry,Matrix3x2F::Identity(),&result);
 
 	if (result == D2D1_GEOMETRY_RELATION_DISJOINT || result == D2D1_GEOMETRY_RELATION_UNKNOWN) return Point2F(-999999,-999999);
 	else
 	{
 		pPathGeometryUnion->Open(&pGeometrySink);
 
-		m_pHitRect->CombineWithGeometry(hitRect->m_pHitRect,D2D1_COMBINE_MODE_UNION,Matrix3x2F::Identity(),NULL,pGeometrySink);
+		m_pGeometry->CombineWithGeometry(hitRect->m_pGeometry,D2D1_COMBINE_MODE_UNION,Matrix3x2F::Identity(),NULL,pGeometrySink);
 
 		pGeometrySink->Close();
 		SafeRelease(pGeometrySink);
@@ -1062,13 +1105,13 @@ D2D1_RECT_F HitRegion::GetDimension()
 // setters
 void HitRegion::SetPosition(int x, int y)
 {
-	Matrix3x2F temp = Matrix3x2F::Translation(x,y);
+	Matrix3x2F temp = Matrix3x2F::Translation(static_cast<float>(x),static_cast<float>(y));
 
 	SafeRelease(m_pTransformedGeometry);
-	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pGeometry,temp,&m_pTransformedGeometry);
 
-	m_CurrentPos.x = x;
-	m_CurrentPos.y = y;
+	m_CurrentPos.x = static_cast<float>(x);
+	m_CurrentPos.y = static_cast<float>(y);
 }
 
 void HitRegion::SetPosition(D2D1_POINT_2F pos)
@@ -1076,7 +1119,7 @@ void HitRegion::SetPosition(D2D1_POINT_2F pos)
 	Matrix3x2F temp = Matrix3x2F::Translation(pos.x,pos.y);
 
 	SafeRelease(m_pTransformedGeometry);
-	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pGeometry,temp,&m_pTransformedGeometry);
 
 	m_CurrentPos.x = pos.x;
 	m_CurrentPos.y = pos.y;
@@ -1087,7 +1130,7 @@ void HitRegion::Move(int x, int y)
 	Matrix3x2F temp = Matrix3x2F::Translation(m_CurrentPos.x + x, m_CurrentPos.y + y);
 
 	SafeRelease(m_pTransformedGeometry);
-	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pGeometry,temp,&m_pTransformedGeometry);
 
 	m_CurrentPos.x += x;
 	m_CurrentPos.y += y;
@@ -1108,7 +1151,7 @@ void HitRegion::SetSize(int width, int height)
                     );
 
 	SafeRelease(m_pTransformedGeometry);
-	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pHitRect,temp,&m_pTransformedGeometry);
+	BLOX_2D->GetFactory()->CreateTransformedGeometry(m_pGeometry,temp,&m_pTransformedGeometry);
 
 	/*if (m_Type == TYPE_RECTANGLE)
 		BLOX_2D->GetFactory()->CreateRectangleGeometry(
@@ -1139,8 +1182,16 @@ void HitRegion::Draw(bool fill)
 	}
 	else if (m_Type == TYPE_ELLIPSE)
 	{
-		if (fill) BLOX_2D->FillEllipse(rect.left+((rect.right-rect.left)/2),rect.top+((rect.bottom-rect.top)/2),(rect.right-rect.left)/2,(rect.bottom-rect.top)/2);
-		else BLOX_2D->DrawEllipse(rect.left+((rect.right-rect.left)/2),rect.top+((rect.bottom-rect.top)/2),rect.right-rect.left,rect.bottom-rect.top);
+		if (fill) BLOX_2D->FillEllipse(
+			static_cast<int>(rect.left+((rect.right-rect.left)/2)),
+			static_cast<int>(rect.top+((rect.bottom-rect.top)/2)),
+			static_cast<int>((rect.right-rect.left)/2),
+			static_cast<int>((rect.bottom-rect.top)/2));
+		else BLOX_2D->DrawEllipse(
+			static_cast<int>(rect.left+((rect.right-rect.left)/2)),
+			static_cast<int>(rect.top+((rect.bottom-rect.top)/2)),
+			static_cast<int>(rect.right-rect.left),
+			static_cast<int>(rect.bottom-rect.top));
 	}
 	else if (m_Type == TYPE_POLYGON)
 	{
@@ -1247,26 +1298,6 @@ bool Bitmap::Exists()
 //-----------------------------------------------------------------
 
 // constructor
-Button::Button()	:	m_bClicked(false),
-						m_pNormalBitmap(0),
-						m_pHoverBitmap(0),
-						m_pDownBitmap(0),
-						m_pDeactivatedBitmap(0),
-						m_pDeactivatedHoverBitmap(0),
-						m_pDeactivatedDownBitmap(0)
-{
-	m_Pos.x = 0;
-	m_Pos.y = 0;
-
-	m_Size.width = 0;
-	m_Size.height = 0;
-
-	m_State = STATE_DEACTIVATED;
-	m_Mode = MODE_MOUSE;
-
-	m_Opacity = 1.0f;
-}
-
 Button::Button(int posX, int posY, int width, int height, bool bToggleable)	:	m_bClicked(false),
 																				m_pNormalBitmap(0),
 																				m_pHoverBitmap(0),
@@ -1470,9 +1501,218 @@ void Button::SetPosition(int x, int y)
 
 	m_pHitRect->SetPosition(Point2F((float)x,(float)y));
 }
+void Button::Deactivate()
+{
+	m_State = STATE_DEACTIVATED;
+	m_bActivated = false;
+}
 
 // getters
 bool Button::Clicked()
 {
 	return m_bClicked;
+}
+
+//-----------------------------------------------------------------
+// TextBox Class
+//-----------------------------------------------------------------
+
+// constructors
+TextBox::TextBox(int posX, int posY, int width, int height)	:	m_Width(width),
+																m_Height(height),
+																m_Pos(Point2F(static_cast<float>(posX), static_cast<float>(posY))),
+																m_pHitRegion(0),
+																m_bHasFocus(false),
+																m_Text(_T("")),
+																m_NewText(_T("")),
+																m_pTextFormat(0),
+																m_BackColor(ColorF(255,255,255)),
+																m_bClick(false),
+																m_TextColor(ColorF(0,0,0)),
+																m_Time(0)
+{
+	m_pHitRegion = new HitRegion(HitRegion::TYPE_RECTANGLE, posX, posY, width, height);
+
+	SetFont(_T("Verdana"), false,false, 12);
+
+	m_Timer.Reset();
+}
+
+// destructor
+TextBox::~TextBox()
+{
+	delete m_pHitRegion;
+
+	SafeRelease(m_pTextFormat);
+}
+
+// general
+void TextBox::Show()
+{
+	Tick();
+
+	BLOX_2D->SetAntiAliasing(false);
+
+	BLOX_2D->SetColor(m_BackColor);
+	BLOX_2D->FillRect(static_cast<int>(m_Pos.x), static_cast<int>(m_Pos.y), m_Width, m_Height);
+
+	BLOX_2D->SetColor(0,0,0,0.5f);
+	BLOX_2D->DrawRect(static_cast<int>(m_Pos.x), static_cast<int>(m_Pos.y), m_Width, m_Height);
+
+//	BLOX_2D->SetFont(m_pTextFormat);
+
+	/*DWRITE_TRIMMING lol;
+	 DWRITE_TRIMMING_GRANULARITY f*/
+
+	if (!m_bHasFocus)
+	{
+		BLOX_2D->SetColor(m_TextColor);
+
+		BLOX_2D->SetFont(_T("Verdana"), false,false, 12);
+		BLOX_2D->DrawString(
+		m_Text,
+		RectF(m_Pos.x+2, m_Pos.y, m_Pos.x + m_Width-4, m_Pos.y + m_Height),
+		Blox2D::HORIZONTAL_ALIGN_LEFT,
+		Blox2D::VERTICAL_ALIGN_MIDDLE);
+	}
+	else
+	{
+		BLOX_2D->SetColor(120,120,255);
+		BLOX_2D->DrawRect(static_cast<int>(m_Pos.x+1), static_cast<int>(m_Pos.y+1), m_Width-2, m_Height-2);
+
+		BLOX_2D->SetColor(m_TextColor);
+
+		tstringstream strm;
+		strm << m_NewText;
+
+		if (m_Time >= 0.5f)
+		{
+			strm << _T("|");
+
+			if (m_Time >= 1.0f)
+				m_Time = 0.0f;
+		}
+
+		BLOX_2D->SetFont(_T("Verdana"), false,false, 12);
+		BLOX_2D->DrawString(
+		strm.str(),
+		RectF(m_Pos.x+2, m_Pos.y, m_Pos.x + m_Width-4, m_Pos.y + m_Height),
+		Blox2D::HORIZONTAL_ALIGN_LEFT,
+		Blox2D::VERTICAL_ALIGN_MIDDLE);
+	}
+
+	BLOX_2D->SetAntiAliasing(true);
+}
+
+void TextBox::Tick()
+{
+	m_Timer.Tick();
+
+	if (CONTROLS->LeftMBDown())
+		m_bClick = true;
+
+	if (CONTROLS->LeftMBUp())
+	{
+		if (m_bClick)
+		{
+			if (m_pHitRegion->HitTest(CONTROLS->GetMousePos()))
+				m_bHasFocus = true;
+			else
+				m_bHasFocus = false;
+
+			m_bClick = false;
+		}
+	}
+
+	if (m_bHasFocus)
+	{
+		m_Time += m_Timer.GetDeltaTime();
+
+		tstringstream stream;
+		stream.str(_T(""));
+
+		if (CONTROLS->IsKeyPressed(VK_NUMPAD0))
+			stream << "0";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD1))
+			stream << "1";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD2))
+			stream << "2";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD3))
+			stream << "3";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD4))
+			stream << "4";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD5))
+			stream << "5";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD6))
+			stream << "6";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD7))
+			stream << "7";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD8))
+			stream << "8";
+		else if (CONTROLS->IsKeyPressed(VK_NUMPAD9))
+			stream << "9";
+		else if (CONTROLS->IsKeyPressed(VK_DECIMAL) || CONTROLS->IsKeyPressed('.'))
+			stream << _T(".");
+
+		else if (CONTROLS->IsKeyPressed(VK_BACK))
+		{
+			int lastChar = m_NewText.length();
+
+			if (lastChar > 1)
+				m_NewText.erase(lastChar-1,lastChar-1);
+			else
+				m_NewText = _T("");
+		}
+
+		if (stream.str() != _T(""))
+		{
+			tstringstream streamFinal;
+			streamFinal << m_NewText << stream.str();
+			m_NewText = streamFinal.str();
+		}
+
+		if (CONTROLS->IsKeyPressed(VK_RETURN))
+		{
+			m_Text = m_NewText;
+
+			//m_bHasFocus = false;
+		}
+	}
+	else
+		m_NewText = m_Text;
+}
+
+// getters
+
+// setters
+void TextBox::SetBackColor(unsigned int R, unsigned int G, unsigned int B)
+{
+	m_BackColor = ColorF(static_cast<float>(R), static_cast<float>(G), static_cast<float>(B));
+}
+
+void TextBox::SetTextColor(unsigned int R, unsigned int G, unsigned int B)
+{
+	m_TextColor = ColorF(static_cast<float>(R), static_cast<float>(G), static_cast<float>(B));
+}
+
+void TextBox::SetFont(tstring fontName, bool bold, bool italic, float size)
+{
+	SafeRelease(m_pTextFormat);
+
+	DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
+	DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+
+	if (bold) weight = DWRITE_FONT_WEIGHT_BOLD;
+	if (italic) style = DWRITE_FONT_STYLE_ITALIC;
+
+	BLOX_2D->GetWriteFactory()->CreateTextFormat(
+		fontName.c_str(),
+        NULL,
+        weight,
+        style,
+        DWRITE_FONT_STRETCH_NORMAL,
+        size,
+        L"", //locale
+        &m_pTextFormat
+        );
 }

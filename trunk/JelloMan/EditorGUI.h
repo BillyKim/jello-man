@@ -6,14 +6,10 @@
 #include "Camera.h"
 #include "RenderContext.h"
 #include "LightController.h"
-
-enum TYPE
-{
-	TYPE_POINTLIGHT = 0,
-	TYPE_SPOTLIGHT = 1,
-	TYPE_DIRECTIONALLIGHT = 2,
-	TYPE_MODEL = 3
-};
+#include "VisualLightDebugger.h"
+#include "ColorPicker.h"
+#include "MoveGizmo.h"
+#include "RotateGizmo.h"
 
 class EditorGUI
 {
@@ -28,15 +24,6 @@ public:
 	void Draw();
 	void Tick(const RenderContext* pRenderContext);
 
-	void VisualPointLightDebugger();
-	void VisualSpotLightDebugger();
-
-	void ColorPicker(Color& color);
-
-	void MoveGizmo(Vector3& position, TYPE type, int id);
-
-	void RotateGizmo(Vector3& position, TYPE type, int id);
-
 	// GETTERS
 	Button* GetLightButton() const
 	{ return m_pLightButton; }
@@ -47,10 +34,6 @@ public:
 	bool EditorMode() const;
 
 private:
-
-	Vector3 GetHue(int i);
-	Vector3 HsvToRgb(double h, double S, double V);
-	void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
 
 	// DATAMEMBERS
 
@@ -74,50 +57,23 @@ private:
 	Button* m_pRotateButton;
 	vector<Bitmap*> m_pRotateButtonBitmaps;
 
-	vector<Bitmap*> m_pPointLightBitmaps;
-	vector<Bitmap*> m_pSpotLightBitmaps;
-
 	Bitmap* m_pCameraBitmap;
 
 	bool m_bUsingCamera;
 	bool m_bGameModeDown;
 	bool m_bEditorModeDown;
-	bool m_bPreviousColorSet;
+
+	bool m_bMoveable;
+	bool m_bRotateable;
 
 	int m_GameEditorModeSelect;
 
 	const RenderContext* m_pRenderContext;
 
-	Vector3 m_PreviousColor;
-	Vector3 m_CurrentColor;
-	Vector3 m_HueColor;
-	Point2D m_ColorPickerPos;
-	Point2D m_ColorPickerSelectPos;
-	int m_Hue;
-
-	// VISUAL POINTLIGHT DEBUGGER
-	vector<HitRegion*> m_pPLightHitRects;
-	vector<bool> m_PLightsSelected;
-
-	vector<D3DXVECTOR3> m_OldPointLightPos;
-
-	// VISUAL SPOTLIGHT DEBUGGER
-	vector<HitRegion*> m_pSLightHitRects;
-	vector<bool> m_SLightsSelected;
-
-	vector<D3DXVECTOR3> m_OldSpotLightPos;
-
-	// VISUAL LIGHT DEBUGGER
-	bool m_bLockX;
-	bool m_bLockY;
-	bool m_bLockZ;
-	bool m_bMoveable;
-	bool m_bRotateable;
-	bool m_bClick;
-	bool m_bClick2;
-
-	int m_SelectedLights;
-	int m_TotalLights;
+	VisualLightDebugger* m_pLightDebugger;
+	ColorPicker* m_pColorPicker;
+	MoveGizmo* m_pMoveGizmo;
+	RotateGizmo* m_pRotateGizmo;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);
