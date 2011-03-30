@@ -27,6 +27,9 @@ public:
 	Vector3(const Vector3& v);
 	Vector3& operator=(const Vector3& v);
 
+    //Destructor
+    ~Vector3() {}
+
 	//---Getters--------->
 	Vector2 XY() const; 
 	Vector2 XZ() const; 

@@ -15,6 +15,9 @@ public:
 	//Copy en assignment
 	Vector4(const Vector4& v);
 	Vector4& operator=(const Vector4& v);
+    
+    //Destructor
+    ~Vector4() {}
 
 	//---Getters--------->
     Vector3 XYZ() const;
