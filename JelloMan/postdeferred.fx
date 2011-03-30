@@ -91,7 +91,7 @@ float3  PS_Point(VertexShaderOutput input)
 	vLightDir /= dist; //normalize
 	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
 	float3 normal = normalize(normalSpec.xyz);
-	float diff = dot(normal, vLightDir);
+	float diff = sqrt(dot(normal, vLightDir) * 0.5f + 0.5f);
 				
 	clip(diff <= 0? -1 : 1);
 
@@ -105,10 +105,17 @@ float3  PS_Point(VertexShaderOutput input)
 	float3 vCamDir = normalize(vCamPos - posGloss.xyz);
 
 	float y = max(dot(normal, vLightDir), 0);
-	float3 reflect = normalize(normal * y * 2 - vLightDir);
-	float spec = saturate(dot(vCamDir, reflect));
-	spec = pow(spec, posGloss.a * 25.0f);
-	spec *= normalSpec.a;
+	float spec;
+	[branch]
+	if (y > 0)
+	{
+		float3 reflect = normalize(normal * y * 2 - vLightDir);
+		spec = saturate(dot(vCamDir, reflect));
+		spec = pow(spec, posGloss.a * 25.0f);
+		spec *= normalSpec.a;
+	}
+	else
+		spec = 0;
 
 	color += spec * pointLight.Color.rgb;
 
