@@ -40,9 +40,6 @@
     <Filter Include="Content\effect">
       <UniqueIdentifier>{ed9724c6-cf2c-4189-80a1-433d34e625f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Content\Audio">
-      <UniqueIdentifier>{5f47482b-6992-41ce-a100-423aedb4fe34}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine Files\Graphics\GUI">
       <UniqueIdentifier>{cd5725f0-9cd6-41aa-998d-d1f6c055e59e}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,15 @@
     </Filter>
     <Filter Include="Engine Files\Graphics\Effect\post">
       <UniqueIdentifier>{82ac807e-d9c4-4c50-bd9c-473734e12159}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Audio">
+      <UniqueIdentifier>{5f47482b-6992-41ce-a100-423aedb4fe34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\RenderContext">
+      <UniqueIdentifier>{7192422c-243b-4403-a830-25f3530bc0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\Blox2D">
+      <UniqueIdentifier>{af040827-9e5c-4086-b201-909265c52ab7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -141,26 +147,17 @@
     <ClInclude Include="GameConfig.h">
       <Filter>Engine Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Blox2D.h">
-      <Filter>Engine Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Engine Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="TestObject.h">
       <Filter>Game Files</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
       <Filter>Game Files</Filter>
     </ClInclude>
-    <ClInclude Include="RenderContext.h">
-      <Filter>Engine Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="AudioEngine.h">
-      <Filter>Content\Audio</Filter>
+      <Filter>Engine Files\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Sound.h">
-      <Filter>Content\Audio</Filter>
+      <Filter>Engine Files\Audio</Filter>
     </ClInclude>
     <ClInclude Include="ForwardRenderer.h">
       <Filter>Engine Files\Graphics</Filter>
@@ -215,6 +212,27 @@
     </ClInclude>
     <ClInclude Include="CookingStream.h">
       <Filter>Engine Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Engine Files\Graphics\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderContext.h">
+      <Filter>Engine Files\Graphics\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="Blox2D.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualLightDebugger.h">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPicker.h">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveGizmo.h">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateGizmo.h">
+      <Filter>Engine Files\Graphics\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -287,12 +305,6 @@
     <ClCompile Include="GameConfig.cpp">
       <Filter>Engine Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Blox2D.cpp">
-      <Filter>Engine Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Engine Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="vertex.cpp">
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
@@ -302,14 +314,11 @@
     <ClCompile Include="Level.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderContext.cpp">
-      <Filter>Engine Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="AudioEngine.cpp">
-      <Filter>Content\Audio</Filter>
+      <Filter>Engine Files\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Sound.cpp">
-      <Filter>Content\Audio</Filter>
+      <Filter>Engine Files\Audio</Filter>
     </ClCompile>
     <ClCompile Include="ForwardRenderer.cpp">
       <Filter>Engine Files\Graphics</Filter>
@@ -364,6 +373,27 @@
     </ClCompile>
     <ClCompile Include="CookingStream.cpp">
       <Filter>Engine Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Engine Files\Graphics\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderContext.cpp">
+      <Filter>Engine Files\Graphics\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="Blox2D.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualLightDebugger.cpp">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPicker.cpp">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -62,17 +62,10 @@ void Camera::Tick(const float dTime)
 	m_PosWorld += dir * finalSpeed * dTime;
 
 	// change FOV with mousewheel
-	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 10.0f);
+	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 5.0f);
 
 	if (angle != 0)
 	{
-		if (CONTROLS->RightMBDown())
-		{
-			m_FOV += angle;
-
-			BuildProjectionMatrix();
-		}
-
 		m_Speed += angle*500;
 
 		if (m_Speed < 10)
@@ -102,6 +95,18 @@ void Camera::Tick(const float dTime)
 		m_RightWorld = Vector3(rightWorld);
 		m_LookWorld = Vector3(lookWorld);
 		m_UpWorld = Vector3(upWorld);
+
+		if (CONTROLS->IsKeyDown('A'))
+		{
+			m_FOV += 1.0;
+			BuildProjectionMatrix();
+		}
+
+		if (CONTROLS->IsKeyDown('W'))
+		{
+			m_FOV -= 1.0;
+			BuildProjectionMatrix();
+		}
 	}
 	else
 		m_FOV = PiOver4;

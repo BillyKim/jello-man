@@ -6,6 +6,7 @@
 #include "D3DUtil.h"
 #include <vector>
 #include "Controls.h"
+#include "GameTimer.h"
 
 #define BLOX_2D (Blox2D::GetSingleton())
 
@@ -52,6 +53,7 @@ public:
 	void SetColor(int r, int g, int b, float a = 1.0f);
 	void SetColor(D2D1_COLOR_F color);
 	void SetFont(tstring const& fontName, bool bold, bool italic, float size);
+	void SetFont(IDWriteTextFormat* textFormat);
 	void SetTransform(D2D1_MATRIX_3X2_F transform);
 	void ResetTransform();
 
@@ -67,6 +69,7 @@ public:
 	// GETTERS
 	Size2D GetWindowSize() const;
 	ID2D1Factory* GetFactory() const { return m_pD2DFactory; }
+	IDWriteFactory* GetWriteFactory() const { return m_pDWriteFactory; }
 	
 	// DRAW METHODS
 	void DrawGrid(int stepsize, D2D1_RECT_F area) const;
@@ -86,13 +89,16 @@ public:
 	void DrawString(tstring const& text, int x, int y) const;
 	void DrawStringCentered(tstring const& text, int offSetX = 0, int offSetY = 0) const;
 	void DrawString(tstring const& text, D2D1_RECT_F rect, HORIZONTAL_ALIGN textAlignment, VERTICAL_ALIGN paragraphAlignment);
-	//void DrawString(int nr, D2D1_RECT_F rect, TEXT_ALIGNMENT textAlignment, PARAGRAPH_ALIGNMENT paragraphAlignment);
 	void ShowFPS(float dTime, bool showGraph = false, float delayInterval = 1.0f);
 	void FillBlock(int x, int y, int size);
 	void FillBlock(D2D1_POINT_2F coord, int size, D2D1_COLOR_F color1, D2D1_COLOR_F color2);
 	void DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize) const;
 	void FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const;
 	void DrawBitmap(Bitmap* bitmap, int x, int y, float opacity = 1.0f, int width = 0, int height = 0);
+	void DrawRoundRect(int x, int y, int width, int height, int radius, float strokeSize = 1.0f) const;
+	void DrawRoundRect(D2D1_ROUNDED_RECT roundRect, float strokeSize = 1.0f) const;
+	void FillRoundRect(int x, int y, int width, int height, int radius) const;
+	void FillRoundRect(D2D1_ROUNDED_RECT roundRect) const;
 
 private:
 
@@ -130,7 +136,6 @@ class HitRegion
 {
 public:
 	// constructors
-	HitRegion(); // default
 	HitRegion(int type, int x, int y, int width, int height);
 	HitRegion(int type, D2D1_POINT_2F* points, int nrPoints);
 
@@ -165,8 +170,7 @@ public:
 	static const int TYPE_POLYGON = 2;
 
 private:
-	ID2D1Geometry* m_pHitRect;
-
+	ID2D1Geometry* m_pGeometry;
 	ID2D1TransformedGeometry* m_pTransformedGeometry;
 
 	int m_Type;
@@ -234,7 +238,6 @@ public:
 	};
 
 	// constructor
-	Button();
 	Button(int posX, int posY, int width, int height, bool bToggleable = false);
 
 	// destructor
@@ -257,6 +260,7 @@ public:
 	void SetPosition(int x, int y);
 	void SetTransparency(float alpha)
 	{m_Opacity = alpha;}
+	void Deactivate();
 
 	// getters
 	bool Clicked();
@@ -297,4 +301,64 @@ private:
 	bool m_bDown;
 
 	float m_Opacity;
+};
+
+//-----------------------------------------------------------------
+// TextBox Class
+//-----------------------------------------------------------------
+
+class TextBox
+{
+public:
+
+	// constructors
+	TextBox(int posX, int posY, int width, int height);
+
+	// destructor
+	virtual ~TextBox();
+
+	// general
+	void Show();
+
+	// getters
+	tstring GetText() const
+	{ return m_Text; }
+	bool HasFocus() const
+	{ return m_bHasFocus; }
+
+	// setters
+	void SetText(tstring text)
+	{ m_Text = text; }
+	void SetBackColor(unsigned int R, unsigned int G, unsigned int B);
+	void SetTextColor(unsigned int R, unsigned int G, unsigned int B);
+	void SetFont(tstring fontName, bool bold, bool italic, float size);
+	void SetFocus(bool hasFocus)
+	{ m_bHasFocus = hasFocus; }
+
+private:
+
+	// general
+	void Tick();
+	
+	// datamembers
+	bool m_bHasFocus;
+	bool m_bClick;
+
+	GameTimer m_Timer;
+	float m_Time;
+
+	tstring m_Text;
+	tstring m_NewText;
+
+	HitRegion* m_pHitRegion;
+
+	Point2D m_Pos;
+
+	int m_Width;
+	int m_Height;
+
+	IDWriteTextFormat* m_pTextFormat;
+
+	ColorF m_BackColor;
+	ColorF m_TextColor;
 };
