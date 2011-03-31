@@ -57,6 +57,9 @@ bool PhysX::Init(void)
 	//(if debug?)
 	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
 	m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
+    m_pPhysicsSDK->setParameter(NxParameter::NX_DEFAULT_SLEEP_ENERGY, 50000.0f);
+    m_pPhysicsSDK->setParameter(NxParameter::NX_DYN_FRICT_SCALING, 100.0f);
+    m_pPhysicsSDK->setParameter(NxParameter::NX_STA_FRICT_SCALING, 100.0f);
 	//create a scene object
 	NxSceneDesc sceneDesc;
 	sceneDesc.gravity.set(0, -981.0f, 0);
@@ -68,9 +71,9 @@ bool PhysX::Init(void)
 	}
 	// Set default material
 	NxMaterial* defaultMaterial = m_pScene->getMaterialFromIndex(0);
-	defaultMaterial->setRestitution(0.5f);
-	defaultMaterial->setStaticFriction(60.0f);
-	defaultMaterial->setDynamicFriction(20.0f);
+	defaultMaterial->setRestitution(0.3f);
+	defaultMaterial->setStaticFriction(.6f);
+	defaultMaterial->setDynamicFriction(.2f);
 
 	// Create ground plane
 	NxPlaneShapeDesc planeDesc;
@@ -125,7 +128,8 @@ void PhysX::FetchResults(void)
 //	m_Controllers.push_back(c);
 //	return c;
 //}
-NxShape *PhysX::GetClosestShape(NxRay& ray,float distance){
+NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
+{
 	NxRaycastHit hit;
 	NxShape* result = m_pScene->raycastClosestShape(ray,NX_STATIC_SHAPES,hit,1,distance);
 	return result;

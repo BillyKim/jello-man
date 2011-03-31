@@ -128,6 +128,7 @@
     <ClInclude Include="TestObject.h" />
     <ClInclude Include="TestObject2.h" />
     <ClInclude Include="TestPhysXBox.h" />
+    <ClInclude Include="TestPhysXSphere.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Vector2.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="TestObject.cpp" />
     <ClCompile Include="TestObject2.cpp" />
     <ClCompile Include="TestPhysXBox.cpp" />
+    <ClCompile Include="TestPhysXSphere.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Vector2.cpp" />
