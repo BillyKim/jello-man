@@ -10,7 +10,8 @@ GameConfig::GameConfig()	:	m_pGameTitle(new tstring(_T(""))),
 								m_WindowWidth(640),
 								m_Windowheight(480),
 								m_b2DAntiAliasing(false),
-								m_KeyboardLayout(KEYBOARD_LAYOUT_AZERTY)
+								m_KeyboardLayout(KEYBOARD_LAYOUT_AZERTY),
+								m_bUsePhysX(false)
 {
 	// nothing to create
 }

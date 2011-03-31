@@ -58,6 +58,7 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_bInitialized(false)
 ,m_Angle(0)
 ,m_bResize(false)
+,m_pPhysXEngine(0)
 {
 	m_GameTimer.Reset();
 }
@@ -70,6 +71,7 @@ Engine::~Engine()
 	delete BLOX_2D;
 
 	SafeDelete(m_pContentManager);
+	SafeDelete(m_pPhysXEngine);
 
 	if( m_pDXDevice )m_pDXDevice->ClearState();
 
@@ -117,7 +119,7 @@ int Engine::Run()
 
 				if (!m_bInitialized)
 				{					
-					m_pGame->LoadResources(m_pDXDevice);
+					m_pGame->LoadResources(m_pDXDevice, m_pPhysXEngine);
 		
 					#if defined DEBUG || _DEBUG
 					cout << "---------------------------\n";
@@ -169,6 +171,18 @@ void Engine::Initialize()
 
 	#if defined DEBUG || _DEBUG
 	cout << "-Blox2D Engine initialized\n";
+	#endif
+
+	// init physx
+	if (m_pGameConfig->UsingPhysX())
+	{
+		m_pPhysXEngine = new PhysX();
+
+		m_pPhysXEngine->Init();
+	}
+
+	#if defined DEBUG || _DEBUG
+	cout << "-PhysX Engine initialized\n";
 	#endif
 }
 
