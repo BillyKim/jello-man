@@ -45,7 +45,7 @@ void Level::Tick(const float dTime)
 		TestPhysXBox* pTestPhysXBox = new TestPhysXBox(m_pPhysXEngine, m_pRenderContext->GetCamera()->GetPosition());
 		pTestPhysXBox->Init();
 		m_vecTestPhysXBox.push_back(pTestPhysXBox);
-		pTestPhysXBox->AddForce(m_pRenderContext->GetCamera()->GetLook() * 15000);
+		pTestPhysXBox->AddForce(m_pRenderContext->GetCamera()->GetLook() * 150);
 	}
 	m_pCharacter->Tick(dTime);
 	for (int i = 0; i < m_vecTestPhysXBox.size(); ++i)

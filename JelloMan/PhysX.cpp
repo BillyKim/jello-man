@@ -59,7 +59,7 @@ bool PhysX::Init(void)
 	m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
 	//create a scene object
 	NxSceneDesc sceneDesc;
-	sceneDesc.gravity.set(0,-981.0f,0);
+	sceneDesc.gravity.set(0, -981.0f, 0);
 	m_pScene = m_pPhysicsSDK->createScene(sceneDesc);
 	if(!m_pScene)
 	{
@@ -69,8 +69,8 @@ bool PhysX::Init(void)
 	// Set default material
 	NxMaterial* defaultMaterial = m_pScene->getMaterialFromIndex(0);
 	defaultMaterial->setRestitution(0.5f);
-	defaultMaterial->setStaticFriction(0.6f);
-	defaultMaterial->setDynamicFriction(0.2f);
+	defaultMaterial->setStaticFriction(60.0f);
+	defaultMaterial->setDynamicFriction(20.0f);
 
 	// Create ground plane
 	NxPlaneShapeDesc planeDesc;
