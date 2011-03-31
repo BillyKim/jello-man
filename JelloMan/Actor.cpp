@@ -20,12 +20,11 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	//Make Actor
 	NxActorDesc actorDesc;
 	
-	NxBodyDesc bodyDesc;
 	if(moveable == true)
 	{
-		/*bodyDesc.angularDamping	= 0.9f;
-		bodyDesc.linearVelocity = NxVec3(0,0,0);
-		actorDesc.body = &bodyDesc;*/
+		NxBodyDesc bodyDesc;
+		bodyDesc.mass = shape.GetShape()->mass;
+		actorDesc.body = &bodyDesc;		
 	}
 	else 
 	{

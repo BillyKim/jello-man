@@ -1,5 +1,6 @@
 #include "TestObject.h"
 #include "ContentManager.h"
+#include "PhysXMesh.h"
 
 TestObject::TestObject(void): m_pModel(0), m_pEffect(0), m_mtxWorld(Matrix::Identity), m_pDiffuseMap(0), m_pSpecMap(0) ,m_pGlossMap(0)
 {
@@ -10,7 +11,7 @@ TestObject::~TestObject(void)
 {
 }
 
-void TestObject::Init()
+void TestObject::Init(PhysX* pPhysX)
 {
     m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Textures/weapon_diffuse.png"));
     m_pSpecMap = Content->LoadTexture2D(_T("Content/Textures/weapon_spec.png"));
@@ -24,6 +25,9 @@ void TestObject::Init()
     {
         (*it)->SetEffect(m_pEffect);
     }
+
+	PhysXMesh mesh = PhysXMesh(pPhysX, "Content/Models/lvl_opt_physX.nxconcave", 10000);
+    InitActor(pPhysX, mesh, false);
 }
 
 void TestObject::Draw(const RenderContext* pRenderContext)

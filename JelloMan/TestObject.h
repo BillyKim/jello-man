@@ -5,14 +5,16 @@
 #include "Vector4.h"
 #include "Matrix.h"
 #include "RenderContext.h"
+#include "PhysX.h"
+#include "Actor.h"
 
-class TestObject
+class TestObject : public Actor
 {
 public:
     TestObject(void);
     virtual ~TestObject(void);
 
-    void Init();
+    void Init(PhysX* pPhysX);
     void Draw(const RenderContext* pRenderContext);
 
 private:
