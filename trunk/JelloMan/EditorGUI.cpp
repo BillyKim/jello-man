@@ -300,7 +300,7 @@ void EditorGUI::Draw()
 		BLOX_2D->DrawString(_T("Move objects and lights present in the scene."), 20, static_cast<int>(BLOX_2D->GetWindowSize().height) - 16);
 	}
 
-	if (m_Mode == MODE_GAME || m_Mode == MODE_PLAY)
+	if (m_Mode == MODE_GAME)
 	{
 		m_pGameModeButton->SetPosition(20, 7);
 		m_pEditorModeButton->SetPosition(20, 43);
@@ -382,11 +382,11 @@ void EditorGUI::Draw()
 	}
 	else if (m_Mode == MODE_PLAY)
 	{
-		m_pEditorModeButton->SetPosition(20,4);
+		m_pEditorModeButton->SetPosition(20,43);
 		m_pGameModeButton->SetPosition(20,79);
 		m_pPlayModeButton->SetPosition(20,7);
 
-		if (CONTROLS->LeftMBUp() && m_bEditorModeDown)
+		if (CONTROLS->LeftMBUp() && m_bPlayModeDown)
 		{
 			if (m_pEditorModeButton->Hover())
 			{
@@ -402,7 +402,7 @@ void EditorGUI::Draw()
 			}
 		}
 
-		if (CONTROLS->LeftMBDown() && m_bEditorModeDown == true)
+		if (CONTROLS->LeftMBDown() && m_bPlayModeDown == true)
 		{
 			m_pGameModeButton->Show();
 			m_pEditorModeButton->Show();
