@@ -24,6 +24,8 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	{
 		NxBodyDesc bodyDesc;
 		bodyDesc.mass = shape.GetShape()->mass;
+		bodyDesc.angularDamping = 5;
+		bodyDesc.linearDamping = 0;
 		actorDesc.body = &bodyDesc;		
 	}
 	else 
@@ -32,7 +34,6 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	}
 
 	actorDesc.shapes.push_back(shape.GetShape());
-
 	actorDesc.globalPose = static_cast<NxMat34>(m_WorldMatrix);
 
 	m_pActor = m_pPhysX->GetScene()->createActor(actorDesc);
