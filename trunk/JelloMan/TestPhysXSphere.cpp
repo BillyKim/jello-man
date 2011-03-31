@@ -1,23 +1,21 @@
-#include "TestPhysXBox.h"
-#include "PhysXBox.h"
-#include "PhysXMesh.h"
+#include "TestPhysXSphere.h"
+#include "PhysXSphere.h"
 #include "ContentManager.h"
 
-TestPhysXBox::TestPhysXBox(PhysX* pPhysX, const Vector3& pos) : Actor()
+TestPhysXSphere::TestPhysXSphere(PhysX* pPhysX, const Vector3& pos) : Actor()
 {
-    PhysXBox box = PhysXBox(Vector3(50, 50, 50), 1000);
-    //PhysXMesh box(pPhysX, "Content/Models/box50.nxconvex", 1000);
-    InitActor(pPhysX, box, true);
+    PhysXSphere sphere(50.0f, 1000);
+    InitActor(pPhysX, sphere, true);
     Translate(pos);
 }
 
 
-TestPhysXBox::~TestPhysXBox(void)
+TestPhysXSphere::~TestPhysXSphere(void)
 {
 
 }
 
-void TestPhysXBox::Init()
+void TestPhysXSphere::Init()
 {
     m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Textures/weapon_diffuse.png"));
     m_pSpecMap = Content->LoadTexture2D(_T("Content/Textures/weapon_spec.png"));
@@ -25,7 +23,7 @@ void TestPhysXBox::Init()
 
     m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
 
-    m_pModel = Content->LoadModel(_T("Content/Models/box50.binobj"));
+    m_pModel = Content->LoadModel(_T("Content/Models/sphere50.binobj"));
     
     for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
     {
@@ -33,7 +31,7 @@ void TestPhysXBox::Init()
     }
 }
 
-void TestPhysXBox::Draw(const RenderContext* pRenderContext)
+void TestPhysXSphere::Draw(const RenderContext* pRenderContext)
 {
     m_pEffect->SetDiffuseMap(m_pDiffuseMap);
     m_pEffect->SetSpecMap(m_pSpecMap);

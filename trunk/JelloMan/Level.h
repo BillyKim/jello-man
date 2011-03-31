@@ -5,7 +5,6 @@
 #include "ForwardRenderer.h"
 #include "TestObject.h"
 #include "TestObject2.h"
-#include "TestPhysXBox.h"
 #include "Blox2D.h"
 #include "RenderContext.h"
 #include "PostProcessor.h"
@@ -34,7 +33,7 @@ private:
 
     TestObject* m_pTestObject;
     TestObject2* m_pTestObject2;
-	vector<TestPhysXBox*> m_vecTestPhysXBox;
+	vector<Actor*> m_vecActor;
 	Character* m_pCharacter;
 
 	PhysX* m_pPhysXEngine;

@@ -5,11 +5,11 @@
 #include "Texture2D.h"
 #include "RenderContext.h"
 
-class TestPhysXBox : public Actor
+class TestPhysXSphere : public Actor
 {
 public:
-    TestPhysXBox(PhysX* pPhysX, const Vector3& pos);
-    virtual ~TestPhysXBox(void);
+    TestPhysXSphere(PhysX* pPhysX, const Vector3& pos);
+    virtual ~TestPhysXSphere(void);
 
 	void Init();
 	void Draw(const RenderContext* pRenderContext);
