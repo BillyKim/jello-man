@@ -11,6 +11,13 @@
 class GameConfig
 {
 public:
+
+	enum KEYBOARD_LAYOUT
+	{
+		KEYBOARD_LAYOUT_AZERTY = 0,
+		KEYBOARD_LAYOUT_QWERTY = 1
+	};
+
 	GameConfig();				// Constructor
 	virtual ~GameConfig();		// Destructor
 
@@ -21,6 +28,7 @@ public:
 	//void Resizable(bool resizable = false) {m_bResizable = resizable;}
 	//void SetIcon(WORD wIcon) {m_wIcon = wIcon;}
 	void SetBlox2DAntiAliasing(bool antiAliasing = true) {m_b2DAntiAliasing = antiAliasing;}
+	void SetKeyboardLayout(KEYBOARD_LAYOUT layout) { m_KeyboardLayout = layout; }
 
 	// GETTERS
 	const tstring* GetGameTitle() {return m_pGameTitle;}
@@ -28,6 +36,7 @@ public:
 	//bool isWindowResizable() {return m_bResizable;}
 	//WORD GetIcon() {return m_wIcon;}
 	bool Blox2DAntiAliasing() { return m_b2DAntiAliasing; }
+	KEYBOARD_LAYOUT GetKeyboardLayout() { return m_KeyboardLayout; }
 
 private: 
 	
@@ -36,6 +45,8 @@ private:
 	//bool m_bResizable;
 	bool m_b2DAntiAliasing;
 	//WORD m_wIcon;
+
+	KEYBOARD_LAYOUT m_KeyboardLayout;
 
 	// -------------------------
 	// Disabling default copy constructor and default 

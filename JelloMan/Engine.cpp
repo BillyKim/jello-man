@@ -57,6 +57,7 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pTextFormat(0)
 ,m_bInitialized(false)
 ,m_Angle(0)
+,m_bResize(false)
 {
 	m_GameTimer.Reset();
 }
@@ -145,6 +146,8 @@ void Engine::Initialize()
 	m_pGameConfig = new GameConfig();
 	m_pGame->Initialize(*m_pGameConfig);
 
+	CONTROLS->SetKeyboardLayout(m_pGameConfig->GetKeyboardLayout());
+
 	m_ClientWidth = static_cast<int>(m_pGameConfig->GetWindowSize().width);
 	m_ClientHeight = static_cast<int>(m_pGameConfig->GetWindowSize().height);
 
@@ -172,6 +175,12 @@ void Engine::Initialize()
 void Engine::OnRender()
 {
 	CreateDeviceResources();
+
+	if (m_bResize)
+	{
+		RecreateSizedResources();
+		m_bResize = false;
+	}
 
 	// clearing rendertarget for new frame
 	//m_pDXDevice->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
@@ -251,7 +260,8 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				m_AppPaused = false;
 				m_Minimized = false;
 				m_Maximized = true;
-				RecreateSizedResources();
+				//RecreateSizedResources();
+				m_bResize = true;
 			}
 			else if( wParam == SIZE_RESTORED )
 			{
@@ -261,7 +271,8 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					m_AppPaused = false;
 					m_Minimized = false;
-					RecreateSizedResources();
+					//RecreateSizedResources();
+					m_bResize = true;
 				}
 
 				// Restoring from maximized state?
@@ -269,7 +280,8 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					m_AppPaused = false;
 					m_Maximized = false;
-					RecreateSizedResources();
+					//RecreateSizedResources();
+					m_bResize = true;
 				}
 				else if( m_Resizing )
 				{
@@ -284,7 +296,8 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 				else // API call such as SetWindowPos or mSwapChain->SetFullscreenState.
 				{
-					RecreateSizedResources();
+					//RecreateSizedResources();
+					m_bResize = true;
 				}
 			}
 		}
@@ -303,7 +316,8 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		m_AppPaused = false;
 		m_Resizing  = false;
 		m_GameTimer.Start();
-		RecreateSizedResources();
+		//RecreateSizedResources();
+		m_bResize = true;
 		return 0;
  
 	// WM_DESTROY is sent when the window is being destroyed.

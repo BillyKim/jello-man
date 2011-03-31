@@ -12,7 +12,8 @@ Level::Level(ID3D10Device* pDXDevice)	:
                 m_pPostProcessor(new PostProcessor(pDXDevice,
                 static_cast<int>(BLOX_2D->GetWindowSize().width),
                 static_cast<int>(BLOX_2D->GetWindowSize().height))),
-                m_pEdgeDetectionEffect(0)
+                m_pEdgeDetectionEffect(0),
+				m_pCharacter(0)
 {
 
 }
@@ -26,6 +27,7 @@ Level::~Level()
     delete m_pTestObject2;
     delete m_pPostProcessor;
     delete m_pEdgeDetectionEffect;
+	delete m_pCharacter;
 }
 
 // GENERAL
@@ -35,6 +37,9 @@ void Level::Initialize()
 								static_cast<int>(BLOX_2D->GetWindowSize().height));
     m_pTestObject->Init();
     m_pTestObject2->Init();
+
+	m_pCharacter = new Character();
+	m_pCharacter->Init();
 
     m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
 
@@ -46,6 +51,7 @@ void Level::Initialize()
 
 void Level::Tick(const float dTime)
 {
+	m_pCharacter->Tick(dTime);
 }
 
 void Level::Draw(const RenderContext* pRenderContext)
@@ -55,13 +61,14 @@ void Level::Draw(const RenderContext* pRenderContext)
 	m_pDeferredRenderer->Begin();
 
 	m_pTestObject->Draw(pRenderContext);
+	m_pCharacter->Draw(pRenderContext);
 
     m_pDeferredRenderer->End(pRenderContext);
 
     m_pForwardRenderer->Begin(m_pDeferredRenderer);
     //m_pForwardRenderer->Clear(Vector4(0.1f, 0.2f, 0.5f, 1.0f));
 
-    m_pTestObject2->Draw(pRenderContext);
+    //m_pTestObject2->Draw(pRenderContext);
 
     m_pForwardRenderer->End();
     
@@ -75,12 +82,12 @@ void Level::OnResize(ID3D10RenderTargetView* pRTView)
 {
 	m_pDeferredRenderer->OnResized(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 									static_cast<int>(BLOX_2D->GetWindowSize().height));
-	m_pDeferredRenderer->Begin();
+	//m_pDeferredRenderer->Begin();
 }
 
 void Level::Release()
 {
-	m_pDeferredRenderer->End(m_pRenderContext);
+	//m_pDeferredRenderer->End(m_pRenderContext);
 	m_pDeferredRenderer->OnResize();
 }
 

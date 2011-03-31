@@ -329,9 +329,11 @@ public:
 	// setters
 	void SetText(tstring text)
 	{ m_Text = text; }
+
 	void SetBackColor(unsigned int R, unsigned int G, unsigned int B);
 	void SetTextColor(unsigned int R, unsigned int G, unsigned int B);
 	void SetFont(tstring fontName, bool bold, bool italic, float size);
+
 	void SetFocus(bool hasFocus)
 	{ m_bHasFocus = hasFocus; }
 

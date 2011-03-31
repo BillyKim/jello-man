@@ -38,6 +38,7 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 	refGameConfig.SetWindowWidth(1440);
 	refGameConfig.SetWindowHeight(800);
 	refGameConfig.SetBlox2DAntiAliasing(true);
+	refGameConfig.SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT_AZERTY);
 }
 
 void MainGame::LoadResources(ID3D10Device* pDXDevice)
@@ -56,13 +57,13 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
     SpotLight sl;
         //Omni 1
         sl = SpotLight();
-        sl.position = Vector3(0.0f,100.0f,0.0f);
+        sl.position = Vector3(0.0f,400.0f,0.0f);
         sl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
         sl.multiplier = 1.5f;
 		sl.AttenuationStart = 0;
-		sl.AttenuationEnd = 1000;
+		sl.AttenuationEnd = 2000;
 		sl.direction = Vector3(0, -1, 0);
-		sl.power = 1.5f;
+		sl.power = 0.5f;
 		sl.shadowsEnabled = false;
 		sl.lightEnabled = true;
         m_pLightController->AddLight(sl);
