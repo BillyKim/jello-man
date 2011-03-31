@@ -15,6 +15,13 @@ class EditorGUI
 {
 public:
 
+	enum MODE
+	{
+		MODE_EDITOR = 0,
+		MODE_GAME = 1,
+		MODE_PLAY = 2
+	};
+
 	// CONSTRUCTOR - DESTRUCTOR
 	EditorGUI();
 	virtual ~EditorGUI();
@@ -27,11 +34,18 @@ public:
 	// GETTERS
 	Button* GetLightButton() const
 	{ return m_pLightButton; }
+
 	Button* GetMoveButton() const
 	{ return m_pMoveButton; }
+
 	Button* GetPointlightButton() const
 	{ return m_pPointlightButton; }
-	bool EditorMode() const;
+
+	Button* GetPlayButton() const
+	{ return m_pPlayModeButton; }
+
+	MODE GetMode() const
+	{ return m_Mode; }
 
 private:
 
@@ -56,17 +70,19 @@ private:
 	vector<Bitmap*> m_pApplyButtonBitmaps;
 	Button* m_pRotateButton;
 	vector<Bitmap*> m_pRotateButtonBitmaps;
+	Button* m_pPlayModeButton;
+	vector<Bitmap*> m_pPlayModeButtonBitmaps;
 
 	Bitmap* m_pCameraBitmap;
 
 	bool m_bUsingCamera;
+
 	bool m_bGameModeDown;
 	bool m_bEditorModeDown;
+	bool m_bPlayModeDown;
 
 	bool m_bMoveable;
 	bool m_bRotateable;
-
-	int m_GameEditorModeSelect;
 
 	const RenderContext* m_pRenderContext;
 
@@ -74,6 +90,8 @@ private:
 	ColorPicker* m_pColorPicker;
 	MoveGizmo* m_pMoveGizmo;
 	RotateGizmo* m_pRotateGizmo;
+
+	MODE m_Mode;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);

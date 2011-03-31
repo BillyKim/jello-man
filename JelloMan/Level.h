@@ -22,20 +22,13 @@ public:
 	// GENERAL
 	void Initialize();
 	void Tick(const float dTime);
-	void Draw(const RenderContext* pRenderContext);
-	void OnResize(ID3D10RenderTargetView* pRTView);
-	void Release();
-	void SetLightMode(LightMode lMode);
+	void DrawDeferred(const RenderContext* pRenderContext);
+	void DrawForward(const RenderContext* pRenderContext);
 
 private:
 
 	// DATAMEMBERS
 	ID3D10Device* m_pDXDevice;
-    DeferredRenderer* m_pDeferredRenderer;
-    ForwardRenderer* m_pForwardRenderer;
-    PostProcessor* m_pPostProcessor;
-
-    EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
 
     TestObject* m_pTestObject;
     TestObject2* m_pTestObject2;

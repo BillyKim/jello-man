@@ -53,32 +53,34 @@ void Character::Tick(float dTime)
 
 	Z = Vector3(Zdx);
 
-	if (!CONTROLS->RightMBDown())
+	if (CONTROLS->GetKeyboardLayout() == GameConfig::KEYBOARD_LAYOUT_AZERTY)
 	{
-		if (CONTROLS->GetKeyboardLayout() == GameConfig::KEYBOARD_LAYOUT_AZERTY)
-		{
-			if (CONTROLS->IsKeyDown('Z'))
-				dir += Z;
-			if (CONTROLS->IsKeyDown('Q'))
-				m_RotationAngle -= 0.05f;
-		}
-		else
-		{
-			if (CONTROLS->IsKeyDown('W'))
-				dir += Z;
-			if (CONTROLS->IsKeyDown('A'))
-				m_RotationAngle -= 0.05f;
-		}
-
-		if (CONTROLS->IsKeyDown('S'))
-			dir -= Z;
-		if (CONTROLS->IsKeyDown('D'))
-			m_RotationAngle += 0.05f;
-
-		dir.Normalize();
-
-		Move(dir * (float)m_Speed);
+		if (CONTROLS->IsKeyDown('Z'))
+			dir += Z;
+		if (CONTROLS->IsKeyDown('Q'))
+			m_RotationAngle -= 0.05f;
 	}
+	else
+	{
+		if (CONTROLS->IsKeyDown('W'))
+			dir += Z;
+		if (CONTROLS->IsKeyDown('A'))
+			m_RotationAngle -= 0.05f;
+	}
+
+	if (CONTROLS->IsKeyDown('S'))
+		dir -= Z;
+	if (CONTROLS->IsKeyDown('D'))
+		m_RotationAngle += 0.05f;
+
+	dir.Normalize();
+
+	int speed = m_Speed;
+
+	if (CONTROLS->IsKeyDown(VK_SHIFT))
+		speed *= 2;
+
+	Move(dir * (float)speed);
 
 	m_mtxWorld = m_mtxWorld.CreateRotationY(m_RotationAngle) * m_mtxWorld.CreateTranslation(m_Pos);
 }

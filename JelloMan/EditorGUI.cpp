@@ -10,7 +10,6 @@ EditorGUI::EditorGUI()	:	m_pLightButton(0),
 							m_pEditorModeButton(0),
 							m_pPointlightButton(0),
 							m_pSpotlightButton(0),
-							m_GameEditorModeSelect(0),
 							m_bGameModeDown(false),
 							m_bEditorModeDown(false),
 							m_pRenderContext(0),
@@ -21,9 +20,12 @@ EditorGUI::EditorGUI()	:	m_pLightButton(0),
 							m_pLightDebugger(0),
 							m_pColorPicker(0),
 							m_pMoveGizmo(0),
-							m_pRotateGizmo(0)
+							m_pRotateGizmo(0),
+							m_pPlayModeButton(0),
+							m_Mode(MODE_GAME),
+							m_bPlayModeDown(false)
 {
-	
+
 }
 
 EditorGUI::~EditorGUI()
@@ -62,6 +64,10 @@ EditorGUI::~EditorGUI()
 
 	delete m_pRotateButton;
 	for (vector<Bitmap*>::iterator it = m_pRotateButtonBitmaps.begin(); it != m_pRotateButtonBitmaps.end(); ++it)
+		delete (*it);
+
+	delete m_pPlayModeButton;
+	for (vector<Bitmap*>::iterator it = m_pPlayModeButtonBitmaps.begin(); it != m_pPlayModeButtonBitmaps.end(); ++it)
 		delete (*it);
 
 	delete m_pCameraBitmap;
@@ -188,6 +194,16 @@ void EditorGUI::Initialize()
 
 	m_pRotateButton->SetState(Button::STATE_DEACTIVATED);
 
+	// PLAY MODE BUTTON
+	m_pPlayModeButton = new Button(20,79,36,36);
+	
+	m_pPlayModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/play_mode_normal.png")));
+	m_pPlayModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/play_mode_hover.png")));
+
+	m_pPlayModeButton->SetNormalState(m_pPlayModeButtonBitmaps[0]);
+	m_pPlayModeButton->SetHoverState(m_pPlayModeButtonBitmaps[1]);
+	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
+
 	// CAMERA
 	m_pCameraBitmap = new Bitmap(_T("Content/Images/Editor/camera.png"));
 
@@ -207,7 +223,7 @@ void EditorGUI::Draw()
 {
 	BLOX_2D->SetAntiAliasing(false);
 
-	if (m_GameEditorModeSelect == 1)
+	if (m_Mode == MODE_EDITOR)
 	{
 		m_pLightDebugger->Tick(m_pRenderContext);
 		m_pLightDebugger->Draw();
@@ -259,7 +275,7 @@ void EditorGUI::Draw()
 						static_cast<int>(BLOX_2D->GetWindowSize().width),
 						static_cast<int>(BLOX_2D->GetWindowSize().height) - 20);
 
-	if (m_GameEditorModeSelect == 1)
+	if (m_Mode == MODE_EDITOR)
 	{
 		BLOX_2D->SetColor(70, 70, 70);
 		BLOX_2D->FillRect(0, 50, 200, static_cast<int>(BLOX_2D->GetWindowSize().height) - 71);
@@ -284,20 +300,25 @@ void EditorGUI::Draw()
 		BLOX_2D->DrawString(_T("Move objects and lights present in the scene."), 20, static_cast<int>(BLOX_2D->GetWindowSize().height) - 16);
 	}
 
-	if (m_GameEditorModeSelect == 0)
+	if (m_Mode == MODE_GAME || m_Mode == MODE_PLAY)
 	{
 		m_pGameModeButton->SetPosition(20, 7);
 		m_pEditorModeButton->SetPosition(20, 43);
+		m_pPlayModeButton->SetPosition(20,79);
 
 		if (CONTROLS->LeftMBUp() && m_bGameModeDown)
 		{
 			if (m_pGameModeButton->Hover())
 			{
-				m_GameEditorModeSelect = 0;
+				m_Mode = MODE_GAME;
 			}
 			else if (m_pEditorModeButton->Hover())
 			{
-				m_GameEditorModeSelect = 1;
+				m_Mode = MODE_EDITOR;
+			}
+			else if (m_pPlayModeButton->Hover())
+			{
+				m_Mode = MODE_PLAY;
 			}
 		}
 
@@ -305,6 +326,7 @@ void EditorGUI::Draw()
 		{
 			m_pGameModeButton->Show();
 			m_pEditorModeButton->Show();
+			m_pPlayModeButton->Show();
 		}
 		else
 		{
@@ -318,20 +340,25 @@ void EditorGUI::Draw()
 			m_bGameModeDown = true;
 		}
 	}
-	else if (m_GameEditorModeSelect == 1)
+	else if (m_Mode == MODE_EDITOR)
 	{
 		m_pEditorModeButton->SetPosition(20,7);
-		m_pGameModeButton->SetPosition(20,43);
+		m_pGameModeButton->SetPosition(20,79);
+		m_pPlayModeButton->SetPosition(20,43);
 
 		if (CONTROLS->LeftMBUp() && m_bEditorModeDown)
 		{
 			if (m_pEditorModeButton->Hover())
 			{
-				m_GameEditorModeSelect = 1;
+				m_Mode = MODE_EDITOR;
 			}
 			else if (m_pGameModeButton->Hover())
 			{
-				m_GameEditorModeSelect = 0;
+				m_Mode = MODE_GAME;
+			}
+			else if (m_pPlayModeButton->Hover())
+			{
+				m_Mode = MODE_PLAY;
 			}
 		}
 
@@ -339,6 +366,7 @@ void EditorGUI::Draw()
 		{
 			m_pGameModeButton->Show();
 			m_pEditorModeButton->Show();
+			m_pPlayModeButton->Show();
 		}
 		else
 		{
@@ -350,6 +378,46 @@ void EditorGUI::Draw()
 		if (m_pEditorModeButton->Down())
 		{
 			m_bEditorModeDown = true;
+		}
+	}
+	else if (m_Mode == MODE_PLAY)
+	{
+		m_pEditorModeButton->SetPosition(20,4);
+		m_pGameModeButton->SetPosition(20,79);
+		m_pPlayModeButton->SetPosition(20,7);
+
+		if (CONTROLS->LeftMBUp() && m_bEditorModeDown)
+		{
+			if (m_pEditorModeButton->Hover())
+			{
+				m_Mode = MODE_EDITOR;
+			}
+			else if (m_pGameModeButton->Hover())
+			{
+				m_Mode = MODE_GAME;
+			}
+			else if (m_pPlayModeButton->Hover())
+			{
+				m_Mode = MODE_PLAY;
+			}
+		}
+
+		if (CONTROLS->LeftMBDown() && m_bEditorModeDown == true)
+		{
+			m_pGameModeButton->Show();
+			m_pEditorModeButton->Show();
+			m_pPlayModeButton->Show();
+		}
+		else
+		{
+			m_pPlayModeButton->Show();
+
+			m_bPlayModeDown = false;
+		}
+
+		if (m_pPlayModeButton->Down())
+		{
+			m_bPlayModeDown = true;
 		}
 	}
 
@@ -376,7 +444,7 @@ void EditorGUI::Draw()
 		BLOX_2D->DrawString(_T("Add a spotlight to the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
 	}
 
-	if (m_GameEditorModeSelect == 1 && m_pLightDebugger->GetNrLightsSelected() == 1)
+	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
 		m_pColorPickerButton->Show();
 
 	if (m_pColorPickerButton->Hover() || m_pColorPickerButton->Down())
@@ -392,6 +460,13 @@ void EditorGUI::Draw()
 		BLOX_2D->SetColor(255,255,255,0.5f);
 		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
 		BLOX_2D->DrawString(_T("Move objects and lights present in the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+	}
+
+	if (m_pPlayModeButton->Hover() || m_pPlayModeButton->Down())
+	{
+		BLOX_2D->SetColor(255,255,255,0.5f);
+		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+		BLOX_2D->DrawString(_T("Play and interact with the objects in the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
 	}
 
 	// CAMERA
@@ -423,8 +498,9 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	m_pPointlightButton->Tick();
 	m_pSpotlightButton->Tick();
 	m_pRotateButton->Tick();
+	m_pPlayModeButton->Tick();
 
-	if (m_GameEditorModeSelect == 1 && m_pLightDebugger->GetNrLightsSelected() == 1)
+	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
 		m_pColorPickerButton->Tick();
 
 	m_pLightDebugger->Tick(pRenderContext);
@@ -517,7 +593,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	if (m_pRotateButton->Clicked())
 		m_pMoveButton->Deactivate();
 
-	if (m_pColorPickerButton->IsActive() && m_GameEditorModeSelect == 1)
+	if (m_pColorPickerButton->IsActive() && m_Mode == MODE_EDITOR)
 	{
 		if (m_pLightDebugger->GetNrLightsSelected() == 1)
 		{
@@ -570,10 +646,3 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 }
 
 // GETTERS
-bool EditorGUI::EditorMode() const
-{
-	if (m_GameEditorModeSelect == 0)
-		return false;
-	else
-		return true;
-}

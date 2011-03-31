@@ -211,8 +211,17 @@ void Engine::OnRender()
 	if (m_pBackBufferRT)
 	{
 		m_pBackBufferRT->BeginDraw();
-		m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
-		m_pGame->DrawScene();
+
+		if (!m_bInitialized)
+		{
+			m_pGame->LoadScreen();
+		}
+		else
+		{
+			m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
+			m_pGame->DrawScene();
+		}
+
 		m_pBackBufferRT->EndDraw();
 	}
 
