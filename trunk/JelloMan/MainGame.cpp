@@ -21,7 +21,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pDeferredRenderer(0),
 							m_pForwardRenderer(0),
 							m_pPostProcessor(0),
-							m_pEdgeDetectionEffect(0)
+							m_pEdgeDetectionEffect(0),
+							m_pRenderContext(0)
 {
 
 }
@@ -39,6 +40,7 @@ MainGame::~MainGame()
 	delete m_pPostProcessor;
 	delete m_pEdgeDetectionEffect;
 	delete m_pLevel;
+	delete m_pRenderContext;
 
 	m_pPhysXEngine = 0;
 }
@@ -87,6 +89,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
+	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController);
 
     SpotLight sl;
         //Omni 1
@@ -175,10 +178,11 @@ void MainGame::UpdateScene(const float dTime)
 
 void MainGame::DrawScene()
 {
-	RenderContext renderContext(m_pEditorCamera, m_pLightController);
-
 	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
-		renderContext.SetCamera(m_pTrackingCamera);
+		m_pRenderContext->SetCamera(m_pTrackingCamera);
+	else
+		m_pRenderContext->SetCamera(m_pEditorCamera);
+
 		
 	// --------------------------------------
 	//			   RENDER SCENE
@@ -191,16 +195,16 @@ void MainGame::DrawScene()
 	m_pDeferredRenderer->Begin();
 
 	// DRAW
-	m_pLevel->DrawDeferred(&renderContext);
+	m_pLevel->DrawDeferred(m_pRenderContext);
 
 	// END DEFERRED
-	m_pDeferredRenderer->End(&renderContext);
+	m_pDeferredRenderer->End(m_pRenderContext);
 
 	// START FORWARD
 	m_pForwardRenderer->Begin(m_pDeferredRenderer);
 
 	// DRAW
-	m_pLevel->DrawForward(&renderContext);
+	m_pLevel->DrawForward(m_pRenderContext);
 
 	// END FORWARD
 	m_pForwardRenderer->End();
@@ -210,7 +214,7 @@ void MainGame::DrawScene()
 		
 	// --------------------------------------
 
-	m_pEditorGUI->Tick(&renderContext);
+	m_pEditorGUI->Tick(m_pRenderContext);
 	m_pEditorGUI->Draw();
 
 	BLOX_2D->SetColor(255,255,255);

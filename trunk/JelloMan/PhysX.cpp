@@ -17,10 +17,38 @@ PhysX::~PhysX(void)
 	if(m_pPhysicsSDK)m_pPhysicsSDK->release();
 	if(m_pAllocator) delete m_pAllocator;
 }
+class MyOutputStream : public NxUserOutputStream
+{
+    void reportError (NxErrorCode code, const char *message, const char* file, int line)
+    {
+        //this should be routed to the application
+        //specific error handling. If this gets hit
+        //then you are in most cases using the SDK
+        //wrong and you need to debug your code!
+        //however, code may  just be a warning or
+        //information.
+        
+        cout << "--Physx: " << message << "\n";
+    }
+                
+    NxAssertResponse reportAssertViolation (const char *message, const char *file,int line)
+    {
+        //this should not get hit by
+        // a properly debugged SDK!
+        ASSERT(0);
+        return NX_AR_CONTINUE;
+    }
+                
+    void print (const char *message)
+    {
+         cout << "SDK says: %s\n" << message << "\n";
+    }
+
+} myOutputStream;
 bool PhysX::Init(void)
 {
 	//create PhysicsSDK object
-	m_pPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, NULL);
+	m_pPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, new MyOutputStream());
 	if(!m_pPhysicsSDK)
 	{
 		OutputDebugString(_T("Wrong SDK DLL version?"));
@@ -28,9 +56,10 @@ bool PhysX::Init(void)
 	}
 	//(if debug?)
 	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
+	m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
 	//create a scene object
 	NxSceneDesc sceneDesc;
-	sceneDesc.gravity.set(0,-9.81f,0);
+	sceneDesc.gravity.set(0,-981.0f,0);
 	m_pScene = m_pPhysicsSDK->createScene(sceneDesc);
 	if(!m_pScene)
 	{
@@ -51,7 +80,7 @@ bool PhysX::Init(void)
 	NxActor* plane = m_pScene->createActor(actorDesc);
 
 	NxReal myTimestep = 1/60.0f;
-	m_pScene->setTiming(myTimestep/4.0f,4,NX_TIMESTEP_FIXED);//4 substeps
+	m_pScene->setTiming(myTimestep, 8, NX_TIMESTEP_FIXED);//4 substeps
 	
 	m_pScene->setUserTriggerReport(this);
 

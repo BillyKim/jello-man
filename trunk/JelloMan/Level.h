@@ -34,8 +34,10 @@ private:
 
     TestObject* m_pTestObject;
     TestObject2* m_pTestObject2;
-	TestPhysXBox* m_pTestPhysXBox;
+	vector<TestPhysXBox*> m_vecTestPhysXBox;
 	Character* m_pCharacter;
+
+	PhysX* m_pPhysXEngine;
 
 	const RenderContext* m_pRenderContext;
 

@@ -60,6 +60,9 @@ private:
 
 	PhysX* m_pPhysXEngine;
 
+	RenderContext* m_pRenderContext;
+
+
 	DeferredRenderer* m_pDeferredRenderer;
     ForwardRenderer* m_pForwardRenderer;
     PostProcessor* m_pPostProcessor;
