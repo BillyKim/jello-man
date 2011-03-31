@@ -12,6 +12,10 @@
 #include <vector>
 #include "EditorGUI.h"
 #include "PhysX.h"
+#include "PostProcessor.h"
+#include "EdgeDetectionPostEffect.h"
+#include "DeferredRenderer.h"
+#include "ForwardRenderer.h"
 
 class AudioEngine;
 
@@ -30,13 +34,13 @@ public:
 	void DrawScene();
 	void OnResize(ID3D10RenderTargetView* pRTView);
 	void Release();
-
 	void LoadScreen();
 
 private:
 
 	// DATAMEMBERS
 	float m_dTtime;
+
 	bool m_bResourcesLoaded;
 	bool m_bDebug;
 
@@ -50,8 +54,14 @@ private:
 	Camera* m_pTrackingCamera;
 
     LightController* m_pLightController;
+
 	AudioEngine* m_pAudioEngine;
 	Sound* m_pTestSound;
 
 	PhysX* m_pPhysXEngine;
+
+	DeferredRenderer* m_pDeferredRenderer;
+    ForwardRenderer* m_pForwardRenderer;
+    PostProcessor* m_pPostProcessor;
+    EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
 };
