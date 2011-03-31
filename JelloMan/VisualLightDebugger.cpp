@@ -565,6 +565,17 @@ void VisualLightDebugger::ShowLightInfo()
 		}
 	}
 
+	tstringstream streamL;
+
+	streamL << _T("lights: ") << GetNrLightsSelected() << _T(" / ") << GetTotalLightsInScene();
+
+	BLOX_2D->SetColor(255, 255, 255, 0.5f);
+	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+	BLOX_2D->DrawString(	streamL.str(),
+							RectF(0,0, BLOX_2D->GetWindowSize().width - 5, BLOX_2D->GetWindowSize().height - 4),
+							Blox2D::HORIZONTAL_ALIGN_RIGHT,
+							Blox2D::VERTICAL_ALIGN_BOTTOM);
+
 	BLOX_2D->SetColor(255, 255, 255);
 	BLOX_2D->SetFont(_T("Verdana"),false,false,12);
 	BLOX_2D->DrawString(stream.str(),10,60);
@@ -588,4 +599,14 @@ int VisualLightDebugger::GetNrLightsSelected()
 	}
 
 	return b;
+}
+
+int VisualLightDebugger::GetTotalLightsInScene()
+{
+	int s = 0;
+
+	s += m_PLightsSelected.size();
+	s += m_SLightsSelected.size();
+
+	return s;
 }
