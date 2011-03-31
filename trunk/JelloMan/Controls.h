@@ -4,6 +4,7 @@
 // Include Files
 //-----------------------------------------------------
 #include "D3DUtil.h"
+#include "GameConfig.h"
 
 #define CONTROLS (Controls::GetSingleton())
 
@@ -33,6 +34,8 @@ public:
 	bool RightMBDown() const { return m_bRMBDown; }
 	Point2D GetMouseMovement();
 
+	GameConfig::KEYBOARD_LAYOUT GetKeyboardLayout() { return m_KBLayout; }
+
 	// SETTERS
 	void SetMousePos(Point2D pos);
 	void SetOldMousePos(Point2D oldPos);
@@ -41,6 +44,7 @@ public:
 	void SetLeftMBDown(bool down);
 	void SetRightMBDown(bool down);
 	void SetMouseWheelPos(short pos) {m_MouseWheelPos = pos;}
+	void SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT layout) { m_KBLayout = layout; }
 
 	void ResetMouse();
 
@@ -57,6 +61,8 @@ private:
 	Point2D m_OldMousePos;
 	unsigned char m_Keys[NUMKEYS];
 	bool m_bKeysPressed[NUMKEYS];
+
+	GameConfig::KEYBOARD_LAYOUT m_KBLayout;
 
 	// -------------------------
 	// Disabling default copy constructor and default 

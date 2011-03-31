@@ -234,6 +234,9 @@
     <ClInclude Include="RotateGizmo.h">
       <Filter>Engine Files\Graphics\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -394,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="RotateGizmo.cpp">
       <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Game Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

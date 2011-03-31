@@ -41,12 +41,23 @@ void Camera::Tick(const float dTime)
 
 	if (!CONTROLS->IsKeyDown(VK_LCONTROL))
 	{
-		if (CONTROLS->IsKeyDown('Z'))
-			dir += m_LookWorld;
+		if (CONTROLS->GetKeyboardLayout() == GameConfig::KEYBOARD_LAYOUT_AZERTY)
+		{
+			if (CONTROLS->IsKeyDown('Z'))
+				dir += m_LookWorld;
+			if (CONTROLS->IsKeyDown('Q'))
+				dir -= m_RightWorld;
+		}
+		else
+		{
+			if (CONTROLS->IsKeyDown('W'))
+				dir += m_LookWorld;
+			if (CONTROLS->IsKeyDown('A'))
+				dir -= m_RightWorld;
+		}
+
 		if (CONTROLS->IsKeyDown('S'))
-			dir -= m_LookWorld;
-		if (CONTROLS->IsKeyDown('Q'))
-			dir -= m_RightWorld;
+				dir -= m_LookWorld;
 		if (CONTROLS->IsKeyDown('D'))
 			dir += m_RightWorld;
 	}
@@ -96,16 +107,33 @@ void Camera::Tick(const float dTime)
 		m_LookWorld = Vector3(lookWorld);
 		m_UpWorld = Vector3(upWorld);
 
-		if (CONTROLS->IsKeyDown('A'))
+		if (CONTROLS->GetKeyboardLayout() == GameConfig::KEYBOARD_LAYOUT_AZERTY)
 		{
-			m_FOV += 1.0;
-			BuildProjectionMatrix();
-		}
+			if (CONTROLS->IsKeyDown('A'))
+			{
+				m_FOV += 0.1f;
+				BuildProjectionMatrix();
+			}
 
-		if (CONTROLS->IsKeyDown('W'))
+			else if (CONTROLS->IsKeyDown('W'))
+			{
+				m_FOV -= 0.1f;
+				BuildProjectionMatrix();
+			}
+		}
+		else
 		{
-			m_FOV -= 1.0;
-			BuildProjectionMatrix();
+			if (CONTROLS->IsKeyDown('Q'))
+			{
+				m_FOV += 0.1f;
+				BuildProjectionMatrix();
+			}
+
+			else if (CONTROLS->IsKeyDown('Z'))
+			{
+				m_FOV -= 0.1f;
+				BuildProjectionMatrix();
+			}
 		}
 	}
 	else

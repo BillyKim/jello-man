@@ -61,6 +61,7 @@ private:
 	bool      m_Resizing;
 	bool	  m_bInitialized;
 	bool	  m_bMouseMoving;
+	bool	  m_bResize;
 
 	MainGame* m_pGame;
  

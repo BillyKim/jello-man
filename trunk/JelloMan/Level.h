@@ -9,7 +9,7 @@
 #include "RenderContext.h"
 #include "PostProcessor.h"
 #include "EdgeDetectionPostEffect.h"
-
+#include "Character.h"
 
 class Level
 {
@@ -39,6 +39,7 @@ private:
 
     TestObject* m_pTestObject;
     TestObject2* m_pTestObject2;
+	Character* m_pCharacter;
 
 	const RenderContext* m_pRenderContext;
 

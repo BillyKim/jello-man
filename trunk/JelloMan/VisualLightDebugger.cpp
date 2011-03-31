@@ -416,20 +416,20 @@ void VisualLightDebugger::ShowLightInfo()
 				BLOX_2D->FillRect(20, 215, 60, 40);
 
 				// multiplier
-				if (m_pMultiplierAddButton->Clicked())
+				if (m_pMultiplierAddButton->Down())
 					m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier += 0.1f;
 			
-				if (m_pMultiplierSubtractButton->Clicked())
+				if (m_pMultiplierSubtractButton->Down())
 					m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier -= 0.1f;
 
 				if (m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier < 0.1f)
 						m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier = 0;
 
 				// attenuation
-				if (m_pAttenuationAddButton->Clicked())
+				if (m_pAttenuationAddButton->Down())
 					m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd += 100;
 			
-				if (m_pAttenuationSubtractButton->Clicked())
+				if (m_pAttenuationSubtractButton->Down())
 					m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd -= 100;
 
 				if (m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd < 100)
@@ -487,30 +487,30 @@ void VisualLightDebugger::ShowLightInfo()
 				BLOX_2D->FillRect(20, 215, 60, 40);
 
 				// multiplier
-				if (m_pMultiplierAddButton->Clicked())
+				if (m_pMultiplierAddButton->Down())
 					m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier += 0.1f;
 
-				if (m_pMultiplierSubtractButton->Clicked())
+				if (m_pMultiplierSubtractButton->Down())
 					m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier -= 0.1f;
 
 				if (m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier < 0.1f)
 						m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier = 0;
 
 				// attenuation
-				if (m_pAttenuationAddButton->Clicked())
+				if (m_pAttenuationAddButton->Down())
 					m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd += 100;
 			
-				if (m_pAttenuationSubtractButton->Clicked())
+				if (m_pAttenuationSubtractButton->Down())
 					m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd -= 100;
 
 				if (m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd < 100)
 						m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd = 0;
 
 				// power
-				if (m_pPowerAddButton->Clicked())
+				if (m_pPowerAddButton->Down())
 					m_pRenderContext->GetLightController()->GetSpotLights()[i].power += 0.1f;
 			
-				if (m_pPowerSubtractButton->Clicked())
+				if (m_pPowerSubtractButton->Down())
 					m_pRenderContext->GetLightController()->GetSpotLights()[i].power-= 0.1f;
 
 				if (m_pRenderContext->GetLightController()->GetSpotLights()[i].power < 0.1f)

@@ -82,6 +82,7 @@
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="ContentManager.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="ContentManager.cpp" />
