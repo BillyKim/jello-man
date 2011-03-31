@@ -2,14 +2,15 @@
 #include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-Character::Character()	:	m_pModel(0),
-							m_pEffect(0),
-							m_mtxWorld(Matrix::Identity),
-							m_pDiffuseMap(0),
-							m_pSpecMap(0),
-							m_pGlossMap(0),
-							m_Speed(2),
-							m_RotationAngle(0)
+Character::Character(Camera* pTrackingCamera)	:	m_pModel(0),
+													m_pEffect(0),
+													m_mtxWorld(Matrix::Identity),
+													m_pDiffuseMap(0),
+													m_pSpecMap(0),
+													m_pGlossMap(0),
+													m_Speed(2),
+													m_RotationAngle(0),
+													m_pTrackingCamera(pTrackingCamera)
 {
 	m_Pos = Vector3(0.0f,0.0f,0.0f);	
 }
@@ -42,6 +43,7 @@ void Character::Init()
 
 void Character::Tick(float dTime)
 {
+	// MOVE CHARACTER
 	Vector3 dir(0.0f, 0.0f, 0.0f);
 	Vector3 Z(0.0f,0.0f,1.0f);
 
@@ -83,6 +85,14 @@ void Character::Tick(float dTime)
 	Move(dir * (float)speed);
 
 	m_mtxWorld = m_mtxWorld.CreateRotationY(m_RotationAngle) * m_mtxWorld.CreateTranslation(m_Pos);
+
+	// MOVE CAMERA
+	Zdx.y -= 0.5;
+	Vector3 posCam = m_Pos - (Vector3(Zdx) * 200);
+	Vector3 posChar = m_Pos;
+	posChar.Y += 50;
+
+	m_pTrackingCamera->LookAt(posCam,posChar,Vector3(0, 1, 0));
 }
 
 void Character::Draw(const RenderContext* pRenderContext)

@@ -60,12 +60,14 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 
 	// CAMERA
 	m_pEditorCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
-									static_cast<int>(BLOX_2D->GetWindowSize().height)	);
+									static_cast<int>(BLOX_2D->GetWindowSize().height),
+									true	);
     m_pEditorCamera->LookAt(Vector3(-225, 115, -205), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	m_pEditorCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
 
 	m_pTrackingCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
-									static_cast<int>(BLOX_2D->GetWindowSize().height)	);
+									static_cast<int>(BLOX_2D->GetWindowSize().height),
+									false	);
 	m_pTrackingCamera->LookAt(Vector3(-225, 115, -205), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	m_pTrackingCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
 
@@ -102,7 +104,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
-	m_pLevel->Initialize();
+	m_pLevel->Initialize(m_pTrackingCamera);
 
 	// AUDIO
 	tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
@@ -170,6 +172,9 @@ void MainGame::UpdateScene(const float dTime)
 void MainGame::DrawScene()
 {
 	RenderContext renderContext(m_pEditorCamera, m_pLightController);
+
+	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
+		renderContext.SetCamera(m_pTrackingCamera);
 		
 	// --------------------------------------
 	//			   RENDER SCENE

@@ -12,7 +12,7 @@ class Character
 public:
 
 	// CONSTRUCTOR - DESTRUCTOR
-	Character();
+	Character(Camera* pTrackingCamera);
 	virtual ~Character();
 
 	// GENERAL
@@ -36,5 +36,7 @@ private:
 	int m_Speed;
 
 	Vector3 m_Pos;
+
+	Camera* m_pTrackingCamera;
 };
 

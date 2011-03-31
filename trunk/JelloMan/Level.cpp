@@ -21,12 +21,12 @@ Level::~Level()
 }
 
 // GENERAL
-void Level::Initialize()
+void Level::Initialize(Camera* pTrackingCamera)
 {
     m_pTestObject->Init();
     m_pTestObject2->Init();
 
-	m_pCharacter = new Character();
+	m_pCharacter = new Character(pTrackingCamera);
 	m_pCharacter->Init();
 }
 
