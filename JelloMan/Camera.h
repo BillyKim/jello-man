@@ -10,7 +10,7 @@ class Camera
 public:
 
 	// CONSTRUCTOR - DESTRUCTOR
-	Camera(int windowWidth, int windowHeight);
+	Camera(int windowWidth, int windowHeight, bool bControllable);
 	virtual ~Camera();
 
 
@@ -88,6 +88,7 @@ private:
 	float m_NearClippingPlane, m_FarClippingPlane;
 
 	bool m_bIsActive;
+	bool m_bControllable;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Camera(const Camera& t);

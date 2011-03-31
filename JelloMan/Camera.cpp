@@ -3,14 +3,15 @@
 #define CONTROLS (Controls::GetSingleton())
 
 // CONSTRUCTOR - DESTRUCTOR
-Camera::Camera(int windowWidth, int windowHeight) :	m_Speed(200.0f),
-													m_FastForward(4.0f),
-													m_MouseSensitivity(100),
-													m_FOV(PiOver4),
-													m_AspectRatio(4.0f/3.0f),
-													m_NearClippingPlane(10.0f),
-													m_FarClippingPlane(10000.0f),
-													m_bIsActive(true)
+Camera::Camera(int windowWidth, int windowHeight, bool bControllable) :	m_Speed(200.0f),
+																		m_FastForward(4.0f),
+																		m_MouseSensitivity(100),
+																		m_FOV(PiOver4),
+																		m_AspectRatio(4.0f/3.0f),
+																		m_NearClippingPlane(10.0f),
+																		m_FarClippingPlane(10000.0f),
+																		m_bIsActive(true),
+																		m_bControllable(bControllable)
 {
 	D3DXMatrixIdentity(&m_matView);
 	D3DXMatrixIdentity(&m_matProjection);
@@ -34,43 +35,46 @@ void Camera::Tick(const float dTime)
 {
 	if (!m_bIsActive) return;
 
-	bool bRunning = false;
-
-	// camera controls
-	Vector3 dir(0.0f, 0.0f, 0.0f);
-
-	if (!CONTROLS->IsKeyDown(VK_LCONTROL))
+	if (m_bControllable)
 	{
-		if (CONTROLS->GetKeyboardLayout() == GameConfig::KEYBOARD_LAYOUT_AZERTY)
+		bool bRunning = false;
+
+		// camera controls
+		Vector3 dir(0.0f, 0.0f, 0.0f);
+
+		if (!CONTROLS->IsKeyDown(VK_LCONTROL))
 		{
-			if (CONTROLS->IsKeyDown('Z'))
-				dir += m_LookWorld;
-			if (CONTROLS->IsKeyDown('Q'))
-				dir -= m_RightWorld;
-		}
-		else
-		{
-			if (CONTROLS->IsKeyDown('W'))
-				dir += m_LookWorld;
-			if (CONTROLS->IsKeyDown('A'))
-				dir -= m_RightWorld;
+			if (CONTROLS->GetKeyboardLayout() == GameConfig::KEYBOARD_LAYOUT_AZERTY)
+			{
+				if (CONTROLS->IsKeyDown('Z'))
+					dir += m_LookWorld;
+				if (CONTROLS->IsKeyDown('Q'))
+					dir -= m_RightWorld;
+			}
+			else
+			{
+				if (CONTROLS->IsKeyDown('W'))
+					dir += m_LookWorld;
+				if (CONTROLS->IsKeyDown('A'))
+					dir -= m_RightWorld;
+			}
+
+			if (CONTROLS->IsKeyDown('S'))
+					dir -= m_LookWorld;
+			if (CONTROLS->IsKeyDown('D'))
+				dir += m_RightWorld;
 		}
 
-		if (CONTROLS->IsKeyDown('S'))
-				dir -= m_LookWorld;
-		if (CONTROLS->IsKeyDown('D'))
-			dir += m_RightWorld;
+		// fast forward
+		if (CONTROLS->IsKeyDown(VK_LSHIFT))
+			bRunning = true;
+
+		dir.Normalize();
+		float finalSpeed = m_Speed;
+		if (bRunning) finalSpeed *= m_FastForward;
+
+		m_PosWorld += dir * finalSpeed * dTime;
 	}
-
-	// fast forward
-	if (CONTROLS->IsKeyDown(VK_LSHIFT))
-		bRunning = true;
-
-	dir.Normalize();
-	float finalSpeed = m_Speed;
-	if (bRunning) finalSpeed *= m_FastForward;
-
-	m_PosWorld += dir * finalSpeed * dTime;
 
 	// change FOV with mousewheel
 	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 5.0f);

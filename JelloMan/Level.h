@@ -20,7 +20,7 @@ public:
 	virtual ~Level();
 
 	// GENERAL
-	void Initialize();
+	void Initialize(Camera* pTrackingCamera);
 	void Tick(const float dTime);
 	void DrawDeferred(const RenderContext* pRenderContext);
 	void DrawForward(const RenderContext* pRenderContext);

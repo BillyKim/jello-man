@@ -18,6 +18,10 @@ public:
 
 	LightController* GetLightController() const
 	{ return m_pLightController; }
+
+	// SETTERS
+	void SetCamera(Camera* pCamera)
+	{ m_pCamera = pCamera; }
 	
 private:
 
