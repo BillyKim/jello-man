@@ -5,11 +5,13 @@
 #include "ForwardRenderer.h"
 #include "TestObject.h"
 #include "TestObject2.h"
+#include "TestPhysXBox.h"
 #include "Blox2D.h"
 #include "RenderContext.h"
 #include "PostProcessor.h"
 #include "EdgeDetectionPostEffect.h"
 #include "Character.h"
+#include "PhysX.h"
 
 class Level
 {
@@ -20,7 +22,7 @@ public:
 	virtual ~Level();
 
 	// GENERAL
-	void Initialize(Camera* pTrackingCamera);
+	void Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera);
 	void Tick(const float dTime);
 	void DrawDeferred(const RenderContext* pRenderContext);
 	void DrawForward(const RenderContext* pRenderContext);
@@ -32,6 +34,7 @@ private:
 
     TestObject* m_pTestObject;
     TestObject2* m_pTestObject2;
+	TestPhysXBox* m_pTestPhysXBox;
 	Character* m_pCharacter;
 
 	const RenderContext* m_pRenderContext;

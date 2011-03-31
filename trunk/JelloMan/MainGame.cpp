@@ -102,9 +102,13 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 		sl.lightEnabled = true;
         m_pLightController->AddLight(sl);
 
+		
+	// PHYSX
+	m_pPhysXEngine = pPhysXEngine;
+
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
-	m_pLevel->Initialize(m_pTrackingCamera);
+	m_pLevel->Initialize(m_pPhysXEngine, m_pTrackingCamera);
 
 	// AUDIO
 	tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
@@ -120,9 +124,6 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	m_pEditorGUI = new EditorGUI();
 	m_pEditorGUI->Initialize();
 
-	// PHYSX
-	m_pPhysXEngine = pPhysXEngine;
-
 	m_bResourcesLoaded = true;
 }
 
@@ -133,14 +134,17 @@ void MainGame::UpdateScene(const float dTime)
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_PLAY)
 		m_pEditorCamera->Tick(dTime);
-	else
-		m_pLevel->Tick(dTime);
+
 
 	m_pAudioEngine->DoWork();
 	m_pTestSound->Tick();
 
 	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
+	{	
+		m_pPhysXEngine->FetchResults();
+		m_pLevel->Tick(dTime);
 		m_pPhysXEngine->Simulate(dTime);
+	}
 
 	if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{

@@ -237,6 +237,9 @@
     <ClInclude Include="Character.h">
       <Filter>Game Files</Filter>
     </ClInclude>
+    <ClInclude Include="Softbody.h">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -400,6 +403,9 @@
     </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Softbody.cpp">
+      <Filter>Engine Files\PhysX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
