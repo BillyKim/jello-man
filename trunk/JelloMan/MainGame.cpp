@@ -139,7 +139,7 @@ void MainGame::UpdateScene(const float dTime)
 	m_pAudioEngine->DoWork();
 	m_pTestSound->Tick();
 
-	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
+	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
 	{	
 		m_pPhysXEngine->FetchResults();
 		m_pLevel->Tick(dTime);
@@ -185,7 +185,7 @@ void MainGame::DrawScene()
 	// --------------------------------------
 
 	// POST PROCESS
-	m_pPostProcessor->Begin();
+	//m_pPostProcessor->Begin();
 
 	// START DEFERRED
 	m_pDeferredRenderer->Begin();
@@ -206,7 +206,7 @@ void MainGame::DrawScene()
 	m_pForwardRenderer->End();
 
 	// POST PROCESS
-	m_pPostProcessor->End();
+	//m_pPostProcessor->End();
 		
 	// --------------------------------------
 

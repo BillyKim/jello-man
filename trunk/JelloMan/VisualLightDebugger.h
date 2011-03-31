@@ -22,6 +22,7 @@ public:
 
 	// GETTERS
 	int GetNrLightsSelected();
+	int GetTotalLightsInScene();
 
 	vector<bool>& GetSpotLightsSelected()
 	{ return m_SLightsSelected; }

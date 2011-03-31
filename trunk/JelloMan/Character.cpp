@@ -60,29 +60,29 @@ void Character::Tick(float dTime)
 		if (CONTROLS->IsKeyDown('Z'))
 			dir += Z;
 		if (CONTROLS->IsKeyDown('Q'))
-			m_RotationAngle -= 0.05f;
+			m_RotationAngle -= (0.05f * dTime * 60);
 	}
 	else
 	{
 		if (CONTROLS->IsKeyDown('W'))
 			dir += Z;
 		if (CONTROLS->IsKeyDown('A'))
-			m_RotationAngle -= 0.05f;
+			m_RotationAngle -= (0.05f * dTime * 60);
 	}
 
 	if (CONTROLS->IsKeyDown('S'))
 		dir -= Z;
 	if (CONTROLS->IsKeyDown('D'))
-		m_RotationAngle += 0.05f;
+		m_RotationAngle += (0.05f * dTime * 60);
 
 	dir.Normalize();
 
 	int speed = m_Speed;
 
 	if (CONTROLS->IsKeyDown(VK_SHIFT))
-		speed *= 2;
+		speed *= 5;
 
-	Move(dir * (float)speed);
+	Move(dir * (float)speed * dTime * 60);
 
 	m_mtxWorld = m_mtxWorld.CreateRotationY(m_RotationAngle) * m_mtxWorld.CreateTranslation(m_Pos);
 

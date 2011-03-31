@@ -22,7 +22,7 @@ EditorGUI::EditorGUI()	:	m_pLightButton(0),
 							m_pMoveGizmo(0),
 							m_pRotateGizmo(0),
 							m_pPlayModeButton(0),
-							m_Mode(MODE_GAME),
+							m_Mode(MODE_EDITOR),
 							m_bPlayModeDown(false)
 {
 
@@ -470,7 +470,7 @@ void EditorGUI::Draw()
 	}
 
 	// CAMERA
-	if (m_bUsingCamera)
+	if (m_bUsingCamera && m_Mode != MODE_PLAY)
 		BLOX_2D->DrawBitmap(m_pCameraBitmap,static_cast<int>(BLOX_2D->GetWindowSize().width-70),90,0.8f);
 
 	BLOX_2D->SetAntiAliasing(true);
