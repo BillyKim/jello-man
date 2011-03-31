@@ -11,6 +11,7 @@
 #include "Matrix.h"
 #include <vector>
 #include "EditorGUI.h"
+#include "PhysX.h"
 
 class AudioEngine;
 
@@ -24,7 +25,7 @@ public:
 
 	// GENERAL
 	void Initialize(GameConfig& refGameConfig);
-	void LoadResources(ID3D10Device* pDXDevice);
+	void LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine);
 	void UpdateScene(const float dTime);
 	void DrawScene();
 	void OnResize(ID3D10RenderTargetView* pRTView);
@@ -44,8 +45,13 @@ private:
 	EditorGUI* m_pEditorGUI;
 
 	Level* m_pLevel;
-	Camera* m_pCamera;
+
+	Camera* m_pEditorCamera;
+	Camera* m_pTrackingCamera;
+
     LightController* m_pLightController;
 	AudioEngine* m_pAudioEngine;
 	Sound* m_pTestSound;
+
+	PhysX* m_pPhysXEngine;
 };

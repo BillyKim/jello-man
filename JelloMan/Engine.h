@@ -15,6 +15,7 @@
 
 #include "Controls.h"
 #include "Blox2D.h"
+#include "PhysX.h"
 
 class KeyboardState;
 class InputStateManager;
@@ -96,6 +97,9 @@ private:
 	GameConfig* m_pGameConfig;
 
 	GameTimer m_GameTimer;
+
+	// PhysX
+	PhysX* m_pPhysXEngine;
 
 private:
 	Engine(const Engine& t);
