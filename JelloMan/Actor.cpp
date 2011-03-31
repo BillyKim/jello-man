@@ -18,21 +18,25 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	m_pPhysX = pPhysX;
 	
 	//Make Actor
-	NxActorDesc ActorDesc;
-	ActorDesc.shapes.push_back(shape.GetShape());
+	NxActorDesc actorDesc;
 	
+	NxBodyDesc bodyDesc;
 	if(moveable == true)
 	{
-		NxBodyDesc bodyDesc;
-		ActorDesc.body = &bodyDesc;
+		/*bodyDesc.angularDamping	= 0.9f;
+		bodyDesc.linearVelocity = NxVec3(0,0,0);
+		actorDesc.body = &bodyDesc;*/
 	}
 	else 
 	{
-		ActorDesc.body = 0;
+		actorDesc.body = 0;
 	}
 
-	ActorDesc.globalPose = static_cast<NxMat34>(m_WorldMatrix);
-	m_pActor = m_pPhysX->GetScene()->createActor(ActorDesc);
+	actorDesc.shapes.push_back(shape.GetShape());
+
+	actorDesc.globalPose = static_cast<NxMat34>(m_WorldMatrix);
+
+	m_pActor = m_pPhysX->GetScene()->createActor(actorDesc);
 
     ASSERT(m_pActor != 0);
 }
@@ -44,7 +48,7 @@ void Actor::Update(float dTime)
 
 void Actor::Translate(const Vector3& pos)
 {
-	ASSERT(m_pActor == 0);
+	ASSERT(m_pActor != 0);
     m_WorldMatrix *= Matrix::CreateTranslation(pos);
 
 	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);

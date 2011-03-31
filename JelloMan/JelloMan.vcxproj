@@ -121,6 +121,7 @@
     <ClInclude Include="PostProcessor.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RotateGizmo.h" />
+    <ClInclude Include="Softbody.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="PostProcessor.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="RotateGizmo.cpp" />
+    <ClCompile Include="Softbody.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />

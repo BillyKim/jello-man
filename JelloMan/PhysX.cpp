@@ -45,9 +45,10 @@ bool PhysX::Init(void)
 
 	// Create ground plane
 	NxPlaneShapeDesc planeDesc;
+	planeDesc.d=-5;//set plane below origine
 	NxActorDesc actorDesc;
 	actorDesc.shapes.pushBack(&planeDesc);
-	m_pScene->createActor(actorDesc);
+	NxActor* plane = m_pScene->createActor(actorDesc);
 
 	NxReal myTimestep = 1/60.0f;
 	m_pScene->setTiming(myTimestep/4.0f,4,NX_TIMESTEP_FIXED);//4 substeps
