@@ -11,6 +11,8 @@
 #include "EdgeDetectionPostEffect.h"
 #include "Character.h"
 #include "PhysX.h"
+#include "LevelObject.h"
+#include "BaseGrid.h"
 
 class Level
 {
@@ -26,6 +28,15 @@ public:
 	void DrawDeferred(const RenderContext* pRenderContext);
 	void DrawForward(const RenderContext* pRenderContext);
 
+	void AddLevelObject(LevelObject* pLevelObject);
+
+	// SETTERS
+	void ShowGrid(bool show)
+	{ m_bShowGrid = show; }
+
+	void TickCharacter(bool tick)
+	{ m_bTickCharacter = tick; }
+
 private:
 
 	// DATAMEMBERS
@@ -39,6 +50,13 @@ private:
 	PhysX* m_pPhysXEngine;
 
 	const RenderContext* m_pRenderContext;
+
+	vector<LevelObject*> m_pLevelObjects;
+
+	BaseGrid* m_pBaseGrid;
+
+	bool m_bShowGrid;
+	bool m_bTickCharacter;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);

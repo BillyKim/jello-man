@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AudioEngine.h" />
+    <ClInclude Include="BaseGrid.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
@@ -103,8 +104,10 @@
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="AssetContainer.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelObject.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightController.h" />
+    <ClInclude Include="LoadModelFromFile.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Model.h" />
@@ -140,6 +143,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
+    <ClCompile Include="BaseGrid.cpp" />
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -162,8 +166,10 @@
     <ClCompile Include="GameWinMain.cpp" />
     <ClCompile Include="AssetContainer.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelObject.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightController.cpp" />
+    <ClCompile Include="LoadModelFromFile.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
@@ -198,6 +204,7 @@
   <ItemGroup>
     <None Include="lights.fx" />
     <None Include="phong.fx" />
+    <None Include="poscol.fx" />
     <None Include="postdeferred.fx" />
     <None Include="postEdgeDetection.fx" />
     <None Include="predeferred.fx" />

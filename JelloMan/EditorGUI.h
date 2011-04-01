@@ -10,6 +10,7 @@
 #include "ColorPicker.h"
 #include "MoveGizmo.h"
 #include "RotateGizmo.h"
+#include "LoadModelFromFile.h"
 
 class EditorGUI
 {
@@ -44,8 +45,19 @@ public:
 	Button* GetPlayButton() const
 	{ return m_pPlayModeButton; }
 
+	Button* GetLoadModelButton() const
+	{ return m_pLoadModelButton; }
+
+	Button* GetShowGridButton() const
+	{ return m_pShowGridButton; }
+
 	MODE GetMode() const
 	{ return m_Mode; }
+
+	LevelObject* GetNewLevelObject();
+
+	bool NewModelLoaded() const
+	{ return m_bNewModelLoaded; }
 
 private:
 
@@ -72,6 +84,10 @@ private:
 	vector<Bitmap*> m_pRotateButtonBitmaps;
 	Button* m_pPlayModeButton;
 	vector<Bitmap*> m_pPlayModeButtonBitmaps;
+	Button* m_pLoadModelButton;
+	vector<Bitmap*> m_pLoadModelButtonBitmaps;
+	Button* m_pShowGridButton;
+	vector<Bitmap*> m_pShowGridButtonBitmaps;
 
 	Bitmap* m_pCameraBitmap;
 
@@ -83,6 +99,7 @@ private:
 
 	bool m_bMoveable;
 	bool m_bRotateable;
+	bool m_bNewModelLoaded;
 
 	const RenderContext* m_pRenderContext;
 
@@ -92,6 +109,8 @@ private:
 	RotateGizmo* m_pRotateGizmo;
 
 	MODE m_Mode;
+
+	LoadModelFromFile* m_pLoadModelFromFile;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);

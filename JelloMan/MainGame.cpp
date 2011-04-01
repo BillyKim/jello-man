@@ -64,7 +64,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	m_pEditorCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 									static_cast<int>(BLOX_2D->GetWindowSize().height),
 									true	);
-    m_pEditorCamera->LookAt(Vector3(-225, 115, -205), Vector3(0, 0, 0), Vector3(0, 1, 0));
+    m_pEditorCamera->LookAt(Vector3(-500, 300, -500), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	m_pEditorCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
 
 	m_pTrackingCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
@@ -94,7 +94,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
     SpotLight sl;
         //Omni 1
         sl = SpotLight();
-        sl.position = Vector3(0.0f,400.0f,0.0f);
+        sl.position = Vector3(0.0f,200.0f,0.0f);
         sl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
         sl.multiplier = 1.5f;
 		sl.AttenuationStart = 0;
@@ -136,8 +136,20 @@ void MainGame::UpdateScene(const float dTime)
 	m_dTtime = dTime;
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_PLAY)
+	{
+		m_pLevel->TickCharacter(false);
 		m_pEditorCamera->Tick(dTime);
+	}
+	else
+		m_pLevel->TickCharacter(true);
 
+	if (m_pEditorGUI->NewModelLoaded())
+	{
+		LevelObject* newLvlObj = m_pEditorGUI->GetNewLevelObject();
+		newLvlObj->Init(m_pPhysXEngine);
+
+		m_pLevel->AddLevelObject(newLvlObj);
+	}
 
 	m_pAudioEngine->DoWork();
 	m_pTestSound->Tick();
@@ -148,6 +160,11 @@ void MainGame::UpdateScene(const float dTime)
 		m_pLevel->Tick(dTime);
 		m_pPhysXEngine->Simulate(dTime);
 	}
+
+	if (m_pEditorGUI->GetShowGridButton()->IsActive())
+		m_pLevel->ShowGrid(true);
+	else
+		m_pLevel->ShowGrid(false);
 
 	if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{
@@ -161,9 +178,11 @@ void MainGame::UpdateScene(const float dTime)
 		}
 	}
 	
-	if (CONTROLS->IsKeyDown(VK_ADD))
+	if (CONTROLS->IsKeyPressed(VK_ADD))
 	{
-		m_pTestSound->SetVolume(m_pTestSound->GetVolume() + 1);
+		//m_pTestSound->SetVolume(m_pTestSound->GetVolume() + 1);
+
+		
 	}
 	else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
 	{
@@ -174,6 +193,8 @@ void MainGame::UpdateScene(const float dTime)
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_LIT);
 	else
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);
+
+	m_pEditorGUI->Tick(m_pRenderContext);
 }
 
 void MainGame::DrawScene()
@@ -183,6 +204,7 @@ void MainGame::DrawScene()
 	else
 		m_pRenderContext->SetCamera(m_pEditorCamera);
 
+	//m_pEditorGUI->DrawGrid();
 		
 	// --------------------------------------
 	//			   RENDER SCENE
@@ -214,7 +236,6 @@ void MainGame::DrawScene()
 		
 	// --------------------------------------
 
-	m_pEditorGUI->Tick(m_pRenderContext);
 	m_pEditorGUI->Draw();
 
 	BLOX_2D->SetColor(255,255,255);
