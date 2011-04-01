@@ -243,6 +243,15 @@
     <ClInclude Include="TestPhysXSphere.h">
       <Filter>Game Files</Filter>
     </ClInclude>
+    <ClInclude Include="BaseGrid.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelObject.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadModelFromFile.h">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -413,6 +422,15 @@
     <ClCompile Include="TestPhysXSphere.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoadModelFromFile.cpp">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseGrid.cpp">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelObject.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx">
@@ -428,6 +446,9 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="postEdgeDetection.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="poscol.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

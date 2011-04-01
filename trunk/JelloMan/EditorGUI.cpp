@@ -23,7 +23,11 @@ EditorGUI::EditorGUI()	:	m_pLightButton(0),
 							m_pRotateGizmo(0),
 							m_pPlayModeButton(0),
 							m_Mode(MODE_EDITOR),
-							m_bPlayModeDown(false)
+							m_bPlayModeDown(false),
+							m_pLoadModelButton(0),
+							m_pLoadModelFromFile(0),
+							m_bNewModelLoaded(false),
+							m_pShowGridButton(0)
 {
 
 }
@@ -70,11 +74,20 @@ EditorGUI::~EditorGUI()
 	for (vector<Bitmap*>::iterator it = m_pPlayModeButtonBitmaps.begin(); it != m_pPlayModeButtonBitmaps.end(); ++it)
 		delete (*it);
 
+	delete m_pLoadModelButton;
+	for (vector<Bitmap*>::iterator it = m_pLoadModelButtonBitmaps.begin(); it != m_pLoadModelButtonBitmaps.end(); ++it)
+		delete (*it);
+
+	delete m_pShowGridButton;
+	for (vector<Bitmap*>::iterator it = m_pShowGridButtonBitmaps.begin(); it != m_pShowGridButtonBitmaps.end(); ++it)
+		delete (*it);
+
 	delete m_pCameraBitmap;
 	delete m_pLightDebugger;
 	delete m_pColorPicker;
 	delete m_pMoveGizmo;
 	delete m_pRotateGizmo;
+	delete m_pLoadModelFromFile;
 }
 
 // GENERAL
@@ -204,6 +217,33 @@ void EditorGUI::Initialize()
 	m_pPlayModeButton->SetHoverState(m_pPlayModeButtonBitmaps[1]);
 	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
 
+	// LOAD MODEL BUTTON
+	m_pLoadModelButton = new Button(310,7,36,36);
+
+	m_pLoadModelButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_model_normal.png")));
+	m_pLoadModelButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_model_hover.png")));
+
+	m_pLoadModelButton->SetNormalState(m_pLoadModelButtonBitmaps[0]);
+	m_pLoadModelButton->SetHoverState(m_pLoadModelButtonBitmaps[1]);
+	m_pLoadModelButton->SetDownState(m_pLoadModelButtonBitmaps[1]);
+
+	// SHOW GRID BUTTON
+	m_pShowGridButton = new Button(370,7,36,36,true);
+
+	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_on_normal.png")));
+	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_on_hover.png")));
+	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_off_normal.png")));
+	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_off_hover.png")));
+
+	m_pShowGridButton->SetNormalState(m_pShowGridButtonBitmaps[0]);
+	m_pShowGridButton->SetHoverState(m_pShowGridButtonBitmaps[1]);
+	m_pShowGridButton->SetDownState(m_pShowGridButtonBitmaps[1]);
+	m_pShowGridButton->SetDeactivatedState(m_pShowGridButtonBitmaps[2]);
+	m_pShowGridButton->SetDeactivatedStateHover(m_pShowGridButtonBitmaps[3]);
+	m_pShowGridButton->SetDeactivatedStateDown(m_pShowGridButtonBitmaps[3]);
+
+	m_pShowGridButton->SetState(Button::STATE_NORMAL);
+
 	// CAMERA
 	m_pCameraBitmap = new Bitmap(_T("Content/Images/Editor/camera.png"));
 
@@ -218,6 +258,8 @@ void EditorGUI::Initialize()
 
 	// ROTATE GIZMO
 	m_pRotateGizmo = new RotateGizmo();
+
+	m_pLoadModelFromFile = new LoadModelFromFile();
 }
 void EditorGUI::Draw()
 {
@@ -469,6 +511,22 @@ void EditorGUI::Draw()
 		BLOX_2D->DrawString(_T("Play and interact with the objects in the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
 	}
 
+	m_pLoadModelButton->Show();
+	if (m_pLoadModelButton->Hover() || m_pLoadModelButton->Down())
+	{
+		BLOX_2D->SetColor(255,255,255,0.5f);
+		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+		BLOX_2D->DrawString(_T("Load new model from file and place it into the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+	}
+
+	m_pShowGridButton->Show();
+	if (m_pShowGridButton->Hover() || m_pShowGridButton->Down())
+	{
+		BLOX_2D->SetColor(255,255,255,0.5f);
+		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+		BLOX_2D->DrawString(_T("Shows 3D ground grid."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+	}
+
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != MODE_PLAY)
 		BLOX_2D->DrawBitmap(m_pCameraBitmap,static_cast<int>(BLOX_2D->GetWindowSize().width-70),90,0.8f);
@@ -499,6 +557,8 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	m_pSpotlightButton->Tick();
 	m_pRotateButton->Tick();
 	m_pPlayModeButton->Tick();
+	m_pLoadModelButton->Tick();
+	m_pShowGridButton->Tick();
 
 	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
 		m_pColorPickerButton->Tick();
@@ -561,6 +621,22 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 		m_pLightDebugger->DeselectAll();
 
 		cout << "Added spotlight\n";
+	}
+
+	if (!m_pLoadModelFromFile)
+	{
+		if (m_pLoadModelFromFile->LevelObjectExtracted())
+			SafeDelete(m_pLoadModelFromFile);
+	}
+
+	if (m_pLoadModelButton->Clicked())
+	{
+		SafeDelete(m_pLoadModelFromFile);
+
+		m_pLoadModelFromFile = new LoadModelFromFile();
+		m_pLoadModelFromFile->LoadNewModel();
+
+		m_bNewModelLoaded = true;
 	}
 
 	// CAMERA
@@ -646,3 +722,9 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 }
 
 // GETTERS
+LevelObject* EditorGUI::GetNewLevelObject()
+{
+	m_bNewModelLoaded = false;
+
+	return m_pLoadModelFromFile->GetLevelObject();
+}
