@@ -87,12 +87,7 @@ void Level::DrawDeferred(const RenderContext* pRenderContext)
 	//m_pTestObject->Draw(pRenderContext);
 	
 	m_pCharacter->Draw(pRenderContext);
-<<<<<<< .mine
-	for (int i = 0; i < m_vecTestPhysXBox.size(); ++i)
-		m_vecTestPhysXBox[i]->Draw(pRenderContext);
-=======	for (int i = 0; i < m_vecActor.size(); ++i)
-		m_vecActor[i]->Draw(pRenderContext);
->>>>>>> .theirs
+
 	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 	{
 		(*it)->Draw(pRenderContext);
