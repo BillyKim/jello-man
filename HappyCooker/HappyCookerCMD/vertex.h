@@ -56,3 +56,27 @@ struct VertexPos //12
 
     Vector3 position;
 };
+
+//===============================================================
+struct VertexPNTSoftbody
+{
+    VertexPNTSoftbody():
+		position(0.0f, 0.0f, 0.0f),
+		normal(0.0f, 0.0f, 0.0f),
+		tex(0.0f, 0.0f),
+        tetra(0),
+        barycentricCoords(0.f, 0.f, 0.f)
+	{
+	}
+    VertexPNTSoftbody(const Vector3& p, const Vector3& n, const Vector2& tx, unsigned long t, const Vector3& bc)
+		:position(p), normal(n), tex(tx),
+        tetra(t), barycentricCoords(bc)
+	{
+	}
+
+	Vector3 position;
+	Vector3 normal;
+	Vector2 tex;
+    unsigned long tetra;
+    Vector3 barycentricCoords;
+};

@@ -41,9 +41,32 @@ public:
 	    return mesh;
     }
 
+    ModelMesh<VertexPNTSoftbody>* GetSoftbodyDrawMesh() const { return m_SoftbodyDrawMesh; }
+    ModelMesh<VertexPNTSoftbody>* SetSoftbodyDrawMesh()
+    {
+	    ModelMesh<VertexPNTSoftbody>* mesh = new ModelMesh<VertexPNTSoftbody>("");
+	    m_SoftbodyDrawMesh = mesh;
+	    return mesh;
+    }
+
+    ModelMesh<VertexPos>* GetSoftbodyMesh() const { return m_SoftbodyMesh; }
+    ModelMesh<VertexPos>* SetSoftbodyMesh()
+    {
+	    ModelMesh<VertexPos>* mesh = new ModelMesh<VertexPos>("");
+	    m_SoftbodyMesh = mesh;
+	    return mesh;
+    }
+
+    bool IsSoftBody() { return m_IsSoftbody; }
+    void SetIsSoftBody(bool value) { m_IsSoftbody = value; }
+
 private:
+    bool m_IsSoftbody;
+
     vector<ModelMesh<VertexPosNormTex>*> m_DrawMeshes;
     vector<ModelMesh<VertexPos>*> m_PhysXMeshes;
 
+    ModelMesh<VertexPos>* m_SoftbodyMesh;
+    ModelMesh<VertexPNTSoftbody>* m_SoftbodyDrawMesh;
 };
 

@@ -17,9 +17,9 @@ public:
     virtual ~LevelObject();
 
 	// GENERAL
-    void Init(PhysX* pPhysX);
-	void Tick(const float dTime);
-    void Draw(const RenderContext* pRenderContext);
+    virtual void Init(PhysX* pPhysX);
+	virtual void Tick(const float dTime);
+    virtual void Draw(const RenderContext* pRenderContext);
 
 	// SETTERS
 	void SetModelPath(tstring modelPath)
