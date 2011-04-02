@@ -34,7 +34,7 @@ bool ConcaveCooker::Cook()
 		// Build the triangle mesh.
 		NxTriangleMeshDesc meshDesc;
 		meshDesc.numVertices				= mesh->GetNumVertices();
-		meshDesc.numTriangles				= mesh->GetNumTriangles();
+		meshDesc.numTriangles				= mesh->GetNumIndices() / 3;
 		meshDesc.pointStrideBytes			= mesh->GetNumBytesPerVertex();
 		meshDesc.triangleStrideBytes		= mesh->GetNumBytesPerIndex() * 3;
         meshDesc.points						= static_cast<const void*>(mesh->GetVertices().data());

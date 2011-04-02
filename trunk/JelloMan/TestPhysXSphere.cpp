@@ -2,7 +2,7 @@
 #include "PhysXSphere.h"
 #include "ContentManager.h"
 
-TestPhysXSphere::TestPhysXSphere(PhysX* pPhysX, const Vector3& pos) : Actor()
+TestPhysXSphere::TestPhysXSphere(PhysX* pPhysX, const Vector3& pos)
 {
     PhysXSphere sphere(50.0f, 1000);
     InitActor(pPhysX, sphere, true);

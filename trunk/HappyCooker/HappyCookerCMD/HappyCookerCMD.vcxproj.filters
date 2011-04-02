@@ -57,6 +57,9 @@
     <ClCompile Include="BinCooker.cpp">
       <Filter>Engine Files\Cooking</Filter>
     </ClCompile>
+    <ClCompile Include="SoftbodyCooker.cpp">
+      <Filter>Engine Files\Cooking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model.h">
@@ -93,6 +96,9 @@
       <Filter>Engine Files\Cooking</Filter>
     </ClInclude>
     <ClInclude Include="BinCooker.h">
+      <Filter>Engine Files\Cooking</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftbodyCooker.h">
       <Filter>Engine Files\Cooking</Filter>
     </ClInclude>
   </ItemGroup>

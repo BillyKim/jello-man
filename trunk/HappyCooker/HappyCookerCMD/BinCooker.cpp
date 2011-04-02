@@ -38,9 +38,9 @@ bool BinCooker::Cook()
         }
 
         //store Indices
-        stream.storeDword(mesh->GetNumTriangles());
-        const vector<NxU32>& ind = mesh->GetIndices();
-        for (unsigned int i = 0; i < mesh->GetNumTriangles() * 3; ++i)
+        stream.storeDword(mesh->GetNumIndices() / 3);
+        const vector<DWORD>& ind = mesh->GetIndices();
+        for (DWORD i = 0; i < mesh->GetNumIndices(); ++i)
         {
             stream.storeDword(ind[i]);
         }

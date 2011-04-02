@@ -15,7 +15,7 @@ public:
     {
     }
    
-    void SetIndices(vector<unsigned int> indices)
+    void SetIndices(vector<DWORD> indices)
     {
 	    m_VecIndices = indices;
     }   
@@ -24,16 +24,16 @@ public:
 	    m_VecVertices = vertices;
     }  
 
-    const vector<unsigned int>& GetIndices() const { return m_VecIndices; }
+    const vector<DWORD>& GetIndices() const { return m_VecIndices; }
     const vector<T>& GetVertices() const { return m_VecVertices; }
 
     unsigned int GetNumVertices() const
     {
         return m_VecVertices.size();
     }
-    unsigned int GetNumTriangles() const
+    unsigned int GetNumIndices() const
     {
-        return m_VecIndices.size() / 3;
+        return m_VecIndices.size();
     }
     unsigned int GetNumBytesPerVertex() const
     {
@@ -50,7 +50,7 @@ public:
 
 private:
     string m_Name;
-    vector<unsigned int> m_VecIndices;
+    vector<DWORD> m_VecIndices;
     vector<T> m_VecVertices;
 };
 

@@ -10,6 +10,14 @@
 #include <map>
 #include "ProgressInfo.h"
 
+struct SBLink
+{
+    SBLink(int t, const Vector3& bc) : tetra(t), barycentricCoord(bc) {}
+
+    int tetra;
+    Vector3 barycentricCoord;
+};
+
 class ModelLoader
 {
 public:
@@ -21,13 +29,17 @@ public:
 	Model* Load(const string& assetName);
 
 private:
-    void ReadObj(const string& assetName);
+    void ReadObj(const string& assetName, bool isSoftbody);
+    void ReadTet(const string& fileName);
+    void LinkSBtoModel(const string& fileName);
 
-    void AddVertex(const Vector3& v);
+    void AddVertex(const Vector3& v, bool isSoftbody);
     void AddNormal(const Vector3& v);
     void AddTexCoord(const Vector2& v);
     void AddMesh(const string& name);
     void AddTri(const vector<vector<int>>& data);
+    void AddTetra(int t1, int t2, int t3, int t4);
+    void AddSBLink(int t, const Vector3& bc);
     void FlushMesh();
 
     vector<Vector3> m_VertexData;
@@ -35,10 +47,15 @@ private:
     vector<Vector2> m_TextureData;
 
     vector<VertexPosNormTex> m_VPNTData;
-    map<string, unsigned int> m_VPNTMap;
+    map<string, DWORD> m_VPNTMap;
+
     vector<VertexPos> m_VPData;
-    map<string, unsigned int> m_VPMap;
-    vector<unsigned int> m_IndexData;
+    map<string, DWORD> m_VPMap;
+
+    vector<DWORD> m_IndexData;
+
+    vector<SBLink> m_SBLinkData;
+    vector<DWORD> m_TetraData;
 
     Model* m_pCurrentModel;
     ModelMesh<VertexPos>* m_pCurrentPhysXMesh;

@@ -52,7 +52,7 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 
 void Level::Tick(const float dTime)
 {
-	if (CONTROLS->IsKeyDown(VK_SPACE))
+    if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{
         if (rand() % 2 == 0)
         {
@@ -92,6 +92,9 @@ void Level::DrawDeferred(const RenderContext* pRenderContext)
 	{
 		(*it)->Draw(pRenderContext);
 	}
+
+    for (int i = 0; i < m_vecActor.size(); ++i)
+        m_vecActor[i]->Draw(pRenderContext);
 
 	m_pRenderContext = pRenderContext;
 }
