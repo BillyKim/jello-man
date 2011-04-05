@@ -16,7 +16,7 @@ MoveGizmo::~MoveGizmo()
 }
 
 // GENERAL
-void MoveGizmo::Show(Vector3& position, TYPE type, int id)
+void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelObject)
 {
 	// MATRIX
 	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -34,8 +34,18 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id)
 	viewP.MinDepth = 0;
 	viewP.MaxDepth = 1;
 
+	D3DXVECTOR3 pos;
 	// POSITION
-	D3DXVECTOR3 pos = position.ToD3DVector3();
+	if (type != TYPE_MODEL)
+		pos = position.ToD3DVector3();
+	else
+	{
+		pos = D3DXVECTOR3(
+			pLevelObject->GetPosition().X,
+			pLevelObject->GetPosition().Y,
+			pLevelObject->GetPosition().Z	);
+	}
+
 	Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
 
 	Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - Vector3(pos);
@@ -211,6 +221,14 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id)
 
 				m_OldSpotLightPos[id].x = mousePosPlusZX_3D.x;
 			}
+			else if (type == TYPE_MODEL)
+			{
+				float diffX = m_OldModelPos[id].x - mousePosPlusZX_3D.x;
+
+				pLevelObject->Translate(Vector3(-diffX,0,0));
+
+				m_OldModelPos[id].x = mousePosPlusZX_3D.x;
+			}
 		}
 		else
 		{
@@ -218,6 +236,8 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id)
 				m_OldPointLightPos[id].x = mousePosPlusZX_3D.x;
 			else if (type == TYPE_SPOTLIGHT)
 				m_OldSpotLightPos[id].x = mousePosPlusZX_3D.x;
+			else if (type == TYPE_MODEL)
+				m_OldModelPos[id].x = mousePosPlusZX_3D.x;
 		}
 
 		// Y
@@ -327,6 +347,14 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id)
 
 				m_OldSpotLightPos[id].y = mousePosPlusZY_3D.y;
 			}
+			else if (type == TYPE_MODEL)
+			{
+				float diffY = m_OldModelPos[id].y - mousePosPlusZY_3D.y;
+
+				pLevelObject->Translate(Vector3(0, -diffY, 0));
+
+				m_OldModelPos[id].y = mousePosPlusZY_3D.y;
+			}
 		}
 		else
 		{
@@ -334,6 +362,8 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id)
 				m_OldPointLightPos[id].y = mousePosPlusZY_3D.y;
 			else if (type == TYPE_SPOTLIGHT)
 				m_OldSpotLightPos[id].y = mousePosPlusZY_3D.y;
+			else if (type == TYPE_MODEL)
+				m_OldModelPos[id].y = mousePosPlusZY_3D.y;
 		}
 	
 		// Z
@@ -444,6 +474,14 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id)
 
 				m_OldSpotLightPos[id].z = mousePosPlusZZ_3D.z;
 			}
+			else if (type == TYPE_MODEL)
+			{
+				float diffZ = m_OldModelPos[id].z - mousePosPlusZZ_3D.z;
+
+				pLevelObject->Translate(Vector3(0, 0, -diffZ));
+
+				m_OldModelPos[id].z = mousePosPlusZZ_3D.z;
+			}
 		}
 		else
 		{
@@ -451,11 +489,13 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id)
 				m_OldPointLightPos[id].z = mousePosPlusZZ_3D.z;
 			else if (type == TYPE_SPOTLIGHT)
 				m_OldSpotLightPos[id].z = mousePosPlusZZ_3D.z;
+			else if (type == TYPE_MODEL)
+				m_OldModelPos[id].z = mousePosPlusZZ_3D.z;
 		}
 	}
 }
 
-void MoveGizmo::Tick(const RenderContext* pRenderContext)
+void MoveGizmo::Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects)
 {
 	m_pRenderContext = pRenderContext;
 
@@ -467,5 +507,10 @@ void MoveGizmo::Tick(const RenderContext* pRenderContext)
 	while (m_pRenderContext->GetLightController()->GetSpotLights().size() > m_OldSpotLightPos.size())
 	{
 		m_OldSpotLightPos.push_back(D3DXVECTOR3(0,0,0));
+	}
+
+	while (pLevelObjects.size() > m_OldModelPos.size())
+	{
+		m_OldModelPos.push_back(D3DXVECTOR3(0,0,0));
 	}
 }

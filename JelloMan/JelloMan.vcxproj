@@ -81,7 +81,10 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="BaseGrid.h" />
+    <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Blox2D.h" />
+    <ClInclude Include="Blox2D_Engine.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Color.h" />
@@ -91,6 +94,7 @@
     <ClInclude Include="CookingStream.h" />
     <ClInclude Include="DeferredPostEffect.h" />
     <ClInclude Include="DeferredPreEffect.h" />
+    <ClInclude Include="DeferredPreEffectNormals.h" />
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="EdgeDetectionPostEffect.h" />
     <ClInclude Include="EditorGUI.h" />
@@ -103,6 +107,7 @@
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="AssetContainer.h" />
+    <ClInclude Include="HitRegion.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelObject.h" />
     <ClInclude Include="Light.h" />
@@ -139,12 +144,15 @@
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="VisualLightDebugger.h" />
+    <ClInclude Include="VisualModelDebugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BaseGrid.cpp" />
+    <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="Blox2D.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Color.cpp" />
@@ -154,6 +162,7 @@
     <ClCompile Include="CookingStream.cpp" />
     <ClCompile Include="DeferredPostEffect.cpp" />
     <ClCompile Include="DeferredPreEffect.cpp" />
+    <ClCompile Include="DeferredPreEffectNormals.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="EdgeDetectionPostEffect.cpp" />
     <ClCompile Include="EditorGUI.cpp" />
@@ -165,6 +174,7 @@
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GameWinMain.cpp" />
     <ClCompile Include="AssetContainer.cpp" />
+    <ClCompile Include="HitRegion.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelObject.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -200,6 +210,7 @@
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="vertex.cpp" />
     <ClCompile Include="VisualLightDebugger.cpp" />
+    <ClCompile Include="VisualModelDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lights.fx" />
@@ -208,6 +219,7 @@
     <None Include="postdeferred.fx" />
     <None Include="postEdgeDetection.fx" />
     <None Include="predeferred.fx" />
+    <None Include="predeferredNormal.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,6 +16,12 @@ public:
 	void Translate(const Vector3& pos);
 	void AddForce(const Vector3& pos);
 
+	// GETTERS
+	NxActor* GetActor() const
+	{ return m_pActor; }
+
+	Vector3 GetPosition() const;
+
 protected:
 	PhysX* m_pPhysX;
 	NxActor* m_pActor;

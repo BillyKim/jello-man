@@ -39,7 +39,7 @@ Texture2D* ContentManager::LoadTexture2D(const tstring& assetName)
     return m_pTextureLoader->Load(m_pDevice, assetName);
 }
 
-Model<VertexPosNormTex>* ContentManager::LoadModel(const tstring& assetName)
+Model<VertexPosNormTanTex>* ContentManager::LoadModel(const tstring& assetName)
 {
     return m_pModelLoader->Load(m_pDevice, assetName);
 }

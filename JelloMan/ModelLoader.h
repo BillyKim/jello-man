@@ -10,7 +10,7 @@
 #include "vertex.h"
 #include <vector>
 
-class ModelLoader : public AssetContainer<Model<VertexPosNormTex>>
+class ModelLoader : public AssetContainer<Model<VertexPosNormTanTex>>
 {
 public:
     //------Constructor-Destructor------->
@@ -18,14 +18,22 @@ public:
 	virtual ~ModelLoader(void);
     //<-----------------------------------
 	
-	Model<VertexPosNormTex>* Load(ID3D10Device *pDXDevice, const tstring& assetName);
+	Model<VertexPosNormTanTex>* Load(ID3D10Device *pDXDevice, const tstring& assetName);
+	Model<VertexPosNormTanTex>* LoadWithTangents(ID3D10Device *pDXDevice, const tstring& assetName);
 
 private:
     void ReadBinObj(const tstring& assetName);
     void ReadASCIIObj(const tstring& assetName);
 
+	void CalculateTangent(	Vector3& v1, Vector3& v2, Vector3& v3,	// in
+							Vector3& n1,							// in
+							Vector2& t1, Vector2& t2, Vector2& t3,	// in
+							Vector3& tangent						// out
+						);
+
     void AddVertex(const Vector3& v);
     void AddNormal(const Vector3& v);
+	void AddTangent(const Vector3& v);
     void AddTexCoord(const Vector2& v);
     void AddMesh(const tstring& name);
     void AddTri(const vector<vector<int>>& data);
@@ -33,14 +41,15 @@ private:
 
     vector<Vector3> m_VertexData;
     vector<Vector3> m_NormalData;
+	vector<Vector3> m_TangentData;
     vector<Vector2> m_TextureData;
 
-    vector<VertexPosNormTex> m_VPNTData;
-    map<string, DWORD> m_VPNTMap;
+    vector<VertexPosNormTanTex> m_VPNTTData;
+    map<string, DWORD> m_VPNTTMap;
     vector<DWORD> m_IndexData;
 
-    Model<VertexPosNormTex>* m_pCurrentModel;
-    ModelMesh<VertexPosNormTex>* m_pCurrentMesh;
+    Model<VertexPosNormTanTex>* m_pCurrentModel;
+    ModelMesh<VertexPosNormTanTex>* m_pCurrentMesh;
 
 	ModelLoader(const ModelLoader& t);
 	ModelLoader& operator=(const ModelLoader& t);

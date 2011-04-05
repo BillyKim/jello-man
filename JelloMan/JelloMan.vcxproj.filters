@@ -252,6 +252,24 @@
     <ClInclude Include="LoadModelFromFile.h">
       <Filter>Engine Files\Graphics\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="VisualModelDebugger.h">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredPreEffectNormals.h">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="HitRegion.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitmap.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Blox2D_Engine.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -431,6 +449,21 @@
     <ClCompile Include="LevelObject.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
+    <ClCompile Include="VisualModelDebugger.cpp">
+      <Filter>Engine Files\Graphics\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredPreEffectNormals.cpp">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="HitRegion.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Bitmap.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx">
@@ -449,6 +482,9 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="poscol.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="predeferredNormal.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

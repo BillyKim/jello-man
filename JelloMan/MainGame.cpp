@@ -49,8 +49,8 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 {
 	// TEST - gameconfig word nog file!
 	refGameConfig.SetTitle(_T("Happy Engine"));
-	refGameConfig.SetWindowWidth(1440);
-	refGameConfig.SetWindowHeight(800);
+	refGameConfig.SetWindowWidth(1800);
+	refGameConfig.SetWindowHeight(1000);
 	refGameConfig.SetBlox2DAntiAliasing(true);
 	refGameConfig.SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT_AZERTY);
 	refGameConfig.UsePhysX(true);
@@ -65,7 +65,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 									static_cast<int>(BLOX_2D->GetWindowSize().height),
 									true	);
     m_pEditorCamera->LookAt(Vector3(-500, 300, -500), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	m_pEditorCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
+	m_pEditorCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,0.1f,10000.0f);
 
 	m_pTrackingCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 									static_cast<int>(BLOX_2D->GetWindowSize().height),
@@ -76,15 +76,18 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	// RENDERERS
 	m_pDeferredRenderer = new DeferredRenderer(pDXDevice);
 	m_pForwardRenderer = new ForwardRenderer(pDXDevice);
+
 	m_pPostProcessor = new PostProcessor(	pDXDevice,
 											static_cast<int>(BLOX_2D->GetWindowSize().width),
 											static_cast<int>(BLOX_2D->GetWindowSize().height));
+	
 	m_pEdgeDetectionEffect = Content->LoadEffect<EdgeDetectionPostEffect>(_T("postEdgeDetection.fx"));
     m_pEdgeDetectionEffect->SetTechnique(0);
 
 	m_pDeferredRenderer->Init(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 								static_cast<int>(BLOX_2D->GetWindowSize().height));
 	m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
+	
 	m_pPostProcessor->SetEffect(m_pEdgeDetectionEffect);
 
     // LIGHTCONTROLLER
@@ -94,7 +97,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
     SpotLight sl;
         //Omni 1
         sl = SpotLight();
-        sl.position = Vector3(0.0f,200.0f,0.0f);
+        sl.position = Vector3(0.0f,400.0f,0.0f);
         sl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
         sl.multiplier = 1.5f;
 		sl.AttenuationStart = 0;
@@ -124,7 +127,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	m_pTestSound->SetVolume(90);
 
 	// GUI
-	m_pEditorGUI = new EditorGUI();
+	m_pEditorGUI = new EditorGUI(m_pPhysXEngine);
 	m_pEditorGUI->Initialize();
 
 	m_bResourcesLoaded = true;
@@ -166,7 +169,7 @@ void MainGame::UpdateScene(const float dTime)
 	else
 		m_pLevel->ShowGrid(false);
 
-	if (CONTROLS->IsKeyPressed(VK_SPACE))
+	/*if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{
 		if (!m_pTestSound->IsPlaying())
 		{
@@ -187,14 +190,14 @@ void MainGame::UpdateScene(const float dTime)
 	else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
 	{
 		m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
-	}
+	}*/
 
 	if (m_pEditorGUI->GetLightButton()->IsActive())
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_LIT);
 	else
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);
 
-	m_pEditorGUI->Tick(m_pRenderContext);
+	m_pEditorGUI->Tick(m_pRenderContext, m_pLevel->GetLevelObjects());
 }
 
 void MainGame::DrawScene()
@@ -203,8 +206,6 @@ void MainGame::DrawScene()
 		m_pRenderContext->SetCamera(m_pTrackingCamera);
 	else
 		m_pRenderContext->SetCamera(m_pEditorCamera);
-
-	//m_pEditorGUI->DrawGrid();
 		
 	// --------------------------------------
 	//			   RENDER SCENE

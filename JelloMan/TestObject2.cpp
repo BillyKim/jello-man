@@ -18,7 +18,7 @@ void TestObject2::Init()
 
     m_pEffect = Content->LoadEffect<PhongEffect>(_T("phong.fx"));
 
-    m_pModel = Content->LoadModel(_T("Content/Models/test3.obj"));
+//    m_pModel = Content->LoadModel(_T("Content/Models/test3.obj"));
    
     for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
     {

@@ -25,7 +25,7 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 		NxBodyDesc bodyDesc;
 		bodyDesc.mass = shape.GetShape()->mass;
 		bodyDesc.angularDamping = 0.5f;
-        bodyDesc.linearDamping = 0.2;
+        bodyDesc.linearDamping = 0.2f;
         bodyDesc.flags |= NX_BF_ENERGY_SLEEP_TEST;
         bodyDesc.sleepEnergyThreshold = 5000.0f;
 		actorDesc.body = &bodyDesc;		
@@ -61,4 +61,12 @@ void Actor::AddForce(const Vector3& pos)
 {
 	NxVec3 v = static_cast<NxVec3>(pos);
 	m_pActor->addForce(v);
+}
+
+Vector3 Actor::GetPosition() const
+{
+	return Vector3(
+		m_pActor->getGlobalPosition().x,
+		m_pActor->getGlobalPosition().y,
+		m_pActor->getGlobalPosition().z);
 }
