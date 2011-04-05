@@ -20,8 +20,10 @@ Character::~Character()
 }
 
 // GENERAL
-void Character::Tick(float dTime)
+void Character::Tick(const float dTime)
 {
+	Actor::Tick(dTime);
+
 	// MOVE CHARACTER
 	Vector3 dir(0.0f, 0.0f, 0.0f);
 	Vector3 Z(0.0f,0.0f,1.0f);
@@ -61,14 +63,18 @@ void Character::Tick(float dTime)
 	if (CONTROLS->IsKeyDown(VK_SHIFT))
 		speed *= 5;
 
+	Vector3 oldPos = m_Pos;
+
 	Move(dir * (float)speed * dTime * 60);
+
+	Translate(m_Pos - oldPos);
 
 	m_WorldMatrix = m_WorldMatrix.CreateRotationY(m_RotationAngle) * m_WorldMatrix.CreateTranslation(m_Pos);
 
 	// MOVE CAMERA
 	Zdx.y -= 0.5;
 	Vector3 posCam = m_Pos - (Vector3(Zdx) * 200);
-	Vector3 posChar = m_Pos;
+	Vector3 posChar = Vector3(m_pActor->getGlobalPosition().x,m_pActor->getGlobalPosition().y,m_pActor->getGlobalPosition().z);
 	posChar.Y += 50;
 
 	m_pTrackingCamera->LookAt(posCam,posChar,Vector3(0, 1, 0));

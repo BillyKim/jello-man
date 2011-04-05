@@ -25,7 +25,7 @@ void TestSoftbody::Init(PhysX* pPhysX)
     m_pGlossMap = Content->LoadTexture2D(_T("Content/Textures/weapon_gloss.png"));
 }
 
-void TestSoftbody::Tick(float dTime)
+void TestSoftbody::Tick(const float dTime)
 {
 }
 

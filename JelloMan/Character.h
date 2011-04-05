@@ -17,7 +17,7 @@ public:
 	virtual ~Character();
 
 	// GENERAL
-	void Tick(float dTime);
+	virtual void Tick(const float dTime);
 	void Move(Vector3 move);
 
 private:

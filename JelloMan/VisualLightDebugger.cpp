@@ -116,13 +116,13 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
-	if (pRenderContext->GetLightController()->GetPointLights().size() > m_PLightsSelected.size())
+	while (pRenderContext->GetLightController()->GetPointLights().size() > m_PLightsSelected.size())
 	{
 		m_pPLightHitRects.push_back(new HitRegion(HitRegion::TYPE_ELLIPSE, -10 ,-10, 10, 10));
 		m_PLightsSelected.push_back(false);
 	}
 
-	if (pRenderContext->GetLightController()->GetSpotLights().size() > m_SLightsSelected.size())
+	while (pRenderContext->GetLightController()->GetSpotLights().size() > m_SLightsSelected.size())
 	{
 		m_pSLightHitRects.push_back(new HitRegion(HitRegion::TYPE_ELLIPSE, -10 ,-10, 10, 10));
 		m_SLightsSelected.push_back(false);
@@ -133,6 +133,28 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 
 void VisualLightDebugger::CheckControls()
 {
+	/*if (CONTROLS->IsKeyPressed(VK_DELETE))
+	{
+		int i = 0;
+
+		vector<PointLight>::iterator it = m_pRenderContext->GetLightController()->GetPointLights().begin();
+
+		vector<vector<PointLight>::iterator> positionsToDelete;
+
+		for (; it != m_pRenderContext->GetLightController()->GetPointLights().end(); ++it)
+		{
+			if (m_PLightsSelected[i])
+				positionsToDelete.push_back(it);
+
+			++i;
+		}
+
+		for (int i2 = 0; i2 < positionsToDelete.size(); ++i2)
+		{
+			m_pRenderContext->GetLightController()->GetPointLights().erase(positionsToDelete[i2]);
+		}
+	}*/
+
 	if (CONTROLS->IsKeyDown(VK_LCONTROL) && CONTROLS->IsKeyDown('D'))
 	{
 		for (unsigned int i = 0; i < m_PLightsSelected.size(); ++i)
@@ -610,3 +632,13 @@ int VisualLightDebugger::GetTotalLightsInScene()
 
 	return s;
 }
+
+//bool VisualLightDebugger::SpotLightSelected(SpotLight* sl)
+//{
+//	return false;
+//}
+//
+//bool VisualLightDebugger::PointLightSelected(PointLight* pl)
+//{
+//	return false;
+//}
