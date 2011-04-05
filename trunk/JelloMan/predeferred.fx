@@ -2,10 +2,10 @@ cbuffer cbPerObject
 {
 	matrix mtxWorld : World;
 	matrix mtxWVP : WorldViewProjection;
+	bool selected : Selected;
 };
 
 Texture2D diffuseMap : DiffuseMap;
-//Texture2D normalMap : NormalMap;
 Texture2D specMap : SpecMap;
 Texture2D glossMap : GlossMap;
 
@@ -56,8 +56,6 @@ VertexShaderOutput  VS(VertexShaderInput input)
 	output.worldPos = mul(float4(input.position, 1.0f), mtxWorld).xyz;
 
 	output.normal = mul(float4(input.normal, 0.0f), mtxWorld).xyz;
-	//output.tangent = mul(float4(input.tangent, 0.0f), mtxWorld);
-	//output.binormal = mul(float4(input.binormal, 0.0f), mtxWorld);
 
 	output.texCoord = input.texCoord;
 
@@ -75,7 +73,10 @@ PixelShaderOutput  PS(VertexShaderOutput input)
 {
 	PixelShaderOutput output;
 	output.color = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, 1.0f);
-	//output.color = float4(1, 0, 0, 1);
+
+	if (selected)
+		output.color += float4(1.0f,1.0f,0.0f,0.5f);
+
 	output.normalSpec = float4(input.normal, specMap.Sample(mapSampler, input.texCoord).r);
 	output.positionGloss = float4(input.worldPos, glossMap.Sample(mapSampler, input.texCoord).r);
 

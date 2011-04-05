@@ -3,7 +3,7 @@
 #include "D3DUtil.h"
 #include "Vector4.h"
 #include "Controls.h"
-#include "Blox2D.h"
+#include "Blox2D_Engine.h"
 
 class Camera
 {

@@ -8,7 +8,7 @@ Camera::Camera(int windowWidth, int windowHeight, bool bControllable) :	m_Speed(
 																		m_MouseSensitivity(100),
 																		m_FOV(PiOver4),
 																		m_AspectRatio(4.0f/3.0f),
-																		m_NearClippingPlane(10.0f),
+																		m_NearClippingPlane(0.1f),
 																		m_FarClippingPlane(10000.0f),
 																		m_bIsActive(true),
 																		m_bControllable(bControllable)

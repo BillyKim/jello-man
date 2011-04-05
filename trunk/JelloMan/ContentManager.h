@@ -24,7 +24,7 @@ public:
     }
 
 	Texture2D* LoadTexture2D(const tstring& assetName);
-	Model<VertexPosNormTex>* LoadModel(const tstring& assetName);
+	Model<VertexPosNormTanTex>* LoadModel(const tstring& assetName);
 
 	static ContentManager* GetSingleton();
 

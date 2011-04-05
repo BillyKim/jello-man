@@ -7,7 +7,8 @@ DeferredPreEffect::DeferredPreEffect(ID3D10Device* pDXDevice, ID3D10Effect* pEff
                 m_pWVP(GetVariableBySemantic("WorldViewProjection")->AsMatrix()),
                 m_pDiffuseMap(GetVariableBySemantic("DiffuseMap")->AsShaderResource()),
                 m_pSpecMap(GetVariableBySemantic("SpecMap")->AsShaderResource()),
-                m_pGlossMap(GetVariableBySemantic("GlossMap")->AsShaderResource())
+                m_pGlossMap(GetVariableBySemantic("GlossMap")->AsShaderResource()),
+				m_bSelected(GetVariableBySemantic("Selected")->AsScalar())
 {    
     ASSERT(m_pWorld->IsValid());
     ASSERT(m_pWVP->IsValid());
@@ -42,4 +43,8 @@ void DeferredPreEffect::SetSpecMap(Texture2D* specMap)
 void DeferredPreEffect::SetGlossMap(Texture2D* glossMap)
 {
     m_pGlossMap->SetResource(glossMap->GetColorMap());
+}
+void DeferredPreEffect::Selected(bool selected)
+{
+	m_bSelected->SetBool(selected);
 }

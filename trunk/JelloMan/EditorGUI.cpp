@@ -2,32 +2,34 @@
 
 
 // CONSTRUCTOR - DESTRUCTOR
-EditorGUI::EditorGUI()	:	m_pLightButton(0),
-							m_pCameraBitmap(0),
-							m_bUsingCamera(false),
-							m_pMoveButton(0),
-							m_pGameModeButton(0),
-							m_pEditorModeButton(0),
-							m_pPointlightButton(0),
-							m_pSpotlightButton(0),
-							m_bGameModeDown(false),
-							m_bEditorModeDown(false),
-							m_pRenderContext(0),
-							m_bMoveable(false),
-							m_pColorPickerButton(0),
-							m_pApplyButton(0),
-							m_pRotateButton(0),
-							m_pLightDebugger(0),
-							m_pColorPicker(0),
-							m_pMoveGizmo(0),
-							m_pRotateGizmo(0),
-							m_pPlayModeButton(0),
-							m_Mode(MODE_EDITOR),
-							m_bPlayModeDown(false),
-							m_pLoadModelButton(0),
-							m_pLoadModelFromFile(0),
-							m_bNewModelLoaded(false),
-							m_pShowGridButton(0)
+EditorGUI::EditorGUI(PhysX* pPhysXEngine)	:	m_pLightButton(0),
+												m_pCameraBitmap(0),
+												m_bUsingCamera(false),
+												m_pMoveButton(0),
+												m_pGameModeButton(0),
+												m_pEditorModeButton(0),
+												m_pPointlightButton(0),
+												m_pSpotlightButton(0),
+												m_bGameModeDown(false),
+												m_bEditorModeDown(false),
+												m_pRenderContext(0),
+												m_bMoveable(false),
+												m_pColorPickerButton(0),
+												m_pApplyButton(0),
+												m_pRotateButton(0),
+												m_pLightDebugger(0),
+												m_pColorPicker(0),
+												m_pMoveGizmo(0),
+												m_pRotateGizmo(0),
+												m_pPlayModeButton(0),
+												m_Mode(MODE_EDITOR),
+												m_bPlayModeDown(false),
+												m_pLoadModelButton(0),
+												m_pLoadModelFromFile(0),
+												m_bNewModelLoaded(false),
+												m_pShowGridButton(0),
+												m_pModelDebugger(0),
+												m_pPhysXEngine(pPhysXEngine)
 {
 
 }
@@ -88,6 +90,7 @@ EditorGUI::~EditorGUI()
 	delete m_pMoveGizmo;
 	delete m_pRotateGizmo;
 	delete m_pLoadModelFromFile;
+	delete m_pModelDebugger;
 }
 
 // GENERAL
@@ -260,6 +263,9 @@ void EditorGUI::Initialize()
 	m_pRotateGizmo = new RotateGizmo();
 
 	m_pLoadModelFromFile = new LoadModelFromFile();
+
+	// MODEL DEBUGGER
+	m_pModelDebugger = new VisualModelDebugger(m_pPhysXEngine);
 }
 void EditorGUI::Draw()
 {
@@ -530,6 +536,12 @@ void EditorGUI::Draw()
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != MODE_PLAY)
 		BLOX_2D->DrawBitmap(m_pCameraBitmap,static_cast<int>(BLOX_2D->GetWindowSize().width-70),90,0.8f);
+	
+
+	if (m_Mode == MODE_EDITOR)
+	{
+		m_pModelDebugger->Draw();
+	}
 
 	BLOX_2D->SetAntiAliasing(true);
 
@@ -546,7 +558,7 @@ void EditorGUI::Draw()
 		Blox2D::HORIZONTAL_ALIGN_RIGHT,
 		Blox2D::VERTICAL_ALIGN_BOTTOM);*/
 }
-void EditorGUI::Tick(const RenderContext* pRenderContext)
+void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects)
 {
 	// BUTTONS
 	m_pLightButton->Tick();
@@ -564,63 +576,75 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 		m_pColorPickerButton->Tick();
 
 	m_pLightDebugger->Tick(pRenderContext);
-	m_pMoveGizmo->Tick(pRenderContext);
+	m_pMoveGizmo->Tick(pRenderContext, pLevelObjects);
 	m_pRotateGizmo->Tick(pRenderContext);
 
-	if (m_pPointlightButton->Clicked())
+	for (unsigned int i = 0; i < m_pModelDebugger->GetModelsSelected().size(); ++i)
 	{
-		Vector3 look = pRenderContext->GetCamera()->GetLook();
-		look.Normalize();
-
-		PointLight pl;
-		pl = PointLight();
-		pl.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
-
-		BYTE r = 180;
-		BYTE g = 180;
-		BYTE b = 200;
-
-		pl.color = Color(r, g, b, 1);
-		pl.multiplier = 1.0f;
-		pl.AttenuationStart = 0;
-		pl.AttenuationEnd = 200;
-		pl.lightEnabled = true;
-
-		pRenderContext->GetLightController()->AddLight(pl);
-
-		m_pLightDebugger->DeselectAll();
-
-		cout << "Added pointlight\n";
+		if (m_pModelDebugger->GetModelsSelected()[i] == true)
+		{
+			if (m_bMoveable)
+				m_pMoveGizmo->Show(Vector3(0,0,0), MoveGizmo::TYPE_MODEL, i, pLevelObjects[i]);
+		}
 	}
 
-	if (m_pSpotlightButton->Clicked())
+	if (m_Mode == MODE_EDITOR)
 	{
-		Vector3 look = pRenderContext->GetCamera()->GetLook();
-		look.Normalize();
+		if (m_pPointlightButton->Clicked())
+		{
+			Vector3 look = pRenderContext->GetCamera()->GetLook();
+			look.Normalize();
 
-		SpotLight sl;
-		sl = SpotLight();
-		sl.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
+			PointLight pl;
+			pl = PointLight();
+			pl.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
 
-		BYTE r = 180;
-		BYTE g = 180;
-		BYTE b = 200;
+			BYTE r = 180;
+			BYTE g = 180;
+			BYTE b = 200;
 
-		sl.color = Color(r, g, b, 1);
-		sl.multiplier = 1.0f;
-		sl.AttenuationStart = 0;
-		sl.AttenuationEnd = 200;
-		sl.power = 2;
-		sl.direction = Vector3(0.0f,-1.0f,0.0f);
-		sl.lightEnabled = true;
-		sl.shadowsEnabled = false;
-		sl.shadowMapSize = 256;
+			pl.color = Color(r, g, b, 1);
+			pl.multiplier = 1.0f;
+			pl.AttenuationStart = 0;
+			pl.AttenuationEnd = 200;
+			pl.lightEnabled = true;
 
-		pRenderContext->GetLightController()->AddLight(sl);
+			pRenderContext->GetLightController()->AddLight(pl);
 
-		m_pLightDebugger->DeselectAll();
+			m_pLightDebugger->DeselectAll();
 
-		cout << "Added spotlight\n";
+			cout << "Added pointlight\n";
+		}
+
+		if (m_pSpotlightButton->Clicked())
+		{
+			Vector3 look = pRenderContext->GetCamera()->GetLook();
+			look.Normalize();
+
+			SpotLight sl;
+			sl = SpotLight();
+			sl.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
+
+			BYTE r = 180;
+			BYTE g = 180;
+			BYTE b = 200;
+
+			sl.color = Color(r, g, b, 1);
+			sl.multiplier = 1.0f;
+			sl.AttenuationStart = 0;
+			sl.AttenuationEnd = 200;
+			sl.power = 2;
+			sl.direction = Vector3(0.0f,-1.0f,0.0f);
+			sl.lightEnabled = true;
+			sl.shadowsEnabled = false;
+			sl.shadowMapSize = 256;
+
+			pRenderContext->GetLightController()->AddLight(sl);
+
+			m_pLightDebugger->DeselectAll();
+
+			cout << "Added spotlight\n";
+		}
 	}
 
 	if (!m_pLoadModelFromFile)
@@ -718,6 +742,11 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	else
 	{
 		m_pColorPicker->PreviousColorSet(false);
+	}
+
+	if (m_Mode == MODE_EDITOR)
+	{
+		m_pModelDebugger->Tick(pRenderContext, pLevelObjects);
 	}
 }
 

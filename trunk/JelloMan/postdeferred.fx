@@ -143,7 +143,6 @@ float3  PS_Spot(VertexShaderOutput input)
 	vLightDir /= dist; //normalize
 	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
 	float3 normal = normalize(normalSpec.xyz);
-
 	
 	float s = dot(-vLightDir, spotLight.Direction);
 	s = pow(s, spotLight.Radius);

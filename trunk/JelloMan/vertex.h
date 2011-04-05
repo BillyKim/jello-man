@@ -76,6 +76,39 @@ struct VertexPosNormTex //12 + 12 + 8 = 32
 };
 
 //===============================================================
+struct VertexPosNormTanTex //12 + 12 + 12 + 8 = 46
+{
+	VertexPosNormTanTex():
+		position(0.0f, 0.0f, 0.0f),
+		normal(0.0f, 0.0f, 0.0f),
+		tangent(0.0f,0.0f,0.0f),
+		tex(0.0f, 0.0f)
+	{
+	}
+
+	VertexPosNormTanTex(	float x, float y, float z, 
+							float nx, float ny, float nz,
+							float tx, float ty, float tz,
+							float u, float v):
+		position(x,y,z), 
+		normal(nx,ny,nz),
+		tangent(tx,ty,tz),
+		tex(u,v)
+	{
+	}
+
+	VertexPosNormTanTex(const Vector3& p, const Vector3& n,  const Vector3& tg, const Vector2& t)
+		:position(p), normal(n), tangent(tg), tex(t)
+	{
+	}
+
+	Vector3 position;
+	Vector3 normal;
+	Vector3 tangent;
+	Vector2 tex;
+};
+
+//===============================================================
 struct VertexPos //12
 {
     VertexPos(): position(0.0f, 0.0f, 0.0f) {}
@@ -129,6 +162,18 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[2], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        elements = desc.size();
+    }
+	else if (sizeof(T) == sizeof(VertexPosNormTanTex))
+    {
+        desc.push_back(D3D10_INPUT_ELEMENT_DESC());
+        desc.push_back(D3D10_INPUT_ELEMENT_DESC());
+        desc.push_back(D3D10_INPUT_ELEMENT_DESC());
+		desc.push_back(D3D10_INPUT_ELEMENT_DESC());
+        GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
+		GetInputElementDesc(desc[2], "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[3], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D10_INPUT_PER_VERTEX_DATA, 0);
         elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPosTex))

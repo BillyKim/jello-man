@@ -2,7 +2,7 @@
 #include "D3DUtil.h"
 #include <vector>
 #include "Light.h"
-#include "Blox2D.h"
+#include "Blox2D_Engine.h"
 #include "Camera.h"
 #include "Controls.h"
 #include "ContentManager.h"

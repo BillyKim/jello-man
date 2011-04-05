@@ -1,12 +1,13 @@
 #pragma once
 #include "Model.h"
 #include "Texture2D.h"
-#include "DeferredPreEffect.h"
+#include "DeferredPreEffectNormals.h"
 #include "Vector4.h"
 #include "Matrix.h"
 #include "RenderContext.h"
 #include "PhysX.h"
 #include "Actor.h"
+#include "DeferredPreEffect.h"
 
 class LevelObject : public Actor
 {
@@ -37,8 +38,26 @@ public:
 	void SetPhysXModelPath(tstring physXModelPath)
 	{ m_PhysXModelPath = physXModelPath; }
 
-	void SetPos(Vector3 pos)
-	{ m_Pos = pos; }
+	void SetNormalPath(tstring normalPath)
+	{ m_NormalPath = normalPath; }
+
+	void UseSimplifiedPhysXMesh(bool use)
+	{ m_bUseSimplifiedPhysXMesh = use; }
+
+	void SetSimplifiedPhysXMesh(PhysXShape* pPhysXShape)
+	{ m_pPhysXShape = pPhysXShape; }
+
+	void SetMass(int mass)
+	{ m_Mass = mass; }
+
+	void SetRigid(bool rigid)
+	{ m_bRigid = rigid; }
+
+	void UseNormalMap(bool use)
+	{ m_bUseNormalMap = use; }
+
+	void Selected(bool selected)
+	{ m_bIsSelected = selected; }
 
 	// GETTERS
 	bool IsInitialized() const
@@ -52,14 +71,22 @@ private:
 	tstring m_SpecPath;
 	tstring m_GlossPath;
 	tstring m_PhysXModelPath;
+	tstring m_NormalPath;
 
 	bool m_bInitialized;
+	bool m_bUseSimplifiedPhysXMesh;
+	bool m_bRigid;
+	bool m_bUseNormalMap;
+	bool m_bIsSelected;
 
-    Model<VertexPosNormTex>* m_pModel;
-    DeferredPreEffect* m_pEffect;
-    Texture2D* m_pDiffuseMap, *m_pSpecMap, *m_pGlossMap;
-    Matrix m_mtxWorld;
+	int m_Mass;
 
-	Vector3 m_Pos;
+    Model<VertexPosNormTanTex>* m_pModel;
+
+    DeferredPreEffectNormals* m_pEffectNormals;
+	DeferredPreEffect* m_pEffect;
+
+    Texture2D* m_pDiffuseMap, *m_pSpecMap, *m_pGlossMap, *m_pNormalMap;
+	PhysXShape* m_pPhysXShape;
 };
 

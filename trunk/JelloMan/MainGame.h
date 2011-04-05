@@ -1,7 +1,7 @@
 #include "D3DUtil.h"
 
 #include "Controls.h"
-#include "Blox2D.h"
+#include "Blox2D_Engine.h"
 #include "GameConfig.h"
 #include "Level.h"
 #include "RenderContext.h"

@@ -19,6 +19,7 @@ void LoadModelFromFile::LoadNewModel()
 	tstring diffusePath = _T("");
 	tstring specPath = _T("");
 	tstring glossPath = _T("");
+	tstring normalPath = _T("");
 
 	if (modelPath == _T(""))
 	{
@@ -78,6 +79,36 @@ void LoadModelFromFile::LoadNewModel()
 		GetOpenFileNameW(&opf);
 
 		physXModelPath = opf.lpstrFile;
+	}
+
+	if (normalPath == _T(""))
+	{
+		wchar_t filePath[256];
+
+		OPENFILENAME opf;
+		opf.hwndOwner = 0;
+		opf.lpstrFilter = L"*.png|*.png";
+		opf.lpstrCustomFilter = 0;
+		opf.nMaxCustFilter = 0L;
+		opf.nFilterIndex = 1L;
+		opf.lpstrFile = filePath;
+		opf.lpstrFile[0] = '\0';
+		opf.nMaxFile = 255;
+		opf.lpstrFileTitle = 0;
+		opf.nMaxFileTitle=50;
+		opf.lpstrInitialDir = 0;
+		opf.lpstrTitle = L"Open Normal Map";
+		opf.nFileOffset = 0;
+		opf.nFileExtension = 2;
+		opf.lpstrDefExt = L"*.*";
+		opf.lpfnHook = NULL;
+		opf.lCustData = 0;
+		opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
+		opf.lStructSize = sizeof(OPENFILENAMEW);
+
+		GetOpenFileNameW(&opf);
+
+		normalPath = opf.lpstrFile;
 	}
 
 	if (diffusePath == _T(""))
@@ -176,6 +207,7 @@ void LoadModelFromFile::LoadNewModel()
 	m_pLevelObject->SetDiffusePath(diffusePath);
 	m_pLevelObject->SetSpecPath(specPath);
 	m_pLevelObject->SetGlossPath(glossPath);
+	m_pLevelObject->SetNormalPath(normalPath);
 
 	m_bIsLoaded = true;
 }

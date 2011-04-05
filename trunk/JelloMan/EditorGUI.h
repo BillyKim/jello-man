@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Blox2D.h"
+#include "Blox2D_Engine.h"
 #include "Controls.h"
 #include <vector>
 #include "Camera.h"
@@ -11,6 +11,8 @@
 #include "MoveGizmo.h"
 #include "RotateGizmo.h"
 #include "LoadModelFromFile.h"
+#include "LevelObject.h"
+#include "VisualModelDebugger.h"
 
 class EditorGUI
 {
@@ -24,13 +26,13 @@ public:
 	};
 
 	// CONSTRUCTOR - DESTRUCTOR
-	EditorGUI();
+	EditorGUI(PhysX* pPhysXEngine);
 	virtual ~EditorGUI();
 
 	// GENERAL
 	void Initialize();
 	void Draw();
-	void Tick(const RenderContext* pRenderContext);
+	void Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects);
 
 	// GETTERS
 	Button* GetLightButton() const
@@ -111,6 +113,10 @@ private:
 	MODE m_Mode;
 
 	LoadModelFromFile* m_pLoadModelFromFile;
+
+	PhysX* m_pPhysXEngine;
+
+	VisualModelDebugger* m_pModelDebugger;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);

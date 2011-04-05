@@ -25,7 +25,7 @@ void TestPhysXBox::Init()
 
     m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
 
-    m_pModel = Content->LoadModel(_T("Content/Models/box50.binobj"));
+//    m_pModel = Content->LoadModel(_T("Content/Models/box50.binobj"));
     
     for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
     {

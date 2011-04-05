@@ -5,7 +5,7 @@
 #include "ForwardRenderer.h"
 #include "TestObject.h"
 #include "TestObject2.h"
-#include "Blox2D.h"
+#include "Blox2D_Engine.h"
 #include "RenderContext.h"
 #include "PostProcessor.h"
 #include "EdgeDetectionPostEffect.h"
@@ -37,14 +37,15 @@ public:
 	void TickCharacter(bool tick)
 	{ m_bTickCharacter = tick; }
 
+	// GETTERS
+	vector<LevelObject*> GetLevelObjects() const
+	{ return m_pLevelObjects; }
+
 private:
 
 	// DATAMEMBERS
 	ID3D10Device* m_pDXDevice;
 
-    TestObject* m_pTestObject;
-    TestObject2* m_pTestObject2;
-	vector<Actor*> m_vecActor;
 	Character* m_pCharacter;
 
 	PhysX* m_pPhysXEngine;

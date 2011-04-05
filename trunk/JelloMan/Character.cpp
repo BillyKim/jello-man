@@ -2,12 +2,7 @@
 #include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-Character::Character(Camera* pTrackingCamera)	:	m_pModel(0),
-													m_pEffect(0),
-													m_mtxWorld(Matrix::Identity),
-													m_pDiffuseMap(0),
-													m_pSpecMap(0),
-													m_pGlossMap(0),
+Character::Character(Camera* pTrackingCamera)	:	LevelObject(),
 													m_Speed(2),
 													m_RotationAngle(0),
 													m_pTrackingCamera(pTrackingCamera)
@@ -17,30 +12,14 @@ Character::Character(Camera* pTrackingCamera)	:	m_pModel(0),
 
 Character::~Character()
 {
-	delete m_pModel;
+	/*delete m_pModel;
 	delete m_pEffect;
 	delete m_pDiffuseMap;
 	delete m_pSpecMap;
-	delete m_pGlossMap;
+	delete m_pGlossMap;*/
 }
 
 // GENERAL
-void Character::Init()
-{
-	m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Textures/weapon_diffuse.png"));
-    m_pSpecMap = Content->LoadTexture2D(_T("Content/Textures/weapon_spec.png"));
-    m_pGlossMap = Content->LoadTexture2D(_T("Content/Textures/weapon_gloss.png"));
-
-    m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
-
-    m_pModel = Content->LoadModel(_T("Content/Models/jman.binobj"));
-    
-    for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
-    {
-        (*it)->SetEffect(m_pEffect);
-    }
-}
-
 void Character::Tick(float dTime)
 {
 	// MOVE CHARACTER
@@ -84,7 +63,7 @@ void Character::Tick(float dTime)
 
 	Move(dir * (float)speed * dTime * 60);
 
-	m_mtxWorld = m_mtxWorld.CreateRotationY(m_RotationAngle) * m_mtxWorld.CreateTranslation(m_Pos);
+	m_WorldMatrix = m_WorldMatrix.CreateRotationY(m_RotationAngle) * m_WorldMatrix.CreateTranslation(m_Pos);
 
 	// MOVE CAMERA
 	Zdx.y -= 0.5;
@@ -93,18 +72,6 @@ void Character::Tick(float dTime)
 	posChar.Y += 50;
 
 	m_pTrackingCamera->LookAt(posCam,posChar,Vector3(0, 1, 0));
-}
-
-void Character::Draw(const RenderContext* pRenderContext)
-{
-	m_pEffect->SetDiffuseMap(m_pDiffuseMap);
-    m_pEffect->SetSpecMap(m_pSpecMap);
-    m_pEffect->SetGlossMap(m_pGlossMap);
-
-    m_pEffect->SetWorld(m_mtxWorld);
-	m_pEffect->SetWorldViewProjection(m_mtxWorld * pRenderContext->GetCamera()->GetViewProjection());
-
-    m_pModel->Draw();
 }
 
 void Character::Move(Vector3 move)

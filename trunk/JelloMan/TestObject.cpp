@@ -19,7 +19,7 @@ void TestObject::Init(PhysX* pPhysX)
 
     m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
 
-    m_pModel = Content->LoadModel(_T("Content/Models/lvl_opt_physX.binobj"));
+//    m_pModel = Content->LoadModel(_T("Content/Models/lvl_opt_physX.binobj"));
     
     for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
     {
