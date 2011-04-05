@@ -3,12 +3,12 @@
 
 
 
-EffectLoader::EffectLoader(void) : AssetContainer()
+EffectLoader::EffectLoader(void) : m_pAssets(new AssetContainer<Effect>)
 {
 
 }
 
 EffectLoader::~EffectLoader(void)
 {
-	AssetContainer::~AssetContainer();
+	delete m_pAssets;
 }

@@ -130,6 +130,7 @@
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RotateGizmo.h" />
     <ClInclude Include="Softbody.h" />
+    <ClInclude Include="SoftbodyMesh.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="TestObject2.h" />
     <ClInclude Include="TestPhysXBox.h" />
     <ClInclude Include="TestPhysXSphere.h" />
+    <ClInclude Include="TestSoftbody.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Vector2.h" />
@@ -180,6 +182,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightController.cpp" />
     <ClCompile Include="LoadModelFromFile.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
@@ -196,6 +199,7 @@
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="RotateGizmo.cpp" />
     <ClCompile Include="Softbody.cpp" />
+    <ClCompile Include="SoftbodyMesh.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
@@ -203,6 +207,7 @@
     <ClCompile Include="TestObject2.cpp" />
     <ClCompile Include="TestPhysXBox.cpp" />
     <ClCompile Include="TestPhysXSphere.cpp" />
+    <ClCompile Include="TestSoftbody.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Vector2.cpp" />

@@ -4,11 +4,10 @@
 #include "vertex.h"
 #include "Effect.h"
 
-template<typename T>
-class ModelMesh
+class SoftbodyMesh
 {
 public:
-    ModelMesh(ID3D10Device* device, const tstring& name) : 
+    SoftbodyMesh(ID3D10Device* device, const tstring& name) : 
 			      m_pDevice(device)
 			    , m_pIndexBuffer(0)
 			    , m_pVertexBuffer(0)
@@ -18,14 +17,14 @@ public:
                 , m_Name(name)
     {
     }
-    ~ModelMesh(void)
+    ~SoftbodyMesh(void)
     {
 	    SafeRelease(m_pVertexBuffer);
 	    SafeRelease(m_pIndexBuffer);
         SafeRelease(m_pInputLayout);
     }
    
-    void SetIndices(vector<DWORD> indices)
+    void SetIndices(const vector<DWORD>& indices)
     {
 	    m_VecIndices = indices;
     
@@ -36,7 +35,7 @@ public:
 	    ibd.Usage = D3D10_USAGE_IMMUTABLE;
 	    ibd.ByteWidth = sizeof(DWORD) * m_VecIndices.size();
 	    ibd.BindFlags = D3D10_BIND_INDEX_BUFFER;
-	    ibd.CPUAccessFlags = 0;
+	    ibd.CPUAccessFlags = 0;//D3D10_CPU_ACCESS_WRITE;
 	    ibd.MiscFlags = 0;
 
 	    D3D10_SUBRESOURCE_DATA initData;
@@ -44,34 +43,76 @@ public:
 
 	    HR(m_pDevice->CreateBuffer(&ibd, &initData, &m_pIndexBuffer));
     }   
-    void SetVertices(vector<T> vertices)
+    void SetVertices(const vector<VertexPosNormTanTex>& vertices)
     {
-	    m_VecVertices = vertices;
+	    if (m_pVertexBuffer == 0)
+        {
+	        m_VecVertices = vertices;
 
-	    //if buffer exists => release
-	    SafeRelease(m_pVertexBuffer);
+	        D3D10_BUFFER_DESC bd;
+            bd.Usage = D3D10_USAGE_DYNAMIC;
+	        bd.ByteWidth = sizeof( VertexPosNormTanTex ) * m_VecVertices.size();
+	        bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
+            bd.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
+	        bd.MiscFlags = 0;
 
-	    D3D10_BUFFER_DESC bd;
-	    bd.Usage = D3D10_USAGE_IMMUTABLE;
-	    bd.ByteWidth = sizeof( T ) * m_VecVertices.size();
-	    bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
-	    bd.CPUAccessFlags = 0;
-	    bd.MiscFlags = 0;
+	        D3D10_SUBRESOURCE_DATA initData;
+	        initData.pSysMem = &m_VecVertices[0];
 
-	    D3D10_SUBRESOURCE_DATA initData;
-	    initData.pSysMem = &m_VecVertices[0];
+	        HR(m_pDevice->CreateBuffer( &bd, &initData, &m_pVertexBuffer ));
+        }
+        else
+        {
+            ASSERT(vertices.size() == m_VecVertices.size());
 
-	    HR(m_pDevice->CreateBuffer( &bd, &initData, &m_pVertexBuffer ));
+            void *pVertices;
+            HR(m_pVertexBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &pVertices));
+
+            //To GPU
+            memcpy(pVertices, static_cast<const void*>(vertices.data()), sizeof(VertexPosNormTanTex) * vertices.size());
+
+            m_pVertexBuffer->Unmap();
+
+            //To CPU
+            memcpy(static_cast<void*>(m_VecVertices.data()), static_cast<const void*>(vertices.data()), sizeof(VertexPosNormTanTex) * vertices.size());
+
+        }
     }  
-    const vector<T>& GetVertices()
+    void SetTetra(const vector<DWORD>& tetra)
+    {
+        m_VecTetra = tetra;
+    }
+    void SetBaryCentricCoords(const vector<Vector3>& bc)
+    {
+        m_VecBC = bc;
+    }
+
+    const vector<VertexPosNormTanTex>& GetVertices() const
     {
         return m_VecVertices;
     }
+    const vector<DWORD>& GetIndices() const
+    {
+        return m_VecIndices;
+    }
+    const vector<DWORD>& GetTetra() const
+    {
+        return m_VecTetra;
+    }
+    const vector<Vector3>& GetBaryCentricCoords() const
+    {
+        return m_VecBC;
+    }
+
     void SetEffect(Effect* effect)
     {
 	    m_pEffect = effect;
         CreateInputLayout();
     }   
+    Effect* GetEffect() const
+    {
+	    return m_pEffect;
+    }  
     void CreateInputLayout()
     {    
         SafeRelease(m_pInputLayout);
@@ -79,21 +120,21 @@ public:
         // Define the input layout
         vector<D3D10_INPUT_ELEMENT_DESC> veclayout;
         UINT numElements;
-        GetInputElementDesc<T>(veclayout, numElements);
+        GetInputElementDesc<VertexPosNormTanTex>(veclayout, numElements);
 
         D3D10_PASS_DESC PassDesc;
         m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->GetDesc(&PassDesc);
 
         HR(m_pDevice->CreateInputLayout(&veclayout[0], numElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &m_pInputLayout));
 
-        m_VertexBufferStride = sizeof(T);
+        m_VertexBufferStride = sizeof(VertexPosNormTanTex);
     }
 
-
-    Effect* GetEffect() const
+    void SetName(const tstring& name)
     {
-	    return m_pEffect;
-    }  
+        m_Name = name;
+    }
+
     void Draw()
     {
         ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && m_pEffect != 0);
@@ -128,8 +169,10 @@ private:
     ID3D10InputLayout* m_pInputLayout;
     UINT m_VertexBufferStride;
 
-	vector<T> m_VecVertices;
+	vector<VertexPosNormTanTex> m_VecVertices;
 	vector<DWORD> m_VecIndices;
+	vector<DWORD> m_VecTetra;
+	vector<Vector3> m_VecBC;
 
     tstring m_Name;
 

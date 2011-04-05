@@ -10,7 +10,7 @@ class Actor
 public:
 	virtual ~Actor(void);
 
-    virtual void Update(float dTime);
+    virtual void Tick(float dTime);
     virtual void Draw(const RenderContext* pRenderContext) = 0;
 
 	void Translate(const Vector3& pos);

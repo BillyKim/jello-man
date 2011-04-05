@@ -14,7 +14,7 @@ public:
 	Vector3(float x, float y, float z);
 	Vector3(const Vector2& v2, float z);
 	explicit Vector3(const D3DXVECTOR3& v3);
-	//Vector3(const NxVec3& v3);
+	explicit Vector3(const NxVec3& v3);
 
     //Static const
     static const Vector3 Up;

@@ -36,7 +36,6 @@ public:
 private:
     ID3D10Device* m_pDevice;
     vector<ModelMesh<T>*> m_Meshes;
-
 };
 
 template <typename T>

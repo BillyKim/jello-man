@@ -38,9 +38,10 @@ MainGame::~MainGame()
 	delete m_pDeferredRenderer;
 	delete m_pForwardRenderer;
 	delete m_pPostProcessor;
-	delete m_pEdgeDetectionEffect;
 	delete m_pLevel;
 	delete m_pRenderContext;
+
+    delete Content;
 
 	m_pPhysXEngine = 0;
 }

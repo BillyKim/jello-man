@@ -57,12 +57,13 @@ bool PhysX::Init(void)
 	//(if debug?)
 	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
 	m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
-    m_pPhysicsSDK->setParameter(NxParameter::NX_DEFAULT_SLEEP_ENERGY, 50000.0f);
-    m_pPhysicsSDK->setParameter(NxParameter::NX_DYN_FRICT_SCALING, 100.0f);
-    m_pPhysicsSDK->setParameter(NxParameter::NX_STA_FRICT_SCALING, 100.0f);
+    m_pPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_ENERGY, 50000.0f);
+    m_pPhysicsSDK->setParameter(NX_DYN_FRICT_SCALING, 100.0f);
+    m_pPhysicsSDK->setParameter(NX_STA_FRICT_SCALING, 100.0f);
 	//create a scene object
 	NxSceneDesc sceneDesc;
 	sceneDesc.gravity.set(0, -981.0f, 0);
+    //sceneDesc.flags |= NX_SF_SEQUENTIAL_PRIMARY;
 	m_pScene = m_pPhysicsSDK->createScene(sceneDesc);
 	if(!m_pScene)
 	{

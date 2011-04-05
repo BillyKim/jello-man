@@ -43,6 +43,10 @@ Model<VertexPosNormTanTex>* ContentManager::LoadModel(const tstring& assetName)
 {
     return m_pModelLoader->Load(m_pDevice, assetName);
 }
+SoftbodyMesh* ContentManager::LoadSoftbodyMesh(const tstring& assetName)
+{
+    return m_pModelLoader->LoadSoftbodyMesh(m_pDevice, assetName);
+}
 
 //Static Method
 ContentManager* ContentManager::GetSingleton()

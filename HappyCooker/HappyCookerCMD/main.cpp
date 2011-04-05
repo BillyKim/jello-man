@@ -2,6 +2,7 @@
 #include "ConvexCooker.h"
 #include "ConcaveCooker.h"
 #include "BinCooker.h"
+#include "SoftbodyCooker.h"
 
 
 bool CookBin(Model* m, const string& outputFilename)
@@ -17,6 +18,11 @@ bool CookConvex(Model* m, const string& outputFilename)
 bool CookConcave(Model* m, const string& outputFilename)
 {
     ConcaveCooker cooker(m, outputFilename);
+    return cooker.Cook();
+}
+bool CookSoftbody(Model* m, const string& outputFilename)
+{
+    SoftbodyCooker cooker(m, outputFilename);
     return cooker.Cook();
 }
 
@@ -56,6 +62,17 @@ void PrefromAction(const string& action, Model* m)
         else
         {
             cout << "ConcaveCooking FAILED!\n";
+        }
+    }
+    else if (action == "3")
+    {
+        if (CookSoftbody(m, outputFilename))
+        {
+            cout << "Softbodycooking succeeded!\n";
+        }
+        else
+        {
+            cout << "Softbodycooking FAILED!\n";
         }
     }
 }

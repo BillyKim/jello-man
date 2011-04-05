@@ -91,7 +91,7 @@ float3  PS_Point(VertexShaderOutput input)
 	vLightDir /= dist; //normalize
 	float4 normalSpec = normalSpecMap.Sample(mapSampler, input.texCoord);
 	float3 normal = normalize(normalSpec.xyz);
-	float diff = sqrt(dot(normal, vLightDir) * 0.5f + 0.5f);
+	float diff = pow(sqrt(dot(normal, vLightDir) * 0.5f + 0.5f), 4);
 				
 	clip(diff <= 0? -1 : 1);
 

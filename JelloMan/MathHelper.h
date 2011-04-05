@@ -15,7 +15,6 @@ D3DX10INLINE T Min(const T& a, const T& b)
 {
 	return a < b ? a : b;
 }
-
 template<typename T>
 D3DX10INLINE T Max(const T& a, const T& b)
 {

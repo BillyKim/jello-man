@@ -1,27 +1,183 @@
 #include "Softbody.h"
 #include "CookingStream.h"
+#include "ContentManager.h"
 
-Softbody::~Softbody(void)
+Vector3 Min(const Vector3& a, const Vector3& b)
 {
+	return Vector3(
+        a.X < b.X? a.X : b.X,
+        a.Y < b.Y? a.Y : b.Y,
+        a.Z < b.Z? a.Z : b.Z);
+}
+Vector3 Max(const Vector3& a, const Vector3& b)
+{
+	return Vector3(
+        a.X > b.X? a.X : b.X,
+        a.Y > b.Y? a.Y : b.Y,
+        a.Z > b.Z? a.Z : b.Z);
+}
+
+Vector3 Abs(const Vector3& v)
+{
+    return Vector3(abs(v.X), abs(v.Y), abs(v.Z));
 }
 
 
-void Softbody::InitSoftbody(PhysX* pPhysX, const tstring& path)
+Softbody::Softbody(): m_pSoftbody(0), m_pPhysX(0), m_numPositions(0), m_numIndices(0), m_Radius(0), m_CenterPoint(Vector3::Zero), m_Dimension(Vector3::Zero)
+{
+
+}
+
+Softbody::~Softbody(void)
+{
+    NxSoftBodyMesh* mesh = m_pSoftbody->getSoftBodyMesh();
+    m_pPhysX->GetScene()->releaseSoftBody(*m_pSoftbody);
+    m_pPhysX->GetSDK()->releaseSoftBodyMesh(*mesh);
+}
+
+
+void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const tstring& path, const Vector3& pos)
 {
 	ASSERT(m_pSoftbody == 0); //would be weird if the actor is already intialized
+    ASSERT(pSoftbodyMesh != 0);
 
 	m_pPhysX = pPhysX;
-	
+
+    m_pSoftbodyMesh = pSoftbodyMesh;
+
+    for (int i = 0; i < MAXTETRA; ++i)
+    {
+        m_arrPositions[i] = Vector3();
+    }
+    for (int i = 0; i < MAXTETRA*4; ++i)
+    {
+        m_arrIndices[i] = 0;
+    }
+    NxMeshData meshData;
+    meshData.verticesPosBegin = static_cast<void*>(&m_arrPositions);
+    meshData.verticesPosByteStride = sizeof(Vector3);
+    meshData.maxVertices = MAXTETRA;
+    meshData.numVerticesPtr = &m_numPositions;
+    meshData.indicesBegin = static_cast<void*>(&m_arrIndices);
+    meshData.indicesByteStride = sizeof(NxU32);
+    meshData.maxIndices = MAXTETRA * 4;
+    meshData.numIndicesPtr = &m_numIndices;
+
 	//Make Actor
 	NxSoftBodyDesc softbodyDesc;
 	
 	string str = string(path.begin(), path.end());
 	NxSoftBodyMesh* pMesh = m_pPhysX->GetSDK()->createSoftBodyMesh(UserStream(str.c_str(), true));
 	softbodyDesc.softBodyMesh = pMesh;
-	
-	softbodyDesc.globalPose = static_cast<NxMat34>(m_WorldMatrix);
+	softbodyDesc.particleRadius = 8.0f;
+    softbodyDesc.volumeStiffness = 0.9f;
+    softbodyDesc.stretchingStiffness = 0.9f;
+    softbodyDesc.friction = 1.0f;
+    softbodyDesc.solverIterations = 8;
+    softbodyDesc.flags = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION;
+    softbodyDesc.meshData = meshData;
+    softbodyDesc.collisionResponseCoefficient = 0.1f;
+
+    softbodyDesc.globalPose = static_cast<NxMat34>(Matrix::CreateTranslation(pos));
 
 	m_pSoftbody = m_pPhysX->GetScene()->createSoftBody(softbodyDesc);
 
+    NxBounds3 b;
+    m_pSoftbody->getWorldBounds(b);
+
+    NxVec3 center, dim;
+    b.getCenter(center);
+    b.getDimensions(dim);
+
+    m_CenterPoint = Vector3(center);
+    m_Dimension = Vector3(dim);
+    m_Radius = m_Dimension.Length() / 2.0f;
+
     ASSERT(m_pSoftbody != 0);
+}
+
+void Softbody::TransformPositions()
+{
+    int size = m_pSoftbodyMesh->GetVertices().size();
+
+    const vector<VertexPosNormTanTex>& vert = m_pSoftbodyMesh->GetVertices();
+    const vector<DWORD>& tetra = m_pSoftbodyMesh->GetTetra();
+    const vector<Vector3>& bc = m_pSoftbodyMesh->GetBaryCentricCoords();
+
+    vector<VertexPosNormTanTex> newVert;
+    newVert.reserve(size);
+
+    Vector3 maxP = Vector3(FLT_MIN, FLT_MIN, FLT_MIN), 
+            minP = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
+
+    for (int i = 0; i < size; ++i)
+    {
+        Vector3 position =	m_arrPositions[m_arrIndices[tetra[i] * 4 + 0]] * bc[i].X + 
+						    m_arrPositions[m_arrIndices[tetra[i] * 4 + 1]] * bc[i].Y + 
+						    m_arrPositions[m_arrIndices[tetra[i] * 4 + 2]] * bc[i].Z + 
+						    m_arrPositions[m_arrIndices[tetra[i] * 4 + 3]] * (1.0f - bc[i].X - bc[i].Y - bc[i].Z);
+
+        maxP = Max(maxP, position);
+        minP = Min(minP, position);
+
+        newVert.push_back(VertexPosNormTanTex(position, Vector3(), Vector3(), vert[i].tex));
+    }
+
+    m_CenterPoint = (maxP + minP) / 2.0f;
+    m_Dimension = maxP - minP;
+    ASSERT(m_Dimension.X >= 0 && m_Dimension.Y >= 0 && m_Dimension.Z >= 0);
+    m_Radius = m_Dimension.Length() / 2.0f;
+
+    const vector<DWORD>& ind = m_pSoftbodyMesh->GetIndices();
+    DWORD numTris = ind.size() / 3;
+    for (DWORD i = 0; i < numTris; ++i)
+    {
+        Vector3 normal;
+
+        Vector3 pos1 = newVert[ind[i * 3]].position, 
+                pos2 = newVert[ind[i * 3 + 1]].position, 
+                pos3 = newVert[ind[i * 3 + 2]].position;
+        Vector3 v1 = pos2 - pos1;
+        Vector3 v2 = pos3 - pos1;
+        v1.Normalize();
+        v2.Normalize();
+        Vector3 cross = v1.Cross(v2);
+        cross.Normalize();
+
+        if (newVert[ind[i * 3 + 0]].normal == Vector3::Zero)
+            newVert[ind[i * 3 + 0]].normal = cross;
+        else
+        {
+            newVert[ind[i * 3 + 0]].normal += cross;
+            newVert[ind[i * 3 + 0]].normal.Normalize();
+        }
+
+        if (newVert[ind[i * 3 + 1]].normal == Vector3::Zero)
+            newVert[ind[i * 3 + 1]].normal = cross;
+        else
+        {
+            newVert[ind[i * 3 + 1]].normal += cross;
+            newVert[ind[i * 3 + 1]].normal.Normalize();
+        }
+
+        if (newVert[ind[i * 3 + 2]].normal == Vector3::Zero)
+            newVert[ind[i * 3 + 2]].normal = cross;
+        else
+        {
+            newVert[ind[i * 3 + 2]].normal += cross;
+            newVert[ind[i * 3 + 2]].normal.Normalize();
+        }
+
+    }
+
+    m_pSoftbodyMesh->SetVertices(newVert);
+}
+
+void Softbody::AddSpeed(const Vector3& speed)
+{
+    m_pSoftbody->addDirectedForceAtPos(m_CenterPoint, speed, m_Radius, NX_VELOCITY_CHANGE);
+}
+void Softbody::AddForce(const Vector3& force)
+{
+    m_pSoftbody->addDirectedForceAtPos(m_CenterPoint, force, m_Radius, NX_FORCE);
 }

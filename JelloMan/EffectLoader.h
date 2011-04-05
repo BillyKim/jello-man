@@ -7,7 +7,7 @@
 #include "AssetContainer.h"
 #include "Effect.h"
 
-class EffectLoader : public AssetContainer<Effect>
+class EffectLoader
 {
 public:
     //------Constructor-Destructor------->
@@ -19,7 +19,7 @@ public:
     T* Load(ID3D10Device *pDXDevice, const tstring& key)
     {
 	    HRESULT hr;
-	    if ( IsAssetPresent(key))
+	    if (m_pAssets->IsAssetPresent(key))
 	    {
 	    }
 	    else
@@ -62,14 +62,15 @@ public:
 		    else
 		    {
                 T* e = new T(pDXDevice, pEffect);
-			    AddAsset(key, e);
+			    m_pAssets->AddAsset(key, e);
 		    }    
 	    }
-        return static_cast<T*>(GetAsset(key));
+        return static_cast<T*>(m_pAssets->GetAsset(key));
     }
 
 private:
 	EffectLoader(const EffectLoader& t);
 	EffectLoader& operator=(const EffectLoader& t);
 
+    AssetContainer<Effect>* m_pAssets;
 };

@@ -6,7 +6,7 @@ using namespace std;
 template<typename T>
 class AssetContainer
 {
-protected:
+public:
     AssetContainer(void) { /*m_Map.insert( make_pair<tstring, T*>(_T(""), 0));*/ }
     virtual ~AssetContainer(void) { RemoveAllAssets(); }
 

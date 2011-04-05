@@ -68,6 +68,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	delete pGame;
 	delete pEngine;
 
+    string temp;
+    cin >> temp;
+
 	return ret;
 
 }

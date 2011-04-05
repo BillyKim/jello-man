@@ -9,8 +9,9 @@
 #include "Vector3.h"
 #include "vertex.h"
 #include <vector>
+#include "SoftbodyMesh.h"
 
-class ModelLoader : public AssetContainer<Model<VertexPosNormTanTex>>
+class ModelLoader
 {
 public:
     //------Constructor-Destructor------->
@@ -20,9 +21,11 @@ public:
 	
 	Model<VertexPosNormTanTex>* Load(ID3D10Device *pDXDevice, const tstring& assetName);
 	Model<VertexPosNormTanTex>* LoadWithTangents(ID3D10Device *pDXDevice, const tstring& assetName);
+    SoftbodyMesh* LoadSoftbodyMesh(ID3D10Device *pDXDevice, const tstring& assetName);
 
 private:
     void ReadBinObj(const tstring& assetName);
+    void ReadBinSBObj(const tstring& assetName);
     void ReadASCIIObj(const tstring& assetName);
 
 	void CalculateTangent(	Vector3& v1, Vector3& v2, Vector3& v3,	// in
@@ -51,7 +54,12 @@ private:
     Model<VertexPosNormTanTex>* m_pCurrentModel;
     ModelMesh<VertexPosNormTanTex>* m_pCurrentMesh;
 
+    SoftbodyMesh* m_pCurrentSBMesh;
+
+    AssetContainer<Model<VertexPosNormTanTex>>* m_pAssetContainer;
+    AssetContainer<SoftbodyMesh>* m_pSBAssetContainer;
+
+    //private
 	ModelLoader(const ModelLoader& t);
 	ModelLoader& operator=(const ModelLoader& t);
-
 };

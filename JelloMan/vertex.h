@@ -117,6 +117,29 @@ struct VertexPos //12
 
     Vector3 position;
 };
+//===============================================================
+struct VertexPNTSoftbody //48
+{
+    VertexPNTSoftbody():
+		position(0.0f, 0.0f, 0.0f),
+		normal(0.0f, 0.0f, 0.0f),
+		tex(0.0f, 0.0f),
+        tetra(0),
+        barycentricCoords(0.f, 0.f, 0.f)
+	{
+	}
+    VertexPNTSoftbody(const Vector3& p, const Vector3& n, const Vector2& tx, unsigned long t, const Vector3& bc)
+		:position(p), normal(n), tex(tx),
+        tetra(t), barycentricCoords(bc)
+	{
+	}
+
+	Vector3 position;
+	Vector3 normal;
+	Vector2 tex;
+    unsigned long tetra;
+    Vector3 barycentricCoords;
+};
 
 void GetInputElementDesc(D3D10_INPUT_ELEMENT_DESC& desc, 
   const LPCSTR&              semanticName,
@@ -182,6 +205,17 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        elements = desc.size();
+    }
+    else if (sizeof(T) == sizeof(VertexPNTSoftbody))
+    {
+        desc.push_back(D3D10_INPUT_ELEMENT_DESC());
+        desc.push_back(D3D10_INPUT_ELEMENT_DESC());
+        GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[2], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[3], "TETRA", 0, DXGI_FORMAT_R32_UINT, 0, 32, D3D10_INPUT_PER_VERTEX_DATA, 0);
+        GetInputElementDesc(desc[4], "BC", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D10_INPUT_PER_VERTEX_DATA, 0);
         elements = desc.size();
     }
     else
