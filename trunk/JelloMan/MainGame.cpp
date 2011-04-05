@@ -109,6 +109,43 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 		sl.lightEnabled = true;
         m_pLightController->AddLight(sl);
 
+	SpotLight sl2;
+        //Omni 1
+        sl2 = SpotLight();
+        sl2.position = Vector3(400.0f,400.0f,0.0f);
+        sl2.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
+        sl2.multiplier = 1.5f;
+		sl2.AttenuationStart = 0;
+		sl2.AttenuationEnd = 2000;
+		sl2.direction = Vector3(0, -1, 0);
+		sl2.power = 0.5f;
+		sl2.shadowsEnabled = false;
+		sl2.lightEnabled = true;
+        m_pLightController->AddLight(sl2);
+
+	SpotLight sl3;
+        //Omni 1
+        sl3 = SpotLight();
+        sl3.position = Vector3(-400.0f,400.0f,0.0f);
+        sl3.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
+        sl3.multiplier = 1.5f;
+		sl3.AttenuationStart = 0;
+		sl3.AttenuationEnd = 2000;
+		sl3.direction = Vector3(0, -1, 0);
+		sl3.power = 0.5f;
+		sl3.shadowsEnabled = false;
+		sl3.lightEnabled = true;
+        m_pLightController->AddLight(sl3);
+
+	PointLight pl;
+	pl = PointLight();
+	pl.position = Vector3(0.0f,100.0f,-400.0f);
+	pl.lightEnabled = true;
+	pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
+	pl.AttenuationEnd = 2000;
+	pl.multiplier = 1.5f;
+	m_pLightController->AddLight(pl);
+
 		
 	// PHYSX
 	m_pPhysXEngine = pPhysXEngine;

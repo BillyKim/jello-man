@@ -7,10 +7,10 @@
 Level::Level(ID3D10Device* pDXDevice)	:	
                 m_pDXDevice(pDXDevice),
 				m_pRenderContext(0),
-				m_pCharacter(0),
 				m_pBaseGrid(new BaseGrid(pDXDevice)),
 				m_bShowGrid(false),
-				m_bTickCharacter(false)
+				m_bTickCharacter(false),
+				m_pCharacter(0)
 {
 
 }
@@ -18,8 +18,6 @@ Level::Level(ID3D10Device* pDXDevice)	:
 
 Level::~Level()
 {
-	delete m_pCharacter;
-
 	delete m_pBaseGrid;
 	
 	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
@@ -33,36 +31,40 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	
 	m_pBaseGrid->Init();
 
-	//m_pCharacter = new Character(pTrackingCamera);
+	// CHARACTER
+	Character* pCharacter = new Character(pTrackingCamera);
 
-	//m_pCharacter->UseNormalMap(false);
-	//m_pCharacter->UseSimplifiedPhysXMesh(false);
+	pCharacter->UseNormalMap(false);
+	pCharacter->UseSimplifiedPhysXMesh(false);
 
-	//m_pCharacter->SetModelPath(_T("Content/Models/jman.binobj"));
-	//m_pCharacter->SetPhysXModelPath(_T("Content/Models/jman.nxconcave"));
+	pCharacter->SetModelPath(_T("Content/Models/jman.binobj"));
+	pCharacter->SetPhysXModelPath(_T("Content/Models/jman.nxconcave"));
 
-	//m_pCharacter->SetDiffusePath(_T("Content/Textures/weapon_color.png"));
-	//m_pCharacter->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-	//m_pCharacter->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+	pCharacter->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
+	pCharacter->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
+	pCharacter->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
 
-	//m_pCharacter->SetRigid(true);
+	pCharacter->SetRigid(false);
 
-	//m_pCharacter->Init(pPhysXEngine);
+	pCharacter->Init(pPhysXEngine);
 
-	// LOAD NEW LEVELOBJECT - WITHOUT NORMAL MAP
+	m_pCharacter = pCharacter;
+
+	m_pLevelObjects.push_back(pCharacter);
+
+	// LOAD NEW LEVELOBJECT
 	LevelObject* pLevelObject = new LevelObject();
 
-	pLevelObject->UseNormalMap(false);
-	pLevelObject->UseSimplifiedPhysXMesh(true);
+	pLevelObject->UseNormalMap(true);
+	pLevelObject->UseSimplifiedPhysXMesh(false);
 
-	pLevelObject->SetModelPath(_T("Content/Models/sphere50.binobj"));
-	
-	PhysXSphere sphere(50.0f, 1000);
-	pLevelObject->SetSimplifiedPhysXMesh(&sphere);
+	pLevelObject->SetModelPath(_T("Content/Models/as_val.binobj"));
+	pLevelObject->SetPhysXModelPath(_T("Content/Models/as_val.nxconcave"));
 
 	pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_color.png"));
 	pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
 	pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+	pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
 
 	pLevelObject->SetRigid(true);
 
@@ -90,7 +92,7 @@ void Level::Tick(const float dTime)
 			PhysXSphere sphere(50.0f, 1000);
 			pLevelObject->SetSimplifiedPhysXMesh(&sphere);
 
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_color.png"));
+			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
 			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
 			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
 			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
@@ -118,7 +120,7 @@ void Level::Tick(const float dTime)
 			PhysXBox box(Vector3(50,50,50),1000);
 			pLevelObject->SetSimplifiedPhysXMesh(&box);
 
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_color.png"));
+			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
 			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
 			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
 			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
@@ -152,22 +154,22 @@ void Level::Tick(const float dTime)
       //  }
 	}
 
-	/*m_pCharacter->Update(dTime);
-
-	if (m_bTickCharacter)
-		m_pCharacter->Tick(dTime);*/
-
 	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 	{
-		(*it)->Tick(dTime);
+		if (!m_bTickCharacter)
+		{
+			if ((*it) != m_pCharacter)
+				(*it)->Tick(dTime);
+		}
+		else
+			(*it)->Tick(dTime);
+		
 	}
 }
 
 void Level::DrawDeferred(const RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
-
-	//m_pCharacter->Draw(pRenderContext);
 
 	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 	{

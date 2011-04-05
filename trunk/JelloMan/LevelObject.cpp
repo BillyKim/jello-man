@@ -60,7 +60,6 @@ void LevelObject::Init(PhysX* pPhysX)
 	if (!m_bUseSimplifiedPhysXMesh)
 	{
 		string s(m_PhysXModelPath.begin(), m_PhysXModelPath.end());
-		s.assign(m_PhysXModelPath.begin(), m_PhysXModelPath.end());
 
 		PhysXMesh mesh = PhysXMesh(pPhysX, s, static_cast<float>(m_Mass));
 

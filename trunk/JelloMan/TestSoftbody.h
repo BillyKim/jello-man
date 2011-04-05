@@ -11,7 +11,7 @@ public:
     virtual ~TestSoftbody(void);
 
     virtual void Init(PhysX* pPhysX);
-	virtual void Tick(float dTime);
+	virtual void Tick(const float dTime);
     virtual void Draw(const RenderContext* rc);
 
 private:

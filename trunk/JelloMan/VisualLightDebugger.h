@@ -34,6 +34,9 @@ private:
 
 	void DeselectAllPointLights();
 	void DeselectAllSpotLights();
+/*
+	bool SpotLightSelected(SpotLight* sl);
+	bool PointLightSelected(PointLight* pl);*/
 
 	// DATAMEMBERS
 	vector<Bitmap*> m_pPointLightBitmaps;

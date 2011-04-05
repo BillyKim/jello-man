@@ -86,8 +86,8 @@ PixelShaderOutput  PS(VertexShaderOutput input)
 	float3 gNormalMap = 2.0f * normalMap.Sample(mapSampler, input.texCoord).rgb - 1.0f;
 
 	float3 mtx1_tvec3 = mul(gNormalMap, basis1);
-	mtx1_tvec3.b *= -1;
-	
+//	mtx1_tvec3.b *= -1;
+
 	output.color = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, 1.0f);
 	if (selected)
 		output.color += float4(1.0f,1.0f,0.0f,0.5f);
