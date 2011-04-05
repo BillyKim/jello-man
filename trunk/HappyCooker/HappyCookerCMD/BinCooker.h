@@ -11,6 +11,9 @@ public:
     bool Cook();
 
 private:
+    bool CookSB();
+    bool CookNSB();
+
     Model* m_pModel;
     string m_OutputName;
 };

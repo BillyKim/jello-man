@@ -1,21 +1,26 @@
 #include "ModelLoader.h"
 #include "CookingStream.h"
 
-ModelLoader::ModelLoader(void): m_pCurrentModel(0), m_pCurrentMesh(0)
+ModelLoader::ModelLoader(void): 
+                m_pCurrentModel(0), 
+                m_pCurrentMesh(0),
+                m_pAssetContainer(new AssetContainer<Model<VertexPosNormTanTex>>()),
+                m_pSBAssetContainer(new AssetContainer<SoftbodyMesh>())
 {
 }
 
 
 ModelLoader::~ModelLoader(void)
 {
-	AssetContainer::~AssetContainer();
+    delete m_pAssetContainer;
+    delete m_pSBAssetContainer;
 }
 
 Model<VertexPosNormTanTex>* ModelLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName)
 {
-    if (IsAssetPresent(assetName))
+    if (m_pAssetContainer->IsAssetPresent(assetName))
     {
-		return GetAsset(assetName);
+        return m_pAssetContainer->GetAsset(assetName);
     }
     else
     {
@@ -30,9 +35,31 @@ Model<VertexPosNormTanTex>* ModelLoader::Load(ID3D10Device *pDXDevice, const tst
         else if (assetName.rfind(_T(".binobj")) != -1)
             ReadBinObj(assetName);
 
-        AddAsset(assetName, m_pCurrentModel);
+        m_pAssetContainer->AddAsset(assetName, m_pCurrentModel);
 
         return m_pCurrentModel;
+    }
+}
+SoftbodyMesh* ModelLoader::LoadSoftbodyMesh(ID3D10Device *pDXDevice, const tstring& assetName)
+{
+    if (m_pSBAssetContainer->IsAssetPresent(assetName))
+    {
+        return m_pSBAssetContainer->GetAsset(assetName);
+    }
+    else
+    {
+        m_pCurrentSBMesh = new SoftbodyMesh(pDXDevice, _T("Softbody"));
+
+        if (assetName.rfind(_T(".obj")) != -1)
+        {
+            wcout << L"Error: softbodymesh can not be an .obj -- " << assetName << "\n";
+            return 0;
+        }
+        else if (assetName.rfind(_T(".binobj")) != -1)
+            ReadBinSBObj(assetName);
+
+        m_pSBAssetContainer->AddAsset(assetName, m_pCurrentSBMesh);
+        return m_pCurrentSBMesh;
     }
 }
 void ModelLoader::ReadBinObj(const tstring& assetName)
@@ -112,6 +139,63 @@ void ModelLoader::ReadBinObj(const tstring& assetName)
         m_pCurrentMesh->SetIndices(m_IndexData);
     }
 }
+void ModelLoader::ReadBinSBObj(const tstring& assetName)
+{
+    //LAYOUT
+    //Word: nameLength
+        //buffer: name
+    //DWord : #vert
+        //vector3: pos, vector3: norm, vector2: tex, DWORD tetra, Vector3 bc     : vertex
+    //DWord : #triangles
+        //DWord, DWord, DWord : triangle
+
+
+    string filename(assetName.cbegin(), assetName.cend());
+    UserStream stream(filename.c_str(), true);
+
+    WORD nameLength = stream.readWord();
+    char* name = new char[nameLength];
+    stream.readBuffer(name, nameLength);
+        
+    string tempname(name);
+    delete name;
+    m_pCurrentSBMesh->SetName(tstring(tempname.cbegin(), tempname.cend()));
+      
+    m_VPNTTData.clear();
+    vector<DWORD> tetraData;
+    vector<Vector3> bcData;
+
+    DWORD numVertices = stream.readDword();
+    for (DWORD v = 0; v < numVertices; ++v)
+    {
+        Vector3 pos = stream.readVector3();
+        Vector3 norm = stream.readVector3();
+        Vector2 tex = stream.readVector2();
+        DWORD tetra = stream.readDword();
+        Vector3 bc = stream.readVector3();
+        m_VPNTTData.push_back(VertexPosNormTanTex(pos, norm, Vector3(), tex));
+
+        tetraData.push_back(tetra);
+        bcData.push_back(bc);
+    }
+
+    DWORD tris = stream.readDword();
+    m_IndexData.clear();
+    for (DWORD i = 0; i < tris; ++i)
+    {
+        DWORD index0 = stream.readDword();
+        DWORD index1 = stream.readDword();
+        DWORD index2 = stream.readDword();
+        m_IndexData.push_back(index2);
+        m_IndexData.push_back(index1);
+        m_IndexData.push_back(index0);
+    }
+    m_pCurrentSBMesh->SetVertices(m_VPNTTData);
+    m_pCurrentSBMesh->SetIndices(m_IndexData);
+    m_pCurrentSBMesh->SetTetra(tetraData);
+    m_pCurrentSBMesh->SetBaryCentricCoords(bcData);
+}
+
 
 //*********************
 //  ASCII

@@ -17,7 +17,9 @@ Vector3::Vector3(const Vector2& v2, float z): X(v2.X), Y(v2.Y), Z(z)
 Vector3::Vector3(const D3DXVECTOR3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
 {
 }
-//Vector3(const NxVec3& v3);
+Vector3::Vector3(const NxVec3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
+{
+}
 
 //Static
 const Vector3 Vector3::Up = Vector3(0, 1, 0);

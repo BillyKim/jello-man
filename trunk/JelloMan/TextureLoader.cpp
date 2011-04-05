@@ -3,19 +3,19 @@
 #include "d3dUtil.h"
 
 
-TextureLoader::TextureLoader(void)
+TextureLoader::TextureLoader(void): m_pAssets(new AssetContainer<Texture2D>)
 {
 
 }
 
 TextureLoader::~TextureLoader(void)
 {
-	AssetContainer::~AssetContainer();
+    delete m_pAssets;
 }
 
 Texture2D* TextureLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName) 
 {
-	if ( IsAssetPresent(assetName))
+	if ( m_pAssets->IsAssetPresent(assetName))
 	{
         //#if defined DEBUG || _DEBUG
 		//cout << "Using Existing Texture.\n";
@@ -33,8 +33,8 @@ Texture2D* TextureLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName
 		}
 
         Texture2D* tex = new Texture2D(pTextureRV);
-        AddAsset(assetName, tex);
+        m_pAssets->AddAsset(assetName, tex);
 	}
 
-    return GetAsset(assetName);
+    return m_pAssets->GetAsset(assetName);
 }

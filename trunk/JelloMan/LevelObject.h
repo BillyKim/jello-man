@@ -19,7 +19,7 @@ public:
 
 	// GENERAL
     virtual void Init(PhysX* pPhysX);
-	virtual void Tick(const float dTime);
+	virtual void Tick(float dTime);
     virtual void Draw(const RenderContext* pRenderContext);
 
 	// SETTERS

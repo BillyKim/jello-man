@@ -44,7 +44,7 @@ public:
     ModelMesh<VertexPNTSoftbody>* GetSoftbodyDrawMesh() const { return m_SoftbodyDrawMesh; }
     ModelMesh<VertexPNTSoftbody>* SetSoftbodyDrawMesh()
     {
-	    ModelMesh<VertexPNTSoftbody>* mesh = new ModelMesh<VertexPNTSoftbody>("");
+	    ModelMesh<VertexPNTSoftbody>* mesh = new ModelMesh<VertexPNTSoftbody>("SB");
 	    m_SoftbodyDrawMesh = mesh;
 	    return mesh;
     }

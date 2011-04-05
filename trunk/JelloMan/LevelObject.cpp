@@ -76,7 +76,7 @@ void LevelObject::Init(PhysX* pPhysX)
 
 void LevelObject::Tick(const float dTime)
 {
-	
+    Actor::Tick(dTime);
 }
 
 void LevelObject::Draw(const RenderContext* pRenderContext)

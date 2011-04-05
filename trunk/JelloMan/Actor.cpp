@@ -8,7 +8,8 @@ Actor::Actor(void): m_WorldMatrix(Matrix::Identity), m_pActor(0), m_pPhysX(0)
 
 Actor::~Actor(void)
 {
-	m_pPhysX->GetScene()->releaseActor(*m_pActor);
+    if (m_pActor != 0)
+	    m_pPhysX->GetScene()->releaseActor(*m_pActor);
 }
 
 void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
@@ -43,7 +44,7 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
     ASSERT(m_pActor != 0);
 }
 
-void Actor::Update(float dTime)
+void Actor::Tick(float dTime)
 {
     m_WorldMatrix = m_pActor->getGlobalPose();
 }

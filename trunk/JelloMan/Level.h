@@ -5,6 +5,7 @@
 #include "ForwardRenderer.h"
 #include "TestObject.h"
 #include "TestObject2.h"
+#include "TestSoftbody.h"
 #include "Blox2D_Engine.h"
 #include "RenderContext.h"
 #include "PostProcessor.h"
@@ -13,6 +14,7 @@
 #include "PhysX.h"
 #include "LevelObject.h"
 #include "BaseGrid.h"
+#include "Softbody.h"
 
 class Level
 {

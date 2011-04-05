@@ -7,7 +7,7 @@
 #include "AssetContainer.h"
 #include "Texture2D.h"
 
-class TextureLoader : public AssetContainer<Texture2D>
+class TextureLoader
 {
 public:
     //------Constructor-Destructor------->
@@ -21,4 +21,5 @@ private:
 	TextureLoader(TextureLoader& t);
 	TextureLoader& operator=(TextureLoader& t);
 
+    AssetContainer<Texture2D>* m_pAssets;
 };

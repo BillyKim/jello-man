@@ -134,6 +134,23 @@ void Level::Tick(const float dTime)
 			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
         }
 	}
+    if (CONTROLS->IsKeyPressed(VK_CONTROL))
+	{
+        //if (rand() % 2 == 0)
+        //{
+            TestSoftbody* pSB = new TestSoftbody(m_pRenderContext->GetCamera()->GetPosition());
+            pSB->Init(m_pPhysXEngine);
+            m_pLevelObjects.push_back(pSB);
+		    pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
+      //  }
+      //  else
+      //  {
+      //      TestPhysXSphere* pTestPhysXShere = new TestPhysXSphere(m_pPhysXEngine, m_pRenderContext->GetCamera()->GetPosition());
+		    //pTestPhysXShere->Init();
+		    //m_vecActor.push_back(pTestPhysXShere);
+		    //pTestPhysXShere->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
+      //  }
+	}
 
 	/*m_pCharacter->Update(dTime);
 
@@ -142,7 +159,6 @@ void Level::Tick(const float dTime)
 
 	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 	{
-		(*it)->Update(dTime);
 		(*it)->Tick(dTime);
 	}
 }
