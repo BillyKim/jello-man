@@ -273,7 +273,13 @@ void EditorGUI::Draw()
 
 	if (m_Mode == MODE_EDITOR)
 	{
+		if (m_bMoveable)
+			m_pLightDebugger->MovingLights(true);
+		else
+			m_pLightDebugger->MovingLights(false);
+
 		m_pLightDebugger->Tick(m_pRenderContext);
+		
 		m_pLightDebugger->Draw();
 
 		BLOX_2D->SetAntiAliasing(true);
@@ -302,6 +308,11 @@ void EditorGUI::Draw()
 		}
 
 		BLOX_2D->SetAntiAliasing(false);
+	}
+	else
+	{
+		m_pLightDebugger->DeselectAll();
+		m_pLightDebugger->HideTextBoxes();
 	}
 
 	// BACKGROUND
@@ -545,18 +556,56 @@ void EditorGUI::Draw()
 
 	BLOX_2D->SetAntiAliasing(true);
 
-	/*BLOX_2D->SetColor(255,255,255,0.8f);
-	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+	if (m_pColorPickerButton->IsActive() && m_Mode == MODE_EDITOR)
+	{
+		if (m_pLightDebugger->GetNrLightsSelected() == 1)
+		{
+			m_pApplyButton->Tick();
+		
+			for (unsigned int i = 0; i < m_pLightDebugger->GetPointLightsSelected().size(); ++i)
+			{
+				if (m_pLightDebugger->GetPointLightsSelected()[i] == true)
+				{
+					m_pColorPicker->Show(m_pRenderContext->GetLightController()->GetPointLights()[i].color);
+					
+					if (m_pApplyButton->Clicked())
+					{
+						m_pRenderContext->GetLightController()->GetPointLights()[i].color.R = (float)(m_pColorPicker->GetCurrentColor().R / 255.0f);
+						m_pRenderContext->GetLightController()->GetPointLights()[i].color.G = (float)(m_pColorPicker->GetCurrentColor().G / 255.0f);
+						m_pRenderContext->GetLightController()->GetPointLights()[i].color.B = (float)(m_pColorPicker->GetCurrentColor().B / 255.0f);
 
-	tstringstream stream;
-	stream << _T("Lights: ") << m_SelectedLights << _T(" / ") << m_TotalLights;
-	BLOX_2D->DrawString(
-		stream.str(),
-		RectF(0.0f, 0.0f,
-		BLOX_2D->GetWindowSize().width - 4,
-		BLOX_2D->GetWindowSize().height - 4),
-		Blox2D::HORIZONTAL_ALIGN_RIGHT,
-		Blox2D::VERTICAL_ALIGN_BOTTOM);*/
+						m_pColorPicker->PreviousColorSet(false);
+					}
+				}
+			}
+
+			for (unsigned int i = 0; i < m_pLightDebugger->GetSpotLightsSelected().size(); ++i)
+			{
+				if (m_pLightDebugger->GetSpotLightsSelected()[i] == true)
+				{
+					m_pColorPicker->Show(m_pRenderContext->GetLightController()->GetSpotLights()[i].color);
+					
+					if (m_pApplyButton->Clicked())
+					{
+						m_pRenderContext->GetLightController()->GetSpotLights()[i].color.R = (float)(m_pColorPicker->GetCurrentColor().R / 255.0f);
+						m_pRenderContext->GetLightController()->GetSpotLights()[i].color.G = (float)(m_pColorPicker->GetCurrentColor().G / 255.0f);
+						m_pRenderContext->GetLightController()->GetSpotLights()[i].color.B = (float)(m_pColorPicker->GetCurrentColor().B / 255.0f);
+
+						m_pColorPicker->PreviousColorSet(false);
+					}
+				}
+			}
+
+			m_pApplyButton->Show();	
+		}
+
+		if (m_pColorPickerButton->Clicked())
+			m_pColorPicker->PreviousColorSet(false);
+	}
+	else
+	{
+		m_pColorPicker->PreviousColorSet(false);
+	}
 }
 void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects)
 {
@@ -692,57 +741,6 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*> p
 		m_pRotateButton->Deactivate();
 	if (m_pRotateButton->Clicked())
 		m_pMoveButton->Deactivate();
-
-	if (m_pColorPickerButton->IsActive() && m_Mode == MODE_EDITOR)
-	{
-		if (m_pLightDebugger->GetNrLightsSelected() == 1)
-		{
-			m_pApplyButton->Tick();
-		
-			for (unsigned int i = 0; i < m_pLightDebugger->GetPointLightsSelected().size(); ++i)
-			{
-				if (m_pLightDebugger->GetPointLightsSelected()[i] == true)
-				{
-					m_pColorPicker->Show(pRenderContext->GetLightController()->GetPointLights()[i].color);
-					
-					if (m_pApplyButton->Clicked())
-					{
-						pRenderContext->GetLightController()->GetPointLights()[i].color.R = (float)(m_pColorPicker->GetCurrentColor().R / 255.0f);
-						pRenderContext->GetLightController()->GetPointLights()[i].color.G = (float)(m_pColorPicker->GetCurrentColor().G / 255.0f);
-						pRenderContext->GetLightController()->GetPointLights()[i].color.B = (float)(m_pColorPicker->GetCurrentColor().B / 255.0f);
-
-						m_pColorPicker->PreviousColorSet(false);
-					}
-				}
-			}
-
-			for (unsigned int i = 0; i < m_pLightDebugger->GetSpotLightsSelected().size(); ++i)
-			{
-				if (m_pLightDebugger->GetSpotLightsSelected()[i] == true)
-				{
-					m_pColorPicker->Show(pRenderContext->GetLightController()->GetSpotLights()[i].color);
-					
-					if (m_pApplyButton->Clicked())
-					{
-						pRenderContext->GetLightController()->GetSpotLights()[i].color.R = (float)(m_pColorPicker->GetCurrentColor().R / 255.0f);
-						pRenderContext->GetLightController()->GetSpotLights()[i].color.G = (float)(m_pColorPicker->GetCurrentColor().G / 255.0f);
-						pRenderContext->GetLightController()->GetSpotLights()[i].color.B = (float)(m_pColorPicker->GetCurrentColor().B / 255.0f);
-
-						m_pColorPicker->PreviousColorSet(false);
-					}
-				}
-			}
-
-			m_pApplyButton->Show();	
-		}
-
-		if (m_pColorPickerButton->Clicked())
-			m_pColorPicker->PreviousColorSet(false);
-	}
-	else
-	{
-		m_pColorPicker->PreviousColorSet(false);
-	}
 
 	if (m_Mode == MODE_EDITOR)
 	{

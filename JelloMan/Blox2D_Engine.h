@@ -4,3 +4,4 @@
 #include "HitRegion.h"
 #include "Bitmap.h"
 #include "Button.h"
+#include "TextBox.h"

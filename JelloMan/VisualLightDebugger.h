@@ -20,6 +20,10 @@ public:
 	void DeselectAll();
 	void ShowLightInfo();
 
+	void HideTextBoxes();
+	void MovingLights(bool bMoving)
+	{ m_bLightsMoving = bMoving; }
+
 	// GETTERS
 	int GetNrLightsSelected();
 	int GetTotalLightsInScene();
@@ -44,9 +48,12 @@ private:
 	vector<Bitmap*> m_pAddSubtractBitmaps;
 
 	bool m_bClick;
+	bool m_bTextBoxesSet;
+	bool m_bLightsMoving;
 
 	int m_TotalSelectedLights;
 	int m_TotalLights;
+	int m_PreviousSelectedLight;
 
 	const RenderContext* m_pRenderContext;
 

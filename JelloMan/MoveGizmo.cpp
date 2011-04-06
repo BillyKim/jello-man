@@ -514,3 +514,12 @@ void MoveGizmo::Tick(const RenderContext* pRenderContext, vector<LevelObject*> p
 		m_OldModelPos.push_back(D3DXVECTOR3(0,0,0));
 	}
 }
+
+// GETTERS
+bool MoveGizmo::IsMoving() const
+{
+	if (m_bLockX || m_bLockY || m_bLockZ)
+		return true;
+	else
+		return false;
+}

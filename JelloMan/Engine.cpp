@@ -169,6 +169,9 @@ void Engine::Initialize()
 						m_pColorBrush,
 						m_pTextFormat );
 
+	BLOX_2D->SetWindowHandle(m_hMainWnd);
+	BLOX_2D->SetWindowInstance(m_hAppInst);
+
 	#if defined DEBUG || _DEBUG
 	cout << "-Blox2D Engine initialized\n";
 	#endif
@@ -423,12 +426,12 @@ void Engine::InitMainWindow(const tstring* pTitle)
 
 	// Compute window rectangle dimensions based on requested client area dimensions.
 	RECT R = { 0, 0, m_ClientWidth, m_ClientHeight };
-    AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
+    AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, false);
 	int width  = R.right - R.left;
 	int height = R.bottom - R.top;
 
 	m_hMainWnd = CreateWindow(L"D3DWndClassName", pTitle->c_str(), 
-		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hAppInst, this); 
+		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hAppInst, this); 
 	if( !m_hMainWnd )
 	{
 		MessageBox(0, L"CreateWindow FAILED", 0, 0);

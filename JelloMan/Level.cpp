@@ -79,7 +79,8 @@ void Level::Tick(const float dTime)
 {
     if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{
-        if (rand() % 2 == 0)
+		int r = rand() % 3;
+        if (r == 0)
         {
 		    // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
 			LevelObject* pLevelObject = new LevelObject();
@@ -107,7 +108,7 @@ void Level::Tick(const float dTime)
 
 			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
         }
-        else
+        else if (r == 1)
         {
             // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
 			LevelObject* pLevelObject = new LevelObject();
@@ -135,6 +136,30 @@ void Level::Tick(const float dTime)
 
 			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
         }
+		else
+		{
+			LevelObject* pLevelObject = new LevelObject();
+
+			pLevelObject->UseNormalMap(false);
+
+			pLevelObject->SetModelPath(_T("Content/Models/jman.binobj"));
+			pLevelObject->SetPhysXModelPath(_T("Content/Models/jman.nxconcave"));
+
+			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
+			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
+			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+
+			pLevelObject->SetRigid(true);
+			pLevelObject->SetMass(1000);
+
+			pLevelObject->Init(m_pPhysXEngine);
+
+			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
+
+			m_pLevelObjects.push_back(pLevelObject);
+
+			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
+		}
 	}
     if (CONTROLS->IsKeyPressed(VK_CONTROL))
 	{

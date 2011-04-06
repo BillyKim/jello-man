@@ -1,5 +1,15 @@
 #include "VisualLightDebugger.h"
 
+// CONVERT STRING TO OTHER TYPE - FLOAT IE
+template <class T>
+bool from_string(T& t, 
+                 const string& s, 
+                 ios_base& (*f)(ios_base&))
+{
+  istringstream iss(s);
+  return !(iss >> f >> t).fail();
+}
+
 // CONSTRUCTOR - DESTRUCTOR
 VisualLightDebugger::VisualLightDebugger()	:	m_bClick(false),
 												m_TotalSelectedLights(0),
@@ -13,7 +23,10 @@ VisualLightDebugger::VisualLightDebugger()	:	m_bClick(false),
 												m_pAttenuationAddButton(0),
 												m_pAttenuationSubtractButton(0),
 												m_pPowerAddButton(0),
-												m_pPowerSubtractButton(0)
+												m_pPowerSubtractButton(0),
+												m_bTextBoxesSet(false),
+												m_PreviousSelectedLight(9999),
+												m_bLightsMoving(false)
 {
 	
 	// POINT LIGHT
@@ -64,9 +77,14 @@ VisualLightDebugger::VisualLightDebugger()	:	m_bClick(false),
 	m_pPowerSubtractButton->SetDownState(m_pAddSubtractBitmaps[3]);
 
 	// TEXTBOX
-	m_pTextBoxX = new TextBox(30,85,80,20);
-	m_pTextBoxY = new TextBox(30,115,80,20);
-	m_pTextBoxZ = new TextBox(30,145,80,20);
+	m_pTextBoxX = new TextBox();
+	m_pTextBoxX->SetBounds(30,85,80,20);
+
+	m_pTextBoxY = new TextBox();
+	m_pTextBoxY->SetBounds(30,115,80,20);
+
+	m_pTextBoxZ = new TextBox();
+	m_pTextBoxZ->SetBounds(30,145,80,20);
 }
 
 
@@ -128,7 +146,8 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 		m_SLightsSelected.push_back(false);
 	}
 
-	CheckControls();
+	if (!m_bLightsMoving)
+		CheckControls();
 }
 
 void VisualLightDebugger::CheckControls()
@@ -166,6 +185,12 @@ void VisualLightDebugger::CheckControls()
 		{
 			m_SLightsSelected[i] = false;
 		}
+	}
+	if (CONTROLS->LeftMBDown() || CONTROLS->RightMBDown())
+	{
+		m_pTextBoxX->LoseFocus();
+		m_pTextBoxY->LoseFocus();
+		m_pTextBoxZ->LoseFocus();
 	}
 
 	if (CONTROLS->LeftMBDown())
@@ -402,27 +427,38 @@ void VisualLightDebugger::ShowLightInfo()
 				tstring t = strm.str();
 				stream << _T("X: ")  << _T("\n\n");
 				
-				tstringstream strmX;
-				strmX << t.substr(0, t.find(_T(".")) + 4);
-				m_pTextBoxX->SetText(strmX.str());
+				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
+				{
+					tstringstream strmX;
+					strmX << t.substr(0, t.find(_T(".")) + 4);
+					m_pTextBoxX->SetText(strmX.str());
+				}
 
 				strm.str(_T(""));
 				strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y;
 				t = strm.str();
 				stream << _T("Y: ") << _T("\n\n");
 
-				tstringstream strmY;
-				strmY << t.substr(0, t.find(_T(".")) + 4);
-				m_pTextBoxY->SetText(strmY.str());
+				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
+				{
+					tstringstream strmY;
+					strmY << t.substr(0, t.find(_T(".")) + 4);
+					m_pTextBoxY->SetText(strmY.str());
+				}
 
 				strm.str(_T(""));
 				strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z;
 				t = strm.str();
 				stream << _T("Z: ") << _T("\n\n\n");
 
-				tstringstream strmZ;
-				strmZ << t.substr(0, t.find(_T(".")) + 4);
-				m_pTextBoxZ->SetText(strmZ.str());
+				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
+				{
+					tstringstream strmZ;
+					strmZ << t.substr(0, t.find(_T(".")) + 4);
+					m_pTextBoxZ->SetText(strmZ.str());
+				}
+
+				m_bTextBoxesSet = true;
 
 				stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R * 255) << _T(" ");
 				stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G * 255) << _T(" ");
@@ -456,6 +492,62 @@ void VisualLightDebugger::ShowLightInfo()
 
 				if (m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd < 100)
 						m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd = 0;
+
+				m_PreviousSelectedLight = i + 1000;
+
+				if (m_pTextBoxX->Entered())
+				{
+					float f;
+
+					tstring s1 = m_pTextBoxX->GetText();
+
+					string s2(s1.begin(), s1.end());
+
+					const char* s = s2.c_str();
+
+					f = atof(s);
+
+					if (!(f == 0 && s2 != "0"))
+						m_pRenderContext->GetLightController()->GetPointLights()[i].position.X = f;
+
+					m_pTextBoxX->LoseFocus();
+				}
+
+				if (m_pTextBoxY->Entered())
+				{
+					float f;
+
+					tstring s1 = m_pTextBoxY->GetText();
+
+					string s2(s1.begin(), s1.end());
+
+					const char* s = s2.c_str();
+
+					f = atof(s);
+
+					if (!(f == 0 && s2 != "0"))
+						m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y = f;
+
+					m_pTextBoxY->LoseFocus();
+				}
+
+				if (m_pTextBoxZ->Entered())
+				{
+					float f;
+
+					tstring s1 = m_pTextBoxZ->GetText();
+
+					string s2(s1.begin(), s1.end());
+
+					const char* s = s2.c_str();
+
+					f = atof(s);
+
+					if (!(f == 0 && s2 != "0"))
+						m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z = f;
+
+					m_pTextBoxZ->LoseFocus();
+				}
 			}
 		}
 
@@ -469,27 +561,38 @@ void VisualLightDebugger::ShowLightInfo()
 				tstring t = strm.str();
 				stream << _T("X: ")  << _T("\n\n");
 				
-				tstringstream strmX;
-				strmX << t.substr(0, t.find(_T(".")) + 4);
-				m_pTextBoxX->SetText(strmX.str());
+				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i || m_bLightsMoving)
+				{
+					tstringstream strmX;
+					strmX << t.substr(0, t.find(_T(".")) + 4);
+					m_pTextBoxX->SetText(strmX.str());
+				}
 
 				strm.str(_T(""));
 				strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Y;
 				t = strm.str();
 				stream << _T("Y: ") << _T("\n\n");
 
-				tstringstream strmY;
-				strmY << t.substr(0, t.find(_T(".")) + 4);
-				m_pTextBoxY->SetText(strmY.str());
+				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i  || m_bLightsMoving)
+				{
+					tstringstream strmY;
+					strmY << t.substr(0, t.find(_T(".")) + 4);
+					m_pTextBoxY->SetText(strmY.str());
+				}
 
 				strm.str(_T(""));
 				strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Z;
 				t = strm.str();
 				stream << _T("Z: ") << _T("\n\n\n");
 
-				tstringstream strmZ;
-				strmZ << t.substr(0, t.find(_T(".")) + 4);
-				m_pTextBoxZ->SetText(strmZ.str());
+				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i  || m_bLightsMoving)
+				{
+					tstringstream strmZ;
+					strmZ << t.substr(0, t.find(_T(".")) + 4);
+					m_pTextBoxZ->SetText(strmZ.str());
+				}
+
+				m_bTextBoxesSet = true;
 
 				stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.R * 255) << _T(" ");
 				stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.G * 255) << _T(" ");
@@ -537,13 +640,69 @@ void VisualLightDebugger::ShowLightInfo()
 
 				if (m_pRenderContext->GetLightController()->GetSpotLights()[i].power < 0.1f)
 						m_pRenderContext->GetLightController()->GetSpotLights()[i].power = 0;
+
+				m_PreviousSelectedLight = i;
+
+				if (m_pTextBoxX->Entered())
+				{
+					float f;
+
+					tstring s1 = m_pTextBoxX->GetText();
+
+					string s2(s1.begin(), s1.end());
+
+					const char* s = s2.c_str();
+
+					f = atof(s);
+
+					if (!(f == 0 && s2 != "0"))
+						m_pRenderContext->GetLightController()->GetSpotLights()[i].position.X = f;
+
+					m_pTextBoxX->LoseFocus();
+				}
+
+				if (m_pTextBoxY->Entered())
+				{
+					float f;
+
+					tstring s1 = m_pTextBoxY->GetText();
+
+					string s2(s1.begin(), s1.end());
+
+					const char* s = s2.c_str();
+
+					f = atof(s);
+
+					if (!(f == 0 && s2 != "0"))
+						m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Y = f;
+
+					m_pTextBoxY->LoseFocus();
+				}
+
+				if (m_pTextBoxZ->Entered())
+				{
+					float f;
+
+					tstring s1 = m_pTextBoxZ->GetText();
+
+					string s2(s1.begin(), s1.end());
+
+					const char* s = s2.c_str();
+
+					f = atof(s);
+
+					if (!(f == 0 && s2 != "0"))
+						m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Z = f;
+
+					m_pTextBoxZ->LoseFocus();
+				}
 			}
 		}
 
 		m_pTextBoxX->Show();
 		m_pTextBoxY->Show();
 		m_pTextBoxZ->Show();
-	
+		
 		m_pMultiplierAddButton->Show();
 		m_pMultiplierSubtractButton->Show();
 		m_pAttenuationAddButton->Show();
@@ -585,7 +744,11 @@ void VisualLightDebugger::ShowLightInfo()
 				stream << _T("spotLight ") << i << _T(",\n");
 			}
 		}
+
+		HideTextBoxes();
 	}
+	else
+		HideTextBoxes();
 
 	tstringstream streamL;
 
@@ -631,6 +794,15 @@ int VisualLightDebugger::GetTotalLightsInScene()
 	s += m_SLightsSelected.size();
 
 	return s;
+}
+
+void VisualLightDebugger::HideTextBoxes()
+{
+	m_pTextBoxX->Hide();
+	m_pTextBoxY->Hide();
+	m_pTextBoxZ->Hide();
+
+	m_bTextBoxesSet = false;
 }
 
 //bool VisualLightDebugger::SpotLightSelected(SpotLight* sl)

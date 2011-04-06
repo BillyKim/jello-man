@@ -282,6 +282,9 @@
     <ClInclude Include="Blox2D_Engine.h">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
+    <ClInclude Include="TextBox.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -483,6 +486,9 @@
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="TextBox.cpp">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClCompile>
   </ItemGroup>
