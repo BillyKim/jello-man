@@ -2,229 +2,275 @@
 
 // CONSTRUCTOR - DESTRUCTOR
 LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
-											m_bLevelObjectExtracted(false)
+											m_bLevelObjectExtracted(false),
+											m_pLevelObject(0),
+											m_pbtnUseNormalMap(0),
+											m_pbtnLoadModel(0),
+											m_ModelPath(_T("")),
+											m_PhysXModelPath(_T("")),
+											m_NormalPath(_T("")),
+											m_DiffusePath(_T("")),
+											m_SpecPath(_T("")),
+											m_GlossPath(_T("")),
+											m_WorkingDirectory(_T(""))
 {
+	m_LoadPathBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/add_small_normal.png")));
+	m_LoadPathBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/add_small_hover.png")));
+
+	m_LoadModelBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_normal.png")));
+	m_LoadModelBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_hover.png")));
+
+	m_pbtnLoadModel = new Button(150, 600, 36, 36);
+	m_pbtnLoadModel->SetNormalState(m_LoadModelBitmaps[0]);
+	m_pbtnLoadModel->SetHoverState(m_LoadModelBitmaps[1]);
+	m_pbtnLoadModel->SetDownState(m_LoadModelBitmaps[1]);
+
+	for (int i = 0; i < 6; ++i)
+	{
+		TextBox* pTextBox = new TextBox();
+		pTextBox->SetBounds(20, 120 + (i*80),120,20);
+
+		m_TextBoxes.push_back(pTextBox);
+
+		Button* pButton = new Button(150,122 + (i*80),15,15);
+		pButton->SetNormalState(m_LoadPathBitmaps[0]);
+		pButton->SetHoverState(m_LoadPathBitmaps[1]);
+		pButton->SetDownState(m_LoadPathBitmaps[1]);
+
+		m_Buttons.push_back(pButton);
+	}
+
+	TCHAR Buffer[256];
+	GetCurrentDirectory(256, Buffer);
+
+	m_WorkingDirectory = Buffer;
 }
 
 
 LoadModelFromFile::~LoadModelFromFile()
 {
+	delete m_pbtnUseNormalMap;
+
+	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
+		delete (*it);
+
+	for (vector<TextBox*>::iterator it = m_TextBoxes.begin(); it != m_TextBoxes.end(); ++it)
+		delete (*it);
+
+	for (vector<Bitmap*>::iterator it = m_LoadPathBitmaps.begin(); it != m_LoadPathBitmaps.end(); ++it)
+		delete (*it);
+
+	for (vector<Bitmap*>::iterator it = m_LoadModelBitmaps.begin(); it != m_LoadModelBitmaps.end(); ++it)
+		delete (*it);
+
+	for (vector<Bitmap*>::iterator it = m_UseNormalMapBitmaps.begin(); it != m_UseNormalMapBitmaps.end(); ++it)
+		delete (*it);
 }
 
 // GENERAL
-void LoadModelFromFile::LoadNewModel()
+void LoadModelFromFile::Tick()
 {
-	tstring modelPath = _T("");
-	tstring physXModelPath = _T("");
-	tstring diffusePath = _T("");
-	tstring specPath = _T("");
-	tstring glossPath = _T("");
-	tstring normalPath = _T("");
-
-	if (modelPath == _T(""))
+	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 	{
-		wchar_t filePath[256];
-
-		OPENFILENAME opf;
-		opf.hwndOwner = 0;
-		opf.lpstrFilter = L"*.binobj|*.binobj";
-		opf.lpstrCustomFilter = 0;
-		opf.nMaxCustFilter = 0L;
-		opf.nFilterIndex = 1L;
-		opf.lpstrFile = filePath;
-		opf.lpstrFile[0] = '\0';
-		opf.nMaxFile = 255;
-		opf.lpstrFileTitle = 0;
-		opf.nMaxFileTitle=50;
-		opf.lpstrInitialDir = 0;
-		opf.lpstrTitle = L"Open Model";
-		opf.nFileOffset = 0;
-		opf.nFileExtension = 2;
-		opf.lpstrDefExt = L"*.*";
-		opf.lpfnHook = NULL;
-		opf.lCustData = 0;
-		opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
-		opf.lStructSize = sizeof(OPENFILENAMEW);
-
-		GetOpenFileName(&opf);
-
-		modelPath = opf.lpstrFile;
+		(*it)->Tick();
 	}
 
-	if (physXModelPath == _T(""))
+	m_pbtnLoadModel->Tick();
+
+	if (m_Buttons[0]->Clicked())
 	{
-		wchar_t filePath[256];
+		m_ModelPath = GetPath(_T("Load Model"), L"OBJ Files\0*.binobj;*.obj*\0\0");
 
-		OPENFILENAME opf;
-		opf.hwndOwner = 0;
-		opf.lpstrFilter = L"*.nxconcave|*.nxconcave";
-		opf.lpstrCustomFilter = 0;
-		opf.nMaxCustFilter = 0L;
-		opf.nFilterIndex = 1L;
-		opf.lpstrFile = filePath;
-		opf.lpstrFile[0] = '\0';
-		opf.nMaxFile = 255;
-		opf.lpstrFileTitle = 0;
-		opf.nMaxFileTitle=50;
-		opf.lpstrInitialDir = 0;
-		opf.lpstrTitle = L"Open PhysX Model";
-		opf.nFileOffset = 0;
-		opf.nFileExtension = 2;
-		opf.lpstrDefExt = L"*.*";
-		opf.lpfnHook = NULL;
-		opf.lCustData = 0;
-		opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
-		opf.lStructSize = sizeof(OPENFILENAMEW);
+		m_TextBoxes[0]->SetText(m_ModelPath);
 
-		GetOpenFileNameW(&opf);
+		SetCurrentDirectory(m_WorkingDirectory.c_str());
+	}
+	if (m_Buttons[1]->Clicked())
+	{
+		m_PhysXModelPath = GetPath(_T("Load PhysX Model"), L"NX Files\0*.nxconvex;*.nxconcave*\0\0");
+		
+		m_TextBoxes[1]->SetText(m_PhysXModelPath);
 
-		physXModelPath = opf.lpstrFile;
+		SetCurrentDirectory(m_WorkingDirectory.c_str());
+	}
+	if (m_Buttons[2]->Clicked())
+	{
+		m_NormalPath = GetPath(_T("Load Normal Map"), L"Image Files\0*.png\0\0");
+
+		m_TextBoxes[2]->SetText(m_NormalPath);
+
+		SetCurrentDirectory(m_WorkingDirectory.c_str());
+	}
+	if (m_Buttons[3]->Clicked())
+	{
+		m_DiffusePath = GetPath(_T("Load Diffuse map"), L"Image Files\0*.png\0\0");
+
+		m_TextBoxes[3]->SetText(m_DiffusePath);
+
+		SetCurrentDirectory(m_WorkingDirectory.c_str());
+	}
+	if (m_Buttons[4]->Clicked())
+	{
+		m_SpecPath = GetPath(_T("Load Specular Map"), L"Image Files\0*.png\0\0");
+
+		m_TextBoxes[4]->SetText(m_SpecPath);
+
+		SetCurrentDirectory(m_WorkingDirectory.c_str());
+	}
+	if (m_Buttons[5]->Clicked())
+	{
+		m_GlossPath = GetPath(_T("Load Glossiness Map"), L"Image Files\0*.png\0\0");
+
+		m_TextBoxes[5]->SetText(m_GlossPath);
+
+		SetCurrentDirectory(m_WorkingDirectory.c_str());
 	}
 
-	if (normalPath == _T(""))
+	if (m_pbtnLoadModel->Clicked())
 	{
-		wchar_t filePath[256];
+		if (m_ModelPath != _T("") &&
+			m_PhysXModelPath != _T("") &&
+			m_NormalPath != _T("") &&
+			m_DiffusePath != _T("") &&
+			m_SpecPath != _T("") &&
+			m_GlossPath != _T(""))
+		{
+			m_pLevelObject = new LevelObject();
 
-		OPENFILENAME opf;
-		opf.hwndOwner = 0;
-		opf.lpstrFilter = L"*.png|*.png";
-		opf.lpstrCustomFilter = 0;
-		opf.nMaxCustFilter = 0L;
-		opf.nFilterIndex = 1L;
-		opf.lpstrFile = filePath;
-		opf.lpstrFile[0] = '\0';
-		opf.nMaxFile = 255;
-		opf.lpstrFileTitle = 0;
-		opf.nMaxFileTitle=50;
-		opf.lpstrInitialDir = 0;
-		opf.lpstrTitle = L"Open Normal Map";
-		opf.nFileOffset = 0;
-		opf.nFileExtension = 2;
-		opf.lpstrDefExt = L"*.*";
-		opf.lpfnHook = NULL;
-		opf.lCustData = 0;
-		opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
-		opf.lStructSize = sizeof(OPENFILENAMEW);
+			m_pLevelObject->UseNormalMap(true);
+			m_pLevelObject->UseSimplifiedPhysXMesh(false);
 
-		GetOpenFileNameW(&opf);
+			m_pLevelObject->SetModelPath(m_ModelPath);
+			m_pLevelObject->SetPhysXModelPath(m_PhysXModelPath);
 
-		normalPath = opf.lpstrFile;
+			m_pLevelObject->SetNormalPath(m_NormalPath);
+			m_pLevelObject->SetDiffusePath(m_DiffusePath);
+			m_pLevelObject->SetSpecPath(m_SpecPath);
+			m_pLevelObject->SetGlossPath(m_GlossPath);
+
+			m_pLevelObject->SetRigid(true);
+			m_pLevelObject->SetMass(1000);
+
+			m_bIsLoaded = true;
+		}
 	}
 
-	if (diffusePath == _T(""))
+	if (m_TextBoxes[0]->Entered())
 	{
-		wchar_t filePath[256];
+		m_ModelPath = m_TextBoxes[0]->GetText();
 
-		OPENFILENAME opf;
-		opf.hwndOwner = 0;
-		opf.lpstrFilter = L"*.png|*.png";
-		opf.lpstrCustomFilter = 0;
-		opf.nMaxCustFilter = 0L;
-		opf.nFilterIndex = 1L;
-		opf.lpstrFile = filePath;
-		opf.lpstrFile[0] = '\0';
-		opf.nMaxFile = 255;
-		opf.lpstrFileTitle = 0;
-		opf.nMaxFileTitle=50;
-		opf.lpstrInitialDir = 0;
-		opf.lpstrTitle = L"Open Diffuse Map";
-		opf.nFileOffset = 0;
-		opf.nFileExtension = 2;
-		opf.lpstrDefExt = L"*.*";
-		opf.lpfnHook = NULL;
-		opf.lCustData = 0;
-		opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
-		opf.lStructSize = sizeof(OPENFILENAMEW);
-
-		GetOpenFileNameW(&opf);
-
-		diffusePath = opf.lpstrFile;
+		m_TextBoxes[0]->LoseFocus();
 	}
 
-	if (specPath == _T(""))
+	if (m_TextBoxes[1]->Entered())
 	{
-		wchar_t filePath[256];
-
-		OPENFILENAME opf;
-		opf.hwndOwner = 0;
-		opf.lpstrFilter = L"*.png|*.png";
-		opf.lpstrCustomFilter = 0;
-		opf.nMaxCustFilter = 0L;
-		opf.nFilterIndex = 1L;
-		opf.lpstrFile = filePath;
-		opf.lpstrFile[0] = '\0';
-		opf.nMaxFile = 255;
-		opf.lpstrFileTitle = 0;
-		opf.nMaxFileTitle=50;
-		opf.lpstrInitialDir = 0;
-		opf.lpstrTitle = L"Open Specular Map";
-		opf.nFileOffset = 0;
-		opf.nFileExtension = 2;
-		opf.lpstrDefExt = L"*.*";
-		opf.lpfnHook = NULL;
-		opf.lCustData = 0;
-		opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
-		opf.lStructSize = sizeof(OPENFILENAMEW);
-
-		GetOpenFileNameW(&opf);
-
-		specPath = opf.lpstrFile;
+		m_PhysXModelPath = m_TextBoxes[1]->GetText();
+		m_TextBoxes[1]->LoseFocus();
 	}
 
-	if (glossPath == _T(""))
+	if (m_TextBoxes[2]->Entered())
 	{
-		wchar_t filePath[256];
-
-		OPENFILENAME opf;
-		opf.hwndOwner = 0;
-		opf.lpstrFilter = L"*.png|*.png";
-		opf.lpstrCustomFilter = 0;
-		opf.nMaxCustFilter = 0L;
-		opf.nFilterIndex = 1L;
-		opf.lpstrFile = filePath;
-		opf.lpstrFile[0] = '\0';
-		opf.nMaxFile = 255;
-		opf.lpstrFileTitle = 0;
-		opf.nMaxFileTitle=50;
-		opf.lpstrInitialDir = 0;
-		opf.lpstrTitle = L"Open Glossiness Map";
-		opf.nFileExtension = 2;
-		opf.lpstrDefExt = L"*.*";
-		opf.lpfnHook = NULL;
-		opf.lCustData = 0;
-		opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
-		opf.lStructSize = sizeof(OPENFILENAMEW);
-
-		GetOpenFileNameW(&opf);
-
-		glossPath = opf.lpstrFile;
+		m_NormalPath = m_TextBoxes[2]->GetText();
+		m_TextBoxes[2]->LoseFocus();
 	}
 
-	m_pLevelObject = new LevelObject();
+	if (m_TextBoxes[3]->Entered())
+	{
+		m_DiffusePath = m_TextBoxes[3]->GetText();
+		m_TextBoxes[3]->LoseFocus();
+	}
 
-	m_pLevelObject->SetModelPath(modelPath);
-	m_pLevelObject->SetPhysXModelPath(physXModelPath);
-	m_pLevelObject->SetDiffusePath(diffusePath);
-	m_pLevelObject->SetSpecPath(specPath);
-	m_pLevelObject->SetGlossPath(glossPath);
-	m_pLevelObject->SetNormalPath(normalPath);
+	if (m_TextBoxes[4]->Entered())
+	{
+		m_SpecPath = m_TextBoxes[4]->GetText();
+		m_TextBoxes[4]->LoseFocus();
+	}
 
-	m_bIsLoaded = true;
+	if (m_TextBoxes[5]->Entered())
+	{
+		m_GlossPath = m_TextBoxes[5]->GetText();
+		m_TextBoxes[5]->LoseFocus();
+	}
+}
+
+void LoadModelFromFile::Show()
+{
+	BLOX_2D->SetColor(255, 255, 255);
+	BLOX_2D->SetFont(_T("Verdana"),false,false,12);
+	BLOX_2D->DrawString(_T("Load new model from file") ,10,60);
+
+	BLOX_2D->DrawString(_T("Model path:") ,10,100);
+	BLOX_2D->DrawString(_T("PhysX Model path:") ,10,180);
+	BLOX_2D->DrawString(_T("Normal Map path:") ,10,260);
+	BLOX_2D->DrawString(_T("Diffuse Map path:") ,10,340);
+	BLOX_2D->DrawString(_T("Specular Map path:") ,10,420);
+	BLOX_2D->DrawString(_T("Glossiness Map path:") ,10,500);
+
+	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
+	{
+		(*it)->Show();
+	}
+
+	for (vector<TextBox*>::iterator it = m_TextBoxes.begin(); it != m_TextBoxes.end(); ++it)
+	{
+		(*it)->Show();			
+	}
+
+	m_pbtnLoadModel->Show();
+}
+
+void LoadModelFromFile::HideTextBoxes()
+{
+	for (vector<TextBox*>::iterator it = m_TextBoxes.begin(); it != m_TextBoxes.end(); ++it)
+	{
+		(*it)->Hide();
+	}
+}
+
+tstring LoadModelFromFile::GetPath(tstring title, LPWSTR filter)
+{
+	wchar_t filePath[256];
+
+	OPENFILENAME opf;
+	opf.hwndOwner = 0;
+	opf.lpstrFilter = filter;
+	opf.lpstrCustomFilter = 0;
+	opf.nMaxCustFilter = 0L;
+	opf.nFilterIndex = 1L;
+	opf.lpstrFile = filePath;
+	opf.lpstrFile[0] = '\0';
+	opf.nMaxFile = 255;
+	opf.lpstrFileTitle = 0;
+	opf.nMaxFileTitle=50;
+	opf.lpstrInitialDir = 0;
+	opf.lpstrTitle = title.c_str();
+	opf.nFileOffset = 0;
+	opf.nFileExtension = 2;
+	opf.lpstrDefExt = L"*.*";
+	opf.lpfnHook = NULL;
+	opf.lCustData = 0;
+	opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
+	opf.lStructSize = sizeof(OPENFILENAMEW);
+
+	GetOpenFileName(&opf);
+
+	return opf.lpstrFile;
+}
+
+void LoadModelFromFile::Clear()
+{
+	m_GlossPath = m_SpecPath = m_DiffusePath = m_NormalPath = m_PhysXModelPath = m_ModelPath = _T("");
+
+	m_pLevelObject = 0;
+
+	m_bIsLoaded = false;
+
+	m_bLevelObjectExtracted = false;
+
+	for (int i = 0; i < 6; ++i)
+	{
+		m_TextBoxes[i]->SetText(_T(""));
+	}
 }
 
 // GETTERS
-//
-//BOOL DoOpenDialog(HWND hwnd, wchar_t *szDataPath)
-//{
-//   OPENFILENAME ofn;
-//   ZeroMemory(&ofn, sizeof(ofn));
-//   ZeroMemory(szDataPath, MAX_PATH);
-//   ofn.lStructSize = sizeof(ofn);
-//   ofn.hwndOwner = hwnd;
-//   ofn.lpstrFilter = "pCrypt Files (*.pc)\0*.pc\0All Files (*.*)\0*.*\0\0";
-//   ofn.lpstrFile = szDataPath;
-//   ofn.nMaxFile = MAX_PATH;
-//   ofn.Flags = OFN_HIDEREADONLY;
-//   ofn.lpstrTitle = "Open Encryption";
-//   return GetOpenFileName(&ofn);
-//}

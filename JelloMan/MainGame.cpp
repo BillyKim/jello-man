@@ -189,6 +189,11 @@ void MainGame::UpdateScene(const float dTime)
 		LevelObject* newLvlObj = m_pEditorGUI->GetNewLevelObject();
 		newLvlObj->Init(m_pPhysXEngine);
 
+		Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
+		vLook.Normalize();
+
+		newLvlObj->Translate(m_pRenderContext->GetCamera()->GetPosition() + vLook * 100);
+
 		m_pLevel->AddLevelObject(newLvlObj);
 	}
 

@@ -16,7 +16,7 @@ public:
 	virtual ~VisualModelDebugger();
 
 	// GENERAL
-	void Tick(const RenderContext* pRenderContex, vector<LevelObject*> pLevelObjects);
+	void Tick(const RenderContext* pRenderContex, vector<LevelObject*>& pLevelObjects);
 	void CheckControls();
 	void Draw();
 	void DeselectAll();

@@ -48,6 +48,8 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 
 	pCharacter->Init(pPhysXEngine);
 
+	pCharacter->Translate(Vector3(0,0,0));
+
 	m_pCharacter = pCharacter;
 
 	m_pLevelObjects.push_back(pCharacter);

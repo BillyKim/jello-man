@@ -221,7 +221,7 @@ void EditorGUI::Initialize()
 	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
 
 	// LOAD MODEL BUTTON
-	m_pLoadModelButton = new Button(310,7,36,36);
+	m_pLoadModelButton = new Button(310,7,36,36, true);
 
 	m_pLoadModelButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_model_normal.png")));
 	m_pLoadModelButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_model_hover.png")));
@@ -229,6 +229,12 @@ void EditorGUI::Initialize()
 	m_pLoadModelButton->SetNormalState(m_pLoadModelButtonBitmaps[0]);
 	m_pLoadModelButton->SetHoverState(m_pLoadModelButtonBitmaps[1]);
 	m_pLoadModelButton->SetDownState(m_pLoadModelButtonBitmaps[1]);
+
+	m_pLoadModelButton->SetDeactivatedState(m_pLoadModelButtonBitmaps[0]);
+	m_pLoadModelButton->SetDeactivatedStateHover(m_pLoadModelButtonBitmaps[1]);
+	m_pLoadModelButton->SetDeactivatedStateDown(m_pLoadModelButtonBitmaps[1]);
+
+	m_pLoadModelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// SHOW GRID BUTTON
 	m_pShowGridButton = new Button(370,7,36,36,true);
@@ -241,6 +247,7 @@ void EditorGUI::Initialize()
 	m_pShowGridButton->SetNormalState(m_pShowGridButtonBitmaps[0]);
 	m_pShowGridButton->SetHoverState(m_pShowGridButtonBitmaps[1]);
 	m_pShowGridButton->SetDownState(m_pShowGridButtonBitmaps[1]);
+
 	m_pShowGridButton->SetDeactivatedState(m_pShowGridButtonBitmaps[2]);
 	m_pShowGridButton->SetDeactivatedStateHover(m_pShowGridButtonBitmaps[3]);
 	m_pShowGridButton->SetDeactivatedStateDown(m_pShowGridButtonBitmaps[3]);
@@ -340,6 +347,19 @@ void EditorGUI::Draw()
 		BLOX_2D->FillRect(0, 50, 200, static_cast<int>(BLOX_2D->GetWindowSize().height) - 71);
 
 		m_pLightDebugger->ShowLightInfo();
+
+		if (m_pLoadModelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0)
+			m_pLoadModelFromFile->Show();
+		else
+		{
+			m_pLoadModelFromFile->Clear();
+			m_pLoadModelButton->Deactivate();
+		}
+	}
+	else
+	{
+		m_pLoadModelButton->Deactivate();
+		m_pLoadModelFromFile->Clear();
 	}
 
 	// BUTTONS
@@ -607,7 +627,7 @@ void EditorGUI::Draw()
 		m_pColorPicker->PreviousColorSet(false);
 	}
 }
-void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects)
+void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& pLevelObjects)
 {
 	// BUTTONS
 	m_pLightButton->Tick();
@@ -696,21 +716,16 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*> p
 		}
 	}
 
-	if (!m_pLoadModelFromFile)
-	{
-		if (m_pLoadModelFromFile->LevelObjectExtracted())
-			SafeDelete(m_pLoadModelFromFile);
-	}
+	if (m_pLoadModelButton->IsActive())
+		m_pLoadModelFromFile->Tick();
+	else
+		m_pLoadModelFromFile->HideTextBoxes();
+	
+	if (m_pLoadModelFromFile->LevelObjectExtracted())
+		m_pLoadModelFromFile->Clear();
 
-	if (m_pLoadModelButton->Clicked())
-	{
-		SafeDelete(m_pLoadModelFromFile);
-
-		m_pLoadModelFromFile = new LoadModelFromFile();
-		m_pLoadModelFromFile->LoadNewModel();
-
+	if (m_pLoadModelFromFile->IsLoaded())
 		m_bNewModelLoaded = true;
-	}
 
 	// CAMERA
 	if (CONTROLS->RightMBDown())
