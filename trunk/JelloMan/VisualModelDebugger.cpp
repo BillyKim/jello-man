@@ -15,7 +15,7 @@ VisualModelDebugger::~VisualModelDebugger()
 }
 
 // GENERAL
-void VisualModelDebugger::Tick(const RenderContext* pRenderContex, vector<LevelObject*> pLevelObjects)
+void VisualModelDebugger::Tick(const RenderContext* pRenderContex, vector<LevelObject*>& pLevelObjects)
 {
 	m_pLevelObjects = pLevelObjects;
 	m_pRenderContext = pRenderContex;
@@ -139,7 +139,7 @@ void VisualModelDebugger::RayCast()
 
 		for (unsigned int i = 0; i < m_pLevelObjects.size(); ++i)
 		{
-			NxVec3 nxPosModel(m_pLevelObjects[i]->GetActor()->getGlobalPosition());
+			NxVec3 nxPosModel(m_pLevelObjects[i]->GetPosition());
 			Vector3 vPosModel(nxPosModel.x, nxPosModel.y, nxPosModel.z);
 
 			if (vPosHit == vPosModel)

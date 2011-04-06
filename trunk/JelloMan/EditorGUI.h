@@ -32,7 +32,7 @@ public:
 	// GENERAL
 	void Initialize();
 	void Draw();
-	void Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects);
+	void Tick(const RenderContext* pRenderContext, vector<LevelObject*>& pLevelObjects);
 
 	// GETTERS
 	Button* GetLightButton() const

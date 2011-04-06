@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LevelObject.h"
+#include "Blox2D_Engine.h"
 
 class LoadModelFromFile
 {
@@ -11,12 +12,18 @@ public:
 	virtual ~LoadModelFromFile();
 
 	// GENERAL
-	void LoadNewModel();
+	void Tick();
+	void Show();
+	void Clear();
+
+	void HideTextBoxes();
 
 	// GETTERS
 	LevelObject* GetLevelObject()
-	{ m_bLevelObjectExtracted = true;
-	  return m_pLevelObject; }
+	{ 
+	  m_bLevelObjectExtracted = true;
+	  return m_pLevelObject;
+	}
 
 	bool IsLoaded() const
 	{ return m_bIsLoaded; }
@@ -26,10 +33,31 @@ public:
 
 private:
 
+	tstring GetPath(tstring title, LPWSTR filter);
+
 	// DATAMEMBERS
 	bool m_bIsLoaded;
 	bool m_bLevelObjectExtracted;
 
+	tstring m_ModelPath;
+	tstring m_PhysXModelPath;
+	tstring m_NormalPath;
+	tstring m_DiffusePath;
+	tstring m_SpecPath;
+	tstring m_GlossPath;
+
 	LevelObject* m_pLevelObject;
+
+	vector<TextBox*> m_TextBoxes;
+	vector<Button*> m_Buttons;
+
+	Button* m_pbtnUseNormalMap;
+	Button* m_pbtnLoadModel;
+
+	vector<Bitmap*> m_LoadPathBitmaps;
+	vector<Bitmap*> m_LoadModelBitmaps;
+	vector<Bitmap*> m_UseNormalMapBitmaps;
+
+	tstring m_WorkingDirectory;
 };
 

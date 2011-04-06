@@ -40,7 +40,7 @@ public:
 	{ m_bTickCharacter = tick; }
 
 	// GETTERS
-	vector<LevelObject*> GetLevelObjects() const
+	vector<LevelObject*>& GetLevelObjects()
 	{ return m_pLevelObjects; }
 
 private:
