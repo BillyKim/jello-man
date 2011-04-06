@@ -67,11 +67,15 @@ public:
 
 	void OnResize(ID2D1RenderTarget* pRenderTarget) { m_pRenderTarget = pRenderTarget; }
 	void SetAntiAliasing(bool AA);
+	void SetWindowHandle(HWND hwnd) { m_Hwnd = hwnd; }
+	void SetWindowInstance(HINSTANCE instance) { m_hInstance = instance; }
 
 	// GETTERS
 	Size2D GetWindowSize() const;
 	ID2D1Factory* GetFactory() const { return m_pD2DFactory; }
 	IDWriteFactory* GetWriteFactory() const { return m_pDWriteFactory; }
+	HWND GetWindowHandle() const { return m_Hwnd; }
+	HINSTANCE GetWindowInstance() const { return m_hInstance; }
 	
 	// DRAW METHODS
 	void DrawGrid(int stepsize, D2D1_RECT_F area) const;
@@ -123,72 +127,13 @@ private:
 	int m_FPS;
 	float m_DTimeS;
 
+	HWND m_Hwnd;
+	HINSTANCE m_hInstance;
+
 	// -------------------------
 	// Disabling default copy constructor and default 
 	// assignment operator.
 	// -------------------------
 	Blox2D(const Blox2D& yRef);									
 	Blox2D& operator=(const Blox2D& yRef);	
-};
-
-//-----------------------------------------------------------------
-// TextBox Class
-//-----------------------------------------------------------------
-
-class TextBox
-{
-public:
-
-	// constructors
-	TextBox(int posX, int posY, int width, int height);
-
-	// destructor
-	virtual ~TextBox();
-
-	// general
-	void Show();
-
-	// getters
-	tstring GetText() const
-	{ return m_Text; }
-	bool HasFocus() const
-	{ return m_bHasFocus; }
-
-	// setters
-	void SetText(tstring text)
-	{ m_Text = text; }
-
-	void SetBackColor(unsigned int R, unsigned int G, unsigned int B);
-	void SetTextColor(unsigned int R, unsigned int G, unsigned int B);
-	void SetFont(tstring fontName, bool bold, bool italic, float size);
-
-	void SetFocus(bool hasFocus)
-	{ m_bHasFocus = hasFocus; }
-
-private:
-
-	// general
-	void Tick();
-	
-	// datamembers
-	bool m_bHasFocus;
-	bool m_bClick;
-
-	GameTimer m_Timer;
-	float m_Time;
-
-	tstring m_Text;
-	tstring m_NewText;
-
-	HitRegion* m_pHitRegion;
-
-	Point2D m_Pos;
-
-	int m_Width;
-	int m_Height;
-
-	IDWriteTextFormat* m_pTextFormat;
-
-	ColorF m_BackColor;
-	ColorF m_TextColor;
 };

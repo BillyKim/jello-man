@@ -25,6 +25,9 @@ public:
 	void Show(Vector3& position, TYPE type, int id, LevelObject* pLevelObject = 0);
 	void Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects);
 
+	// GETTERS
+	bool IsMoving() const;
+
 private:
 
 	// DATAMEMBERS

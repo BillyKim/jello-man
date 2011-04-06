@@ -98,9 +98,9 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
     SpotLight sl;
         //Omni 1
         sl = SpotLight();
-        sl.position = Vector3(0.0f,400.0f,0.0f);
+        sl.position = Vector3(0.0f,600.0f,0.0f);
         sl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
-        sl.multiplier = 1.5f;
+        sl.multiplier = 1.0f;
 		sl.AttenuationStart = 0;
 		sl.AttenuationEnd = 2000;
 		sl.direction = Vector3(0, -1, 0);
@@ -112,9 +112,9 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	SpotLight sl2;
         //Omni 1
         sl2 = SpotLight();
-        sl2.position = Vector3(400.0f,400.0f,0.0f);
+        sl2.position = Vector3(800.0f,600.0f,0.0f);
         sl2.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
-        sl2.multiplier = 1.5f;
+        sl2.multiplier = 1.0f;
 		sl2.AttenuationStart = 0;
 		sl2.AttenuationEnd = 2000;
 		sl2.direction = Vector3(0, -1, 0);
@@ -126,9 +126,9 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	SpotLight sl3;
         //Omni 1
         sl3 = SpotLight();
-        sl3.position = Vector3(-400.0f,400.0f,0.0f);
+        sl3.position = Vector3(-800.0f,600.0f,0.0f);
         sl3.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
-        sl3.multiplier = 1.5f;
+        sl3.multiplier = 1.0f;
 		sl3.AttenuationStart = 0;
 		sl3.AttenuationEnd = 2000;
 		sl3.direction = Vector3(0, -1, 0);
@@ -143,7 +143,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	pl.lightEnabled = true;
 	pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
 	pl.AttenuationEnd = 2000;
-	pl.multiplier = 1.5f;
+	pl.multiplier = 1.0f;
 	m_pLightController->AddLight(pl);
 
 		
