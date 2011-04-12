@@ -18,6 +18,9 @@ public:
 	void SetNormalMap(Texture2D* normalMap);
 
 	void Selected(bool selected);
+    
+    virtual ID3D10InputLayout* GetInputLayout() const;
+    virtual UINT GetVertexStride() const;
 
 private:
     ID3D10EffectMatrixVariable* m_pWorld;
@@ -29,4 +32,7 @@ private:
 	ID3D10EffectShaderResourceVariable* m_pNormalMap;
 
 	ID3D10EffectScalarVariable* m_bSelected;
+
+    ID3D10InputLayout* m_pInputLayout;
+    UINT m_VertexStride;
 };

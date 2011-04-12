@@ -33,8 +33,9 @@ public:
 	virtual bool IsSelected() const;
 
 	virtual bool HasShadowMap() const { return false; } //no shadowmaps for a pointlight
-    virtual void SetShadowMap(ShadowMapType type) { cout << "Warning: trying to set shadowmap on a spotlight"; };
+    virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type) { cout << "Warning: trying to set shadowmap on a spotlight"; };
 	virtual Texture2D* GetShadowMap() const { cout << "Warning: trying to get the shadowmap from a spotlight"; return 0; }
+    virtual Camera* GetShadowCamera() const { cout << "Warning: trying to get the shadowcamera from a spotlight"; return 0;}
     
     virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const;
 

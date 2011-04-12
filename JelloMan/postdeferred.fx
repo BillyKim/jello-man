@@ -3,7 +3,10 @@
 Texture2D colorMap : ColorMap;
 Texture2D normalSpecMap : NormalSpecMap;
 Texture2D positionGlossMap : PositionGlossMap;
+
+Matrix mtxLightWVP;
 Texture2D shadowMap: ShadowMap;
+
 float3 vCamPos : CameraPosition;
 
 
@@ -26,13 +29,17 @@ RasterizerState rState
 	FillMode = Solid;
 	ScissorEnable = true;
 };
-
+SamplerState shadowSampler
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = CLAMP;
+	AddressV = CLAMP;
+};
 SamplerState mapSampler
 {
 	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = WRAP;
 	AddressV = WRAP;
-	AddressW = WRAP;
 };
 
 struct VertexShaderInput
@@ -45,6 +52,7 @@ struct VertexShaderOutput
 {
     float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD0;
+	float3 texCoordShadow : TEXCOORD1;
 };
 
 VertexShaderOutput  VS(VertexShaderInput input) 
@@ -66,10 +74,6 @@ float3  PS_UNLIT(VertexShaderOutput input) : SV_TARGET
 	return endColor;
 }
 
-float SpotShadowCheck()
-{
-	return 1.0f;
-}
 float3  PS_Point(VertexShaderOutput input)
 {
 	//Check if light is not too far from pixel
@@ -180,9 +184,27 @@ float3 PS_SpotNoShadows(VertexShaderOutput input) : SV_TARGET
 {
 	return PS_Spot(input);
 }
+
+float SpotShadowCheck(float3 position)
+{
+	float4 coord = mul(float4(position, 1.0f), mtxLightWVP);
+	coord.xyz /= coord.w;
+	if (coord.x < -1 || coord.y < -1 || coord.x > 1 || coord.y > 1 ||
+		coord.z < 0)
+		return 0.0f;
+
+	//NDC -> texturespace
+	coord.x = (coord.x + 1) / 2.0f;
+	coord.y = 1 - (coord.y + 1) / 2.0f;
+
+	float shadow = shadowMap.Sample(shadowSampler, coord);
+	shadow = coord.z < shadow + 0.00001f? 1.0f : 0.0f;
+
+	return shadow;
+}
 float3 PS_SpotShadows(VertexShaderOutput input) : SV_TARGET
 {
-	float shadowMult = SpotShadowCheck();
+	float shadowMult = SpotShadowCheck(positionGlossMap.Sample(mapSampler, input.texCoord).xyz);
 	clip (shadowMult < 0.01f? -1 : 1);
 
 	return PS_Spot(input) * shadowMult;

@@ -26,11 +26,6 @@ void TestPhysXBox::Init()
     m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
 
 //    m_pModel = Content->LoadModel(_T("Content/Models/box50.binobj"));
-    
-    for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
-    {
-        (*it)->SetEffect(m_pEffect);
-    }
 }
 
 void TestPhysXBox::Draw(const RenderContext* pRenderContext)
@@ -42,5 +37,5 @@ void TestPhysXBox::Draw(const RenderContext* pRenderContext)
 	m_pEffect->SetWorld(m_WorldMatrix);
 	m_pEffect->SetWorldViewProjection(m_WorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
 
-    m_pModel->Draw();
+    m_pModel->Draw(m_pEffect);
 }

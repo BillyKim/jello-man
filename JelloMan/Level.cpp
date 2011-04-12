@@ -209,8 +209,8 @@ void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreSh
 {
     for (vector<LevelObject*>::const_iterator lIt = m_pLevelObjects.cbegin(); lIt != m_pLevelObjects.cend(); ++lIt)
 	{
-		LevelObject* lobj = *lIt;      
-		lobj->GetModel()->DrawEffectless();
+		LevelObject* lobj = *lIt;
+        lobj->DrawShadow(pRenderContext, pPreShadowEffect);
 	}
 }
 

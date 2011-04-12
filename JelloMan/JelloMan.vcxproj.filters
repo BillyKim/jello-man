@@ -324,6 +324,9 @@
     <ClInclude Include="PreShadowEffect.h">
       <Filter>Engine Files\Graphics\Effect\pre</Filter>
     </ClInclude>
+    <ClInclude Include="PosColEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -556,6 +559,9 @@
     </ClCompile>
     <ClCompile Include="PreShadowEffect.cpp">
       <Filter>Engine Files\Graphics\Effect\pre</Filter>
+    </ClCompile>
+    <ClCompile Include="PosColEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

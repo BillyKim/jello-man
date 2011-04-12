@@ -20,11 +20,17 @@ void Effect::SetTechnique(int index)
 {
     m_pCurrentTechnique = m_pEffect->GetTechniqueByIndex(index);
 	ASSERT(m_pCurrentTechnique->IsValid() != 0, _T("Effect technique is not valid"));
+    D3D10_TECHNIQUE_DESC desc;
+    m_pCurrentTechnique->GetDesc(&desc);
+    m_NumPasses = desc.Passes;
 }
 void Effect::SetTechnique(const string& name)
 {
     m_pCurrentTechnique = m_pEffect->GetTechniqueByName(name.c_str());
 	ASSERT(m_pCurrentTechnique->IsValid() != 0, _T("Effect technique is not valid"));
+    D3D10_TECHNIQUE_DESC desc;
+    m_pCurrentTechnique->GetDesc(&desc);
+    m_NumPasses = desc.Passes;
 }
 ID3D10EffectVariable* Effect::GetVariableByName(const string& name) const
 {
@@ -41,4 +47,8 @@ ID3D10EffectVariable* Effect::GetVariableBySemantic(const string& semantic) cons
 	ASSERT(var->IsValid() != 0, _T("Effect variable is not valid!"));
     
     return var;
+}
+UINT Effect::GetNumPasses() const
+{
+    return m_NumPasses;
 }

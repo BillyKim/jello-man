@@ -35,6 +35,10 @@ private:
     ID3D10ShaderResourceView* m_pDepthMapSRV;
     ID3D10DepthStencilView* m_pDepthMapDSV;
 
+    ID3D10RenderTargetView* m_pPrevRenderTarget;
+    ID3D10DepthStencilView* m_pPrevDSV;
+    D3D10_VIEWPORT m_PrevViewport;
+
     D3D10_VIEWPORT m_Viewport;
 };
 

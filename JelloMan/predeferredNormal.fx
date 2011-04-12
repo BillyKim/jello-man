@@ -46,9 +46,9 @@ struct VertexShaderOutput
 {
     float4 position : SV_POSITION;
 	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
 	float2 texCoord : TEXCOORD0;
 	float3 worldPos : TEXCOORD1;
-	float3 tangent : TANGENT;
 };
 
 VertexShaderOutput  VS(VertexShaderInput input) 

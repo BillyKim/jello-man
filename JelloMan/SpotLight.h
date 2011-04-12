@@ -5,7 +5,7 @@
 class SpotLight : public Light
 {
 public:
-	SpotLight(const SpotLightDesc& desc);
+	SpotLight();
 	~SpotLight();
     
     virtual void InitGame();
@@ -33,8 +33,9 @@ public:
 	virtual bool IsSelected() const;
 
 	virtual bool HasShadowMap() const;
-    virtual void SetShadowMap(ShadowMapType type);
+    virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type);
 	virtual Texture2D* GetShadowMap() const;
+    virtual Camera* GetShadowCamera() const;
     
     virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const;
 
@@ -50,8 +51,8 @@ public:
     virtual void SetAttenuationEnd(float end);
     virtual float GetAttenuationEnd() const;
 
-	virtual void SetPower(float power);
-	virtual void AddPower(float add);
+	virtual void SetOpeningsAngle(float rad);
+	virtual void AddOpeningsAngle(float rad);
 
     virtual const SpotLightDesc& GetDesc() const;
     
@@ -70,7 +71,14 @@ private:
 	Matrix m_Rotation;
     Vector3 m_Angles;
 	float m_Scale;
+    float m_OpeningsAngle;
 
     LightBehaviour* m_pLightBehaviour;
+    Camera* m_pShadowCamera;
+
+    Vector3 m_vUp;
+
+    void UpdateShadowCameraView();
+    void UpdateShadowCameraProjection();
 };
 

@@ -4,7 +4,7 @@
 #include <vector>
 #include "vertex.h"
 #include "Effect.h"
-#include "PhongEffect.h"
+#include "PosColEffect.h"
 #include "RenderContext.h"
 
 class BaseGrid
@@ -29,12 +29,9 @@ private:
 
 	ID3D10Buffer* m_pVertexBuffer;
 
-    ID3D10InputLayout* m_pInputLayout;
-    UINT m_VertexBufferStride;
-
 	vector<VertexPosCol> m_VecVertices;
 
-	PhongEffect* m_pEffect;
+	PosColEffect* m_pEffect;
 
 	Matrix m_mtxWorld;
 };

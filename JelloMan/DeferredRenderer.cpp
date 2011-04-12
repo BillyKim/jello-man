@@ -62,7 +62,6 @@ void DeferredRenderer::Init(UINT width, UINT height)
 
 	m_pScreenMesh->SetVertices(vertices);
     m_pScreenMesh->SetIndices(indices);
-	m_pScreenMesh->SetEffect(m_pEffect);
 }
 
 
@@ -209,7 +208,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
     m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());	
 	
-    m_pScreenMesh->SetIA();
+    m_pScreenMesh->SetIA(m_pEffect);
 
 #pragma region LightMode LIT
 	if(m_LightMode == LIGHT_MODE_LIT)
@@ -253,7 +252,10 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
                 ASSERT(false);
             
             if (pLight->HasShadowMap() == true)
+            {
                 m_pEffect->SetShadowMap(pLight->GetShadowMap()->GetDepthMap());
+                m_pEffect->SetShadowWVP(pLight->GetShadowCamera()->GetViewProjection());
+            }
 
             D3D10_RECT scissorRect = pLight->CalcScissorRect(pRenderContext->GetCamera(), m_Viewport.Width, m_Viewport.Height);
             //Calc scissor rect
@@ -272,7 +274,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	else
 	{
 		m_pEffect->SetTechnique("tech_UNLIT");
-		m_pScreenMesh->Draw();
+        m_pScreenMesh->Draw(m_pEffect);
 	}
 #pragma endregion
 

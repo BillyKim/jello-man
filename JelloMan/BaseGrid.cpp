@@ -4,8 +4,6 @@
 // CONSTRUCTOR - DESTRUCTOR
 BaseGrid::BaseGrid(ID3D10Device* device)	:	m_pDevice(device),
 												m_pVertexBuffer(0),
-												m_pInputLayout(0),
-												m_VertexBufferStride(0),
 												m_pEffect(0),
 												m_mtxWorld(Matrix::Identity)
 
@@ -15,15 +13,13 @@ BaseGrid::BaseGrid(ID3D10Device* device)	:	m_pDevice(device),
 BaseGrid::~BaseGrid()
 {
 	SafeRelease(m_pVertexBuffer);
-	SafeRelease(m_pInputLayout);
 }
 
 // GENERAL
 void BaseGrid::Init()
 {
-	m_pEffect = Content->LoadEffect<PhongEffect>(_T("poscol.fx"));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
 
-	DefineInputLayout();
 	BuildVertexBuffer();
 }
 
@@ -32,11 +28,12 @@ void BaseGrid::Draw(const RenderContext* pRenderContext)
 	m_pEffect->SetWorld(m_mtxWorld);
 	m_pEffect->SetWorldViewProjection(m_mtxWorld * pRenderContext->GetCamera()->GetViewProjection());
 
-	m_pDevice->IASetInputLayout(m_pInputLayout);
+	m_pDevice->IASetInputLayout(m_pEffect->GetInputLayout());
 
 	 // Set vertex buffer(s)
     UINT offset = 0;
-    m_pDevice->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_VertexBufferStride, &offset);
+    UINT vertexStride = m_pEffect->GetVertexStride();
+    m_pDevice->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &vertexStride, &offset);
 
     // Set primitive topology
 	m_pDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -48,23 +45,6 @@ void BaseGrid::Draw(const RenderContext* pRenderContext)
         m_pEffect->GetCurrentTechnique()->GetPassByIndex(p)->Apply(0);
 		m_pDevice->Draw(m_VecVertices.size(), 0); 
     }
-}
-
-void BaseGrid::DefineInputLayout()
-{
-	SafeRelease(m_pInputLayout);
-
-    // Define the input layout
-    vector<D3D10_INPUT_ELEMENT_DESC> veclayout;
-    UINT numElements;
-	GetInputElementDesc<VertexPosCol>(veclayout, numElements);
-
-    D3D10_PASS_DESC PassDesc;
-    m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->GetDesc(&PassDesc);
-
-    HR(m_pDevice->CreateInputLayout(&veclayout[0], numElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &m_pInputLayout));
-
-	m_VertexBufferStride = sizeof(VertexPosCol);
 }
 
 void BaseGrid::BuildVertexBuffer()

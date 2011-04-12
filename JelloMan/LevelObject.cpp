@@ -49,14 +49,6 @@ void LevelObject::Init(PhysX* pPhysX)
 
     m_pModel = Content->LoadModel(m_ModelPath);
     
-    for (vector<ModelMesh<VertexPosNormTanTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
-    {
-		if (m_bUseNormalMap)
-			(*it)->SetEffect(m_pEffectNormals);
-		else
-			(*it)->SetEffect(m_pEffect);
-    }
-
 	if (!m_bUseSimplifiedPhysXMesh)
 	{
 		string s(m_PhysXModelPath.begin(), m_PhysXModelPath.end());
@@ -103,10 +95,17 @@ void LevelObject::Draw(const RenderContext* pRenderContext)
 		m_pEffect->SetWorld(m_WorldMatrix);
 		m_pEffect->SetWorldViewProjection(m_WorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
 	}
-
-    m_pModel->Draw();
+    if (m_bUseNormalMap)
+	{
+        m_pModel->Draw(m_pEffectNormals);
+    }
+    else
+    {
+        m_pModel->Draw(m_pEffect);
+    }
 }
-void LevelObject::DrawEffectless()
+void LevelObject::DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e)
 {
-    m_pModel->DrawEffectless();
+    e->SetWorldViewProjection(m_WorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
+    m_pModel->Draw(e);
 }
