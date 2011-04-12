@@ -16,6 +16,7 @@
 #include "EdgeDetectionPostEffect.h"
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
+#include "PreShadowEffect.h"
 
 class AudioEngine;
 
@@ -67,4 +68,5 @@ private:
     ForwardRenderer* m_pForwardRenderer;
     PostProcessor* m_pPostProcessor;
     EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
+    PreShadowEffect* m_pPreShadowEffect;
 };

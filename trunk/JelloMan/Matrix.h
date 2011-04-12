@@ -21,6 +21,7 @@ public:
     static Matrix CreateRotationX(float f);
     static Matrix CreateRotationY(float f);
     static Matrix CreateRotationZ(float f);
+    static Matrix CreateRotation(const Vector3& axis, float f);
     static Matrix CreateScale(float f);
     static Matrix CreateScale(const Vector3& f);
 

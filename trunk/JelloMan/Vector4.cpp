@@ -41,6 +41,10 @@ Vector3 Vector4::XYZ() const
 {
     return Vector3(X, Y, Z);
 }
+Vector2 Vector4::XY() const
+{
+    return Vector2(X, Y);
+}
 void Vector4::ToFloat4(float* float4) const
 {
     float4[0] = X;

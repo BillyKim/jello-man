@@ -1,17 +1,15 @@
 #include "lights.fx"
 
-cbuffer cbPerFrame
-{
-};
+Texture2D colorMap : ColorMap;
+Texture2D normalSpecMap : NormalSpecMap;
+Texture2D positionGlossMap : PositionGlossMap;
+Texture2D shadowMap: ShadowMap;
+float3 vCamPos : CameraPosition;
+
 
 PointLight pointLight : PointLight;
 SpotLight spotLight : SpotLight;
 
-float3 vCamPos : CameraPosition;
-
-Texture2D colorMap : ColorMap;
-Texture2D normalSpecMap : NormalSpecMap;
-Texture2D positionGlossMap : PositionGlossMap;
 
 BlendState blend
 {
@@ -68,10 +66,6 @@ float3  PS_UNLIT(VertexShaderOutput input) : SV_TARGET
 	return endColor;
 }
 
-float PointShadowCheck()
-{
-	return 1.0f;
-}
 float SpotShadowCheck()
 {
 	return 1.0f;

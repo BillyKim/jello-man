@@ -15,6 +15,7 @@
 #include "LevelObject.h"
 #include "BaseGrid.h"
 #include "Softbody.h"
+#include "PreShadowEffect.h"
 
 class Level
 {
@@ -29,6 +30,7 @@ public:
 	void Tick(const float dTime);
 	void DrawDeferred(const RenderContext* pRenderContext);
 	void DrawForward(const RenderContext* pRenderContext);
+    void DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect);
 
 	void AddLevelObject(LevelObject* pLevelObject);
 

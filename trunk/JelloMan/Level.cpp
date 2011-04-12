@@ -204,6 +204,16 @@ void Level::DrawDeferred(const RenderContext* pRenderContext)
 	}
 }
 
+
+void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
+{
+    for (vector<LevelObject*>::const_iterator lIt = m_pLevelObjects.cbegin(); lIt != m_pLevelObjects.cend(); ++lIt)
+	{
+		LevelObject* lobj = *lIt;      
+		lobj->GetModel()->DrawEffectless();
+	}
+}
+
 void Level::DrawForward(const RenderContext* pRenderContext)
 {
 	if (m_bShowGrid)

@@ -59,3 +59,7 @@ public:
 	//<------------------------
 };
 
+
+Vector2 Min(const Vector2& a, const Vector2& b);
+Vector2 Max(const Vector2& a, const Vector2& b);
+Vector2 Abs(const Vector2& v);

@@ -96,6 +96,7 @@
     <ClInclude Include="DeferredPreEffect.h" />
     <ClInclude Include="DeferredPreEffectNormals.h" />
     <ClInclude Include="DeferredRenderer.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="EdgeDetectionPostEffect.h" />
     <ClInclude Include="EditorGUI.h" />
     <ClInclude Include="Effect.h" />
@@ -111,6 +112,11 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelObject.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="LightBehaviour.h" />
+    <ClInclude Include="LightBehaviourBroken.h" />
+    <ClInclude Include="LightBehaviourNormal.h" />
+    <ClInclude Include="LightBehaviourRotator.h" />
+    <ClInclude Include="LightDesc.h" />
     <ClInclude Include="LightController.h" />
     <ClInclude Include="LoadModelFromFile.h" />
     <ClInclude Include="MathHelper.h" />
@@ -125,13 +131,16 @@
     <ClInclude Include="PhysXMesh.h" />
     <ClInclude Include="PhysXShape.h" />
     <ClInclude Include="PhysXSphere.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PostProcessEffect.h" />
     <ClInclude Include="PostProcessor.h" />
+    <ClInclude Include="PreShadowEffect.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RotateGizmo.h" />
     <ClInclude Include="Softbody.h" />
     <ClInclude Include="SoftbodyMesh.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="TestObject.h" />
@@ -167,6 +176,7 @@
     <ClCompile Include="DeferredPreEffect.cpp" />
     <ClCompile Include="DeferredPreEffectNormals.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="EdgeDetectionPostEffect.cpp" />
     <ClCompile Include="EditorGUI.cpp" />
     <ClCompile Include="Effect.cpp" />
@@ -181,6 +191,11 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelObject.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightBehaviour.cpp" />
+    <ClCompile Include="LightBehaviourBroken.cpp" />
+    <ClCompile Include="LightBehaviourNormal.cpp" />
+    <ClCompile Include="LightBehaviourRotator.cpp" />
+    <ClCompile Include="LightDesc.cpp" />
     <ClCompile Include="LightController.cpp" />
     <ClCompile Include="LoadModelFromFile.cpp" />
     <ClCompile Include="MathHelper.cpp" />
@@ -195,13 +210,16 @@
     <ClCompile Include="PhysXMesh.cpp" />
     <ClCompile Include="PhysXShape.cpp" />
     <ClCompile Include="PhysXSphere.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PostProcessEffect.cpp" />
     <ClCompile Include="PostProcessor.cpp" />
+    <ClCompile Include="PreShadowEffect.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="RotateGizmo.cpp" />
     <ClCompile Include="Softbody.cpp" />
     <ClCompile Include="SoftbodyMesh.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="TestObject.cpp" />
@@ -227,6 +245,7 @@
     <None Include="postEdgeDetection.fx" />
     <None Include="predeferred.fx" />
     <None Include="predeferredNormal.fx" />
+    <None Include="preShadowmapShader.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

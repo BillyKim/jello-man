@@ -3,6 +3,9 @@
 #include "ContentManager.h"
 #include "vertex.h"
 #include <vector>
+#include "Light.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 DeferredRenderer::DeferredRenderer(ID3D10Device* device):
     m_pDepthDSV(0),
@@ -190,29 +193,7 @@ void DeferredRenderer::Begin()
         m_pDevice->ClearRenderTargetView(m_RenderTargets[i], c);
 }
 
-inline D3D10_RECT CalcScissorRect(const Vector3& center, float length, const Matrix& worldViewProj, UINT backbufferWidth, UINT backbufferHeight)
-{
-    Vector4 pos;
-    pos = Vector3::Transform(center, worldViewProj);
 
-    float len = abs(pos.W);
-	len *= 0.001f;
-	float size = length / len * 1.1f;//len.Length();
-
-	pos.X /= pos.W;
-	pos.Y /= pos.W;
-
-	pos.X += 1.f; pos.X /= 2;
-	pos.Y += 1.f; pos.Y /= 2; pos.Y = 1 - pos.Y;
-
-	D3D10_RECT r;
-	r.left = static_cast<LONG>(pos.X * backbufferWidth - size);
-	r.right =  static_cast<LONG>(r.left + size * 2);
-	r.top = static_cast<LONG>(pos.Y * backbufferHeight - size);
-	r.bottom = static_cast<LONG>(r.top + size * 2);
-
-    return r;
-}
 void DeferredRenderer::End(const RenderContext* pRenderContext)
 { 
     ASSERT(m_pPrevBackbuffer != 0, _T("Begin has not been called or backbuffer got lost"));
@@ -228,6 +209,8 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
     m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());	
 	
+    m_pScreenMesh->SetIA();
+
 #pragma region LightMode LIT
 	if(m_LightMode == LIGHT_MODE_LIT)
 	{
@@ -236,68 +219,50 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	    m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
         
 		bool first = true;
-        //Loop PointLights
-        vector<PointLight>::const_iterator itPoint = pRenderContext->GetLightController()->GetPointLights().cbegin();
-	    for (; itPoint != pRenderContext->GetLightController()->GetPointLights().cend(); ++itPoint)
+        //Loop Lights
+        vector<Light*>::const_iterator itLight = pRenderContext->GetLightController()->GetLights().cbegin();
+	    for (; itLight != pRenderContext->GetLightController()->GetLights().cend(); ++itLight)
 	    {
-			if (itPoint->lightEnabled == false)
+            //Get light
+            Light* pLight = *itLight;
+
+            //Check if on
+			if (pLight->IsEnabled() == false)
 				continue;
 
-			m_pEffect->SetTechnique("tech_PointLightNoShadows");
-
-            D3D10_RECT r = CalcScissorRect(itPoint->position, itPoint->AttenuationEnd, pRenderContext->GetCamera()->GetViewProjection(),
-                                            m_Width, m_Height);
-
-		    //BLOX_2D->SetColor(255,255,255,1.0f);
-		    //BLOX_2D->DrawRect(r.left, r.top, r.right - r.left, r.bottom - r.top, 1.0f);
-
-		    m_pDevice->RSSetScissorRects(1, &r);
-
-		    m_pEffect->SetPointLight(*itPoint);
-
-		    if (first) //first time only
-            {     
-				first = false;
-			    m_pScreenMesh->Draw(); //sets vertexbuffer 'n stuff
-            }
-		    else //other times
+            if (pLight->GetType() == LightType_Point)
             {
-				m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0);	
-				m_pDevice->DrawIndexed(6, 0, 0);
+                PointLight* pl = dynamic_cast<PointLight*>(pLight);
+
+			    m_pEffect->SetTechnique("tech_PointLightNoShadows");
+                
+		        m_pEffect->SetPointLight(pl->GetDesc());
             }
-	    }
-
-	    //Loop SpotLights
-        vector<SpotLight>::const_iterator itSpot = pRenderContext->GetLightController()->GetSpotLights().cbegin();
-	    for (; itSpot != pRenderContext->GetLightController()->GetSpotLights().cend(); ++itSpot)
-	    {
-			if (itSpot->lightEnabled == false)
-				continue;
-		
-			if (itSpot->shadowsEnabled == false)
-				m_pEffect->SetTechnique("tech_SpotLightNoShadows");
-			else		
-			{
-				m_pEffect->SetTechnique("tech_SpotLightShadows");
-				//m_pEffect->SetShadowMap(
-			}
-
-            D3D10_RECT r = CalcScissorRect(itSpot->position, itSpot->AttenuationEnd, pRenderContext->GetCamera()->GetViewProjection(),
-                                            m_Width, m_Height);
-		    m_pDevice->RSSetScissorRects(1, &r);
-
-		    m_pEffect->SetSpotLight(*itSpot);
-
-		    if (first) //first time only
-            {        			
-				first = false;
-			    m_pScreenMesh->Draw(); //sets vertexbuffer
-            }
-		    else //other times
+            else if (pLight->GetType() == LightType_Spot)
             {
-				m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0);	
-				m_pDevice->DrawIndexed(6, 0, 0);
+                SpotLight* sl = dynamic_cast<SpotLight*>(pLight);
+
+                if (sl->HasShadowMap())
+			        m_pEffect->SetTechnique("tech_SpotLightShadows");
+                else
+			        m_pEffect->SetTechnique("tech_SpotLightNoShadows");
+
+		        m_pEffect->SetSpotLight(sl->GetDesc());
             }
+            else
+                ASSERT(false);
+            
+            if (pLight->HasShadowMap() == true)
+                m_pEffect->SetShadowMap(pLight->GetShadowMap()->GetDepthMap());
+
+            D3D10_RECT scissorRect = pLight->CalcScissorRect(pRenderContext->GetCamera(), m_Viewport.Width, m_Viewport.Height);
+            //Calc scissor rect
+		    BLOX_2D->SetColor(255,255,255,1.0f);
+		    BLOX_2D->DrawRect(scissorRect.left, scissorRect.top, scissorRect.right - scissorRect.left, scissorRect.bottom - scissorRect.top, 1.0f);
+		    m_pDevice->RSSetScissorRects(1, &scissorRect);
+
+			m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0);	
+			m_pDevice->DrawIndexed(6, 0, 0);
 	    }
 
 	    m_pDevice->RSSetScissorRects(0, NULL);
@@ -318,6 +283,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	m_pEffect->SetColorMap(0);
 	m_pEffect->SetNormalSpecMap(0);
 	m_pEffect->SetPosGlossMap(0);
+    m_pEffect->SetShadowMap(0);
 	m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertargets
 }
 

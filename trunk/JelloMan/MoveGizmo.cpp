@@ -499,15 +499,17 @@ void MoveGizmo::Tick(const RenderContext* pRenderContext, vector<LevelObject*> p
 {
 	m_pRenderContext = pRenderContext;
 
-	while (m_pRenderContext->GetLightController()->GetPointLights().size() > m_OldPointLightPos.size())
-	{
-		m_OldPointLightPos.push_back(D3DXVECTOR3(0,0,0));
-	}
+    //TODO
 
-	while (m_pRenderContext->GetLightController()->GetSpotLights().size() > m_OldSpotLightPos.size())
-	{
-		m_OldSpotLightPos.push_back(D3DXVECTOR3(0,0,0));
-	}
+	//while (m_pRenderContext->GetLightController()->GetPointLights().size() > m_OldPointLightPos.size())
+	//{
+	//	m_OldPointLightPos.push_back(D3DXVECTOR3(0,0,0));
+	//}
+
+	//while (m_pRenderContext->GetLightController()->GetSpotLights().size() > m_OldSpotLightPos.size())
+	//{
+	//	m_OldSpotLightPos.push_back(D3DXVECTOR3(0,0,0));
+	//}
 
 	while (pLevelObjects.size() > m_OldModelPos.size())
 	{

@@ -92,48 +92,6 @@ typedef D2D1_SIZE_F Size2D;
 #include "MathHelper.h"
 
 //*****************************************************************************
-// Light Struct
-//*****************************************************************************
-typedef struct DirLight
-{
-	D3DXCOLOR Ambient;
-	D3DXCOLOR Diffuse;
-	D3DXCOLOR Specular;
-	D3DXVECTOR3 DirW;
-}DirLight;
-
-//*****************************************************************************
-// Bounding Volumes
-//*****************************************************************************
-struct AABB 
-{
-	// Initialize to an infinitely small bounding box.
-	AABB()
-		: minPt(INFINITY, INFINITY, INFINITY),
-		  maxPt(-INFINITY, -INFINITY, -INFINITY){}
-
-    D3DXVECTOR3 center()
-	{
-		return 0.5f*(minPt+maxPt);
-	}
-	D3DXVECTOR3 size()
-	{
-		return D3DXVECTOR3(maxPt.x-minPt.x,maxPt.y-minPt.y,maxPt.z-minPt.z);
-	}
-	D3DXVECTOR3 minPt;
-	D3DXVECTOR3 maxPt;
-};
-
-struct BoundingSphere 
-{
-	BoundingSphere()
-		: pos(0.0f, 0.0f, 0.0f), radius(0.0f){}
-
-	D3DXVECTOR3 pos;
-	float radius;
-};
-
-//*****************************************************************************
 //Declare templates for releasing interfaces and deleting objects 
 //*****************************************************************************
 template<class Interface>

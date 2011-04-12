@@ -5,6 +5,9 @@
 #include "ContentManager.h"
 #include "AudioEngine.h"
 #include "xact3.h"
+#include "LightDesc.h"
+#include "SpotLight.h"
+#include "PointLight.h"
 
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
@@ -22,7 +25,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pForwardRenderer(0),
 							m_pPostProcessor(0),
 							m_pEdgeDetectionEffect(0),
-							m_pRenderContext(0)
+							m_pRenderContext(0),
+                            m_pPreShadowEffect(0)
 {
 
 }
@@ -85,66 +89,57 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	m_pEdgeDetectionEffect = Content->LoadEffect<EdgeDetectionPostEffect>(_T("postEdgeDetection.fx"));
     m_pEdgeDetectionEffect->SetTechnique(0);
 
+	m_pPostProcessor->SetEffect(m_pEdgeDetectionEffect);
+
 	m_pDeferredRenderer->Init(	static_cast<int>(BLOX_2D->GetWindowSize().width),
 								static_cast<int>(BLOX_2D->GetWindowSize().height));
 	m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
 	
-	m_pPostProcessor->SetEffect(m_pEdgeDetectionEffect);
+    m_pPreShadowEffect = Content->LoadEffect<PreShadowEffect>(_T("preShadowmapShader.fx"));
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
 	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController);
 
-    SpotLight sl;
-        //Omni 1
-        sl = SpotLight();
+    SpotLightDesc sl;
+        //spot 1
         sl.position = Vector3(0.0f,600.0f,0.0f);
         sl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
         sl.multiplier = 1.0f;
-		sl.AttenuationStart = 0;
-		sl.AttenuationEnd = 2000;
+		sl.attenuationStart = 0;
+		sl.attenuationEnd = 2000;
 		sl.direction = Vector3(0, -1, 0);
 		sl.power = 0.5f;
-		sl.shadowsEnabled = false;
-		sl.lightEnabled = true;
-        m_pLightController->AddLight(sl);
+        m_pLightController->AddLight(new SpotLight(sl));
 
-	SpotLight sl2;
-        //Omni 1
-        sl2 = SpotLight();
+	SpotLightDesc sl2;
+        //spot 1
         sl2.position = Vector3(800.0f,600.0f,0.0f);
         sl2.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
         sl2.multiplier = 1.0f;
-		sl2.AttenuationStart = 0;
-		sl2.AttenuationEnd = 2000;
+		sl2.attenuationStart = 0;
+		sl2.attenuationEnd = 2000;
 		sl2.direction = Vector3(0, -1, 0);
 		sl2.power = 0.5f;
-		sl2.shadowsEnabled = false;
-		sl2.lightEnabled = true;
-        m_pLightController->AddLight(sl2);
+        m_pLightController->AddLight(new SpotLight(sl2));
 
-	SpotLight sl3;
-        //Omni 1
-        sl3 = SpotLight();
+	SpotLightDesc sl3;
+        //spot 1
         sl3.position = Vector3(-800.0f,600.0f,0.0f);
         sl3.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
         sl3.multiplier = 1.0f;
-		sl3.AttenuationStart = 0;
-		sl3.AttenuationEnd = 2000;
+		sl3.attenuationStart = 0;
+		sl3.attenuationEnd = 2000;
 		sl3.direction = Vector3(0, -1, 0);
 		sl3.power = 0.5f;
-		sl3.shadowsEnabled = false;
-		sl3.lightEnabled = true;
-        m_pLightController->AddLight(sl3);
+        m_pLightController->AddLight(new SpotLight(sl3));
 
-	PointLight pl;
-	pl = PointLight();
-	pl.position = Vector3(0.0f,100.0f,-400.0f);
-	pl.lightEnabled = true;
-	pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
-	pl.AttenuationEnd = 2000;
-	pl.multiplier = 1.0f;
-	m_pLightController->AddLight(pl);
+	PointLightDesc pl;
+	    pl.position = Vector3(0.0f,100.0f,-400.0f);
+	    pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
+	    pl.attenuationEnd = 2000;
+	    pl.multiplier = 1.0f;
+	    m_pLightController->AddLight(new PointLight(pl));
 
 		
 	// PHYSX
@@ -253,27 +248,40 @@ void MainGame::DrawScene()
 	// --------------------------------------
 	//			   RENDER SCENE
 	// --------------------------------------
+    const vector<Light*>& lights = m_pRenderContext->GetLightController()->GetLights();
+    vector<Light*>::const_iterator it(lights.cbegin());
+    for (; it != lights.end(); ++it)
+    {
+        Light* l = *it;
+        if (l->HasShadowMap() == true)
+        {
+            l->GetShadowMap()->BeginDraw();
+            m_pLevel->DrawShadowMap(m_pRenderContext, m_pPreShadowEffect); 
+            l->GetShadowMap()->EndDraw();
+        }
+    }
+
 
 	// POST PROCESS
 	//m_pPostProcessor->Begin();
 
-	// START DEFERRED
-	m_pDeferredRenderer->Begin();
+	    // START DEFERRED
+	    m_pDeferredRenderer->Begin();
 
-	// DRAW
-	m_pLevel->DrawDeferred(m_pRenderContext);
+	        // DRAW
+	        m_pLevel->DrawDeferred(m_pRenderContext);
 
-	// END DEFERRED
-	m_pDeferredRenderer->End(m_pRenderContext);
+	    // END DEFERRED
+	    m_pDeferredRenderer->End(m_pRenderContext);
 
-	// START FORWARD
-	m_pForwardRenderer->Begin(m_pDeferredRenderer);
+	    // START FORWARD
+	    m_pForwardRenderer->Begin(m_pDeferredRenderer);
 
-	// DRAW
-	m_pLevel->DrawForward(m_pRenderContext);
+	        // DRAW
+	        m_pLevel->DrawForward(m_pRenderContext);
 
-	// END FORWARD
-	m_pForwardRenderer->End();
+	    // END FORWARD
+	    m_pForwardRenderer->End();
 
 	// POST PROCESS
 	//m_pPostProcessor->End();

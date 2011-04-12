@@ -127,3 +127,21 @@ bool Vector2::operator!=(const Vector2& v) const
 	return !operator==(v);
 }
 //<--------------------------------------------------
+
+
+Vector2 Min(const Vector2& a, const Vector2& b)
+{
+	return Vector2(
+        a.X < b.X? a.X : b.X,
+        a.Y < b.Y? a.Y : b.Y);
+}
+Vector2 Max(const Vector2& a, const Vector2& b)
+{
+	return Vector2(
+        a.X > b.X? a.X : b.X,
+        a.Y > b.Y? a.Y : b.Y);
+}
+Vector2 Abs(const Vector2& v)
+{
+    return Vector2(abs(v.X), abs(v.Y));
+}
