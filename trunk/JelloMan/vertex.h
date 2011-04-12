@@ -76,7 +76,7 @@ struct VertexPosNormTex //12 + 12 + 8 = 32
 };
 
 //===============================================================
-struct VertexPosNormTanTex //12 + 12 + 12 + 8 = 46
+struct VertexPosNormTanTex //12 + 12 + 12 + 8 = 44
 {
 	VertexPosNormTanTex():
 		position(0.0f, 0.0f, 0.0f),

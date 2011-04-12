@@ -42,7 +42,6 @@ void PostProcessor::Init()
 }
 void PostProcessor::SetEffect(PostProcessEffect* pEffect)
 {
-	m_pScreenMesh->SetEffect(pEffect->GetEffect());
     m_pEffect = pEffect;
     m_pEffect->SetColorMapSize(m_Width, m_Height);
 }
@@ -65,7 +64,7 @@ void PostProcessor::End()
 
     m_pEffect->SetColorMap(m_pBuffer->GetColorMap());
 
-    m_pScreenMesh->Draw();
+    m_pScreenMesh->Draw(m_pEffect->GetEffect());
 
     m_pEffect->SetColorMap(0);
     m_pEffect->GetEffect()->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertarget

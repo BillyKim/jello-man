@@ -132,6 +132,7 @@
     <ClInclude Include="PhysXShape.h" />
     <ClInclude Include="PhysXSphere.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="PosColEffect.h" />
     <ClInclude Include="PostProcessEffect.h" />
     <ClInclude Include="PostProcessor.h" />
     <ClInclude Include="PreShadowEffect.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="PhysXShape.cpp" />
     <ClCompile Include="PhysXSphere.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="PosColEffect.cpp" />
     <ClCompile Include="PostProcessEffect.cpp" />
     <ClCompile Include="PostProcessor.cpp" />
     <ClCompile Include="PreShadowEffect.cpp" />

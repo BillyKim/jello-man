@@ -8,6 +8,7 @@
 #include "PhysX.h"
 #include "Actor.h"
 #include "DeferredPreEffect.h"
+#include "PreShadowEffect.h"
 
 class LevelObject : public Actor
 {
@@ -21,7 +22,7 @@ public:
     virtual void Init(PhysX* pPhysX);
 	virtual void Tick(float dTime);
     virtual void Draw(const RenderContext* pRenderContext);
-    virtual void DrawEffectless();
+    virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e);
 
 	// SETTERS
 	void SetModelPath(tstring modelPath)

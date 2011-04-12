@@ -711,8 +711,8 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 			sDesc.power = 2;
 			sDesc.direction = Vector3(0.0f,-1.0f,0.0f);
 
-            SpotLight* sl = new SpotLight(sDesc);
-			pRenderContext->GetLightController()->AddLight(sl);
+            /*SpotLight* sl = new SpotLight(sDesc);
+			pRenderContext->GetLightController()->AddLight(sl);*/
 
 			m_pLightDebugger->DeselectAll();
 

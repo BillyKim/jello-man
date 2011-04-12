@@ -8,7 +8,9 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pShadowMap(GetVariableBySemantic("ShadowMap")->AsShaderResource()),
                     m_pPointLight(GetVariableBySemantic("PointLight")),
                     m_pSpotLight(GetVariableBySemantic("SpotLight")),
-                    m_pCamPos(GetVariableBySemantic("CameraPosition")->AsVector())
+                    m_pCamPos(GetVariableBySemantic("CameraPosition")->AsVector()),
+                    m_pMtxLightWVP(GetVariableByName("mtxLightWVP")->AsMatrix()),
+                    m_pInputLayout(0), m_VertexStride(0)
 {
     ASSERT(m_pColorMap->IsValid());
     ASSERT(m_pNormalSpecMap->IsValid());
@@ -16,11 +18,15 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
     ASSERT(m_pShadowMap->IsValid());
     ASSERT(m_pPointLight->IsValid());
     ASSERT(m_pCamPos->IsValid());
+    ASSERT(m_pMtxLightWVP->IsValid());
+
+    CreateInputLayout<VertexPosTex>(pDevice, this, &m_pInputLayout, m_VertexStride);
 }
 
 
 DeferredPostEffect::~DeferredPostEffect(void)
 {
+    SafeRelease(m_pInputLayout);
 }
 
 void DeferredPostEffect::SetPointLight(const PointLightDesc& light)
@@ -48,9 +54,22 @@ void DeferredPostEffect::SetShadowMap(ID3D10ShaderResourceView* map)
 {
     m_pShadowMap->SetResource(map);
 }
+void DeferredPostEffect::SetShadowWVP(const Matrix& wvp)
+{
+    m_pMtxLightWVP->SetMatrix((float*)const_cast<Matrix&>(wvp));
+}
 void DeferredPostEffect::SetCameraPosition(const Vector3& camPos)
 {
     float f[3];
     camPos.ToFloat(f);
     m_pCamPos->SetFloatVector(f);
+}
+ID3D10InputLayout* DeferredPostEffect::GetInputLayout() const
+{
+    ASSERT(m_pInputLayout != 0);
+    return m_pInputLayout;
+}
+UINT DeferredPostEffect::GetVertexStride() const
+{
+    return m_VertexStride;
 }

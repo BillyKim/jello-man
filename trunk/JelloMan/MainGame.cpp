@@ -101,45 +101,45 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
     m_pLightController = new LightController();
 	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController);
 
-    SpotLightDesc sl;
-        //spot 1
-        sl.position = Vector3(0.0f,600.0f,0.0f);
-        sl.color = Color(0.8f, 0.8f, 0.5f, 1.0f);
-        sl.multiplier = 1.0f;
-		sl.attenuationStart = 0;
-		sl.attenuationEnd = 2000;
-		sl.direction = Vector3(0, -1, 0);
-		sl.power = 0.5f;
-        m_pLightController->AddLight(new SpotLight(sl));
+    SpotLight* sp1 = new SpotLight();
+        sp1->SetPosition(Vector3(0.0f,600.0f,0.0f));
+        sp1->SetColor(Color(0.8f, 0.8f, 0.5f, 1.0f));
+        sp1->SetMulitplier(1.0f);
+        sp1->SetAttenuationStart(0);
+        sp1->SetAttenuationEnd(2000);
+        sp1->SetOpeningsAngle(ToRadians(135));
+        sp1->Rotate(Vector3::Forward, PiOver2);
+        sp1->SetShadowMap(pDXDevice, ShadowMapType512x512);
+        m_pLightController->AddLight(sp1);
 
-	SpotLightDesc sl2;
-        //spot 1
-        sl2.position = Vector3(800.0f,600.0f,0.0f);
-        sl2.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
-        sl2.multiplier = 1.0f;
-		sl2.attenuationStart = 0;
-		sl2.attenuationEnd = 2000;
-		sl2.direction = Vector3(0, -1, 0);
-		sl2.power = 0.5f;
-        m_pLightController->AddLight(new SpotLight(sl2));
+	SpotLight* sp2 = new SpotLight();
+        sp2->SetPosition(Vector3(800.0f,600.0f,0.0f));
+        sp2->SetColor(Color(0.9f, 0.9f, 0.8f, 1.0f));
+        sp2->SetMulitplier(1.0f);
+        sp2->SetAttenuationStart(0);
+        sp2->SetAttenuationEnd(2000);
+        sp2->SetOpeningsAngle(ToRadians(90));
+        sp2->Rotate(Vector3::Forward, PiOver2);
+        sp2->SetShadowMap(pDXDevice, ShadowMapType512x512);
+        m_pLightController->AddLight(sp2);
 
-	SpotLightDesc sl3;
-        //spot 1
-        sl3.position = Vector3(-800.0f,600.0f,0.0f);
-        sl3.color = Color(0.9f, 0.9f, 0.8f, 1.0f);
-        sl3.multiplier = 1.0f;
-		sl3.attenuationStart = 0;
-		sl3.attenuationEnd = 2000;
-		sl3.direction = Vector3(0, -1, 0);
-		sl3.power = 0.5f;
-        m_pLightController->AddLight(new SpotLight(sl3));
+	SpotLight* sp3 = new SpotLight();
+        sp3->SetPosition(Vector3(-800.0f,600.0f,0.0f));
+        sp3->SetColor(Color(0.9f, 0.9f, 0.8f, 1.0f));
+        sp3->SetMulitplier(1.0f);
+        sp3->SetAttenuationStart(0);
+        sp3->SetAttenuationEnd(2000);
+        sp3->SetOpeningsAngle(ToRadians(90));
+        sp3->Rotate(Vector3::Forward, PiOver2);
+        sp3->SetShadowMap(pDXDevice, ShadowMapType512x512);
+        m_pLightController->AddLight(sp3);
 
 	PointLightDesc pl;
 	    pl.position = Vector3(0.0f,100.0f,-400.0f);
 	    pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
 	    pl.attenuationEnd = 2000;
 	    pl.multiplier = 1.0f;
-	    m_pLightController->AddLight(new PointLight(pl));
+	    //m_pLightController->AddLight(new PointLight(pl));
 
 		
 	// PHYSX
@@ -239,12 +239,7 @@ void MainGame::UpdateScene(const float dTime)
 }
 
 void MainGame::DrawScene()
-{
-	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
-		m_pRenderContext->SetCamera(m_pTrackingCamera);
-	else
-		m_pRenderContext->SetCamera(m_pEditorCamera);
-		
+{	
 	// --------------------------------------
 	//			   RENDER SCENE
 	// --------------------------------------
@@ -254,13 +249,21 @@ void MainGame::DrawScene()
     {
         Light* l = *it;
         if (l->HasShadowMap() == true)
-        {
+        {         
+            m_pRenderContext->SetCamera(l->GetShadowCamera());
+
             l->GetShadowMap()->BeginDraw();
+
             m_pLevel->DrawShadowMap(m_pRenderContext, m_pPreShadowEffect); 
+
             l->GetShadowMap()->EndDraw();
         }
     }
 
+    if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
+		m_pRenderContext->SetCamera(m_pTrackingCamera);
+	else
+		m_pRenderContext->SetCamera(m_pEditorCamera);
 
 	// POST PROCESS
 	//m_pPostProcessor->Begin();

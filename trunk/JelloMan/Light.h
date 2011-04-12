@@ -53,8 +53,9 @@ public:
 	virtual bool IsSelected() const = 0;
 
 	virtual bool HasShadowMap() const = 0;
-    virtual void SetShadowMap(ShadowMapType type) = 0;
+    virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type) = 0;
 	virtual Texture2D* GetShadowMap() const = 0;
+    virtual Camera* GetShadowCamera() const = 0;
 
     virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const = 0;
 

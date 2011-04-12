@@ -14,12 +14,17 @@ public:
 	void SetColorMap(ID3D10ShaderResourceView* map);
 	void SetNormalSpecMap(ID3D10ShaderResourceView* map);
 	void SetPosGlossMap(ID3D10ShaderResourceView* map);
+
     void SetShadowMap(ID3D10ShaderResourceView* map);
+    void SetShadowWVP(const Matrix& wvp);
 
     void SetPointLight(const PointLightDesc& light);
     void SetSpotLight(const SpotLightDesc& light);
 
     void SetCameraPosition(const Vector3& camPos);
+    
+    virtual ID3D10InputLayout* GetInputLayout() const;
+    virtual UINT GetVertexStride() const;
 
 private:
 	ID3D10EffectShaderResourceVariable *m_pColorMap, 
@@ -31,4 +36,9 @@ private:
     ID3D10EffectVariable* m_pSpotLight;
 
     ID3D10EffectVectorVariable* m_pCamPos;
+
+    ID3D10EffectMatrixVariable* m_pMtxLightWVP;
+
+    ID3D10InputLayout* m_pInputLayout;
+    UINT m_VertexStride;
 };

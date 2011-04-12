@@ -9,7 +9,13 @@ public:
     virtual ~PreShadowEffect(void);
 
     void SetWorldViewProjection(const Matrix& wvp);
+    
+    virtual ID3D10InputLayout* GetInputLayout() const;
+    virtual UINT GetVertexStride() const;
 
 private:
     ID3D10EffectMatrixVariable* m_pWVP;
+
+    ID3D10InputLayout* m_pInputLayout;
+    UINT m_VertexStride;
 };

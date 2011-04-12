@@ -3,11 +3,11 @@
 #include "Vector3.h"
 #include "Matrix.h"
 
-class PhongEffect : public Effect
+class PosColEffect : public Effect
 {
 public:
-	PhongEffect(ID3D10Device* pDevice, ID3D10Effect* effect);
-	virtual ~PhongEffect(void);
+	PosColEffect(ID3D10Device* pDevice, ID3D10Effect* effect);
+	virtual ~PosColEffect(void);
 
     void SetWorldViewProjection(const Matrix& wvp);
     void SetWorld(const Matrix& world);

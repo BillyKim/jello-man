@@ -19,11 +19,6 @@ void TestObject2::Init()
     m_pEffect = Content->LoadEffect<PhongEffect>(_T("phong.fx"));
 
 //    m_pModel = Content->LoadModel(_T("Content/Models/test3.obj"));
-   
-    for (vector<ModelMesh<VertexPosNormTex>*>::const_iterator it = m_pModel->GetModelMeshes().cbegin(); it != m_pModel->GetModelMeshes().cend(); ++it)
-    {
-        (*it)->SetEffect(m_pEffect);
-    }
 }
 
 void TestObject2::Draw(const RenderContext* pRenderContext)
@@ -35,5 +30,5 @@ void TestObject2::Draw(const RenderContext* pRenderContext)
     m_pEffect->SetWorld(m_mtxWorld);
 	m_pEffect->SetWorldViewProjection(m_mtxWorld * pRenderContext->GetCamera()->GetViewProjection());
 
-    m_pModel->Draw();
+    m_pModel->Draw(m_pEffect);
 }

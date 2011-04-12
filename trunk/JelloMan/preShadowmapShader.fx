@@ -46,12 +46,17 @@ VertexShaderOutput  VS(VertexShaderInput input)
 
     output.position = mul(float4(input.position, 1.0f), mtxWVP);
 
+	//Notused-->
+	//output.normal = input.normal;
+	//output.tangent = input.tangent;
+	//output.texCoord = input.texCoord;
+	//<---
+
     return output;	
 };
 
-float3  PS(VertexShaderOutput input) : SV_TARGET
+void PS(VertexShaderOutput input)
 {
-	return float3(0.0f, 0.0f, 0.0f);
 };
 
 

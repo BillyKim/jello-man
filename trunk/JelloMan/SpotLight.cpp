@@ -1,22 +1,33 @@
 #include "SpotLight.h"
 #include "LightBehaviourNormal.h"
 
-SpotLight::SpotLight(const SpotLightDesc& desc):
+SpotLight::SpotLight():
 			m_Scale(1), 
-            m_Rotation(Matrix::Identity), 
-			m_Desc(desc),
-            m_StartDesc(desc),
+            m_Rotation(Matrix::Identity),
 			m_IsEnabled(true),
 			m_IsSelected(false),
 			m_ShadowMap(0),
-            m_pLightBehaviour(0)
+            m_pLightBehaviour(0),
+            m_pShadowCamera(0),
+            m_OpeningsAngle(0.0f),
+            m_vUp(0, 1, 0)
 {
     SetBehaviour(new LightBehaviourNormal());
+
+    m_Desc.attenuationStart = 0;
+    m_Desc.attenuationEnd = 500;
+    m_Desc.color = Color(1.0f, 1.0f, 1.0f);
+    m_Desc.direction = Vector3(1, 0, 0);
+    m_Desc.multiplier = 1.0f;
+    m_Desc.position = Vector3(0, 0, 0);
+    m_Desc.power = 1.0f;
+    m_StartDesc = m_Desc;
 }
 SpotLight::~SpotLight()
 {
 	delete m_ShadowMap;
     delete m_pLightBehaviour;
+    delete m_pShadowCamera;
 }
 
 void SpotLight::InitGame()
@@ -39,10 +50,12 @@ void SpotLight::Draw(const RenderContext* rc)
 void SpotLight::Translate(const Vector3& add)
 {
 	m_Desc.position += add;
+    UpdateShadowCameraView();
 }
 void SpotLight::SetPosition(const Vector3& pos)
 {
 	m_Desc.position = pos;
+    UpdateShadowCameraView();
 }
 const Vector3& SpotLight::GetPosition() const
 {
@@ -51,12 +64,16 @@ const Vector3& SpotLight::GetPosition() const
 
 void SpotLight::Rotate(const Vector3& axis, float angle)
 {
-    m_Desc.direction = Vector3::Transform(m_Desc.direction, Matrix::CreateRotation(axis, angle)).XYZ();
+    Matrix rot(Matrix::CreateRotation(axis, angle));
+    m_Desc.direction = Vector3::Transform(m_Desc.direction, rot).XYZ();
+    m_vUp = Vector3::Transform(m_vUp, rot).XYZ();
+    UpdateShadowCameraView();
 }
 
 void SpotLight::Scale(const Vector3& scale)
 {
 	m_Desc.attenuationEnd *= (scale.X + scale.Y + scale.Z) / 3;
+    UpdateShadowCameraProjection();
 }
 
 void SpotLight::Enable()
@@ -92,15 +109,37 @@ Texture2D* SpotLight::GetShadowMap() const
 {
 	return m_ShadowMap;
 }
-void SpotLight::SetShadowMap(ShadowMapType type)
+Camera* SpotLight::GetShadowCamera() const
+{
+    return m_pShadowCamera;
+}
+void SpotLight::SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type)
 {
     delete m_ShadowMap;
     m_ShadowMap = 0;
+    delete m_pShadowCamera;
+    m_pShadowCamera = 0;
 
 	if (type != ShadowMapType_None)
 	{
-		m_ShadowMap = new Texture2D(0, type, type, false);
+		m_ShadowMap = new Texture2D(pDXDevice, type, type, false);
+        m_pShadowCamera = new Camera(type, type, false);
+        m_pShadowCamera->SetPosition(m_Desc.position);    
+
+        UpdateShadowCameraProjection();
+        UpdateShadowCameraView();
 	}
+}
+
+void SpotLight::UpdateShadowCameraView()
+{
+    if (m_pShadowCamera != 0)
+        m_pShadowCamera->LookAt(m_Desc.position, m_Desc.position + m_Desc.direction, m_vUp); 
+}
+void SpotLight::UpdateShadowCameraProjection()
+{
+    if (m_pShadowCamera != 0)
+        m_pShadowCamera->SetLens(1.0f, m_OpeningsAngle, 1.0f, m_Desc.attenuationEnd);
 }
 
 D3D10_RECT SpotLight::CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const
@@ -148,6 +187,7 @@ float SpotLight::GetMulitplier() const
 void SpotLight::SetAttenuationStart(float start)
 {
     m_Desc.attenuationStart = start;
+    UpdateShadowCameraProjection();
 }    
 float SpotLight::GetAttenuationStart() const
 {
@@ -157,19 +197,24 @@ float SpotLight::GetAttenuationStart() const
 void SpotLight::SetAttenuationEnd(float end)
 {
     m_Desc.attenuationEnd = end;
+    UpdateShadowCameraProjection();
 }
 float SpotLight::GetAttenuationEnd() const
 {
     return m_Desc.attenuationEnd;
 }
 
-void SpotLight::SetPower(float power)
+void SpotLight::SetOpeningsAngle(float rad)
 {
-	m_Desc.power = power;
+    m_OpeningsAngle = rad;
+
+    m_Desc.power = -(log(100.0f) / (log(cos(m_OpeningsAngle / 2.0f)))); //use only a half of the angle
+
+    UpdateShadowCameraProjection();
 }
-void SpotLight::AddPower(float add)
+void SpotLight::AddOpeningsAngle(float rad)
 {
-	m_Desc.power += add;
+	SetOpeningsAngle(-m_OpeningsAngle + rad);
 }
 
 const SpotLightDesc& SpotLight::GetDesc() const

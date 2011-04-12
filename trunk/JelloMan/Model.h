@@ -28,13 +28,13 @@ public:
 	    return mesh;
     }
 
-    void Draw() const
+    void Draw(Effect* e) const
     {
-	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DrawModelMesh<T>);
-    }
-    void DrawEffectless() const
-    {
-	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DrawEffectlessModelMesh<T>);
+        vector<ModelMesh<T>*>::const_iterator it = m_Meshes.cbegin();
+	    for(; it != m_Meshes.cend(); ++it)
+        {
+            (*it)->Draw(e);
+        }
     }
 
 private:
@@ -46,15 +46,5 @@ template <typename T>
 void DeleteModelMesh(ModelMesh<T>* p)
 {
 	delete p;
-}
-template <typename T>
-void DrawModelMesh(ModelMesh<T>* p)
-{
-	p->Draw();
-}
-template <typename T>
-void DrawEffectlessModelMesh(ModelMesh<T>* p)
-{
-	p->DrawEffectless();
 }
 

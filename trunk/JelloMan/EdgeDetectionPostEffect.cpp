@@ -1,19 +1,23 @@
 #include "EdgeDetectionPostEffect.h"
 
-EdgeDetectionPostEffect::EdgeDetectionPostEffect(ID3D10Device* pDevice, ID3D10Effect* effect): 
-				Effect(pDevice, effect), 
+EdgeDetectionPostEffect::EdgeDetectionPostEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect): 
+				Effect(pDXDevice, effect), 
                 m_pColorMap(GetVariableByName("backBuffer")->AsShaderResource()),
                 m_pMapWidth(GetVariableByName("bbWidth")->AsScalar()),
-                m_pMapHeight(GetVariableByName("bbHeight")->AsScalar())
+                m_pMapHeight(GetVariableByName("bbHeight")->AsScalar()),
+                m_pInputLayout(0), m_VertexStride(0)
 {
     ASSERT(m_pColorMap->IsValid());
     ASSERT(m_pMapWidth->IsValid());
     ASSERT(m_pMapHeight->IsValid());
+
+    CreateInputLayout<VertexPosTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
 
 
 EdgeDetectionPostEffect::~EdgeDetectionPostEffect(void)
 {
+    SafeRelease(m_pInputLayout);
 }
 
 void EdgeDetectionPostEffect::SetColorMap(ID3D10ShaderResourceView* map)
@@ -28,4 +32,14 @@ void EdgeDetectionPostEffect::SetColorMapSize(int width, int height)
 Effect* EdgeDetectionPostEffect::GetEffect()
 {
     return this;
+}
+
+ID3D10InputLayout* EdgeDetectionPostEffect::GetInputLayout() const
+{
+    ASSERT(m_pInputLayout != 0);
+    return m_pInputLayout;
+}
+UINT EdgeDetectionPostEffect::GetVertexStride() const
+{
+    return m_VertexStride;
 }

@@ -9,7 +9,8 @@ DeferredPreEffectNormals::DeferredPreEffectNormals(ID3D10Device* pDXDevice, ID3D
                 m_pSpecMap(GetVariableBySemantic("SpecMap")->AsShaderResource()),
                 m_pGlossMap(GetVariableBySemantic("GlossMap")->AsShaderResource()),
 				m_pNormalMap(GetVariableBySemantic("NormalMap")->AsShaderResource()),
-				m_bSelected(GetVariableBySemantic("Selected")->AsScalar())
+				m_bSelected(GetVariableBySemantic("Selected")->AsScalar()),
+                m_pInputLayout(0), m_VertexStride(0)
 {    
     ASSERT(m_pWorld->IsValid());
     ASSERT(m_pWVP->IsValid());
@@ -17,11 +18,14 @@ DeferredPreEffectNormals::DeferredPreEffectNormals(ID3D10Device* pDXDevice, ID3D
     ASSERT(m_pSpecMap->IsValid());
     ASSERT(m_pGlossMap->IsValid());
 	ASSERT(m_pNormalMap->IsValid());
+
+    CreateInputLayout<VertexPosNormTanTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
 
 
 DeferredPreEffectNormals::~DeferredPreEffectNormals(void)
 {
+    SafeRelease(m_pInputLayout);
 }
 
 void DeferredPreEffectNormals::SetWorld(const Matrix& world)
@@ -53,4 +57,14 @@ void DeferredPreEffectNormals::SetNormalMap(Texture2D* normalMap)
 void DeferredPreEffectNormals::Selected(bool selected)
 {
 	m_bSelected->SetBool(selected);
+}
+
+ID3D10InputLayout* DeferredPreEffectNormals::GetInputLayout() const
+{
+    ASSERT(m_pInputLayout != 0);
+    return m_pInputLayout;
+}
+UINT DeferredPreEffectNormals::GetVertexStride() const
+{
+    return m_VertexStride;
 }

@@ -108,6 +108,9 @@ void Texture2D::BeginDraw()
 {
     ASSERT(m_pDepthMapDSV != 0);
 
+    m_pDevice->OMGetRenderTargets(1, &m_pPrevRenderTarget, &m_pPrevDSV);
+    UINT num = 1;
+
     ID3D10RenderTargetView* renderTargets[1] = { m_pColorMapRTV };
     m_pDevice->OMSetRenderTargets(1, renderTargets, m_pDepthMapDSV);
     m_pDevice->RSSetViewports(1, &m_Viewport);
@@ -118,6 +121,9 @@ void Texture2D::EndDraw()
 {
     if (m_pColorMapSRV && m_MakeMips)
         m_pDevice->GenerateMips(m_pColorMapSRV);
+    
+    ID3D10RenderTargetView* renderTargets[1] = { m_pPrevRenderTarget };
+    m_pDevice->OMSetRenderTargets(1, renderTargets, m_pPrevDSV);
 }
 void Texture2D::Clear(const Vector4& color)
 {
