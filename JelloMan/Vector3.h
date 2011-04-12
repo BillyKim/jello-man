@@ -80,6 +80,7 @@ public:
                            const Matrix& projection, const Matrix& view, const Matrix& world);
     static Vector3 UnProject(const Vector3& v, CONST D3D10_VIEWPORT *pViewport,
                            const Matrix& projection, const Matrix& view, const Matrix& world);
+    static Vector3 Normalize(const Vector3& vec);
 
     //<--------------------------------------------------
 
@@ -90,3 +91,6 @@ public:
 	//<------------------------
 };
 
+Vector3 Min(const Vector3& a, const Vector3& b);
+Vector3 Max(const Vector3& a, const Vector3& b);
+Vector3 Abs(const Vector3& v);

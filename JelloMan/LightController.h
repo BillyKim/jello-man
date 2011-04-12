@@ -1,12 +1,9 @@
 #pragma once
-#include "D3DUtil.h"
 #include <vector>
-#include "Light.h"
-#include "Blox2D_Engine.h"
-#include "Camera.h"
-#include "Controls.h"
-#include "ContentManager.h"
-#include "Model.h"
+
+using namespace std;
+
+class Light;
 
 class LightController
 {
@@ -14,17 +11,11 @@ public:
     LightController(void);
     virtual ~LightController(void);
 
-    void AddLight(const PointLight& light);
-    void AddLight(const DirectionalLight& light);
-    void AddLight(const SpotLight& light);
+    void AddLight(Light* light);
 
-    vector<PointLight>& GetPointLights();
-    vector<DirectionalLight>& GetDirectionalLights();
-    vector<SpotLight>& GetSpotLights();
+    const vector<Light*>& GetLights() const;
 
 private:
-    vector<PointLight> m_PointLights;
-    vector<DirectionalLight> m_DirectionalLights;
-	vector<SpotLight> m_SpotLights;
+    vector<Light*> m_Lights;
 };
 

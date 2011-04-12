@@ -7,21 +7,17 @@ struct PointLight
 
     float AttenuationStart;
     float AttenuationEnd;
-
-    //bool Enabled;
 };
 struct SpotLight
 {
     float4 Color;
 
     float3 Position;
+
+    float3 Direction;
     float Multiplier;
 
     float AttenuationStart;
     float AttenuationEnd;
     float Radius;
-
-    float3 Direction;
-
-    //bool Enabled;
 };

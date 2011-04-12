@@ -106,3 +106,7 @@ void LevelObject::Draw(const RenderContext* pRenderContext)
 
     m_pModel->Draw();
 }
+void LevelObject::DrawEffectless()
+{
+    m_pModel->DrawEffectless();
+}

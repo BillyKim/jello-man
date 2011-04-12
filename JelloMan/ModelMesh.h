@@ -94,7 +94,7 @@ public:
     {
 	    return m_pEffect;
     }  
-    void Draw()
+    void SetIA() const
     {
         ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && m_pEffect != 0);
 
@@ -109,6 +109,10 @@ public:
 
         // Set primitive topology
         m_pDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    }
+    void Draw() const
+    {
+        SetIA();       
 
         D3D10_TECHNIQUE_DESC techDesc;
         m_pEffect->GetCurrentTechnique()->GetDesc(&techDesc);
@@ -117,6 +121,12 @@ public:
             m_pEffect->GetCurrentTechnique()->GetPassByIndex(p)->Apply(0);
 		    m_pDevice->DrawIndexed(m_VecIndices.size(), 0, 0); 
         }
+    }
+    void DrawEffectless() const
+    {
+        SetIA();       
+
+		m_pDevice->DrawIndexed(m_VecIndices.size(), 0, 0); 
     }
 
 private:

@@ -32,6 +32,10 @@ public:
     {
 	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DrawModelMesh<T>);
     }
+    void DrawEffectless() const
+    {
+	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DrawEffectlessModelMesh<T>);
+    }
 
 private:
     ID3D10Device* m_pDevice;
@@ -47,5 +51,10 @@ template <typename T>
 void DrawModelMesh(ModelMesh<T>* p)
 {
 	p->Draw();
+}
+template <typename T>
+void DrawEffectlessModelMesh(ModelMesh<T>* p)
+{
+	p->DrawEffectless();
 }
 

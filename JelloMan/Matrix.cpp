@@ -50,6 +50,12 @@ Matrix Matrix::CreateRotationZ(float f)
     D3DXMatrixRotationZ(&m.m_Matrix, f);
     return m;
 }
+Matrix Matrix::CreateRotation(const Vector3& axis, float f)
+{
+    Matrix m;
+    D3DXMatrixRotationAxis(&m.m_Matrix, &axis.ToD3DVector3(), f);
+    return m;
+}
 Matrix Matrix::CreateScale(float f)
 {
     Matrix m;

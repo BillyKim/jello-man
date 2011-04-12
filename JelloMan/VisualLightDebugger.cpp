@@ -1,4 +1,5 @@
 #include "VisualLightDebugger.h"
+#include "Light.h"
 
 // CONVERT STRING TO OTHER TYPE - FLOAT IE
 template <class T>
@@ -134,16 +135,10 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
-	while (pRenderContext->GetLightController()->GetPointLights().size() > m_PLightsSelected.size())
+	while (pRenderContext->GetLightController()->GetLights().size() > m_PLightsSelected.size())
 	{
 		m_pPLightHitRects.push_back(new HitRegion(HitRegion::TYPE_ELLIPSE, -10 ,-10, 10, 10));
 		m_PLightsSelected.push_back(false);
-	}
-
-	while (pRenderContext->GetLightController()->GetSpotLights().size() > m_SLightsSelected.size())
-	{
-		m_pSLightHitRects.push_back(new HitRegion(HitRegion::TYPE_ELLIPSE, -10 ,-10, 10, 10));
-		m_SLightsSelected.push_back(false);
 	}
 
 	if (!m_bLightsMoving)
@@ -277,10 +272,14 @@ void VisualLightDebugger::Draw()
 
 	int size = 10;
 
+    //TODO
+    //2 fors
+
 	// POINTLIGHTS
-	for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetPointLights().size(); ++i)
+	for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
 	{
-		D3DXVECTOR3 pos = m_pRenderContext->GetLightController()->GetPointLights()[i].position.ToD3DVector3();
+        Light* pl = m_pRenderContext->GetLightController()->GetLights()[i];
+		D3DXVECTOR3 pos = pl->GetPosition();
 	
 		Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - Vector3(pos);
 		float l = length.Length();
@@ -324,7 +323,7 @@ void VisualLightDebugger::Draw()
 	}
 
 	// SPOTLIGHTS
-	for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetSpotLights().size(); ++i)
+	/*for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetSpotLights().size(); ++i)
 	{
 		D3DXVECTOR3 pos = m_pRenderContext->GetLightController()->GetSpotLights()[i].position.ToD3DVector3();
 	
@@ -367,7 +366,7 @@ void VisualLightDebugger::Draw()
 									static_cast<int>(m_pPointLightBitmaps[0]->GetSize().height / (8 * l)));
 			}
 		}
-	}
+	}*/
 }
 
 void VisualLightDebugger::DeselectAllPointLights()
@@ -394,376 +393,377 @@ void VisualLightDebugger::DeselectAll()
 
 void VisualLightDebugger::ShowLightInfo()
 {
-	tstringstream stream;
-
-	if (GetNrLightsSelected() == 1)
-	{
-		int type = 0;
-
-		for (unsigned int i = 0; i < m_SLightsSelected.size(); ++i)
-		{
-			if (m_SLightsSelected[i] == true)
-				type = 1;
-		}
-
-		m_pMultiplierAddButton->Tick();
-		m_pMultiplierSubtractButton->Tick();
-		m_pAttenuationAddButton->Tick();
-		m_pAttenuationSubtractButton->Tick();
-
-		if (type == 1)
-		{
-			m_pPowerAddButton->Tick();
-			m_pPowerSubtractButton->Tick();
-		}
-
-		for (unsigned int i = 0; i < m_PLightsSelected.size(); ++i)
-		{
-			if (m_PLightsSelected[i] == true)
-			{
-				stream << _T("PointLight ") << i << _T(":\n\n");
-				tstringstream strm;
-				strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.X;
-				tstring t = strm.str();
-				stream << _T("X: ")  << _T("\n\n");
-				
-				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
-				{
-					tstringstream strmX;
-					strmX << t.substr(0, t.find(_T(".")) + 4);
-					m_pTextBoxX->SetText(strmX.str());
-				}
-
-				strm.str(_T(""));
-				strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y;
-				t = strm.str();
-				stream << _T("Y: ") << _T("\n\n");
+    //TODO
+	//tstringstream stream;
+
+	//if (GetNrLightsSelected() == 1)
+	//{
+	//	int type = 0;
+
+	//	for (unsigned int i = 0; i < m_SLightsSelected.size(); ++i)
+	//	{
+	//		if (m_SLightsSelected[i] == true)
+	//			type = 1;
+	//	}
+
+	//	m_pMultiplierAddButton->Tick();
+	//	m_pMultiplierSubtractButton->Tick();
+	//	m_pAttenuationAddButton->Tick();
+	//	m_pAttenuationSubtractButton->Tick();
+
+	//	if (type == 1)
+	//	{
+	//		m_pPowerAddButton->Tick();
+	//		m_pPowerSubtractButton->Tick();
+	//	}
+
+	//	for (unsigned int i = 0; i < m_PLightsSelected.size(); ++i)
+	//	{
+	//		if (m_PLightsSelected[i] == true)
+	//		{
+	//			stream << _T("PointLight ") << i << _T(":\n\n");
+	//			tstringstream strm;
+	//			strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.X;
+	//			tstring t = strm.str();
+	//			stream << _T("X: ")  << _T("\n\n");
+	//			
+	//			if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
+	//			{
+	//				tstringstream strmX;
+	//				strmX << t.substr(0, t.find(_T(".")) + 4);
+	//				m_pTextBoxX->SetText(strmX.str());
+	//			}
+
+	//			strm.str(_T(""));
+	//			strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y;
+	//			t = strm.str();
+	//			stream << _T("Y: ") << _T("\n\n");
+
+	//			if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
+	//			{
+	//				tstringstream strmY;
+	//				strmY << t.substr(0, t.find(_T(".")) + 4);
+	//				m_pTextBoxY->SetText(strmY.str());
+	//			}
 
-				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
-				{
-					tstringstream strmY;
-					strmY << t.substr(0, t.find(_T(".")) + 4);
-					m_pTextBoxY->SetText(strmY.str());
-				}
+	//			strm.str(_T(""));
+	//			strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z;
+	//			t = strm.str();
+	//			stream << _T("Z: ") << _T("\n\n\n");
 
-				strm.str(_T(""));
-				strm << m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z;
-				t = strm.str();
-				stream << _T("Z: ") << _T("\n\n\n");
+	//			if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
+	//			{
+	//				tstringstream strmZ;
+	//				strmZ << t.substr(0, t.find(_T(".")) + 4);
+	//				m_pTextBoxZ->SetText(strmZ.str());
+	//			}
 
-				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i + 1000 || m_bLightsMoving)
-				{
-					tstringstream strmZ;
-					strmZ << t.substr(0, t.find(_T(".")) + 4);
-					m_pTextBoxZ->SetText(strmZ.str());
-				}
+	//			m_bTextBoxesSet = true;
+
+	//			stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R * 255) << _T(" ");
+	//			stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G * 255) << _T(" ");
+	//			stream << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B * 255) << _T("\n\n\n\n\n\n");
+
+	//			stream << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier << _T("\n\n\n\n");
+	//			stream << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd;
+
+	//			BLOX_2D->SetColor(	static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R * 255),
+	//								static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G * 255),
+	//								static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B * 255)	);
+
+	//			BLOX_2D->FillRect(20, 215, 60, 40);
+
+	//			// multiplier
+	//			if (m_pMultiplierAddButton->Down())
+	//				m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier += 0.1f;
+	//		
+	//			if (m_pMultiplierSubtractButton->Down())
+	//				m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier -= 0.1f;
+
+	//			if (m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier < 0.1f)
+	//					m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier = 0;
+
+	//			// attenuation
+	//			if (m_pAttenuationAddButton->Down())
+	//				m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd += 100;
+	//		
+	//			if (m_pAttenuationSubtractButton->Down())
+	//				m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd -= 100;
+
+	//			if (m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd < 100)
+	//					m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd = 0;
+
+	//			m_PreviousSelectedLight = i + 1000;
 
-				m_bTextBoxesSet = true;
-
-				stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R * 255) << _T(" ");
-				stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G * 255) << _T(" ");
-				stream << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B * 255) << _T("\n\n\n\n\n\n");
-
-				stream << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier << _T("\n\n\n\n");
-				stream << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd;
-
-				BLOX_2D->SetColor(	static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.R * 255),
-									static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.G * 255),
-									static_cast<int>(m_pRenderContext->GetLightController()->GetPointLights()[i].color.B * 255)	);
-
-				BLOX_2D->FillRect(20, 215, 60, 40);
-
-				// multiplier
-				if (m_pMultiplierAddButton->Down())
-					m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier += 0.1f;
-			
-				if (m_pMultiplierSubtractButton->Down())
-					m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier -= 0.1f;
-
-				if (m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier < 0.1f)
-						m_pRenderContext->GetLightController()->GetPointLights()[i].multiplier = 0;
-
-				// attenuation
-				if (m_pAttenuationAddButton->Down())
-					m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd += 100;
-			
-				if (m_pAttenuationSubtractButton->Down())
-					m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd -= 100;
-
-				if (m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd < 100)
-						m_pRenderContext->GetLightController()->GetPointLights()[i].AttenuationEnd = 0;
-
-				m_PreviousSelectedLight = i + 1000;
-
-				if (m_pTextBoxX->Entered())
-				{
-					float f;
+	//			if (m_pTextBoxX->Entered())
+	//			{
+	//				float f;
 
-					tstring s1 = m_pTextBoxX->GetText();
+	//				tstring s1 = m_pTextBoxX->GetText();
 
-					string s2(s1.begin(), s1.end());
+	//				string s2(s1.begin(), s1.end());
 
-					const char* s = s2.c_str();
+	//				const char* s = s2.c_str();
 
-					f = atof(s);
+	//				f = atof(s);
 
-					if (!(f == 0 && s2 != "0"))
-						m_pRenderContext->GetLightController()->GetPointLights()[i].position.X = f;
+	//				if (!(f == 0 && s2 != "0"))
+	//					m_pRenderContext->GetLightController()->GetPointLights()[i].position.X = f;
 
-					m_pTextBoxX->LoseFocus();
-				}
+	//				m_pTextBoxX->LoseFocus();
+	//			}
 
-				if (m_pTextBoxY->Entered())
-				{
-					float f;
+	//			if (m_pTextBoxY->Entered())
+	//			{
+	//				float f;
 
-					tstring s1 = m_pTextBoxY->GetText();
+	//				tstring s1 = m_pTextBoxY->GetText();
 
-					string s2(s1.begin(), s1.end());
+	//				string s2(s1.begin(), s1.end());
 
-					const char* s = s2.c_str();
+	//				const char* s = s2.c_str();
 
-					f = atof(s);
+	//				f = atof(s);
 
-					if (!(f == 0 && s2 != "0"))
-						m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y = f;
+	//				if (!(f == 0 && s2 != "0"))
+	//					m_pRenderContext->GetLightController()->GetPointLights()[i].position.Y = f;
 
-					m_pTextBoxY->LoseFocus();
-				}
+	//				m_pTextBoxY->LoseFocus();
+	//			}
 
-				if (m_pTextBoxZ->Entered())
-				{
-					float f;
+	//			if (m_pTextBoxZ->Entered())
+	//			{
+	//				float f;
 
-					tstring s1 = m_pTextBoxZ->GetText();
+	//				tstring s1 = m_pTextBoxZ->GetText();
 
-					string s2(s1.begin(), s1.end());
+	//				string s2(s1.begin(), s1.end());
 
-					const char* s = s2.c_str();
+	//				const char* s = s2.c_str();
 
-					f = atof(s);
+	//				f = atof(s);
 
-					if (!(f == 0 && s2 != "0"))
-						m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z = f;
+	//				if (!(f == 0 && s2 != "0"))
+	//					m_pRenderContext->GetLightController()->GetPointLights()[i].position.Z = f;
 
-					m_pTextBoxZ->LoseFocus();
-				}
-			}
-		}
+	//				m_pTextBoxZ->LoseFocus();
+	//			}
+	//		}
+	//	}
 
-		for (unsigned int i = 0; i < m_SLightsSelected.size(); ++i)
-		{
-			if (m_SLightsSelected[i] == true)
-			{
-				stream << _T("SpotLight ") << i << _T(":\n\n");
-				tstringstream strm;
-				strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.X;
-				tstring t = strm.str();
-				stream << _T("X: ")  << _T("\n\n");
-				
-				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i || m_bLightsMoving)
-				{
-					tstringstream strmX;
-					strmX << t.substr(0, t.find(_T(".")) + 4);
-					m_pTextBoxX->SetText(strmX.str());
-				}
+	//	for (unsigned int i = 0; i < m_SLightsSelected.size(); ++i)
+	//	{
+	//		if (m_SLightsSelected[i] == true)
+	//		{
+	//			stream << _T("SpotLight ") << i << _T(":\n\n");
+	//			tstringstream strm;
+	//			strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.X;
+	//			tstring t = strm.str();
+	//			stream << _T("X: ")  << _T("\n\n");
+	//			
+	//			if (!m_bTextBoxesSet || m_PreviousSelectedLight != i || m_bLightsMoving)
+	//			{
+	//				tstringstream strmX;
+	//				strmX << t.substr(0, t.find(_T(".")) + 4);
+	//				m_pTextBoxX->SetText(strmX.str());
+	//			}
 
-				strm.str(_T(""));
-				strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Y;
-				t = strm.str();
-				stream << _T("Y: ") << _T("\n\n");
+	//			strm.str(_T(""));
+	//			strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Y;
+	//			t = strm.str();
+	//			stream << _T("Y: ") << _T("\n\n");
 
-				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i  || m_bLightsMoving)
-				{
-					tstringstream strmY;
-					strmY << t.substr(0, t.find(_T(".")) + 4);
-					m_pTextBoxY->SetText(strmY.str());
-				}
+	//			if (!m_bTextBoxesSet || m_PreviousSelectedLight != i  || m_bLightsMoving)
+	//			{
+	//				tstringstream strmY;
+	//				strmY << t.substr(0, t.find(_T(".")) + 4);
+	//				m_pTextBoxY->SetText(strmY.str());
+	//			}
 
-				strm.str(_T(""));
-				strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Z;
-				t = strm.str();
-				stream << _T("Z: ") << _T("\n\n\n");
+	//			strm.str(_T(""));
+	//			strm << m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Z;
+	//			t = strm.str();
+	//			stream << _T("Z: ") << _T("\n\n\n");
 
-				if (!m_bTextBoxesSet || m_PreviousSelectedLight != i  || m_bLightsMoving)
-				{
-					tstringstream strmZ;
-					strmZ << t.substr(0, t.find(_T(".")) + 4);
-					m_pTextBoxZ->SetText(strmZ.str());
-				}
+	//			if (!m_bTextBoxesSet || m_PreviousSelectedLight != i  || m_bLightsMoving)
+	//			{
+	//				tstringstream strmZ;
+	//				strmZ << t.substr(0, t.find(_T(".")) + 4);
+	//				m_pTextBoxZ->SetText(strmZ.str());
+	//			}
 
-				m_bTextBoxesSet = true;
+	//			m_bTextBoxesSet = true;
 
-				stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.R * 255) << _T(" ");
-				stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.G * 255) << _T(" ");
-				stream << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.B * 255) << _T("\n\n\n\n\n\n");
+	//			stream << _T("R:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.R * 255) << _T(" ");
+	//			stream << _T("G:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.G * 255) << _T(" ");
+	//			stream << _T("B:") << static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.B * 255) << _T("\n\n\n\n\n\n");
 
-				stream << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier << _T("\n\n\n\n");
-				stream << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd << _T("\n\n\n\n");
-				stream << _T("Power: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].power << _T("\n\n\n\n");
+	//			stream << _T("Multiplier: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier << _T("\n\n\n\n");
+	//			stream << _T("Attenuation end: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd << _T("\n\n\n\n");
+	//			stream << _T("Power: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].power << _T("\n\n\n\n");
 
-				stream << _T("ShadowMaps enabled: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].shadowsEnabled << _T("\n");
-				stream << _T("ShadowMaps size: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].shadowMapSize;
+	//			stream << _T("ShadowMaps enabled: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].shadowsEnabled << _T("\n");
+	//			stream << _T("ShadowMaps size: ") << m_pRenderContext->GetLightController()->GetSpotLights()[i].shadowMapSize;
 
-				BLOX_2D->SetColor(	static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.R * 255),
-									static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.G * 255),
-									static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.B * 255)	);
+	//			BLOX_2D->SetColor(	static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.R * 255),
+	//								static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.G * 255),
+	//								static_cast<int>(m_pRenderContext->GetLightController()->GetSpotLights()[i].color.B * 255)	);
 
-				BLOX_2D->FillRect(20, 215, 60, 40);
+	//			BLOX_2D->FillRect(20, 215, 60, 40);
 
-				// multiplier
-				if (m_pMultiplierAddButton->Down())
-					m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier += 0.1f;
+	//			// multiplier
+	//			if (m_pMultiplierAddButton->Down())
+	//				m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier += 0.1f;
 
-				if (m_pMultiplierSubtractButton->Down())
-					m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier -= 0.1f;
+	//			if (m_pMultiplierSubtractButton->Down())
+	//				m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier -= 0.1f;
 
-				if (m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier < 0.1f)
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier = 0;
+	//			if (m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier < 0.1f)
+	//					m_pRenderContext->GetLightController()->GetSpotLights()[i].multiplier = 0;
 
-				// attenuation
-				if (m_pAttenuationAddButton->Down())
-					m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd += 100;
-			
-				if (m_pAttenuationSubtractButton->Down())
-					m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd -= 100;
+	//			// attenuation
+	//			if (m_pAttenuationAddButton->Down())
+	//				m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd += 100;
+	//		
+	//			if (m_pAttenuationSubtractButton->Down())
+	//				m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd -= 100;
 
-				if (m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd < 100)
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd = 0;
+	//			if (m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd < 100)
+	//					m_pRenderContext->GetLightController()->GetSpotLights()[i].AttenuationEnd = 0;
 
-				// power
-				if (m_pPowerAddButton->Down())
-					m_pRenderContext->GetLightController()->GetSpotLights()[i].power += 0.1f;
-			
-				if (m_pPowerSubtractButton->Down())
-					m_pRenderContext->GetLightController()->GetSpotLights()[i].power-= 0.1f;
+	//			// power
+	//			if (m_pPowerAddButton->Down())
+	//				m_pRenderContext->GetLightController()->GetSpotLights()[i].power += 0.1f;
+	//		
+	//			if (m_pPowerSubtractButton->Down())
+	//				m_pRenderContext->GetLightController()->GetSpotLights()[i].power-= 0.1f;
 
-				if (m_pRenderContext->GetLightController()->GetSpotLights()[i].power < 0.1f)
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].power = 0;
+	//			if (m_pRenderContext->GetLightController()->GetSpotLights()[i].power < 0.1f)
+	//					m_pRenderContext->GetLightController()->GetSpotLights()[i].power = 0;
 
-				m_PreviousSelectedLight = i;
+	//			m_PreviousSelectedLight = i;
 
-				if (m_pTextBoxX->Entered())
-				{
-					float f;
+	//			if (m_pTextBoxX->Entered())
+	//			{
+	//				float f;
 
-					tstring s1 = m_pTextBoxX->GetText();
+	//				tstring s1 = m_pTextBoxX->GetText();
 
-					string s2(s1.begin(), s1.end());
+	//				string s2(s1.begin(), s1.end());
 
-					const char* s = s2.c_str();
+	//				const char* s = s2.c_str();
 
-					f = atof(s);
+	//				f = atof(s);
 
-					if (!(f == 0 && s2 != "0"))
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].position.X = f;
+	//				if (!(f == 0 && s2 != "0"))
+	//					m_pRenderContext->GetLightController()->GetSpotLights()[i].position.X = f;
 
-					m_pTextBoxX->LoseFocus();
-				}
+	//				m_pTextBoxX->LoseFocus();
+	//			}
 
-				if (m_pTextBoxY->Entered())
-				{
-					float f;
+	//			if (m_pTextBoxY->Entered())
+	//			{
+	//				float f;
 
-					tstring s1 = m_pTextBoxY->GetText();
+	//				tstring s1 = m_pTextBoxY->GetText();
 
-					string s2(s1.begin(), s1.end());
+	//				string s2(s1.begin(), s1.end());
 
-					const char* s = s2.c_str();
+	//				const char* s = s2.c_str();
 
-					f = atof(s);
+	//				f = atof(s);
 
-					if (!(f == 0 && s2 != "0"))
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Y = f;
+	//				if (!(f == 0 && s2 != "0"))
+	//					m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Y = f;
 
-					m_pTextBoxY->LoseFocus();
-				}
+	//				m_pTextBoxY->LoseFocus();
+	//			}
 
-				if (m_pTextBoxZ->Entered())
-				{
-					float f;
+	//			if (m_pTextBoxZ->Entered())
+	//			{
+	//				float f;
 
-					tstring s1 = m_pTextBoxZ->GetText();
+	//				tstring s1 = m_pTextBoxZ->GetText();
 
-					string s2(s1.begin(), s1.end());
+	//				string s2(s1.begin(), s1.end());
 
-					const char* s = s2.c_str();
+	//				const char* s = s2.c_str();
 
-					f = atof(s);
+	//				f = atof(s);
 
-					if (!(f == 0 && s2 != "0"))
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Z = f;
+	//				if (!(f == 0 && s2 != "0"))
+	//					m_pRenderContext->GetLightController()->GetSpotLights()[i].position.Z = f;
 
-					m_pTextBoxZ->LoseFocus();
-				}
-			}
-		}
+	//				m_pTextBoxZ->LoseFocus();
+	//			}
+	//		}
+	//	}
 
-		m_pTextBoxX->Show();
-		m_pTextBoxY->Show();
-		m_pTextBoxZ->Show();
-		
-		m_pMultiplierAddButton->Show();
-		m_pMultiplierSubtractButton->Show();
-		m_pAttenuationAddButton->Show();
-		m_pAttenuationSubtractButton->Show();
+	//	m_pTextBoxX->Show();
+	//	m_pTextBoxY->Show();
+	//	m_pTextBoxZ->Show();
+	//	
+	//	m_pMultiplierAddButton->Show();
+	//	m_pMultiplierSubtractButton->Show();
+	//	m_pAttenuationAddButton->Show();
+	//	m_pAttenuationSubtractButton->Show();
 
-		BLOX_2D->SetColor(40,40,40);
-		BLOX_2D->DrawLine(10,180,190,180);
-		BLOX_2D->DrawLine(10,270,190,270);
-		BLOX_2D->DrawLine(10,330,190,330);
-		BLOX_2D->DrawLine(10,387,190,387);
+	//	BLOX_2D->SetColor(40,40,40);
+	//	BLOX_2D->DrawLine(10,180,190,180);
+	//	BLOX_2D->DrawLine(10,270,190,270);
+	//	BLOX_2D->DrawLine(10,330,190,330);
+	//	BLOX_2D->DrawLine(10,387,190,387);
 
-		if (type == 1)
-		{
-			m_pPowerAddButton->Show();
-			m_pPowerSubtractButton->Show();
+	//	if (type == 1)
+	//	{
+	//		m_pPowerAddButton->Show();
+	//		m_pPowerSubtractButton->Show();
 
-			BLOX_2D->DrawLine(10,445,190,445);
-		}
-	}
-	else if (GetNrLightsSelected() > 1)
-	{
-		
-		stream << _T("Selected:\n\n");
+	//		BLOX_2D->DrawLine(10,445,190,445);
+	//	}
+	//}
+	//else if (GetNrLightsSelected() > 1)
+	//{
+	//	
+	//	stream << _T("Selected:\n\n");
 
-		for (unsigned int i = 0; i < m_PLightsSelected.size(); ++i)
-		{
-			if (m_PLightsSelected[i] == true)
-			{
-				stream << _T("pointLight ") << i << _T(",\n");
-			}
-		}
+	//	for (unsigned int i = 0; i < m_PLightsSelected.size(); ++i)
+	//	{
+	//		if (m_PLightsSelected[i] == true)
+	//		{
+	//			stream << _T("pointLight ") << i << _T(",\n");
+	//		}
+	//	}
 
-		stream << _T("\n");
+	//	stream << _T("\n");
 
-		for (unsigned int i = 0; i < m_SLightsSelected.size(); ++i)
-		{
-			if (m_SLightsSelected[i] == true)
-			{
-				stream << _T("spotLight ") << i << _T(",\n");
-			}
-		}
+	//	for (unsigned int i = 0; i < m_SLightsSelected.size(); ++i)
+	//	{
+	//		if (m_SLightsSelected[i] == true)
+	//		{
+	//			stream << _T("spotLight ") << i << _T(",\n");
+	//		}
+	//	}
 
-		HideTextBoxes();
-	}
-	else
-		HideTextBoxes();
+	//	HideTextBoxes();
+	//}
+	//else
+	//	HideTextBoxes();
 
-	tstringstream streamL;
+	//tstringstream streamL;
 
-	streamL << _T("lights: ") << GetNrLightsSelected() << _T(" / ") << GetTotalLightsInScene();
+	//streamL << _T("lights: ") << GetNrLightsSelected() << _T(" / ") << GetTotalLightsInScene();
 
-	BLOX_2D->SetColor(255, 255, 255, 0.5f);
-	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-	BLOX_2D->DrawString(	streamL.str(),
-							RectF(0,0, BLOX_2D->GetWindowSize().width - 5, BLOX_2D->GetWindowSize().height - 4),
-							Blox2D::HORIZONTAL_ALIGN_RIGHT,
-							Blox2D::VERTICAL_ALIGN_BOTTOM);
+	//BLOX_2D->SetColor(255, 255, 255, 0.5f);
+	//BLOX_2D->SetFont(_T("Verdana"),false,false,10);
+	//BLOX_2D->DrawString(	streamL.str(),
+	//						RectF(0,0, BLOX_2D->GetWindowSize().width - 5, BLOX_2D->GetWindowSize().height - 4),
+	//						Blox2D::HORIZONTAL_ALIGN_RIGHT,
+	//						Blox2D::VERTICAL_ALIGN_BOTTOM);
 
-	BLOX_2D->SetColor(255, 255, 255);
-	BLOX_2D->SetFont(_T("Verdana"),false,false,12);
-	BLOX_2D->DrawString(stream.str(),10,60);
+	//BLOX_2D->SetColor(255, 255, 255);
+	//BLOX_2D->SetFont(_T("Verdana"),false,false,12);
+	//BLOX_2D->DrawString(stream.str(),10,60);
 }
 
 // GETTERS

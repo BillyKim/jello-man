@@ -2,27 +2,6 @@
 #include "CookingStream.h"
 #include "ContentManager.h"
 
-Vector3 Min(const Vector3& a, const Vector3& b)
-{
-	return Vector3(
-        a.X < b.X? a.X : b.X,
-        a.Y < b.Y? a.Y : b.Y,
-        a.Z < b.Z? a.Z : b.Z);
-}
-Vector3 Max(const Vector3& a, const Vector3& b)
-{
-	return Vector3(
-        a.X > b.X? a.X : b.X,
-        a.Y > b.Y? a.Y : b.Y,
-        a.Z > b.Z? a.Z : b.Z);
-}
-
-Vector3 Abs(const Vector3& v)
-{
-    return Vector3(abs(v.X), abs(v.Y), abs(v.Z));
-}
-
-
 Softbody::Softbody(): m_pSoftbody(0), m_pPhysX(0), m_numPositions(0), m_numIndices(0), m_Radius(0), m_CenterPoint(Vector3::Zero), m_Dimension(Vector3::Zero)
 {
 
@@ -77,6 +56,7 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
     softbodyDesc.flags = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION;
     softbodyDesc.meshData = meshData;
     softbodyDesc.collisionResponseCoefficient = 0.1f;
+	softbodyDesc.sleepLinearVelocity = 10;
 
     softbodyDesc.globalPose = static_cast<NxMat34>(Matrix::CreateTranslation(pos));
 

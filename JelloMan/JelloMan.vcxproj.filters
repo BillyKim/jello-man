@@ -73,6 +73,18 @@
     <Filter Include="Engine Files\Graphics\Effect\pre">
       <UniqueIdentifier>{deb43386-deae-4f64-8439-48eb5eed99b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Graphics\Light\behaviours">
+      <UniqueIdentifier>{9dc47179-aa70-4304-bb55-36ad12f01e75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\Light\types">
+      <UniqueIdentifier>{8ff7fe67-f51b-4b3a-8ccf-7948167d4ab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\Light\types\desc">
+      <UniqueIdentifier>{6289388c-1618-4670-9055-e348c57a2319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\Light\types\base">
+      <UniqueIdentifier>{64e062d2-8d2e-4fd9-a822-cd02ba424281}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -121,9 +133,6 @@
       <Filter>Engine Files\Graphics\Model</Filter>
     </ClInclude>
     <ClInclude Include="LightController.h">
-      <Filter>Engine Files\Graphics\Light</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
       <Filter>Engine Files\Graphics\Light</Filter>
     </ClInclude>
     <ClInclude Include="DeferredRenderer.h">
@@ -285,6 +294,36 @@
     <ClInclude Include="TextBox.h">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
+    <ClInclude Include="LightBehaviour.h">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBehaviourNormal.h">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBehaviourBroken.h">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBehaviourRotator.h">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Engine Files\Graphics\Light\types</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Engine Files\Graphics\Light\types</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Engine Files\Graphics\Light\types</Filter>
+    </ClInclude>
+    <ClInclude Include="LightDesc.h">
+      <Filter>Engine Files\Graphics\Light\types\desc</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Engine Files\Graphics\Light\types\base</Filter>
+    </ClInclude>
+    <ClInclude Include="PreShadowEffect.h">
+      <Filter>Engine Files\Graphics\Effect\pre</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -325,9 +364,6 @@
     </ClCompile>
     <ClCompile Include="ModelMesh.cpp">
       <Filter>Engine Files\Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Engine Files\Graphics\Light</Filter>
     </ClCompile>
     <ClCompile Include="LightController.cpp">
       <Filter>Engine Files\Graphics\Light</Filter>
@@ -491,6 +527,36 @@
     <ClCompile Include="TextBox.cpp">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClCompile>
+    <ClCompile Include="LightBehaviour.cpp">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBehaviourNormal.cpp">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBehaviourBroken.cpp">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBehaviourRotator.cpp">
+      <Filter>Engine Files\Graphics\Light\behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Engine Files\Graphics\Light\types</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Engine Files\Graphics\Light\types</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Engine Files\Graphics\Light\types</Filter>
+    </ClCompile>
+    <ClCompile Include="LightDesc.cpp">
+      <Filter>Engine Files\Graphics\Light\types\desc</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Engine Files\Graphics\Light\types\base</Filter>
+    </ClCompile>
+    <ClCompile Include="PreShadowEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect\pre</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx">
@@ -512,6 +578,9 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="predeferredNormal.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="preShadowmapShader.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

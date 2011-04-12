@@ -65,7 +65,7 @@ public:
 			    m_pAssets->AddAsset(key, e);
 		    }    
 	    }
-        return static_cast<T*>(m_pAssets->GetAsset(key));
+        return dynamic_cast<T*>(m_pAssets->GetAsset(key));
     }
 
 private:

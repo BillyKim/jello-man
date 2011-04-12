@@ -1,4 +1,7 @@
 #include "EditorGUI.h"
+#include "LightDesc.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 
 // CONSTRUCTOR - DESTRUCTOR
@@ -292,7 +295,8 @@ void EditorGUI::Draw()
 		BLOX_2D->SetAntiAliasing(true);
 
 		// MOVE GIZMO
-		for (unsigned int i = 0; i < m_pLightDebugger->GetSpotLightsSelected().size(); ++i)
+        //TODO
+		/*for (unsigned int i = 0; i < m_pLightDebugger->GetSpotLightsSelected().size(); ++i)
 		{
 			if (m_pLightDebugger->GetSpotLightsSelected()[i] == true)
 			{
@@ -312,7 +316,7 @@ void EditorGUI::Draw()
 				else if (m_bRotateable)
 					m_pRotateGizmo->Show(m_pRenderContext->GetLightController()->GetSpotLights()[i].position,RotateGizmo::TYPE_SPOTLIGHT,i);
 			}
-		}
+		}*/
 
 		BLOX_2D->SetAntiAliasing(false);
 	}
@@ -582,7 +586,8 @@ void EditorGUI::Draw()
 		{
 			m_pApplyButton->Tick();
 		
-			for (unsigned int i = 0; i < m_pLightDebugger->GetPointLightsSelected().size(); ++i)
+            //TODO
+			/*for (unsigned int i = 0; i < m_pLightDebugger->GetPointLightsSelected().size(); ++i)
 			{
 				if (m_pLightDebugger->GetPointLightsSelected()[i] == true)
 				{
@@ -614,7 +619,7 @@ void EditorGUI::Draw()
 						m_pColorPicker->PreviousColorSet(false);
 					}
 				}
-			}
+			}*/
 
 			m_pApplyButton->Show();	
 		}
@@ -664,20 +669,21 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 			Vector3 look = pRenderContext->GetCamera()->GetLook();
 			look.Normalize();
 
-			PointLight pl;
-			pl = PointLight();
-			pl.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
+			PointLightDesc pDesc;
+
+			pDesc.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
 
 			BYTE r = 180;
 			BYTE g = 180;
 			BYTE b = 200;
+            BYTE a = 255;
 
-			pl.color = Color(r, g, b, 1);
-			pl.multiplier = 1.0f;
-			pl.AttenuationStart = 0;
-			pl.AttenuationEnd = 200;
-			pl.lightEnabled = true;
-
+			pDesc.color = Color(r, g, b, a);
+			pDesc.multiplier = 1.0f;
+			pDesc.attenuationStart = 0;
+			pDesc.attenuationEnd = 200;
+            
+			PointLight* pl = new PointLight(pDesc);
 			pRenderContext->GetLightController()->AddLight(pl);
 
 			m_pLightDebugger->DeselectAll();
@@ -690,24 +696,22 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 			Vector3 look = pRenderContext->GetCamera()->GetLook();
 			look.Normalize();
 
-			SpotLight sl;
-			sl = SpotLight();
-			sl.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
+			SpotLightDesc sDesc;
+			sDesc.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
 
 			BYTE r = 180;
 			BYTE g = 180;
 			BYTE b = 200;
+            BYTE a = 255;
 
-			sl.color = Color(r, g, b, 1);
-			sl.multiplier = 1.0f;
-			sl.AttenuationStart = 0;
-			sl.AttenuationEnd = 200;
-			sl.power = 2;
-			sl.direction = Vector3(0.0f,-1.0f,0.0f);
-			sl.lightEnabled = true;
-			sl.shadowsEnabled = false;
-			sl.shadowMapSize = 256;
+			sDesc.color = Color(r, g, b, a);
+			sDesc.multiplier = 1.0f;
+			sDesc.attenuationStart = 0;
+			sDesc.attenuationEnd = 200;
+			sDesc.power = 2;
+			sDesc.direction = Vector3(0.0f,-1.0f,0.0f);
 
+            SpotLight* sl = new SpotLight(sDesc);
 			pRenderContext->GetLightController()->AddLight(sl);
 
 			m_pLightDebugger->DeselectAll();

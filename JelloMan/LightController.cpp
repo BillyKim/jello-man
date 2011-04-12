@@ -1,4 +1,5 @@
 #include "LightController.h"
+#include "Light.h"
 
 
 LightController::LightController(void)
@@ -8,36 +9,17 @@ LightController::LightController(void)
 
 LightController::~LightController(void)
 {
-    //for (UINT i = 0; i < m_PointLights.size(); ++i)
-    //    delete m_PointLights[i];
-    //for (UINT i = 0; i < m_DirectionalLights.size(); ++i)
-    //    delete m_DirectionalLights[i];
-    //for (UINT i = 0; i < m_SpotLights.size(); ++i)
-    //    delete m_DirectionalLights[i];
+    vector<Light*>::iterator it = m_Lights.begin();
+    for (; it != m_Lights.end(); ++it)
+        delete *it;
 }
 
-void LightController::AddLight(const PointLight& light)
+void LightController::AddLight(Light* light)
 {
-    m_PointLights.push_back(light);
-}
-void LightController::AddLight(const DirectionalLight& light)
-{
-    m_DirectionalLights.push_back(light);
-}
-void LightController::AddLight(const SpotLight& light)
-{
-    m_SpotLights.push_back(light);
+    m_Lights.push_back(light);
 }
 
-vector<PointLight>& LightController::GetPointLights()
+const vector<Light*>& LightController::GetLights() const
 {
-    return m_PointLights;
-}
-vector<DirectionalLight>& LightController::GetDirectionalLights()
-{
-    return m_DirectionalLights;
-}
-vector<SpotLight>& LightController::GetSpotLights()
-{
-    return m_SpotLights;
+    return m_Lights;
 }

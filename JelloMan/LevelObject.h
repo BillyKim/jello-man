@@ -19,8 +19,9 @@ public:
 
 	// GENERAL
     virtual void Init(PhysX* pPhysX);
-	virtual void Tick(const float dTime);
+	virtual void Tick(float dTime);
     virtual void Draw(const RenderContext* pRenderContext);
+    virtual void DrawEffectless();
 
 	// SETTERS
 	void SetModelPath(tstring modelPath)
@@ -62,6 +63,9 @@ public:
 	// GETTERS
 	bool IsInitialized() const
 	{ return m_bInitialized; }
+
+    Model<VertexPosNormTanTex>* GetModel()
+    { return m_pModel; }
 
 private:
 

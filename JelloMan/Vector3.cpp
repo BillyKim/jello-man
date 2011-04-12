@@ -218,3 +218,28 @@ Vector3 Vector3::UnProject(const Vector3& vec, CONST D3D10_VIEWPORT *pViewport,
     D3DXVec3Unproject(&temp, &v, pViewport, &pr, &vw, &wd);
     return Vector3(temp);
 }
+Vector3 Vector3::Normalize(const Vector3& vec)
+{
+    Vector3 temp(vec);
+    temp.Normalize();
+    return temp;
+}
+
+Vector3 Min(const Vector3& a, const Vector3& b)
+{
+	return Vector3(
+        a.X < b.X? a.X : b.X,
+        a.Y < b.Y? a.Y : b.Y,
+        a.Z < b.Z? a.Z : b.Z);
+}
+Vector3 Max(const Vector3& a, const Vector3& b)
+{
+	return Vector3(
+        a.X > b.X? a.X : b.X,
+        a.Y > b.Y? a.Y : b.Y,
+        a.Z > b.Z? a.Z : b.Z);
+}
+Vector3 Abs(const Vector3& v)
+{
+    return Vector3(abs(v.X), abs(v.Y), abs(v.Z));
+}
