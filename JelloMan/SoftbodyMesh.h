@@ -11,9 +11,6 @@ public:
 			      m_pDevice(device)
 			    , m_pIndexBuffer(0)
 			    , m_pVertexBuffer(0)
-			    , m_pEffect(0)
-	            , m_pInputLayout(0)
-	            , m_VertexBufferStride(0)
                 , m_Name(name)
     {
     }
@@ -21,7 +18,6 @@ public:
     {
 	    SafeRelease(m_pVertexBuffer);
 	    SafeRelease(m_pIndexBuffer);
-        SafeRelease(m_pInputLayout);
     }
    
     void SetIndices(const vector<DWORD>& indices)
@@ -104,46 +100,21 @@ public:
         return m_VecBC;
     }
 
-    void SetEffect(Effect* effect)
-    {
-	    m_pEffect = effect;
-        CreateInputLayout();
-    }   
-    Effect* GetEffect() const
-    {
-	    return m_pEffect;
-    }  
-    void CreateInputLayout()
-    {    
-        SafeRelease(m_pInputLayout);
-
-        // Define the input layout
-        vector<D3D10_INPUT_ELEMENT_DESC> veclayout;
-        UINT numElements;
-        GetInputElementDesc<VertexPosNormTanTex>(veclayout, numElements);
-
-        D3D10_PASS_DESC PassDesc;
-        m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->GetDesc(&PassDesc);
-
-        HR(m_pDevice->CreateInputLayout(&veclayout[0], numElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &m_pInputLayout));
-
-        m_VertexBufferStride = sizeof(VertexPosNormTanTex);
-    }
-
     void SetName(const tstring& name)
     {
         m_Name = name;
     }
 
-    void Draw()
+    void Draw(Effect* effect)
     {
-        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && m_pEffect != 0);
+        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && effect != 0);
 
-	    m_pDevice->IASetInputLayout(m_pInputLayout);
+	    m_pDevice->IASetInputLayout(effect->GetInputLayout());
 
         // Set vertex buffer(s)
         UINT offset = 0;
-        m_pDevice->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_VertexBufferStride, &offset);
+        UINT vertexStride = effect->GetVertexStride();
+        m_pDevice->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &vertexStride, &offset);
    	
 	    // Set index buffer
 	    m_pDevice->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
@@ -152,10 +123,10 @@ public:
         m_pDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         D3D10_TECHNIQUE_DESC techDesc;
-        m_pEffect->GetCurrentTechnique()->GetDesc(&techDesc);
+        effect->GetCurrentTechnique()->GetDesc(&techDesc);
         for(UINT p = 0; p < techDesc.Passes; ++p)
         {
-            m_pEffect->GetCurrentTechnique()->GetPassByIndex(p)->Apply(0);
+            effect->GetCurrentTechnique()->GetPassByIndex(p)->Apply(0);
 		    m_pDevice->DrawIndexed(m_VecIndices.size(), 0, 0); 
         }
     }
@@ -166,16 +137,11 @@ private:
 	ID3D10Buffer* m_pVertexBuffer;
 	ID3D10Buffer* m_pIndexBuffer;
 
-    ID3D10InputLayout* m_pInputLayout;
-    UINT m_VertexBufferStride;
-
 	vector<VertexPosNormTanTex> m_VecVertices;
 	vector<DWORD> m_VecIndices;
 	vector<DWORD> m_VecTetra;
 	vector<Vector3> m_VecBC;
 
     tstring m_Name;
-
-	Effect* m_pEffect;
 };
 

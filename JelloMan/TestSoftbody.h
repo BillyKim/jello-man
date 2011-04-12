@@ -12,7 +12,8 @@ public:
 
     virtual void Init(PhysX* pPhysX);
 	virtual void Tick(float dTime);
-    virtual void Draw(const RenderContext* rc);
+    virtual void Draw(const RenderContext* pRenderContext);
+    virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e);
 
 private:
     DeferredPreEffect* m_pEffect;
