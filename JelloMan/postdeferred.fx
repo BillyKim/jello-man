@@ -13,6 +13,7 @@ float3 vCamPos : CameraPosition;
 PointLight pointLight : PointLight;
 SpotLight spotLight : SpotLight;
 
+float t0; //texel size
 
 BlendState blend
 {
@@ -29,12 +30,18 @@ RasterizerState rState
 	FillMode = Solid;
 	ScissorEnable = true;
 };
-SamplerState shadowSampler
+
+SamplerComparisonState shadowSampler
 {
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = CLAMP;
-	AddressV = CLAMP;
+   // sampler state
+   Filter = COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+   AddressU = MIRROR;
+   AddressV = MIRROR;
+
+   // sampler comparison state
+   ComparisonFunc = LESS;
 };
+
 SamplerState mapSampler
 {
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -196,9 +203,15 @@ float SpotShadowCheck(float3 position)
 	//NDC -> texturespace
 	coord.x = (coord.x + 1) / 2.0f;
 	coord.y = 1 - (coord.y + 1) / 2.0f;
-
-	float shadow = shadowMap.Sample(shadowSampler, coord);
-	shadow = coord.z < shadow + 0.00001f? 1.0f : 0.0f;
+	
+	float shadow = 0;
+	[unroll]
+	for (int tx = -1.0f; tx <= 1.0f; tx += 1.0f)
+		[unroll]
+		for (int ty = -1.0f; ty <= 1.0f; ty += 1.0f)
+			shadow += shadowMap.SampleCmpLevelZero(shadowSampler, coord.xy + float2(t0 * tx, t0 * ty), coord.z - 0.00005f);
+	
+	shadow /= 9.0f;
 
 	return shadow;
 }

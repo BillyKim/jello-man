@@ -56,6 +56,7 @@ public:
     virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type) = 0;
 	virtual Texture2D* GetShadowMap() const = 0;
     virtual Camera* GetShadowCamera() const = 0;
+    virtual ShadowMapType GetShadowMapType() const = 0;
 
     virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const = 0;
 

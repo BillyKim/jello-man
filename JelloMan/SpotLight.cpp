@@ -10,7 +10,8 @@ SpotLight::SpotLight():
             m_pLightBehaviour(0),
             m_pShadowCamera(0),
             m_OpeningsAngle(0.0f),
-            m_vUp(0, 1, 0)
+            m_vUp(0, 1, 0),
+            m_ShadowType(ShadowMapType_None)
 {
     SetBehaviour(new LightBehaviourNormal());
 
@@ -113,12 +114,18 @@ Camera* SpotLight::GetShadowCamera() const
 {
     return m_pShadowCamera;
 }
+ShadowMapType SpotLight::GetShadowMapType() const
+{
+    return m_ShadowType;
+}
 void SpotLight::SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type)
 {
     delete m_ShadowMap;
     m_ShadowMap = 0;
     delete m_pShadowCamera;
     m_pShadowCamera = 0;
+
+    m_ShadowType = type;
 
 	if (type != ShadowMapType_None)
 	{
