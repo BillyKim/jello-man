@@ -67,14 +67,14 @@ float3 GetEdge(float2 texCoord)
 	float2 ox = float2(1.0f / bbWidth, 0.0f);
 	float2 oy = float2(0.0f, 1.0f / bbHeight);
 
-	float3 c00 = backBuffer.Sample(mapSampler, texCoord - ox - oy);
-	float3 c01 = backBuffer.Sample(mapSampler, texCoord - oy);
-	float3 c02 = backBuffer.Sample(mapSampler, texCoord + ox - oy);
-	float3 c10 = backBuffer.Sample(mapSampler, texCoord - ox );
-	float3 c12 = backBuffer.Sample(mapSampler, texCoord + ox);
-	float3 c20 = backBuffer.Sample(mapSampler, texCoord - ox + oy);
-	float3 c21 = backBuffer.Sample(mapSampler, texCoord + oy);
-	float3 c22 = backBuffer.Sample(mapSampler, texCoord + ox + oy);
+	float3 c00 = backBuffer.SampleLevel(mapSampler, texCoord - ox - oy, 0);
+	float3 c01 = backBuffer.SampleLevel(mapSampler, texCoord - oy, 0);
+	float3 c02 = backBuffer.SampleLevel(mapSampler, texCoord + ox - oy, 0);
+	float3 c10 = backBuffer.SampleLevel(mapSampler, texCoord - ox, 0);
+	float3 c12 = backBuffer.SampleLevel(mapSampler, texCoord + ox, 0);
+	float3 c20 = backBuffer.SampleLevel(mapSampler, texCoord - ox + oy, 0);
+	float3 c21 = backBuffer.SampleLevel(mapSampler, texCoord + oy, 0);
+	float3 c22 = backBuffer.SampleLevel(mapSampler, texCoord + ox + oy, 0);
 
 
 	somX -= c00 * mult1;
@@ -119,6 +119,47 @@ float3 PSOverlay(VertexShaderOutput input) : SV_TARGET
 float3 PSEdgeOnly(VertexShaderOutput input) : SV_TARGET
 {
 	return GetEdge(input.TexCoord);
+}
+float3 PSAA(VertexShaderOutput input) : SV_TARGET
+{
+	float3 g_edge = GetEdge(input.TexCoord);
+	float edge = (g_edge.x + g_edge.y + g_edge.z) / 3.0f;
+
+	float3 bbCol = backBuffer.Sample(mapSampler, input.TexCoord);
+
+	[branch]
+	if (edge > 0.99f)
+	{
+		return bbCol;
+	}
+	else
+	{
+		float2 ox = float2(1.0f / bbWidth, 0.0f);
+		float2 oy = float2(0.0f, 1.0f / bbHeight);
+
+		float3 c00 = backBuffer.SampleLevel(mapSampler, input.TexCoord - ox - oy, 0);
+		 c00 += backBuffer.SampleLevel(mapSampler, input.TexCoord - oy, 0);
+		 c00 += backBuffer.SampleLevel(mapSampler, input.TexCoord + ox - oy, 0);
+		 c00 += backBuffer.SampleLevel(mapSampler, input.TexCoord - ox, 0 );
+		 c00 += backBuffer.SampleLevel(mapSampler, input.TexCoord + ox, 0);
+		 c00 += backBuffer.SampleLevel(mapSampler, input.TexCoord - ox + oy, 0);
+		 c00 += backBuffer.SampleLevel(mapSampler, input.TexCoord + oy, 0);
+		 c00 += backBuffer.SampleLevel(mapSampler, input.TexCoord + ox + oy, 0);
+
+		 c00 /= 8.0f;
+
+		 return c00;
+	}
+}
+technique10 tech_AA
+{
+    pass Pass1
+    {
+        VertexShader = compile vs_4_0 VS();
+        PixelShader = compile ps_4_0 PSAA();
+		SetBlendState(blend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
+		SetRasterizerState(rState);
+    }
 }
 technique10 tech_Overlay
 {

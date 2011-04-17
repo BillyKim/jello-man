@@ -33,13 +33,13 @@ void LightBehaviourBroken::Tick(float dTime)
             if (m_IsOn)
             {
                 m_Multiplier = rand() % 1000 / 1000.0f * m_MultiplierNormal / 2.0f;
-                m_WaitTime = rand() % 1000 / 1000.0f * 1.0f;
+                m_WaitTime = rand() % 1000 / 1000.0f * 0.1f;
                 m_IsOn = false;
             }
             else
             {
                 m_Multiplier = rand() % 1000 / 1000.0f * m_MultiplierNormal + m_MultiplierNormal / 2.0f;
-                m_WaitTime = rand() % 1000 / 1000.0f * 1.0f;
+                m_WaitTime = rand() % 1000 / 1000.0f * 0.5f;
                 m_IsOn = true;
             }
         }

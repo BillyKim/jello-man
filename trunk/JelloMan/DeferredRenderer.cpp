@@ -255,6 +255,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
             {
                 m_pEffect->SetShadowMap(pLight->GetShadowMap()->GetDepthMap());
                 m_pEffect->SetShadowWVP(pLight->GetShadowCamera()->GetViewProjection());
+                m_pEffect->SetShadowMapType(pLight->GetShadowMapType());
             }
 
             D3D10_RECT scissorRect = pLight->CalcScissorRect(pRenderContext->GetCamera(), m_Viewport.Width, m_Viewport.Height);

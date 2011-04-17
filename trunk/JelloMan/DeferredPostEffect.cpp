@@ -10,6 +10,7 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pSpotLight(GetVariableBySemantic("SpotLight")),
                     m_pCamPos(GetVariableBySemantic("CameraPosition")->AsVector()),
                     m_pMtxLightWVP(GetVariableByName("mtxLightWVP")->AsMatrix()),
+                    m_pTexelSize(GetVariableByName("t0")->AsScalar()),
                     m_pInputLayout(0), m_VertexStride(0)
 {
     ASSERT(m_pColorMap->IsValid());
@@ -19,6 +20,7 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
     ASSERT(m_pPointLight->IsValid());
     ASSERT(m_pCamPos->IsValid());
     ASSERT(m_pMtxLightWVP->IsValid());
+    ASSERT(m_pTexelSize->IsValid());
 
     CreateInputLayout<VertexPosTex>(pDevice, this, &m_pInputLayout, m_VertexStride);
 }
@@ -57,6 +59,10 @@ void DeferredPostEffect::SetShadowMap(ID3D10ShaderResourceView* map)
 void DeferredPostEffect::SetShadowWVP(const Matrix& wvp)
 {
     m_pMtxLightWVP->SetMatrix((float*)const_cast<Matrix&>(wvp));
+}
+void DeferredPostEffect::SetShadowMapType(ShadowMapType type)
+{
+    m_pTexelSize->SetFloat(1.0f / type);
 }
 void DeferredPostEffect::SetCameraPosition(const Vector3& camPos)
 {

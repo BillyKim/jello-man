@@ -36,6 +36,7 @@ public:
     virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type);
 	virtual Texture2D* GetShadowMap() const;
     virtual Camera* GetShadowCamera() const;
+    virtual ShadowMapType GetShadowMapType() const;
     
     virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const;
 
@@ -67,6 +68,7 @@ private:
 	SpotLightDesc m_StartDesc;
 
 	Texture2D* m_ShadowMap;
+    ShadowMapType m_ShadowType;
 
 	Matrix m_Rotation;
     Vector3 m_Angles;

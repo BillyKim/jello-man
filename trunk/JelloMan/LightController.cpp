@@ -14,6 +14,15 @@ LightController::~LightController(void)
         delete *it;
 }
 
+void LightController::Tick(float dTime)
+{
+    vector<Light*>::iterator it = m_Lights.begin();
+    for (; it != m_Lights.end(); ++it)
+    {
+        (*it)->Tick(dTime);
+    }
+}
+
 void LightController::AddLight(Light* light)
 {
     m_Lights.push_back(light);

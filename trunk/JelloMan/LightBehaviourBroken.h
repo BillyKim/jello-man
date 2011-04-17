@@ -8,7 +8,7 @@ enum BrokenLightType
     BrokenLightType_LightBulb
 };
 
-class LightBehaviourBroken
+class LightBehaviourBroken : public LightBehaviour
 {
 public:
     LightBehaviourBroken(BrokenLightType type);

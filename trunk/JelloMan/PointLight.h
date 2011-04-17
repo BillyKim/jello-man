@@ -36,6 +36,7 @@ public:
     virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type) { cout << "Warning: trying to set shadowmap on a spotlight"; };
 	virtual Texture2D* GetShadowMap() const { cout << "Warning: trying to get the shadowmap from a spotlight"; return 0; }
     virtual Camera* GetShadowCamera() const { cout << "Warning: trying to get the shadowcamera from a spotlight"; return 0;}
+    virtual ShadowMapType GetShadowMapType() const { return ShadowMapType_None; };
     
     virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const;
 

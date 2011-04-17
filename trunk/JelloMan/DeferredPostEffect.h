@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include <vector>
 #include "LightDesc.h"
+#include "Light.h"
 
 class DeferredPostEffect : public Effect
 {
@@ -17,6 +18,7 @@ public:
 
     void SetShadowMap(ID3D10ShaderResourceView* map);
     void SetShadowWVP(const Matrix& wvp);
+    void SetShadowMapType(ShadowMapType type);
 
     void SetPointLight(const PointLightDesc& light);
     void SetSpotLight(const SpotLightDesc& light);
@@ -38,6 +40,7 @@ private:
     ID3D10EffectVectorVariable* m_pCamPos;
 
     ID3D10EffectMatrixVariable* m_pMtxLightWVP;
+    ID3D10EffectScalarVariable* m_pTexelSize;
 
     ID3D10InputLayout* m_pInputLayout;
     UINT m_VertexStride;

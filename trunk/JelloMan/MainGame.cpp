@@ -8,6 +8,8 @@
 #include "LightDesc.h"
 #include "SpotLight.h"
 #include "PointLight.h"
+#include "LightBehaviourBroken.h"
+#include "LightBehaviourRotator.h"
 
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
@@ -103,43 +105,45 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 
     SpotLight* sp1 = new SpotLight();
         sp1->SetPosition(Vector3(0.0f,600.0f,0.0f));
-        sp1->SetColor(Color(0.8f, 0.8f, 0.5f, 1.0f));
-        sp1->SetMulitplier(1.0f);
-        sp1->SetAttenuationStart(0);
+        sp1->SetColor(Color(0.9f, 0.002f, 0.002f, 1.0f));
+        sp1->SetMulitplier(2.0f);
+        sp1->SetAttenuationStart(1000);
         sp1->SetAttenuationEnd(2000);
         sp1->SetOpeningsAngle(ToRadians(135));
-        sp1->Rotate(Vector3::Forward, PiOver2);
-        sp1->SetShadowMap(pDXDevice, ShadowMapType512x512);
+        sp1->Rotate(Vector3::Forward, Pi / 4.0f * 3.0f);
+        sp1->SetShadowMap(pDXDevice, ShadowMapType1024x1024);
+        sp1->SetBehaviour(new LightBehaviourRotator(Vector3::Up, 2.5f));
         m_pLightController->AddLight(sp1);
 
 	SpotLight* sp2 = new SpotLight();
         sp2->SetPosition(Vector3(800.0f,600.0f,0.0f));
         sp2->SetColor(Color(0.9f, 0.9f, 0.8f, 1.0f));
-        sp2->SetMulitplier(1.0f);
-        sp2->SetAttenuationStart(0);
+        sp2->SetMulitplier(2.0f);
+        sp2->SetAttenuationStart(1000);
         sp2->SetAttenuationEnd(2000);
         sp2->SetOpeningsAngle(ToRadians(90));
         sp2->Rotate(Vector3::Forward, PiOver2);
-        sp2->SetShadowMap(pDXDevice, ShadowMapType512x512);
+        sp2->SetShadowMap(pDXDevice, ShadowMapType1024x1024);
         m_pLightController->AddLight(sp2);
 
 	SpotLight* sp3 = new SpotLight();
         sp3->SetPosition(Vector3(-800.0f,600.0f,0.0f));
         sp3->SetColor(Color(0.9f, 0.9f, 0.8f, 1.0f));
-        sp3->SetMulitplier(1.0f);
-        sp3->SetAttenuationStart(0);
+        sp3->SetMulitplier(2.0f);
+        sp3->SetAttenuationStart(1000);
         sp3->SetAttenuationEnd(2000);
         sp3->SetOpeningsAngle(ToRadians(90));
         sp3->Rotate(Vector3::Forward, PiOver2);
-        sp3->SetShadowMap(pDXDevice, ShadowMapType512x512);
+        sp3->SetShadowMap(pDXDevice, ShadowMapType1024x1024);
+        sp3->SetBehaviour(new LightBehaviourBroken(BrokenLightType_LightBulb));
         m_pLightController->AddLight(sp3);
 
 	PointLightDesc pl;
-	    pl.position = Vector3(0.0f,100.0f,-400.0f);
+	    pl.position = Vector3(0.0f,500.0f,0.0f);
 	    pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
-	    pl.attenuationEnd = 2000;
-	    pl.multiplier = 1.0f;
-	    //m_pLightController->AddLight(new PointLight(pl));
+	    pl.attenuationEnd = 5000;
+	    pl.multiplier = 0.5f;
+	    m_pLightController->AddLight(new PointLight(pl));
 
 		
 	// PHYSX
@@ -170,6 +174,8 @@ void MainGame::UpdateScene(const float dTime)
 {
 	// dtime
 	m_dTtime = dTime;
+
+    m_pLightController->Tick(dTime);
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_PLAY)
 	{
@@ -266,7 +272,7 @@ void MainGame::DrawScene()
 		m_pRenderContext->SetCamera(m_pEditorCamera);
 
 	// POST PROCESS
-	//m_pPostProcessor->Begin();
+	m_pPostProcessor->Begin();
 
 	    // START DEFERRED
 	    m_pDeferredRenderer->Begin();
@@ -287,7 +293,7 @@ void MainGame::DrawScene()
 	    m_pForwardRenderer->End();
 
 	// POST PROCESS
-	//m_pPostProcessor->End();
+	m_pPostProcessor->End();
 		
 	// --------------------------------------
 
