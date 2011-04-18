@@ -56,6 +56,7 @@ public:
 
 	virtual void SetOpeningsAngle(float rad);
 	virtual void AddOpeningsAngle(float rad);
+	virtual float GetOpeningsAngle() const;
 
 	virtual void SetPower(float power);
 	virtual float GetPower() const;

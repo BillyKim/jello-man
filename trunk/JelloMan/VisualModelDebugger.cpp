@@ -37,7 +37,8 @@ void VisualModelDebugger::CheckControls()
 	{
 		if (m_bClick)
 		{
-			RayCast();
+			if (CONTROLS->GetMousePos().x > 200 && CONTROLS->GetMousePos().y > 50)
+				RayCast();
 
 			m_bClick = false;
 		}
@@ -70,7 +71,7 @@ void VisualModelDebugger::Draw()
 	{
 		if (m_ModelsSelected[i])
 		{
-			/*D3DXVECTOR3 pos(
+			D3DXVECTOR3 pos(
 				m_pLevelObjects[i]->GetActor()->getGlobalPosition().x,
 				m_pLevelObjects[i]->GetActor()->getGlobalPosition().y,
 				m_pLevelObjects[i]->GetActor()->getGlobalPosition().z
@@ -80,7 +81,7 @@ void VisualModelDebugger::Draw()
 			D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
 
 			BX2D->SetColor(255,255,255,0.5f);
-			BX2D->FillEllipse(static_cast<int>(pos2D.x), static_cast<int>(pos2D.y), 10,10);*/
+			BX2D->FillEllipse(pos2D.x, pos2D.y, 10,10);
 
 			m_pLevelObjects[i]->Selected(true);
 		}
@@ -93,7 +94,10 @@ void VisualModelDebugger::Draw()
 void VisualModelDebugger::DeselectAll()
 {
 	for (unsigned int i = 0; i < m_ModelsSelected.size(); ++i)
+	{
 		m_ModelsSelected[i] = false;
+		m_pLevelObjects[i]->Selected(false);
+	}
 }
 
 void VisualModelDebugger::RayCast()
