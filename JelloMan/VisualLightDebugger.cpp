@@ -111,8 +111,7 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
-	if (!m_bLightsMoving)
-		CheckControls();
+	CheckControls();
 }
 
 void VisualLightDebugger::CheckControls()
@@ -151,44 +150,47 @@ void VisualLightDebugger::CheckControls()
 		m_pTextBoxZ->LoseFocus();
 	}
 
-	if (CONTROLS->LeftMBDown())
-		m_bClick = true;
-
-	if (CONTROLS->LeftMBUp())
+	if (!m_bLightsMoving)
 	{
-		if (m_bClick)
+		if (CONTROLS->LeftMBDown())
+			m_bClick = true;
+
+		if (CONTROLS->LeftMBUp())
 		{
-			if (CONTROLS->IsKeyDown(VK_LCONTROL))
+			if (m_bClick)
 			{
-				for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
+				if (CONTROLS->IsKeyDown(VK_LCONTROL))
 				{
-					if (m_pRenderContext->GetLightController()->GetLights()[i]->GetHitRegion()->HitTest(CONTROLS->GetMousePos()))
+					for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
 					{
-						if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
-							m_pRenderContext->GetLightController()->GetLights()[i]->Deselect();
-						else
-							m_pRenderContext->GetLightController()->GetLights()[i]->Select();
+						if (m_pRenderContext->GetLightController()->GetLights()[i]->GetHitRegion()->HitTest(CONTROLS->GetMousePos()))
+						{
+							if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
+								m_pRenderContext->GetLightController()->GetLights()[i]->Deselect();
+							else
+								m_pRenderContext->GetLightController()->GetLights()[i]->Select();
+						}
 					}
 				}
-			}
-			else
-			{
-				for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
+				else
 				{
-					if (m_pRenderContext->GetLightController()->GetLights()[i]->GetHitRegion()->HitTest(CONTROLS->GetMousePos()))
+					for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
 					{
-						if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
-							m_pRenderContext->GetLightController()->GetLights()[i]->Deselect();
-						else
-							m_pRenderContext->GetLightController()->GetLights()[i]->Select();
+						if (m_pRenderContext->GetLightController()->GetLights()[i]->GetHitRegion()->HitTest(CONTROLS->GetMousePos()))
+						{
+							if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
+								m_pRenderContext->GetLightController()->GetLights()[i]->Deselect();
+							else
+								m_pRenderContext->GetLightController()->GetLights()[i]->Select();
 					
-						DeselectAllLights(i);
+							DeselectAllLights(i);
+						}
 					}
 				}
+
+			m_bClick = false;
+
 			}
-
-		m_bClick = false;
-
 		}
 	}
 }

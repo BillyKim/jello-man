@@ -38,6 +38,9 @@ public:
 	void ShowGrid(bool show)
 	{ m_bShowGrid = show; }
 
+	void EditorMode(bool editor)
+	{ m_bEditor = editor; }
+
 	void TickCharacter(bool tick)
 	{ m_bTickCharacter = tick; }
 
@@ -62,6 +65,7 @@ private:
 
 	bool m_bShowGrid;
 	bool m_bTickCharacter;
+	bool m_bEditor;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);

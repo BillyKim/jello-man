@@ -68,8 +68,13 @@ void Actor::AddForce(const Vector3& pos)
 
 Vector3 Actor::GetPosition() const
 {
-	return Vector3(
-		m_pActor->getGlobalPosition().x,
-		m_pActor->getGlobalPosition().y,
-		m_pActor->getGlobalPosition().z);
+	if (m_pActor)
+	{
+		return Vector3(
+			m_pActor->getGlobalPosition().x,
+			m_pActor->getGlobalPosition().y,
+			m_pActor->getGlobalPosition().z);
+	}
+
+	return Vector3(0,0,0);
 }
