@@ -122,22 +122,32 @@ void LoadModelFromFile::Tick()
 
 	if (m_pbtnLoadModel->Clicked())
 	{
-		if (m_ModelPath != _T("") &&
-			m_PhysXModelPath != _T("") &&
-			m_NormalPath != _T("") &&
-			m_DiffusePath != _T("") &&
-			m_SpecPath != _T("") &&
-			m_GlossPath != _T(""))
+		if (m_ModelPath != _T("") && m_PhysXModelPath != _T(""))
 		{
 			m_pLevelObject = new LevelObject();
 
-			m_pLevelObject->UseNormalMap(true);
+			if (m_NormalPath != _T(""))
+			{
+				m_pLevelObject->UseNormalMap(true);
+				m_pLevelObject->SetNormalPath(m_NormalPath);
+			}
+			else
+				m_pLevelObject->UseNormalMap(false);
+
+			if (m_DiffusePath == _T(""))
+				m_DiffusePath = _T("Content/Textures/checker_1024.png");
+
+			if (m_SpecPath == _T(""))
+				m_SpecPath = _T("Content/Textures/checker_1024.png");
+
+			if (m_GlossPath == _T(""))
+				m_GlossPath = _T("Content/Textures/checker_1024.png");
+
 			m_pLevelObject->UseSimplifiedPhysXMesh(false);
 
 			m_pLevelObject->SetModelPath(m_ModelPath);
 			m_pLevelObject->SetPhysXModelPath(m_PhysXModelPath);
-
-			m_pLevelObject->SetNormalPath(m_NormalPath);
+			
 			m_pLevelObject->SetDiffusePath(m_DiffusePath);
 			m_pLevelObject->SetSpecPath(m_SpecPath);
 			m_pLevelObject->SetGlossPath(m_GlossPath);

@@ -3,16 +3,8 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "ContentManager.h"
-
-// CONVERT STRING TO OTHER TYPE - FLOAT IE
-template <class T>
-bool from_string(T& t, 
-                 const string& s, 
-                 ios_base& (*f)(ios_base&))
-{
-  istringstream iss(s);
-  return !(iss >> f >> t).fail();
-}
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 // CONSTRUCTOR - DESTRUCTOR
 VisualLightDebugger::VisualLightDebugger()	:	m_bClick(false),
@@ -233,6 +225,7 @@ void VisualLightDebugger::DeselectAllLights(int excluding)
 void VisualLightDebugger::ShowLightInfo()
 {
 	tstringstream stream;
+	stream.precision(8);
 
 	if (GetNrLightsSelected() == 1)
 	{
@@ -313,7 +306,10 @@ void VisualLightDebugger::ShowLightInfo()
 		{
 			SpotLight* pSLight = dynamic_cast<SpotLight*>(pLight);
 
-			stream << _T("Power: ") << pSLight->GetPower() << _T("\n\n\n\n");
+			float angle = (pSLight->GetOpeningsAngle() / (2 * M_PI)) * 360.0f * 2.0f;
+			if (angle < 0.1f) angle = 0.0f;
+
+			stream << _T("Angle: ") << angle << _T("\n\n\n\n");
 
 			stream << _T("ShadowMaps enabled: ") << pSLight->HasShadowMap() << _T("\n");
 			stream << _T("ShadowMaps size: ") << pSLight->GetShadowMapType();
@@ -371,12 +367,12 @@ void VisualLightDebugger::ShowLightInfo()
 
 			if (m_pPowerAddButton->Down())
 			{
-				power += 0.1f;
+				power -= 0.1f;
 			}
 			
 			if (m_pPowerSubtractButton->Down())
 			{
-				power-= 0.1f;
+				power += 0.1f;
 			}
 
 			if (power < 0.1f)

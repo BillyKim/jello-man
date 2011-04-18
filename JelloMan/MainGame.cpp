@@ -281,7 +281,7 @@ void MainGame::DrawScene()
 		m_pRenderContext->SetCamera(m_pEditorCamera);
 
 	// POST PROCESS
-	m_pPostProcessor->Begin();
+	//m_pPostProcessor->Begin();
 
 	    // START DEFERRED
 	    m_pDeferredRenderer->Begin();
@@ -302,7 +302,7 @@ void MainGame::DrawScene()
 	    m_pForwardRenderer->End();
 
 	// POST PROCESS
-	m_pPostProcessor->End();
+	//m_pPostProcessor->End();
 		
 	// --------------------------------------
 

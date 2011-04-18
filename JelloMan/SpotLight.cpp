@@ -1,6 +1,8 @@
 #include "SpotLight.h"
 #include "LightBehaviourNormal.h"
 #include "ContentManager.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 SpotLight::SpotLight():
 			m_Scale(1), 
@@ -104,15 +106,12 @@ void SpotLight::Draw(const RenderContext* rc)
 	// HITRECT
 	SafeDelete(m_pHitRegion);
 
-	/*if (pos2D.x > 0 && pos2D.x < BX2D->GetWindowSize().width && pos2D.y > 0 && pos2D.y < BX2D->GetWindowSize().height)
-	{*/
-		m_pHitRegion = new HitRegion(	
-			HitRegion::TYPE_ELLIPSE,
-			pos2D.x,
-			pos2D.y, 
-			size / l,
-			size / l);
-	//}
+	m_pHitRegion = new HitRegion(	
+		HitRegion::TYPE_ELLIPSE,
+		pos2D.x,
+		pos2D.y, 
+		size / l,
+		size / l);
 
 	if (vLook.Dot(length) < 0)
 	{
@@ -319,6 +318,16 @@ void SpotLight::SetOpeningsAngle(float rad)
 void SpotLight::AddOpeningsAngle(float rad)
 {
 	SetOpeningsAngle(-m_OpeningsAngle + rad);
+}
+
+float SpotLight::GetOpeningsAngle() const
+{
+	float power = m_Desc.power;
+
+	float angle = powf(M_E, (-(log(100.0f)))/power);
+	angle = acosf(angle*2);
+
+	return angle;
 }
 
 void SpotLight::SetPower(float power)

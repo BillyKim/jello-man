@@ -268,24 +268,9 @@ void EditorGUI::Draw()
 		{
 			if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
 			{
-				if (m_pRenderContext->GetLightController()->GetLights()[i]->GetType() == LightType_Point)
-				{
-					PointLight* pPLight = dynamic_cast<PointLight*>(m_pRenderContext->GetLightController()->GetLights()[i]);
-					PointLightDesc& PLDesc = const_cast<PointLightDesc&>(pPLight->GetDesc());
 
-					if (m_bMoveable)
-						m_pMoveGizmo->Show(PLDesc.position,MoveGizmo::TYPE_POINTLIGHT,i);
-				}
-				else if (m_pRenderContext->GetLightController()->GetLights()[i]->GetType() == LightType_Spot)
-				{
-					SpotLight* pSLight = dynamic_cast<SpotLight*>(m_pRenderContext->GetLightController()->GetLights()[i]);
-					SpotLightDesc& SLDesc = const_cast<SpotLightDesc&>(pSLight->GetDesc());
-
-					if (m_bMoveable)
-						m_pMoveGizmo->Show(SLDesc.position,MoveGizmo::TYPE_SPOTLIGHT,i);
-					else if (m_bRotateable)
-						m_pRotateGizmo->Show(SLDesc.position,SLDesc.direction, RotateGizmo::TYPE_SPOTLIGHT,i);
-				}
+				if (m_bMoveable)
+					m_pMoveGizmo->Show(m_pRenderContext->GetLightController()->GetLights()[i], i);
 			}
 		}
 
@@ -294,7 +279,7 @@ void EditorGUI::Draw()
 			if (m_pModelDebugger->GetModelsSelected()[i] == true)
 			{
 				if (m_bMoveable)
-					m_pMoveGizmo->Show(Vector3(0,0,0), MoveGizmo::TYPE_MODEL, i, (*m_pLevelObjects)[i]);
+					m_pMoveGizmo->Show((*m_pLevelObjects)[i], i);
 			}
 		}
 
@@ -304,6 +289,7 @@ void EditorGUI::Draw()
 	{
 		m_pLightDebugger->DeselectAllLights();
 		m_pLightDebugger->HideTextBoxes();
+		m_pModelDebugger->DeselectAll();
 	}
 
 	// BACKGROUND
@@ -685,7 +671,11 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 		m_pLoadModelFromFile->HideTextBoxes();
 	
 	if (m_pLoadModelFromFile->LevelObjectExtracted())
+	{
 		m_pLoadModelFromFile->Clear();
+
+		m_pLoadModelButton->Deactivate();
+	}
 
 	if (m_pLoadModelFromFile->IsLoaded())
 		m_bNewModelLoaded = true;
@@ -720,7 +710,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 	if (m_pRotateButton->Clicked())
 		m_pMoveButton->Deactivate();
 
-	if (m_Mode == MODE_EDITOR)
+	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 0)
 	{
 		m_pModelDebugger->Tick(pRenderContext, pLevelObjects);
 	}
