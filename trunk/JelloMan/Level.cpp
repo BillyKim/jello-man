@@ -10,7 +10,8 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_pBaseGrid(new BaseGrid(pDXDevice)),
 				m_bShowGrid(false),
 				m_bTickCharacter(false),
-				m_pCharacter(0)
+				m_pCharacter(0),
+				m_bEditor(true)
 {
 
 }
@@ -220,12 +221,17 @@ void Level::DrawForward(const RenderContext* pRenderContext)
 		m_pBaseGrid->Draw(pRenderContext);
 
 	// DRAW LIGHTS
-	BX2D->SetAntiAliasing(true);
-	for (unsigned int i = 0; i < pRenderContext->GetLightController()->GetLights().size(); ++i)
+	if (m_bEditor)
 	{
-		m_pRenderContext->GetLightController()->GetLights()[i]->Draw(m_pRenderContext);
+		BX2D->SetAntiAliasing(true);
+
+		for (unsigned int i = 0; i < pRenderContext->GetLightController()->GetLights().size(); ++i)
+		{
+			m_pRenderContext->GetLightController()->GetLights()[i]->Draw(m_pRenderContext);
+		}
+
+		BX2D->SetAntiAliasing(false);
 	}
-	BX2D->SetAntiAliasing(false);
 }
 
 void Level::AddLevelObject(LevelObject* pLevelObject)

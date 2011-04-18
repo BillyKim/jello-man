@@ -215,7 +215,10 @@ void MainGame::UpdateScene(const float dTime)
 		m_pPhysXEngine->FetchResults();
 		m_pLevel->Tick(dTime);
 		m_pPhysXEngine->Simulate(dTime);
+		m_pLevel->EditorMode(false);
 	}
+	else
+		m_pLevel->EditorMode(true);
 
 	if (m_pEditorGUI->GetShowGridButton()->IsActive())
 		m_pLevel->ShowGrid(true);

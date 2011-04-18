@@ -607,6 +607,12 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 
 	if (m_Mode == MODE_EDITOR)
 	{
+		if (CONTROLS->IsKeyDown(VK_LCONTROL) && CONTROLS->IsKeyDown('D'))
+		{
+			m_pMoveButton->Deactivate();
+			m_pRotateButton->Deactivate();
+		}
+
 		if (m_pPointlightButton->Clicked())
 		{
 			Vector3 look = pRenderContext->GetCamera()->GetLook();
@@ -631,6 +637,8 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 			pRenderContext->GetLightController()->AddLight(pl);
 
 			m_pLightDebugger->DeselectAllLights();
+			m_pMoveButton->Deactivate();
+			m_pRotateButton->Deactivate();
 
 			cout << "Added pointlight\n";
 		}
@@ -660,6 +668,8 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 			pRenderContext->GetLightController()->AddLight(sl);
 
 			m_pLightDebugger->DeselectAllLights();
+			m_pMoveButton->Deactivate();
+			m_pRotateButton->Deactivate();
 
 			cout << "Added spotlight\n";
 		}
