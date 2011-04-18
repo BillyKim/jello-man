@@ -1,6 +1,6 @@
 #include "Button.h"
 #include "HitRegion.h"
-#include "Bitmap.h"
+#include "Image.h"
 
 //-----------------------------------------------------------------
 // Button Class
@@ -31,7 +31,7 @@ Button::Button(int posX, int posY, int width, int height, bool bToggleable)	:	m_
 
 	m_Opacity = 1.0f;
 
-	m_pHitRect = new HitRegion(HitRegion::TYPE_RECTANGLE,posX,posY,width,height);
+	m_pHitRect = new HitRegion(HitRegion::TYPE_RECTANGLE,(float)posX,(float)posY,(float)width,(float)height);
 }
 
 // destructor
@@ -124,33 +124,33 @@ void Button::Show()
 
 	if (m_State == STATE_NORMAL)
 	{
-		if (m_pNormalBitmap != 0 && m_pNormalBitmap->Exists())
-			BLOX_2D->DrawBitmap(m_pNormalBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+		if (m_pNormalBitmap)
+			BX2D->DrawBitmap(m_pNormalBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_HOVER)
 	{
-		if (m_pHoverBitmap != 0 && m_pHoverBitmap->Exists())
-			BLOX_2D->DrawBitmap(m_pHoverBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+		if (m_pHoverBitmap)
+			BX2D->DrawBitmap(m_pHoverBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DOWN)
 	{
-		if (m_pDownBitmap != 0 && m_pDownBitmap->Exists())
-			BLOX_2D->DrawBitmap(m_pDownBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+		if (m_pDownBitmap)
+			BX2D->DrawBitmap(m_pDownBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DEACTIVATED)
 	{
-		if (m_pDeactivatedBitmap != 0 && m_pDeactivatedBitmap->Exists())
-			BLOX_2D->DrawBitmap(m_pDeactivatedBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+		if (m_pDeactivatedBitmap)
+			BX2D->DrawBitmap(m_pDeactivatedBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DEACTIVATED_HOVER)
 	{
-		if (m_pDeactivatedHoverBitmap != 0 && m_pDeactivatedHoverBitmap->Exists())
-			BLOX_2D->DrawBitmap(m_pDeactivatedHoverBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+		if (m_pDeactivatedHoverBitmap)
+			BX2D->DrawBitmap(m_pDeactivatedHoverBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DEACTIVATED_DOWN)
 	{
-		if (m_pDeactivatedDownBitmap != 0 && m_pDeactivatedDownBitmap->Exists())
-			BLOX_2D->DrawBitmap(m_pDeactivatedDownBitmap,(int)m_Pos.x, (int)m_Pos.y, m_Opacity);
+		if (m_pDeactivatedDownBitmap)
+			BX2D->DrawBitmap(m_pDeactivatedDownBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 }
 
@@ -159,37 +159,37 @@ void Button::ShowHitRegion(bool fill)
 	if (fill)
 	{
 		D2D1_RECT_F rect = m_pHitRect->GetDimension();
-		BLOX_2D->FillRect(rect);
+		BX2D->FillRect(rect);
 	}
 	else
 	{
 		D2D1_RECT_F rect = m_pHitRect->GetDimension();
-		BLOX_2D->DrawRect(rect);
+		BX2D->DrawRect(rect);
 	}
 }
 
 // setters
-void Button::SetNormalState(Bitmap* normalState)
+void Button::SetNormalState(Image* normalState)
 {
 	m_pNormalBitmap = normalState;
 }
-void Button::SetHoverState(Bitmap* hoverState)
+void Button::SetHoverState(Image* hoverState)
 {
 	m_pHoverBitmap = hoverState;
 }
-void Button::SetDownState(Bitmap* downState)
+void Button::SetDownState(Image* downState)
 {
 	m_pDownBitmap = downState;
 }
-void Button::SetDeactivatedState(Bitmap* deacivatedState)
+void Button::SetDeactivatedState(Image* deacivatedState)
 {
 	m_pDeactivatedBitmap = deacivatedState;
 }
-void Button::SetDeactivatedStateHover(Bitmap* deactivatedHover)
+void Button::SetDeactivatedStateHover(Image* deactivatedHover)
 {
 	m_pDeactivatedHoverBitmap = deactivatedHover;
 }
-void Button::SetDeactivatedStateDown(Bitmap* deactivatedDown)
+void Button::SetDeactivatedStateDown(Image* deactivatedDown)
 {
 	m_pDeactivatedDownBitmap = deactivatedDown;
 }

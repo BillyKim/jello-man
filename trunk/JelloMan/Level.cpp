@@ -218,6 +218,14 @@ void Level::DrawForward(const RenderContext* pRenderContext)
 {
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
+
+	// DRAW LIGHTS
+	BX2D->SetAntiAliasing(true);
+	for (unsigned int i = 0; i < pRenderContext->GetLightController()->GetLights().size(); ++i)
+	{
+		m_pRenderContext->GetLightController()->GetLights()[i]->Draw(m_pRenderContext);
+	}
+	BX2D->SetAntiAliasing(false);
 }
 
 void Level::AddLevelObject(LevelObject* pLevelObject)

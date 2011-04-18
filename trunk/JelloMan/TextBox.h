@@ -46,7 +46,7 @@ public:
 
 	void LoseFocus() const
 	{
-		SetFocus(BLOX_2D->GetWindowHandle());
+		SetFocus(BX2D->GetWindowHandle());
 	}
 
 private:

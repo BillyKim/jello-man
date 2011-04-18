@@ -42,12 +42,12 @@ public:
 	void Show();
 
 	// setters
-	void SetNormalState(Bitmap* normalState);
-	void SetHoverState(Bitmap* hoverState);
-	void SetDownState(Bitmap* downState);
-	void SetDeactivatedState(Bitmap* deacivatedState);
-	void SetDeactivatedStateHover(Bitmap* deactivatedHover);
-	void SetDeactivatedStateDown(Bitmap* deactivatedDown);
+	void SetNormalState(Image* normalState);
+	void SetHoverState(Image* hoverState);
+	void SetDownState(Image* downState);
+	void SetDeactivatedState(Image* deacivatedState);
+	void SetDeactivatedStateHover(Image* deactivatedHover);
+	void SetDeactivatedStateDown(Image* deactivatedDown);
 	void SetState(BUTTON_STATE state);
 	void SetMode(BUTTON_MODE mode);
 	void SetPosition(int x, int y);
@@ -71,12 +71,12 @@ public:
 	{ return m_pHitRect; }
 
 private:
-	Bitmap* m_pNormalBitmap;
-	Bitmap* m_pHoverBitmap;
-	Bitmap* m_pDownBitmap;
-	Bitmap* m_pDeactivatedBitmap;
-	Bitmap* m_pDeactivatedHoverBitmap;
-	Bitmap* m_pDeactivatedDownBitmap;
+	Image* m_pNormalBitmap;
+	Image* m_pHoverBitmap;
+	Image* m_pDownBitmap;
+	Image* m_pDeactivatedBitmap;
+	Image* m_pDeactivatedHoverBitmap;
+	Image* m_pDeactivatedDownBitmap;
 
 	D2D1_SIZE_F m_Size;
 	D2D1_POINT_2F m_Pos;

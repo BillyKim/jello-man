@@ -9,7 +9,7 @@
 TextBox::TextBox(tstring const& text) : m_x(0), m_y(0), m_BgColor(RGB(255, 255, 255)), m_ForeColor(RGB(0, 0, 0)), m_BgColorBrush(0), m_Font(0), m_OldFont(0), m_bEntered(false)
 {
 	// Create the edit box
-	m_hWndEdit = CreateWindow(_T("EDIT"), text.c_str(), WS_BORDER | WS_CHILD | WS_CLIPSIBLINGS | WS_TABSTOP | ES_LEFT | ES_AUTOHSCROLL, 0, 0, 0, 0, BLOX_2D->GetWindowHandle(), NULL, BLOX_2D->GetWindowInstance(), NULL);
+	m_hWndEdit = CreateWindow(_T("EDIT"), text.c_str(), WS_BORDER | WS_CHILD | WS_CLIPSIBLINGS | WS_TABSTOP | ES_LEFT | ES_AUTOHSCROLL, 0, 0, 0, 0, BX2D->GetWindowHandle(), NULL, BX2D->GetWindowInstance(), NULL);
 
 	// Set de nieuwe WNDPROC voor de edit box, en houd de oude bij 
 	m_procOldEdit = (WNDPROC) SetWindowLong(m_hWndEdit, GWL_WNDPROC, (LONG) EditProcStatic);
@@ -21,7 +21,7 @@ TextBox::TextBox(tstring const& text) : m_x(0), m_y(0), m_BgColor(RGB(255, 255, 
 TextBox::TextBox() : m_x(0), m_y(0), m_BgColor(RGB(255, 255, 255)), m_ForeColor(RGB(0, 0, 0)), m_BgColorBrush(0), m_Font(0), m_OldFont(0), m_bEntered(false)
 {
 	// Create the edit box
-	m_hWndEdit = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_CLIPSIBLINGS | WS_TABSTOP | ES_LEFT | ES_AUTOHSCROLL, 0, 0, 0, 0, BLOX_2D->GetWindowHandle(), NULL, BLOX_2D->GetWindowInstance(), NULL);
+	m_hWndEdit = CreateWindow(_T("EDIT"), _T(""), WS_BORDER | WS_CHILD | WS_CLIPSIBLINGS | WS_TABSTOP | ES_LEFT | ES_AUTOHSCROLL, 0, 0, 0, 0, BX2D->GetWindowHandle(), NULL, BX2D->GetWindowInstance(), NULL);
 
 	// Set de nieuwe WNDPROC voor de edit box, en houd de oude bij 
 	m_procOldEdit = (WNDPROC) SetWindowLong(m_hWndEdit, GWL_WNDPROC, (LONG) EditProcStatic);

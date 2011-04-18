@@ -1,6 +1,8 @@
 #pragma once
 #include "Light.h"
 #include "LightDesc.h"
+#include "Model.h"
+#include "PosColEffect.h"
 
 class PointLight : public Light
 {
@@ -57,6 +59,10 @@ public:
     //this method should delete and init the lightbehaviour
     virtual void SetBehaviour(LightBehaviour* lightBehaviour);
 
+	// EDITOR
+	HitRegion* GetHitRegion() const
+	{ return m_pHitRegion; }
+
 private:
 	bool m_IsEnabled;
 	bool m_IsSelected;
@@ -65,5 +71,12 @@ private:
 	PointLightDesc m_StartDesc;
 
     LightBehaviour* m_pLightBehaviour;
+
+	HitRegion* m_pHitRegion;
+
+	Image* m_pPointLightImage;
+	
+	Model<VertexPosCol>* m_pAttenuationSpline;
+	PosColEffect* m_pEffect;
 };
 

@@ -2,7 +2,7 @@
 #include "LightDesc.h"
 #include "PointLight.h"
 #include "SpotLight.h"
-
+#include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 EditorGUI::EditorGUI(PhysX* pPhysXEngine)	:	m_pLightButton(0),
@@ -32,7 +32,8 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine)	:	m_pLightButton(0),
 												m_bNewModelLoaded(false),
 												m_pShowGridButton(0),
 												m_pModelDebugger(0),
-												m_pPhysXEngine(pPhysXEngine)
+												m_pPhysXEngine(pPhysXEngine),
+												m_pLevelObjects(0)
 {
 
 }
@@ -40,52 +41,17 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine)	:	m_pLightButton(0),
 EditorGUI::~EditorGUI()
 {
 	delete m_pLightButton;
-	for (vector<Bitmap*>::iterator it = m_pLightButtonBitmaps.begin(); it != m_pLightButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pMoveButton;
-	for (vector<Bitmap*>::iterator it = m_pMoveButtonBitmaps.begin(); it != m_pMoveButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pGameModeButton;
-	for (vector<Bitmap*>::iterator it = m_pGameModeButtonBitmaps.begin(); it != m_pGameModeButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pEditorModeButton;
-	for (vector<Bitmap*>::iterator it = m_pEditorModeButtonBitmaps.begin(); it != m_pEditorModeButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pPointlightButton;
-	for (vector<Bitmap*>::iterator it = m_pPointlightButtonBitmaps.begin(); it != m_pPointlightButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pSpotlightButton;
-	for (vector<Bitmap*>::iterator it = m_pSpotlightButtonBitmaps.begin(); it != m_pSpotlightButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pColorPickerButton;
-	for (vector<Bitmap*>::iterator it = m_pColorPickerButtonBitmaps.begin(); it != m_pColorPickerButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pApplyButton;
-	for (vector<Bitmap*>::iterator it = m_pApplyButtonBitmaps.begin(); it != m_pApplyButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pRotateButton;
-	for (vector<Bitmap*>::iterator it = m_pRotateButtonBitmaps.begin(); it != m_pRotateButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pPlayModeButton;
-	for (vector<Bitmap*>::iterator it = m_pPlayModeButtonBitmaps.begin(); it != m_pPlayModeButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pLoadModelButton;
-	for (vector<Bitmap*>::iterator it = m_pLoadModelButtonBitmaps.begin(); it != m_pLoadModelButtonBitmaps.end(); ++it)
-		delete (*it);
-
 	delete m_pShowGridButton;
-	for (vector<Bitmap*>::iterator it = m_pShowGridButtonBitmaps.begin(); it != m_pShowGridButtonBitmaps.end(); ++it)
-		delete (*it);
 
 	delete m_pCameraBitmap;
 	delete m_pLightDebugger;
@@ -102,10 +68,10 @@ void EditorGUI::Initialize()
 	// LIGHT BUTTON
 	m_pLightButton = new Button(60,7,36,36,true);
 
-	m_pLightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/lights_on_normal.png")));
-	m_pLightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/lights_on_hover.png")));
-	m_pLightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/lights_off_normal.png")));
-	m_pLightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/lights_off_hover.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_on_normal.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_on_hover.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_off_normal.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_off_hover.png")));
 
 	m_pLightButton->SetNormalState(m_pLightButtonBitmaps[0]);
 	m_pLightButton->SetHoverState(m_pLightButtonBitmaps[1]);
@@ -117,10 +83,10 @@ void EditorGUI::Initialize()
 	// MOVE BUTTON
 	m_pMoveButton = new Button(120,7,36,36,true);
 
-	m_pMoveButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/move_on_normal.png")));
-	m_pMoveButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/move_on_hover.png")));
-	m_pMoveButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/move_off_normal.png")));
-	m_pMoveButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/move_off_hover.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_on_normal.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_on_hover.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_off_normal.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_off_hover.png")));
 
 	m_pMoveButton->SetNormalState(m_pMoveButtonBitmaps[0]);
 	m_pMoveButton->SetHoverState(m_pMoveButtonBitmaps[1]);
@@ -134,8 +100,8 @@ void EditorGUI::Initialize()
 	// GAME MODE BUTTON
 	m_pGameModeButton = new Button(20,7,36,36);
 
-	m_pGameModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/game_mode_normal.png")));
-	m_pGameModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/game_mode_hover.png")));
+	m_pGameModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/game_mode_normal.png")));
+	m_pGameModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/game_mode_hover.png")));
 
 	m_pGameModeButton->SetNormalState(m_pGameModeButtonBitmaps[0]);
 	m_pGameModeButton->SetHoverState(m_pGameModeButtonBitmaps[1]);
@@ -144,8 +110,8 @@ void EditorGUI::Initialize()
 	// EDITOR MODE BUTTON
 	m_pEditorModeButton = new Button(20,43,36,36);
 
-	m_pEditorModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/editor_mode_normal.png")));
-	m_pEditorModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/editor_mode_hover.png")));
+	m_pEditorModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/editor_mode_normal.png")));
+	m_pEditorModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/editor_mode_hover.png")));
 
 	m_pEditorModeButton->SetNormalState(m_pEditorModeButtonBitmaps[0]);
 	m_pEditorModeButton->SetHoverState(m_pEditorModeButtonBitmaps[1]);
@@ -154,8 +120,8 @@ void EditorGUI::Initialize()
 	// POINTLIGHT BUTTON
 	m_pPointlightButton = new Button(216,7,36,36);
 
-	m_pPointlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/pointlight_normal.png")));
-	m_pPointlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/pointlight_hover.png")));
+	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/pointlight_normal.png")));
+	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/pointlight_hover.png")));
 
 	m_pPointlightButton->SetNormalState(m_pPointlightButtonBitmaps[0]);
 	m_pPointlightButton->SetHoverState(m_pPointlightButtonBitmaps[1]);
@@ -164,8 +130,8 @@ void EditorGUI::Initialize()
 	// SPOTLIGHT BUTTON
 	m_pSpotlightButton = new Button(250,7,36,36);
 
-	m_pSpotlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/spotlight_normal.png")));
-	m_pSpotlightButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/spotlight_hover.png")));
+	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/spotlight_normal.png")));
+	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/spotlight_hover.png")));
 
 	m_pSpotlightButton->SetNormalState(m_pSpotlightButtonBitmaps[0]);
 	m_pSpotlightButton->SetHoverState(m_pSpotlightButtonBitmaps[1]);
@@ -174,8 +140,8 @@ void EditorGUI::Initialize()
 	// COLOR PICKER BUTTON
 	m_pColorPickerButton = new Button(100,217,36,36,true);
 
-	m_pColorPickerButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/colorpicker_normal.png")));
-	m_pColorPickerButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/colorpicker_hover.png")));
+	m_pColorPickerButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/colorpicker_normal.png")));
+	m_pColorPickerButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/colorpicker_hover.png")));
 
 	m_pColorPickerButton->SetNormalState(m_pColorPickerButtonBitmaps[0]);
 	m_pColorPickerButton->SetHoverState(m_pColorPickerButtonBitmaps[1]);
@@ -189,8 +155,8 @@ void EditorGUI::Initialize()
 	// APPLY BUTTON
 	m_pApplyButton = new Button((int)(210 + 360),(int)(60 + 220),36,36);
 
-	m_pApplyButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/apply_normal.png")));
-	m_pApplyButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/apply_hover.png")));
+	m_pApplyButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/apply_normal.png")));
+	m_pApplyButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/apply_hover.png")));
 
 	m_pApplyButton->SetNormalState(m_pApplyButtonBitmaps[0]);
 	m_pApplyButton->SetHoverState(m_pApplyButtonBitmaps[1]);
@@ -199,10 +165,10 @@ void EditorGUI::Initialize()
 	// ROTATE BUTTON
 	m_pRotateButton = new Button(155,7,36,36,true);
 
-	m_pRotateButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/rotate_on_normal.png")));
-	m_pRotateButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/rotate_on_hover.png")));
-	m_pRotateButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/rotate_off_normal.png")));
-	m_pRotateButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/rotate_off_hover.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_on_normal.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_on_hover.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_off_normal.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_off_hover.png")));
 
 	m_pRotateButton->SetNormalState(m_pRotateButtonBitmaps[0]);
 	m_pRotateButton->SetHoverState(m_pRotateButtonBitmaps[1]);
@@ -216,8 +182,8 @@ void EditorGUI::Initialize()
 	// PLAY MODE BUTTON
 	m_pPlayModeButton = new Button(20,79,36,36);
 	
-	m_pPlayModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/play_mode_normal.png")));
-	m_pPlayModeButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/play_mode_hover.png")));
+	m_pPlayModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/play_mode_normal.png")));
+	m_pPlayModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/play_mode_hover.png")));
 
 	m_pPlayModeButton->SetNormalState(m_pPlayModeButtonBitmaps[0]);
 	m_pPlayModeButton->SetHoverState(m_pPlayModeButtonBitmaps[1]);
@@ -226,8 +192,8 @@ void EditorGUI::Initialize()
 	// LOAD MODEL BUTTON
 	m_pLoadModelButton = new Button(310,7,36,36, true);
 
-	m_pLoadModelButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_model_normal.png")));
-	m_pLoadModelButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_model_hover.png")));
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_model_normal.png")));
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_model_hover.png")));
 
 	m_pLoadModelButton->SetNormalState(m_pLoadModelButtonBitmaps[0]);
 	m_pLoadModelButton->SetHoverState(m_pLoadModelButtonBitmaps[1]);
@@ -242,10 +208,10 @@ void EditorGUI::Initialize()
 	// SHOW GRID BUTTON
 	m_pShowGridButton = new Button(370,7,36,36,true);
 
-	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_on_normal.png")));
-	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_on_hover.png")));
-	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_off_normal.png")));
-	m_pShowGridButtonBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/grid_off_hover.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_on_normal.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_on_hover.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_off_normal.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_off_hover.png")));
 
 	m_pShowGridButton->SetNormalState(m_pShowGridButtonBitmaps[0]);
 	m_pShowGridButton->SetHoverState(m_pShowGridButtonBitmaps[1]);
@@ -258,7 +224,7 @@ void EditorGUI::Initialize()
 	m_pShowGridButton->SetState(Button::STATE_NORMAL);
 
 	// CAMERA
-	m_pCameraBitmap = new Bitmap(_T("Content/Images/Editor/camera.png"));
+	m_pCameraBitmap = Content->LoadImage(_T("Content/Images/Editor/camera.png"));
 
 	// LIGHT DEBUGGER
 	m_pLightDebugger = new VisualLightDebugger();
@@ -276,10 +242,13 @@ void EditorGUI::Initialize()
 
 	// MODEL DEBUGGER
 	m_pModelDebugger = new VisualModelDebugger(m_pPhysXEngine);
+
+	// FONT
+	m_pInfoFont = Content->LoadTextFormat(_T("Verdana"),10,false,false);
 }
 void EditorGUI::Draw()
 {
-	BLOX_2D->SetAntiAliasing(false);
+	BX2D->SetAntiAliasing(false);
 
 	if (m_Mode == MODE_EDITOR)
 	{
@@ -292,63 +261,72 @@ void EditorGUI::Draw()
 		
 		m_pLightDebugger->Draw();
 
-		BLOX_2D->SetAntiAliasing(true);
+		BX2D->SetAntiAliasing(true);
 
 		// MOVE GIZMO
-        //TODO
-		/*for (unsigned int i = 0; i < m_pLightDebugger->GetSpotLightsSelected().size(); ++i)
+		for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
 		{
-			if (m_pLightDebugger->GetSpotLightsSelected()[i] == true)
+			if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
 			{
-				if (m_bMoveable)
-					m_pMoveGizmo->Show(m_pRenderContext->GetLightController()->GetSpotLights()[i].position,MoveGizmo::TYPE_SPOTLIGHT,i);
-				else if (m_bRotateable)
-					m_pRotateGizmo->Show(m_pRenderContext->GetLightController()->GetSpotLights()[i].position,RotateGizmo::TYPE_SPOTLIGHT,i);
+				if (m_pRenderContext->GetLightController()->GetLights()[i]->GetType() == LightType_Point)
+				{
+					PointLight* pPLight = dynamic_cast<PointLight*>(m_pRenderContext->GetLightController()->GetLights()[i]);
+					PointLightDesc& PLDesc = const_cast<PointLightDesc&>(pPLight->GetDesc());
+
+					if (m_bMoveable)
+						m_pMoveGizmo->Show(PLDesc.position,MoveGizmo::TYPE_POINTLIGHT,i);
+				}
+				else if (m_pRenderContext->GetLightController()->GetLights()[i]->GetType() == LightType_Spot)
+				{
+					SpotLight* pSLight = dynamic_cast<SpotLight*>(m_pRenderContext->GetLightController()->GetLights()[i]);
+					SpotLightDesc& SLDesc = const_cast<SpotLightDesc&>(pSLight->GetDesc());
+
+					if (m_bMoveable)
+						m_pMoveGizmo->Show(SLDesc.position,MoveGizmo::TYPE_SPOTLIGHT,i);
+					else if (m_bRotateable)
+						m_pRotateGizmo->Show(SLDesc.position,SLDesc.direction, RotateGizmo::TYPE_SPOTLIGHT,i);
+				}
 			}
 		}
 
-		for (unsigned int i = 0; i < m_pLightDebugger->GetPointLightsSelected().size(); ++i)
+		for (unsigned int i = 0; i < m_pModelDebugger->GetModelsSelected().size(); ++i)
 		{
-			if (m_pLightDebugger->GetPointLightsSelected()[i] == true)
+			if (m_pModelDebugger->GetModelsSelected()[i] == true)
 			{
 				if (m_bMoveable)
-					m_pMoveGizmo->Show(m_pRenderContext->GetLightController()->GetPointLights()[i].position,MoveGizmo::TYPE_POINTLIGHT,i);
-				else if (m_bRotateable)
-					m_pRotateGizmo->Show(m_pRenderContext->GetLightController()->GetSpotLights()[i].position,RotateGizmo::TYPE_SPOTLIGHT,i);
+					m_pMoveGizmo->Show(Vector3(0,0,0), MoveGizmo::TYPE_MODEL, i, (*m_pLevelObjects)[i]);
 			}
-		}*/
+		}
 
-		BLOX_2D->SetAntiAliasing(false);
+		BX2D->SetAntiAliasing(false);
 	}
 	else
 	{
-		m_pLightDebugger->DeselectAll();
+		m_pLightDebugger->DeselectAllLights();
 		m_pLightDebugger->HideTextBoxes();
 	}
 
 	// BACKGROUND
-	BLOX_2D->SetColor(70, 70, 70);
-	BLOX_2D->FillRect(0, 0, static_cast<int>(BLOX_2D->GetWindowSize().width), 50);
+	BX2D->SetColor(70, 70, 70);
+	BX2D->FillRect(0, 0, BX2D->GetWindowSize().width, 50);
 
-	BLOX_2D->SetColor(90, 90, 90);
-	BLOX_2D->DrawLine(0, 50, static_cast<int>(BLOX_2D->GetWindowSize().width), 50);
+	BX2D->SetColor(90, 90, 90);
+	BX2D->DrawLine(0, 50, BX2D->GetWindowSize().width, 50);
 
-	BLOX_2D->SetColor(70, 70, 70);
-	BLOX_2D->FillRect(	0,
-						static_cast<int>(BLOX_2D->GetWindowSize().height) - 20,
-						static_cast<int>(BLOX_2D->GetWindowSize().width),
+	BX2D->SetColor(70, 70, 70);
+	BX2D->FillRect(	0,	BX2D->GetWindowSize().height - 20,
+						BX2D->GetWindowSize().width,
 						20);
 	
-	BLOX_2D->SetColor(90, 90, 90);
-	BLOX_2D->DrawLine(	0,
-						static_cast<int>(BLOX_2D->GetWindowSize().height) - 20,
-						static_cast<int>(BLOX_2D->GetWindowSize().width),
-						static_cast<int>(BLOX_2D->GetWindowSize().height) - 20);
+	BX2D->SetColor(90, 90, 90);
+	BX2D->DrawLine(	0,	BX2D->GetWindowSize().height - 20,
+						BX2D->GetWindowSize().width,
+						BX2D->GetWindowSize().height - 20);
 
 	if (m_Mode == MODE_EDITOR)
 	{
-		BLOX_2D->SetColor(70, 70, 70);
-		BLOX_2D->FillRect(0, 50, 200, static_cast<int>(BLOX_2D->GetWindowSize().height) - 71);
+		BX2D->SetColor(70, 70, 70);
+		BX2D->FillRect(0, 50, 200, BX2D->GetWindowSize().height - 71);
 
 		m_pLightDebugger->ShowLightInfo();
 
@@ -370,17 +348,17 @@ void EditorGUI::Draw()
 	m_pLightButton->Show();
 	if (m_pLightButton->Hover() || m_pMoveButton->Down())
 	{
-		BLOX_2D->SetColor(255, 255, 255, 0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Switch between lit and unlit mode."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255, 255, 255, 0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Switch between lit and unlit mode."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	m_pMoveButton->Show();
 	if (m_pMoveButton->Hover() || m_pMoveButton->Down())
 	{
-		BLOX_2D->SetColor(255, 255, 255, 0.5f);
-		BLOX_2D->SetFont(_T("Verdana"), false, false, 10);
-		BLOX_2D->DrawString(_T("Move objects and lights present in the scene."), 20, static_cast<int>(BLOX_2D->GetWindowSize().height) - 16);
+		BX2D->SetColor(255, 255, 255, 0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Move objects and lights present in the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	if (m_Mode == MODE_GAME)
@@ -506,25 +484,25 @@ void EditorGUI::Draw()
 
 	if (m_pEditorModeButton->Hover() || m_pEditorModeButton->Down() || m_pGameModeButton->Hover() || m_pGameModeButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Switch between game and editor mode."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Switch between game and editor mode."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	m_pPointlightButton->Show();
 	if (m_pPointlightButton->Hover() || m_pPointlightButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Add a pointlight to the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Add a pointlight to the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	m_pSpotlightButton->Show();
 	if (m_pSpotlightButton->Hover() || m_pSpotlightButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Add a spotlight to the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Add a spotlight to the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
@@ -532,45 +510,45 @@ void EditorGUI::Draw()
 
 	if (m_pColorPickerButton->Hover() || m_pColorPickerButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Change the color of the selected light."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Change the color of the selected light."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	m_pRotateButton->Show();
 	if (m_pRotateButton->Hover() || m_pRotateButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Move objects and lights present in the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Move objects and lights present in the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	if (m_pPlayModeButton->Hover() || m_pPlayModeButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Play and interact with the objects in the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Play and interact with the objects in the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	m_pLoadModelButton->Show();
 	if (m_pLoadModelButton->Hover() || m_pLoadModelButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Load new model from file and place it into the scene."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Load new model from file and place it into the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	m_pShowGridButton->Show();
 	if (m_pShowGridButton->Hover() || m_pShowGridButton->Down())
 	{
-		BLOX_2D->SetColor(255,255,255,0.5f);
-		BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-		BLOX_2D->DrawString(_T("Shows 3D ground grid."),20,static_cast<int>(BLOX_2D->GetWindowSize().height)-16);
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Shows 3D ground grid."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != MODE_PLAY)
-		BLOX_2D->DrawBitmap(m_pCameraBitmap,static_cast<int>(BLOX_2D->GetWindowSize().width-70),90,0.8f);
+		BX2D->DrawBitmap(m_pCameraBitmap, BX2D->GetWindowSize().width - 70, 90, true, 0.8f);
 	
 
 	if (m_Mode == MODE_EDITOR)
@@ -578,7 +556,7 @@ void EditorGUI::Draw()
 		m_pModelDebugger->Draw();
 	}
 
-	BLOX_2D->SetAntiAliasing(true);
+	BX2D->SetAntiAliasing(true);
 
 	if (m_pColorPickerButton->IsActive() && m_Mode == MODE_EDITOR)
 	{
@@ -587,41 +565,27 @@ void EditorGUI::Draw()
 			m_pApplyButton->Tick();
 		
             //TODO
-			/*for (unsigned int i = 0; i < m_pLightDebugger->GetPointLightsSelected().size(); ++i)
+			for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
 			{
-				if (m_pLightDebugger->GetPointLightsSelected()[i] == true)
+				if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
 				{
-					m_pColorPicker->Show(m_pRenderContext->GetLightController()->GetPointLights()[i].color);
-					
+					Color prevColor = m_pRenderContext->GetLightController()->GetLights()[i]->GetColor() * 255.0f;
+
+					m_pColorPicker->SetPreviousColor(prevColor);
+
 					if (m_pApplyButton->Clicked())
 					{
-						m_pRenderContext->GetLightController()->GetPointLights()[i].color.R = (float)(m_pColorPicker->GetCurrentColor().R / 255.0f);
-						m_pRenderContext->GetLightController()->GetPointLights()[i].color.G = (float)(m_pColorPicker->GetCurrentColor().G / 255.0f);
-						m_pRenderContext->GetLightController()->GetPointLights()[i].color.B = (float)(m_pColorPicker->GetCurrentColor().B / 255.0f);
+						m_pRenderContext->GetLightController()->GetLights()[i]->SetColor(m_pColorPicker->GetCurrentColor() / 255.0f);
 
 						m_pColorPicker->PreviousColorSet(false);
+
+						m_pColorPicker->SetPreviousColor(m_pColorPicker->GetCurrentColor());
 					}
 				}
 			}
 
-			for (unsigned int i = 0; i < m_pLightDebugger->GetSpotLightsSelected().size(); ++i)
-			{
-				if (m_pLightDebugger->GetSpotLightsSelected()[i] == true)
-				{
-					m_pColorPicker->Show(m_pRenderContext->GetLightController()->GetSpotLights()[i].color);
-					
-					if (m_pApplyButton->Clicked())
-					{
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].color.R = (float)(m_pColorPicker->GetCurrentColor().R / 255.0f);
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].color.G = (float)(m_pColorPicker->GetCurrentColor().G / 255.0f);
-						m_pRenderContext->GetLightController()->GetSpotLights()[i].color.B = (float)(m_pColorPicker->GetCurrentColor().B / 255.0f);
-
-						m_pColorPicker->PreviousColorSet(false);
-					}
-				}
-			}*/
-
-			m_pApplyButton->Show();	
+			m_pColorPicker->Show();
+			m_pApplyButton->Show();
 		}
 
 		if (m_pColorPickerButton->Clicked())
@@ -651,16 +615,9 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 
 	m_pLightDebugger->Tick(pRenderContext);
 	m_pMoveGizmo->Tick(pRenderContext, pLevelObjects);
-	m_pRotateGizmo->Tick(pRenderContext);
+	m_pRotateGizmo->Tick(pRenderContext, pLevelObjects);
 
-	for (unsigned int i = 0; i < m_pModelDebugger->GetModelsSelected().size(); ++i)
-	{
-		if (m_pModelDebugger->GetModelsSelected()[i] == true)
-		{
-			if (m_bMoveable)
-				m_pMoveGizmo->Show(Vector3(0,0,0), MoveGizmo::TYPE_MODEL, i, pLevelObjects[i]);
-		}
-	}
+	m_pLevelObjects = &pLevelObjects;
 
 	if (m_Mode == MODE_EDITOR)
 	{
@@ -684,9 +641,10 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 			pDesc.attenuationEnd = 200;
             
 			PointLight* pl = new PointLight(pDesc);
+			pl->InitEditor();
 			pRenderContext->GetLightController()->AddLight(pl);
 
-			m_pLightDebugger->DeselectAll();
+			m_pLightDebugger->DeselectAllLights();
 
 			cout << "Added pointlight\n";
 		}
@@ -711,10 +669,11 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& 
 			sDesc.power = 2;
 			sDesc.direction = Vector3(0.0f,-1.0f,0.0f);
 
-            /*SpotLight* sl = new SpotLight(sDesc);
-			pRenderContext->GetLightController()->AddLight(sl);*/
+            SpotLight* sl = new SpotLight(sDesc);
+			sl->InitEditor();
+			pRenderContext->GetLightController()->AddLight(sl);
 
-			m_pLightDebugger->DeselectAll();
+			m_pLightDebugger->DeselectAllLights();
 
 			cout << "Added spotlight\n";
 		}

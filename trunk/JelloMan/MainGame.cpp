@@ -28,7 +28,10 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pPostProcessor(0),
 							m_pEdgeDetectionEffect(0),
 							m_pRenderContext(0),
-                            m_pPreShadowEffect(0)
+                            m_pPreShadowEffect(0),
+							m_pDefaultFont(0),
+							m_pHappyFaceFont(0),
+							m_pLoadingResourcesFont(0)
 {
 
 }
@@ -67,34 +70,40 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 {
     Content->Init(pDXDevice);
 
+	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
+	BX2D->SetFont(m_pDefaultFont);
+
+	m_pLoadingResourcesFont = Content->LoadTextFormat(_T("Arial"), 30, true, false);
+	m_pHappyFaceFont = Content->LoadTextFormat(_T("Arial"),200,true,false);
+
 	// CAMERA
-	m_pEditorCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
-									static_cast<int>(BLOX_2D->GetWindowSize().height),
+	m_pEditorCamera = new Camera(	static_cast<int>(BX2D->GetWindowSize().width),
+									static_cast<int>(BX2D->GetWindowSize().height),
 									true	);
     m_pEditorCamera->LookAt(Vector3(-500, 300, -500), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	m_pEditorCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,0.1f,10000.0f);
+	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,10000.0f);
 
-	m_pTrackingCamera = new Camera(	static_cast<int>(BLOX_2D->GetWindowSize().width),
-									static_cast<int>(BLOX_2D->GetWindowSize().height),
+	m_pTrackingCamera = new Camera(	static_cast<int>(BX2D->GetWindowSize().width),
+									static_cast<int>(BX2D->GetWindowSize().height),
 									false	);
 	m_pTrackingCamera->LookAt(Vector3(-225, 115, -205), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	m_pTrackingCamera->SetLens(BLOX_2D->GetWindowSize().width/BLOX_2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
+	m_pTrackingCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
 
 	// RENDERERS
 	m_pDeferredRenderer = new DeferredRenderer(pDXDevice);
 	m_pForwardRenderer = new ForwardRenderer(pDXDevice);
 
 	m_pPostProcessor = new PostProcessor(	pDXDevice,
-											static_cast<int>(BLOX_2D->GetWindowSize().width),
-											static_cast<int>(BLOX_2D->GetWindowSize().height));
+											static_cast<int>(BX2D->GetWindowSize().width),
+											static_cast<int>(BX2D->GetWindowSize().height));
 	
 	m_pEdgeDetectionEffect = Content->LoadEffect<EdgeDetectionPostEffect>(_T("postEdgeDetection.fx"));
     m_pEdgeDetectionEffect->SetTechnique(0);
 
 	m_pPostProcessor->SetEffect(m_pEdgeDetectionEffect);
 
-	m_pDeferredRenderer->Init(	static_cast<int>(BLOX_2D->GetWindowSize().width),
-								static_cast<int>(BLOX_2D->GetWindowSize().height));
+	m_pDeferredRenderer->Init(	static_cast<int>(BX2D->GetWindowSize().width),
+								static_cast<int>(BX2D->GetWindowSize().height));
 	m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
 	
     m_pPreShadowEffect = Content->LoadEffect<PreShadowEffect>(_T("preShadowmapShader.fx"));
@@ -299,11 +308,11 @@ void MainGame::DrawScene()
 
 	m_pEditorGUI->Draw();
 
-	BLOX_2D->SetColor(255,255,255);
-	BLOX_2D->ShowFPS(m_dTtime,true,0.5f);
+	BX2D->SetColor(255,255,255);
+	BX2D->ShowFPS(m_dTtime,true,0.5f);
 
-	BLOX_2D->SetColor(255,255,255);
-	BLOX_2D->SetFont(_T("Arial"),true,false,12);
+	BX2D->SetColor(255,255,255);
+	BX2D->SetFont(m_pDefaultFont);
 
 	CONTROLS->ResetMouse();		
 }
@@ -312,8 +321,8 @@ void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
 {
 	if (m_bResourcesLoaded)
 	{
-		m_pDeferredRenderer->OnResized(	static_cast<int>(BLOX_2D->GetWindowSize().width),
-										static_cast<int>(BLOX_2D->GetWindowSize().height));
+		m_pDeferredRenderer->OnResized(	static_cast<int>(BX2D->GetWindowSize().width),
+										static_cast<int>(BX2D->GetWindowSize().height));
 	}
 }
 void MainGame::Release()
@@ -327,28 +336,30 @@ void MainGame::Release()
 
 void MainGame::LoadScreen()
 {
-	BLOX_2D->SetColor(ColorF(ColorF::CornflowerBlue));
-	BLOX_2D->FillBackGround();
+	BX2D->SetColor(ColorF(ColorF::CornflowerBlue));
+	BX2D->FillBackGround();
 
-	BLOX_2D->SetColor(ColorF(ColorF::LightGray));
-	BLOX_2D->DrawGrid(3,RectF(0,0,BLOX_2D->GetWindowSize().width,
-									BLOX_2D->GetWindowSize().height));
+	BX2D->SetColor(ColorF(ColorF::LightGray));
+	BX2D->DrawGrid(3,RectF(0,0,BX2D->GetWindowSize().width,
+									BX2D->GetWindowSize().height));
 
-	BLOX_2D->SetFont(_T("Arial"),true,false,30);
-	BLOX_2D->SetColor(0,0,0);
-	BLOX_2D->DrawString(_T("Loading Resources..."),RectF(10,0,BLOX_2D->GetWindowSize().width,
-																BLOX_2D->GetWindowSize().height-10),
-																Blox2D::HORIZONTAL_ALIGN_LEFT,
-																Blox2D::VERTICAL_ALIGN_BOTTOM);
+	/*BX2D->SetFont(m_pLoadingResourcesFont);
+	m_pLoadingResourcesFont->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
+	m_pLoadingResourcesFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_BOTTOM);
+	BX2D->SetColor(0,0,0);
+	BX2D->DrawString(_T("Loading Resources..."),RectF(10,0,	BX2D->GetWindowSize().width,
+															BX2D->GetWindowSize().height-10));*/
 
 	D2D1_MATRIX_3X2_F rot;
-	D2D1MakeRotateMatrix(90,Point2F(BLOX_2D->GetWindowSize().width/2,
-									BLOX_2D->GetWindowSize().height/2),&rot);
-	BLOX_2D->SetTransform(rot);
+	D2D1MakeRotateMatrix(90,Point2F(BX2D->GetWindowSize().width/2,
+									BX2D->GetWindowSize().height/2),&rot);
+	BX2D->SetTransform(rot);
 
-	BLOX_2D->SetColor(255,255,255);
-	BLOX_2D->SetFont(_T("Arial"),true,false,200);
-	BLOX_2D->DrawStringCentered(_T(":D"),-20);
+	BX2D->SetColor(255,255,255);
+	/*BX2D->SetFont(m_pHappyFaceFont);
+	m_pHappyFaceFont->SetHorizontalAlignment(TEXT_ALIGNMENT_CENTER);
+	m_pHappyFaceFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_MIDDLE);
+	BX2D->DrawStringCentered(_T(":D"),-20);*/
 
-	BLOX_2D->ResetTransform();
+	BX2D->ResetTransform();
 }

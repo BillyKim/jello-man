@@ -81,7 +81,6 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="BaseGrid.h" />
-    <ClInclude Include="Bitmap.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Blox2D_Engine.h" />
     <ClInclude Include="Button.h" />
@@ -109,6 +108,8 @@
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="AssetContainer.h" />
     <ClInclude Include="HitRegion.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelObject.h" />
     <ClInclude Include="Light.h" />
@@ -141,7 +142,9 @@
     <ClInclude Include="Softbody.h" />
     <ClInclude Include="SoftbodyMesh.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SplineLoader.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="TestObject.h" />
@@ -150,6 +153,8 @@
     <ClInclude Include="TestPhysXSphere.h" />
     <ClInclude Include="TestSoftbody.h" />
     <ClInclude Include="TextBox.h" />
+    <ClInclude Include="TextFormat.h" />
+    <ClInclude Include="TextFormatLoader.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Vector2.h" />
@@ -163,7 +168,6 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BaseGrid.cpp" />
-    <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="Blox2D.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -189,6 +193,8 @@
     <ClCompile Include="GameWinMain.cpp" />
     <ClCompile Include="AssetContainer.cpp" />
     <ClCompile Include="HitRegion.cpp" />
+    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelObject.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -221,7 +227,9 @@
     <ClCompile Include="Softbody.cpp" />
     <ClCompile Include="SoftbodyMesh.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SplineLoader.cpp" />
     <ClCompile Include="SpotLight.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="TestObject.cpp" />
@@ -230,6 +238,8 @@
     <ClCompile Include="TestPhysXSphere.cpp" />
     <ClCompile Include="TestSoftbody.cpp" />
     <ClCompile Include="TextBox.cpp" />
+    <ClCompile Include="TextFormat.cpp" />
+    <ClCompile Include="TextFormatLoader.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Vector2.cpp" />

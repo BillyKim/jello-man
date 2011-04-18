@@ -54,10 +54,12 @@ private:
 	Button* m_pbtnUseNormalMap;
 	Button* m_pbtnLoadModel;
 
-	vector<Bitmap*> m_LoadPathBitmaps;
-	vector<Bitmap*> m_LoadModelBitmaps;
-	vector<Bitmap*> m_UseNormalMapBitmaps;
+	vector<Image*> m_LoadPathBitmaps;
+	vector<Image*> m_LoadModelBitmaps;
+	vector<Image*> m_UseNormalMapBitmaps;
 
 	tstring m_WorkingDirectory;
+
+	TextFormat* m_pFont;
 };
 

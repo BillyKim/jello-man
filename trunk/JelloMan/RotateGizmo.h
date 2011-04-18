@@ -3,6 +3,7 @@
 #include "Blox2D_Engine.h"
 #include "Vector3.h"
 #include "RenderContext.h"
+#include "LevelObject.h"
 
 class RotateGizmo
 {
@@ -10,10 +11,9 @@ public:
 
 	enum TYPE
 	{
-		TYPE_POINTLIGHT = 0,
-		TYPE_SPOTLIGHT = 1,
-		TYPE_DIRECTIONALLIGHT = 2,
-		TYPE_MODEL = 3
+		TYPE_SPOTLIGHT = 0,
+		TYPE_DIRECTIONALLIGHT = 1,
+		TYPE_MODEL = 2
 	};
 
 	// CONSTRUCTOR - DESTRUCTOR
@@ -21,12 +21,23 @@ public:
 	virtual ~RotateGizmo();
 
 	// GENERAL
-	void Show(Vector3& position, TYPE type, int id);
-	void Tick(const RenderContext* pRenderContext);
+	void Show(Vector3& position, Vector3& direction, TYPE type, int id, LevelObject* pLevelObject = 0);
+	void Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects);
 
 private:
 
 	// DATAMEMBERS
 	const RenderContext* m_pRenderContext;
+
+	bool m_bLockXY;
+	bool m_bLockYZ;
+	bool m_bLockZX;
+
+	vector<D3DXVECTOR3> m_OldLightPos;
+	vector<D3DXVECTOR3> m_OldModelPos;
+
+	vector<Vector3> m_OldModelRot;
+
+	TextFormat* m_pAxisFont;
 };
 

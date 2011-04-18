@@ -1,5 +1,6 @@
 #include "SpotLight.h"
 #include "LightBehaviourNormal.h"
+#include "ContentManager.h"
 
 SpotLight::SpotLight():
 			m_Scale(1), 
@@ -11,7 +12,9 @@ SpotLight::SpotLight():
             m_pShadowCamera(0),
             m_OpeningsAngle(0.0f),
             m_vUp(0, 1, 0),
-            m_ShadowType(ShadowMapType_None)
+			m_pHitRegion(0),
+			m_pSpotLightImage(0),
+			m_ShadowMapType(ShadowMapType_None)
 {
     SetBehaviour(new LightBehaviourNormal());
 
@@ -23,12 +26,35 @@ SpotLight::SpotLight():
     m_Desc.position = Vector3(0, 0, 0);
     m_Desc.power = 1.0f;
     m_StartDesc = m_Desc;
+
+	m_pSpotLightImage = Content->LoadImage(_T("Content/Images/Editor/slight.png"));
+}
+SpotLight::SpotLight(const SpotLightDesc& desc):
+			m_Scale(1), 
+            m_Rotation(Matrix::Identity),
+			m_IsEnabled(true),
+			m_IsSelected(false),
+			m_ShadowMap(0),
+            m_pLightBehaviour(0),
+            m_pShadowCamera(0),
+            m_OpeningsAngle(0.0f),
+            m_vUp(0, 1, 0),
+			m_pHitRegion(0),
+			m_Desc(desc),
+			m_pSpotLightImage(0),
+			m_ShadowMapType(ShadowMapType_None)
+{
+	SetBehaviour(new LightBehaviourNormal());
+	m_StartDesc = m_Desc;
+
+	m_pSpotLightImage = Content->LoadImage(_T("Content/Images/Editor/slight.png"));
 }
 SpotLight::~SpotLight()
 {
 	delete m_ShadowMap;
     delete m_pLightBehaviour;
     delete m_pShadowCamera;
+	delete m_pHitRegion;
 }
 
 void SpotLight::InitGame()
@@ -46,6 +72,75 @@ void SpotLight::Tick(float dTime)
 }
 void SpotLight::Draw(const RenderContext* rc)
 {
+	D3DXMATRIX matProj = rc->GetCamera()->GetProjection();
+	D3DXMATRIX matView = rc->GetCamera()->GetView();
+
+	D3DXMATRIX matIdent;
+	D3DXMatrixIdentity(&matIdent);
+
+	Vector3 vLook = rc->GetCamera()->GetLook();
+	Vector3 vRight = rc->GetCamera()->GetRight();
+
+	D3D10_VIEWPORT viewP;
+	viewP.TopLeftX = 0;
+	viewP.TopLeftY = 0;
+	viewP.Width = (UINT)BX2D->GetWindowSize().width;
+	viewP.Height = (UINT)BX2D->GetWindowSize().height;
+	viewP.MinDepth = 0.0f;
+	viewP.MaxDepth = 1.0f;
+
+	int size = 10;
+	
+	// VIEWPORT PROJECTION
+	D3DXVECTOR3 pos = D3DXVECTOR3(m_Desc.position.X, m_Desc.position.Y, m_Desc.position.Z);
+	
+	Vector3 length = rc->GetCamera()->GetPosition() - Vector3(pos);
+	float l = length.Length();
+	l *= 0.001f;
+
+	D3DXVECTOR3 pos2D;
+	D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
+
+	// HITRECT
+	SafeDelete(m_pHitRegion);
+
+	/*if (pos2D.x > 0 && pos2D.x < BX2D->GetWindowSize().width && pos2D.y > 0 && pos2D.y < BX2D->GetWindowSize().height)
+	{*/
+		m_pHitRegion = new HitRegion(	
+			HitRegion::TYPE_ELLIPSE,
+			pos2D.x,
+			pos2D.y, 
+			size / l,
+			size / l);
+	//}
+
+	if (vLook.Dot(length) < 0)
+	{
+		// DRAW
+		if (m_pHitRegion->HitTest(CONTROLS->GetMousePos()) || m_IsSelected)
+		{
+			BX2D->SetColor(255,255,255);
+			BX2D->FillEllipse(pos2D.x, pos2D.y, size / l, size / l);
+			BX2D->SetColor(30,30,30);
+			BX2D->DrawEllipse(pos2D.x, pos2D.y, size / l, size / l, 2.0f / l);
+		}
+		else
+		{
+			BX2D->SetColor(static_cast<int>(m_Desc.color.R * 255), static_cast<int>(m_Desc.color.G * 255), static_cast<int>(m_Desc.color.B * 255));
+			BX2D->FillEllipse(pos2D.x, pos2D.y, size / l, size / l);
+			BX2D->SetColor(230,230,230);
+			BX2D->DrawEllipse(pos2D.x, pos2D.y, size / l, size / l, 2.0f / l);
+		}
+
+		BX2D->DrawBitmap(
+			m_pSpotLightImage,
+			pos2D.x - (m_pSpotLightImage->GetDimensions().width / (16 * l)),
+			pos2D.y - (m_pSpotLightImage->GetDimensions().height / (16 * l)),
+			false,
+			1.0f,
+			m_pSpotLightImage->GetDimensions().width / (8 * l),
+			m_pSpotLightImage->GetDimensions().height / (8 * l));
+	}
 }
 
 void SpotLight::Translate(const Vector3& add)
@@ -116,7 +211,7 @@ Camera* SpotLight::GetShadowCamera() const
 }
 ShadowMapType SpotLight::GetShadowMapType() const
 {
-    return m_ShadowType;
+    return m_ShadowMapType;
 }
 void SpotLight::SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type)
 {
@@ -125,7 +220,7 @@ void SpotLight::SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type)
     delete m_pShadowCamera;
     m_pShadowCamera = 0;
 
-    m_ShadowType = type;
+    m_ShadowMapType = type;
 
 	if (type != ShadowMapType_None)
 	{
@@ -136,6 +231,8 @@ void SpotLight::SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type)
         UpdateShadowCameraProjection();
         UpdateShadowCameraView();
 	}
+
+	m_ShadowMapType = type;
 }
 
 void SpotLight::UpdateShadowCameraView()
@@ -222,6 +319,16 @@ void SpotLight::SetOpeningsAngle(float rad)
 void SpotLight::AddOpeningsAngle(float rad)
 {
 	SetOpeningsAngle(-m_OpeningsAngle + rad);
+}
+
+void SpotLight::SetPower(float power)
+{
+	m_Desc.power = power;
+}
+
+float SpotLight::GetPower() const
+{
+	return m_Desc.power;
 }
 
 const SpotLightDesc& SpotLight::GetDesc() const

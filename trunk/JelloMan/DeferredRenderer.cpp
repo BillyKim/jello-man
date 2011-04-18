@@ -260,8 +260,8 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 
             D3D10_RECT scissorRect = pLight->CalcScissorRect(pRenderContext->GetCamera(), m_Viewport.Width, m_Viewport.Height);
             //Calc scissor rect
-		    BLOX_2D->SetColor(255,255,255,1.0f);
-		    BLOX_2D->DrawRect(scissorRect.left, scissorRect.top, scissorRect.right - scissorRect.left, scissorRect.bottom - scissorRect.top, 1.0f);
+		    BX2D->SetColor(255,255,255,1.0f);
+		    BX2D->DrawRect((float)scissorRect.left, (float)scissorRect.top, (float)(scissorRect.right - scissorRect.left), (float)(scissorRect.bottom - scissorRect.top), 1.0f);
 		    m_pDevice->RSSetScissorRects(1, &scissorRect);
 
 			m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0);	

@@ -1,28 +1,28 @@
 #include "ColorPicker.h"
+#include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 ColorPicker::ColorPicker()	:	m_bPreviousColorSet(false),
-								m_Hue(0)
+								m_Hue(0),
+								m_pFont(0)
 {
 	m_PreviousColor = Vector3(0.0f,0.0f,0.0f);
 	m_CurrentColor = Vector3(0.0f,0.0f,0.0f);
 	m_ColorPickerPos = Point2F(210.0f,60.0f);
 	m_HueColor = Vector3(255.0f,0.0f,0.0f);
 	m_ColorPickerSelectPos = Point2F(0.0f,0.0f);
+
+	m_pFont = Content->LoadTextFormat(_T("Verdana"),10,false,false);
 }
 
 ColorPicker::~ColorPicker()
 {
 }
 
-void ColorPicker::Show(Color& color)
+void ColorPicker::Show()
 {
 	if (!m_bPreviousColorSet)
 	{
-		m_PreviousColor.R = (color.R * 255);
-		m_PreviousColor.G = (color.G * 255);
-		m_PreviousColor.B = (color.B * 255);
-
 		m_CurrentColor = m_PreviousColor;
 
 		float *h,*s, *v;
@@ -30,7 +30,7 @@ void ColorPicker::Show(Color& color)
 		s = new float(0.0f);
 		v = new float(0.0f);
 
-		RGBtoHSV(color.R, color.G, color.B, h, s, v);
+		RGBtoHSV(m_CurrentColor.R / 255.0f, m_CurrentColor.G / 255.0f, m_CurrentColor.B / 255.0f, h, s, v);
 
 		m_HueColor.R = GetHue((int)((255 - ((*h / 360) * 255)))).X;
 		m_HueColor.G = GetHue((int)((255 - ((*h / 360) * 255)))).Y;
@@ -48,17 +48,17 @@ void ColorPicker::Show(Color& color)
 	}
 
 	// DRAW
-	BLOX_2D->SetAntiAliasing(false);
+	BX2D->SetAntiAliasing(false);
 
-	BLOX_2D->SetColor(43, 43, 43);
-	BLOX_2D->FillRect((int)(m_ColorPickerPos.x - 5), (int)(m_ColorPickerPos.y - 5), 405, 265);
-	BLOX_2D->SetColor(120, 120, 120);
-	BLOX_2D->DrawRect((int)(m_ColorPickerPos.x - 5), (int)(m_ColorPickerPos.y - 5), 405, 265);
+	BX2D->SetColor(43, 43, 43);
+	BX2D->FillRect(m_ColorPickerPos.x - 5, m_ColorPickerPos.y - 5, 405, 265);
+	BX2D->SetColor(120, 120, 120);
+	BX2D->DrawRect(m_ColorPickerPos.x - 5, m_ColorPickerPos.y - 5, 405, 265);
 
 	HitRegion hHitRect(
 		HitRegion::TYPE_RECTANGLE,
-		(int)(m_ColorPickerPos.x + 280),
-		(int)(m_ColorPickerPos.y + 1),
+		m_ColorPickerPos.x + 280,
+		m_ColorPickerPos.y + 1,
 		20,
 		255);
 
@@ -75,13 +75,13 @@ void ColorPicker::Show(Color& color)
 		m_CurrentColor = rgb;
 	}
 
-	BLOX_2D->SetColor((int)m_HueColor.R, (int)m_HueColor.G, (int)m_HueColor.B);
-	BLOX_2D->FillRect((int)m_ColorPickerPos.x,(int)m_ColorPickerPos.y,255,255);
+	BX2D->SetColor((int)m_HueColor.R, (int)m_HueColor.G, (int)m_HueColor.B);
+	BX2D->FillRect(m_ColorPickerPos.x,m_ColorPickerPos.y,255,255);
 
 	HitRegion cHitRect(
 		HitRegion::TYPE_RECTANGLE,
-		(int)m_ColorPickerPos.x,
-		(int)m_ColorPickerPos.y,
+		m_ColorPickerPos.x,
+		m_ColorPickerPos.y,
 		255,
 		255);
 
@@ -96,35 +96,35 @@ void ColorPicker::Show(Color& color)
 
 	for (int i = 0; i < 255; ++i)
 	{
-		BLOX_2D->SetColor(255,255,255,(255-i)/255.0f);
+		BX2D->SetColor(255,255,255,(255-i)/255.0f);
 
-		BLOX_2D->DrawLine((int)(m_ColorPickerPos.x+1+i),(int)m_ColorPickerPos.y,(int)(m_ColorPickerPos.x+1+i),(int)(m_ColorPickerPos.y+255));
+		BX2D->DrawLine(m_ColorPickerPos.x + 1 + i, m_ColorPickerPos.y, m_ColorPickerPos.x + 1 + i, m_ColorPickerPos.y + 255);
 	}
 
 	for (int i = 0; i < 255; ++i)
 	{
-		BLOX_2D->SetColor(0,0,0,i/255.0f);
+		BX2D->SetColor(0,0,0,i/255.0f);
 
-		BLOX_2D->DrawLine((int)m_ColorPickerPos.x,(int)(m_ColorPickerPos.y+i+1),(int)(m_ColorPickerPos.x+255),(int)(m_ColorPickerPos.y+i+1));
+		BX2D->DrawLine(m_ColorPickerPos.x, m_ColorPickerPos.y + i + 1, m_ColorPickerPos.x + 255, m_ColorPickerPos.y + i + 1);
 	}
 
 	for (int i = 0; i < 255; ++i)
 	{
-		BLOX_2D->SetColor((int)GetHue(i).X,(int)GetHue(i).Y,(int)GetHue(i).Z);
+		BX2D->SetColor((int)GetHue(i).X,(int)GetHue(i).Y,(int)GetHue(i).Z);
 
-		BLOX_2D->DrawLine((int)(m_ColorPickerPos.x+280),(int)(m_ColorPickerPos.y+i+1),(int)(m_ColorPickerPos.x+300),(int)(m_ColorPickerPos.y+i+1));
+		BX2D->DrawLine(m_ColorPickerPos.x + 280, m_ColorPickerPos.y + i + 1, m_ColorPickerPos.x + 300, m_ColorPickerPos.y + i + 1);
 	}
 
-	BLOX_2D->SetColor((int)m_PreviousColor.R, (int)m_PreviousColor.G, (int)m_PreviousColor.B);
-	BLOX_2D->FillRect((int)(m_ColorPickerPos.x+310),(int)(m_ColorPickerPos.y),80,40);
+	BX2D->SetColor((int)m_PreviousColor.R, (int)m_PreviousColor.G, (int)m_PreviousColor.B);
+	BX2D->FillRect(m_ColorPickerPos.x + 310, m_ColorPickerPos.y, 80, 40);
 
-	BLOX_2D->SetColor((int)m_CurrentColor.R, (int)m_CurrentColor.G, (int)m_CurrentColor.B);
-	BLOX_2D->FillRect((int)(m_ColorPickerPos.x+310),(int)(m_ColorPickerPos.y+45),80,40);
+	BX2D->SetColor((int)m_CurrentColor.R, (int)m_CurrentColor.G, (int)m_CurrentColor.B);
+	BX2D->FillRect(m_ColorPickerPos.x + 310, m_ColorPickerPos.y + 45, 80, 40);
 
-	BLOX_2D->SetColor(255,255,255);
-	BLOX_2D->DrawEllipse((int)m_ColorPickerSelectPos.x,(int)m_ColorPickerSelectPos.y,5,5);
-	BLOX_2D->SetColor(0,0,0);
-	BLOX_2D->DrawEllipse((int)m_ColorPickerSelectPos.x,(int)m_ColorPickerSelectPos.y,6,6);
+	BX2D->SetColor(255,255,255);
+	BX2D->DrawEllipse(m_ColorPickerSelectPos.x, m_ColorPickerSelectPos.y, 5, 5);
+	BX2D->SetColor(0,0,0);
+	BX2D->DrawEllipse(m_ColorPickerSelectPos.x, m_ColorPickerSelectPos.y, 6, 6);
 
 	D2D1_POINT_2F r[4];
 	r[0].x = m_ColorPickerPos.x+273;
@@ -136,18 +136,18 @@ void ColorPicker::Show(Color& color)
 	r[3].x = m_ColorPickerPos.x+273;
 	r[3].y = ((255-((m_Hue/360.0f)*255))+m_ColorPickerPos.y-1-5);
 
-	BLOX_2D->SetColor(255,255,255);
-	BLOX_2D->FillPolygon(r,4);
+	BX2D->SetColor(255,255,255);
+	BX2D->FillPolygon(r,4);
 
 	tstringstream strm;
 	strm << _T("R: ") << (int)m_CurrentColor.R << _T("\n");
 	strm << _T("G: ") << (int)m_CurrentColor.G << _T("\n");
 	strm << _T("B: ") << (int)m_CurrentColor.B << _T("\n");
 	
-	BLOX_2D->SetFont(_T("Verdana"),false,false,10);
-	BLOX_2D->DrawString(strm.str(),(int)(m_ColorPickerPos.x+310),(int)(m_ColorPickerPos.y+90));
+	BX2D->SetFont(m_pFont);
+	BX2D->DrawString(strm.str(), m_ColorPickerPos.x + 310, m_ColorPickerPos.y + 90);
 
-	BLOX_2D->SetAntiAliasing(true);
+	BX2D->SetAntiAliasing(true);
 }
 
 Vector3 ColorPicker::GetHue(int i)

@@ -90,9 +90,6 @@ private:
 	// Direct2D
 	ID2D1Factory* m_pD2DFactory;
     ID2D1RenderTarget* m_pBackBufferRT;
-	ID2D1SolidColorBrush* m_pColorBrush;
-	IDWriteFactory* m_pDWriteFactory;
-	IDWriteTextFormat* m_pTextFormat;
 
 	GameConfig* m_pGameConfig;
 
