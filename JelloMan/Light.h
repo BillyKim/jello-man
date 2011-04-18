@@ -5,6 +5,7 @@
 #include "Color.h"
 #include "LightBehaviour.h"
 #include "Camera.h"
+#include "Blox2D_Engine.h"
 
 //
 //Percentage close filtering
@@ -74,5 +75,8 @@ public:
 
     //this method should delete and init the lightbehaviour
     virtual void SetBehaviour(LightBehaviour* lightBehaviour) = 0;
+
+	// EDITOR
+	virtual HitRegion* GetHitRegion() const = 0;
 };
 

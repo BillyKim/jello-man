@@ -35,10 +35,11 @@ private:
 	bool m_bLockY;
 	bool m_bLockZ;
 
-	vector<D3DXVECTOR3> m_OldPointLightPos;
-	vector<D3DXVECTOR3> m_OldSpotLightPos;
+	vector<D3DXVECTOR3> m_OldLightPos;
 	vector<D3DXVECTOR3> m_OldModelPos;
 
 	const RenderContext* m_pRenderContext;
+
+	TextFormat* m_pAxisFont;
 };
 

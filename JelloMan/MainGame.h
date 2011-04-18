@@ -47,6 +47,10 @@ private:
 
 	int m_Angle;
 
+	TextFormat* m_pDefaultFont;
+	TextFormat* m_pHappyFaceFont;
+	TextFormat* m_pLoadingResourcesFont;
+
 	EditorGUI* m_pEditorGUI;
 
 	Level* m_pLevel;
@@ -62,7 +66,6 @@ private:
 	PhysX* m_pPhysXEngine;
 
 	RenderContext* m_pRenderContext;
-
 
 	DeferredRenderer* m_pDeferredRenderer;
     ForwardRenderer* m_pForwardRenderer;

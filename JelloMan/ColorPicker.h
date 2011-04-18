@@ -13,7 +13,7 @@ public:
 	virtual ~ColorPicker();
 
 	// GENERAL
-	void Show(Color& color);
+	void Show();
 
 	// SETTERS
 	void PreviousColorSet(bool prevColorSet)
@@ -50,6 +50,8 @@ private:
 
 	Point2D m_ColorPickerPos;
 	Point2D m_ColorPickerSelectPos;
+
+	TextFormat* m_pFont;
 
 	int m_Hue;
 };

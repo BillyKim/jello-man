@@ -1,11 +1,13 @@
 #pragma once
 #include "Light.h"
 #include "LightDesc.h"
+#include "Model.h"
 
 class SpotLight : public Light
 {
 public:
 	SpotLight();
+	SpotLight(const SpotLightDesc& desc);
 	~SpotLight();
     
     virtual void InitGame();
@@ -34,9 +36,9 @@ public:
 
 	virtual bool HasShadowMap() const;
     virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type);
+	virtual ShadowMapType GetShadowMapType() const;
 	virtual Texture2D* GetShadowMap() const;
     virtual Camera* GetShadowCamera() const;
-    virtual ShadowMapType GetShadowMapType() const;
     
     virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const;
 
@@ -55,10 +57,17 @@ public:
 	virtual void SetOpeningsAngle(float rad);
 	virtual void AddOpeningsAngle(float rad);
 
+	virtual void SetPower(float power);
+	virtual float GetPower() const;
+
     virtual const SpotLightDesc& GetDesc() const;
     
     //this method should delete and init the lightbehaviour
     virtual void SetBehaviour(LightBehaviour* lightBehaviour);
+
+	// EDITOR
+	HitRegion* GetHitRegion() const
+	{ return m_pHitRegion; }
 
 private:
 	bool m_IsEnabled;
@@ -68,7 +77,7 @@ private:
 	SpotLightDesc m_StartDesc;
 
 	Texture2D* m_ShadowMap;
-    ShadowMapType m_ShadowType;
+    ShadowMapType m_ShadowMapType;
 
 	Matrix m_Rotation;
     Vector3 m_Angles;
@@ -79,6 +88,12 @@ private:
     Camera* m_pShadowCamera;
 
     Vector3 m_vUp;
+
+	HitRegion* m_pHitRegion;
+
+	Image* m_pSpotLightImage;
+
+	Model<VertexPosCol>* m_pAttenuationSpline;
 
     void UpdateShadowCameraView();
     void UpdateShadowCameraProjection();

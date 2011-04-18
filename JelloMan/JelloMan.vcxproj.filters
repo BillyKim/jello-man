@@ -85,6 +85,15 @@
     <Filter Include="Engine Files\Graphics\Light\types\base">
       <UniqueIdentifier>{64e062d2-8d2e-4fd9-a822-cd02ba424281}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Graphics\GUI\Editor">
+      <UniqueIdentifier>{1c636aea-e433-49d7-ba1f-c73381f8e9b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\GUI\Lights">
+      <UniqueIdentifier>{00da9002-d10f-4c00-85e4-80efc7b8d072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\GUI\Models">
+      <UniqueIdentifier>{ec27c9a8-64ed-431f-b0dc-237edf804e8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -177,9 +186,6 @@
     <ClInclude Include="PhongEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="EditorGUI.h">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Engine Files\Math</Filter>
     </ClInclude>
@@ -228,32 +234,14 @@
     <ClInclude Include="Blox2D.h">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
-    <ClInclude Include="VisualLightDebugger.h">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorPicker.h">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="MoveGizmo.h">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="RotateGizmo.h">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>Game Files</Filter>
     </ClInclude>
     <ClInclude Include="Softbody.h">
       <Filter>Engine Files\PhysX</Filter>
     </ClInclude>
-    <ClInclude Include="BaseGrid.h">
-      <Filter>Game Files</Filter>
-    </ClInclude>
     <ClInclude Include="LevelObject.h">
       <Filter>Game Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadModelFromFile.h">
-      <Filter>Engine Files\Graphics\GUI</Filter>
     </ClInclude>
     <ClInclude Include="TestPhysXSphere.h">
       <Filter>Game Files\Tests</Filter>
@@ -273,16 +261,10 @@
     <ClInclude Include="SoftbodyMesh.h">
       <Filter>Engine Files\Graphics\Model</Filter>
     </ClInclude>
-    <ClInclude Include="VisualModelDebugger.h">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="DeferredPreEffectNormals.h">
       <Filter>Engine Files\Graphics\Effect\deferred</Filter>
     </ClInclude>
     <ClInclude Include="HitRegion.h">
-      <Filter>Engine Files\Graphics\Blox2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Bitmap.h">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
@@ -326,6 +308,48 @@
     </ClInclude>
     <ClInclude Include="PosColEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorGUI.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveGizmo.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateGizmo.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualModelDebugger.h">
+      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadModelFromFile.h">
+      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualLightDebugger.h">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPicker.h">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseGrid.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFormat.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageLoader.h">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFormatLoader.h">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SplineLoader.h">
+      <Filter>Engine Files\ContentManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -413,9 +437,6 @@
     <ClCompile Include="PhongEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="EditorGUI.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Engine Files\Math</Filter>
     </ClCompile>
@@ -464,29 +485,11 @@
     <ClCompile Include="Blox2D.cpp">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClCompile>
-    <ClCompile Include="VisualLightDebugger.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorPicker.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="MoveGizmo.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="RotateGizmo.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
     <ClCompile Include="Softbody.cpp">
       <Filter>Engine Files\PhysX</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadModelFromFile.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseGrid.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
     </ClCompile>
     <ClCompile Include="LevelObject.cpp">
       <Filter>Game Files</Filter>
@@ -512,16 +515,10 @@
     <ClCompile Include="MathHelper.cpp">
       <Filter>Engine Files\Math</Filter>
     </ClCompile>
-    <ClCompile Include="VisualModelDebugger.cpp">
-      <Filter>Engine Files\Graphics\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="DeferredPreEffectNormals.cpp">
       <Filter>Engine Files\Graphics\Effect\deferred</Filter>
     </ClCompile>
     <ClCompile Include="HitRegion.cpp">
-      <Filter>Engine Files\Graphics\Blox2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Bitmap.cpp">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
@@ -562,6 +559,48 @@
     </ClCompile>
     <ClCompile Include="PosColEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorGUI.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualModelDebugger.cpp">
+      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadModelFromFile.cpp">
+      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseGrid.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPicker.cpp">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualLightDebugger.cpp">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFormat.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageLoader.cpp">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFormatLoader.cpp">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SplineLoader.cpp">
+      <Filter>Engine Files\ContentManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

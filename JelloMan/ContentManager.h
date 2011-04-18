@@ -4,6 +4,9 @@
 #include "TextureLoader.h"
 #include "ModelLoader.h"
 #include "vertex.h"
+#include "ImageLoader.h"
+#include "TextFormatLoader.h"
+#include "SplineLoader.h"
 
 class TextureLoader;
 class EffectLoader;
@@ -24,23 +27,38 @@ public:
     }
 
 	Texture2D* LoadTexture2D(const tstring& assetName);
+
 	Model<VertexPosNormTanTex>* LoadModel(const tstring& assetName);
+	Model<VertexPosCol>* LoadSpline(const tstring& assetName, Color col);
+
 	SoftbodyMesh* LoadSoftbodyMesh(const tstring& assetName);
+
+	//* Loads image from a file location. *
+	Image* LoadImage(const tstring& fileNameRef, int newWidth = 0, int newHeight = 0);
+	//* Loads new text format. *
+	TextFormat* LoadTextFormat(const tstring& fontName, float size, bool bold = false, bool italic = false);
 
 	static ContentManager* GetSingleton();
 
- 
-
 private:
 	ContentManager();
+
+	// initialize wic imaging factory
+	void CreateWICFactory();
+
 	//-------------------------------------------------
 	// Datamembers								
 	//-------------------------------------------------
 	ID3D10Device* m_pDevice;
+	IWICImagingFactory* m_pWICFactory;
+
+	ImageLoader* m_pImageLoader;
+	TextFormatLoader* m_pTextFormatLoader;
 	
 	TextureLoader* m_pTextureLoader;
 	EffectLoader* m_pEffectLoader;
 	ModelLoader* m_pModelLoader;
+	SplineLoader* m_pSplineLoader;
 	
 	static ContentManager* m_pSingleton;
 

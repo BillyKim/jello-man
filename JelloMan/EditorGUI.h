@@ -67,31 +67,31 @@ private:
 
 	// BUTTONS
 	Button* m_pLightButton;
-	vector<Bitmap*> m_pLightButtonBitmaps;
+	vector<Image*> m_pLightButtonBitmaps;
 	Button* m_pMoveButton;
-	vector<Bitmap*> m_pMoveButtonBitmaps;
+	vector<Image*> m_pMoveButtonBitmaps;
 	Button* m_pGameModeButton;
-	vector<Bitmap*> m_pGameModeButtonBitmaps;
+	vector<Image*> m_pGameModeButtonBitmaps;
 	Button* m_pEditorModeButton;
-	vector<Bitmap*> m_pEditorModeButtonBitmaps;
+	vector<Image*> m_pEditorModeButtonBitmaps;
 	Button* m_pPointlightButton;
-	vector<Bitmap*> m_pPointlightButtonBitmaps;
+	vector<Image*> m_pPointlightButtonBitmaps;
 	Button* m_pSpotlightButton;
-	vector<Bitmap*> m_pSpotlightButtonBitmaps;
+	vector<Image*> m_pSpotlightButtonBitmaps;
 	Button* m_pColorPickerButton;
-	vector<Bitmap*> m_pColorPickerButtonBitmaps;
+	vector<Image*> m_pColorPickerButtonBitmaps;
 	Button* m_pApplyButton;
-	vector<Bitmap*> m_pApplyButtonBitmaps;
+	vector<Image*> m_pApplyButtonBitmaps;
 	Button* m_pRotateButton;
-	vector<Bitmap*> m_pRotateButtonBitmaps;
+	vector<Image*> m_pRotateButtonBitmaps;
 	Button* m_pPlayModeButton;
-	vector<Bitmap*> m_pPlayModeButtonBitmaps;
+	vector<Image*> m_pPlayModeButtonBitmaps;
 	Button* m_pLoadModelButton;
-	vector<Bitmap*> m_pLoadModelButtonBitmaps;
+	vector<Image*> m_pLoadModelButtonBitmaps;
 	Button* m_pShowGridButton;
-	vector<Bitmap*> m_pShowGridButtonBitmaps;
+	vector<Image*> m_pShowGridButtonBitmaps;
 
-	Bitmap* m_pCameraBitmap;
+	Image* m_pCameraBitmap;
 
 	bool m_bUsingCamera;
 
@@ -117,6 +117,10 @@ private:
 	PhysX* m_pPhysXEngine;
 
 	VisualModelDebugger* m_pModelDebugger;
+
+	TextFormat* m_pInfoFont;
+
+	vector<LevelObject*>* m_pLevelObjects;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);

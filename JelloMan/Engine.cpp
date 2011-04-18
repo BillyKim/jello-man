@@ -52,9 +52,6 @@ Engine::Engine(HINSTANCE hInstance)
 ,m_pContentManager(0)
 ,m_pD2DFactory(0)
 ,m_pBackBufferRT(0)
-,m_pColorBrush(0)
-,m_pDWriteFactory(0)
-,m_pTextFormat(0)
 ,m_bInitialized(false)
 ,m_Angle(0)
 ,m_bResize(false)
@@ -68,7 +65,7 @@ Engine::~Engine()
 	delete m_pGameConfig;
 
 	delete CONTROLS;
-	delete BLOX_2D;
+	delete BX2D;
 
 	SafeDelete(m_pContentManager);
 	SafeDelete(m_pPhysXEngine);
@@ -82,9 +79,6 @@ Engine::~Engine()
 	SafeRelease(m_pDXDevice);
 	SafeRelease(m_pD2DFactory);
 	SafeRelease(m_pBackBufferRT);
-	SafeRelease(m_pColorBrush);
-	SafeRelease(m_pDWriteFactory);
-	SafeRelease(m_pTextFormat);
 }
 
 HINSTANCE Engine::GetAppInst()
@@ -163,14 +157,11 @@ void Engine::Initialize()
 	#endif
 
 	// init D2D engine
-	BLOX_2D->SetParams(	m_pBackBufferRT,
-						m_pD2DFactory,
-						m_pDWriteFactory,
-						m_pColorBrush,
-						m_pTextFormat );
+	BX2D->Initialize(	m_pBackBufferRT,
+						m_pD2DFactory );
 
-	BLOX_2D->SetWindowHandle(m_hMainWnd);
-	BLOX_2D->SetWindowInstance(m_hAppInst);
+	BX2D->SetWindowHandle(m_hMainWnd);
+	BX2D->SetWindowInstance(m_hAppInst);
 
 	#if defined DEBUG || _DEBUG
 	cout << "-Blox2D Engine initialized\n";
@@ -453,35 +444,35 @@ HRESULT Engine::CreateDeviceIndependentResources()
 	// Create a Direct2D factory.
 	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 
-    if (SUCCEEDED(hr))
-	{
-        // Create a DirectWrite factory.
-        hr = DWriteCreateFactory(
-            DWRITE_FACTORY_TYPE_SHARED,
-            __uuidof(m_pDWriteFactory),
-            reinterpret_cast<IUnknown **>(&m_pDWriteFactory)
-            );
-    }
-    if (SUCCEEDED(hr))
-    {
-        // Create a DirectWrite text format object.
-        hr = m_pDWriteFactory->CreateTextFormat(
-            msc_fontName,
-            NULL,
-            DWRITE_FONT_WEIGHT_NORMAL,
-            DWRITE_FONT_STYLE_NORMAL,
-            DWRITE_FONT_STRETCH_NORMAL,
-            msc_fontSize,
-            L"", //locale
-            &m_pTextFormat
-            );
-    }
-    if (SUCCEEDED(hr))
-    {
-        // Center the text horizontally and vertically.
-        m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-        m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-    }
+ //   if (SUCCEEDED(hr))
+	//{
+ //       // Create a DirectWrite factory.
+ //       hr = DWriteCreateFactory(
+ //           DWRITE_FACTORY_TYPE_SHARED,
+ //           __uuidof(m_pDWriteFactory),
+ //           reinterpret_cast<IUnknown **>(&m_pDWriteFactory)
+ //           );
+ //   }
+ //   if (SUCCEEDED(hr))
+ //   {
+ //       // Create a DirectWrite text format object.
+ //       hr = m_pDWriteFactory->CreateTextFormat(
+ //           msc_fontName,
+ //           NULL,
+ //           DWRITE_FONT_WEIGHT_NORMAL,
+ //           DWRITE_FONT_STYLE_NORMAL,
+ //           DWRITE_FONT_STRETCH_NORMAL,
+ //           msc_fontSize,
+ //           L"", //locale
+ //           &m_pTextFormat
+ //           );
+ //   }
+ //   if (SUCCEEDED(hr))
+ //   {
+ //       // Center the text horizontally and vertically.
+ //       m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+ //       m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+ //   }
 
     SafeRelease(pSink);
 
@@ -579,11 +570,11 @@ HRESULT Engine::CreateDeviceResources()
         }
 		if (SUCCEEDED(hr))
         {
-            // Create a brush.
-            hr = m_pBackBufferRT->CreateSolidColorBrush(
-                D2D1::ColorF(D2D1::ColorF::Black),
-                &m_pColorBrush
-                );
+            //// Create a brush.
+            //hr = m_pBackBufferRT->CreateSolidColorBrush(
+            //    D2D1::ColorF(D2D1::ColorF::Black),
+            //    &m_pColorBrush
+            //    );
 
 			// anti-aliasing for direct2D
 			if (m_pGameConfig->Blox2DAntiAliasing())
@@ -720,7 +711,7 @@ HRESULT Engine::RecreateSizedResources()
 			m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
 		// sending new rendertarget to Blox2D
-		BLOX_2D->OnResize(m_pBackBufferRT);
+		BX2D->OnResize(m_pBackBufferRT);
 		m_pGame->OnResize(m_pRenderTargetView);
     }
 

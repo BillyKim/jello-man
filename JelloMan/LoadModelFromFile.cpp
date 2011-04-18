@@ -1,4 +1,5 @@
 #include "LoadModelFromFile.h"
+#include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
@@ -14,11 +15,11 @@ LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
 											m_GlossPath(_T("")),
 											m_WorkingDirectory(_T(""))
 {
-	m_LoadPathBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/add_small_normal.png")));
-	m_LoadPathBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/add_small_hover.png")));
+	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/add_small_normal.png")));
+	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/add_small_hover.png")));
 
-	m_LoadModelBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_normal.png")));
-	m_LoadModelBitmaps.push_back(new Bitmap(_T("Content/Images/Editor/load_hover.png")));
+	m_LoadModelBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_normal.png")));
+	m_LoadModelBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_hover.png")));
 
 	m_pbtnLoadModel = new Button(150, 600, 36, 36);
 	m_pbtnLoadModel->SetNormalState(m_LoadModelBitmaps[0]);
@@ -44,6 +45,8 @@ LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
 	GetCurrentDirectory(256, Buffer);
 
 	m_WorkingDirectory = Buffer;
+
+	m_pFont = Content->LoadTextFormat(_T("Verdana"),12, false,false);
 }
 
 
@@ -55,15 +58,6 @@ LoadModelFromFile::~LoadModelFromFile()
 		delete (*it);
 
 	for (vector<TextBox*>::iterator it = m_TextBoxes.begin(); it != m_TextBoxes.end(); ++it)
-		delete (*it);
-
-	for (vector<Bitmap*>::iterator it = m_LoadPathBitmaps.begin(); it != m_LoadPathBitmaps.end(); ++it)
-		delete (*it);
-
-	for (vector<Bitmap*>::iterator it = m_LoadModelBitmaps.begin(); it != m_LoadModelBitmaps.end(); ++it)
-		delete (*it);
-
-	for (vector<Bitmap*>::iterator it = m_UseNormalMapBitmaps.begin(); it != m_UseNormalMapBitmaps.end(); ++it)
 		delete (*it);
 }
 
@@ -195,16 +189,16 @@ void LoadModelFromFile::Tick()
 
 void LoadModelFromFile::Show()
 {
-	BLOX_2D->SetColor(255, 255, 255);
-	BLOX_2D->SetFont(_T("Verdana"),false,false,12);
-	BLOX_2D->DrawString(_T("Load new model from file") ,10,60);
+	BX2D->SetColor(255, 255, 255);
+	BX2D->SetFont(m_pFont);
+	BX2D->DrawString(_T("Load new model from file") ,10,60);
 
-	BLOX_2D->DrawString(_T("Model path:") ,10,100);
-	BLOX_2D->DrawString(_T("PhysX Model path:") ,10,180);
-	BLOX_2D->DrawString(_T("Normal Map path:") ,10,260);
-	BLOX_2D->DrawString(_T("Diffuse Map path:") ,10,340);
-	BLOX_2D->DrawString(_T("Specular Map path:") ,10,420);
-	BLOX_2D->DrawString(_T("Glossiness Map path:") ,10,500);
+	BX2D->DrawString(_T("Model path:") ,10,100);
+	BX2D->DrawString(_T("PhysX Model path:") ,10,180);
+	BX2D->DrawString(_T("Normal Map path:") ,10,260);
+	BX2D->DrawString(_T("Diffuse Map path:") ,10,340);
+	BX2D->DrawString(_T("Specular Map path:") ,10,420);
+	BX2D->DrawString(_T("Glossiness Map path:") ,10,500);
 
 	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 	{

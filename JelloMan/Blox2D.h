@@ -5,35 +5,20 @@
 //-----------------------------------------------------
 #include "D3DUtil.h"
 #include <vector>
-#include "Controls.h"
 #include "GameTimer.h"
 
-#define BLOX_2D (Blox2D::GetSingleton())
+#define BX2D (Blox2D::GetSingleton())
 
 class HitRegion;
-class Bitmap;
 class Button;
+class Image;
+class TextFormat;
 
 //-----------------------------------------------------
 // Blox2D Class									
 //-----------------------------------------------------
 class Blox2D
 {
-public:
-	enum HORIZONTAL_ALIGN
-	{
-		HORIZONTAL_ALIGN_LEFT = 0,
-		HORIZONTAL_ALIGN_CENTER = 1,
-		HORIZONTAL_ALIGN_RIGHT = 2
-	};
-
-	enum VERTICAL_ALIGN
-	{
-		VERTICAL_ALIGN_TOP = 0,
-		VERTICAL_ALIGN_MIDDLE = 1,
-		VERTICAL_ALIGN_BOTTOM = 2
-	};
-
 private:
 	// singleton
 	Blox2D();
@@ -44,84 +29,95 @@ public:
 	virtual ~Blox2D();
 	static Blox2D* GetSingleton();
 
-	HRESULT Blox2D::LoadBitmapFromFile(
-    PCWSTR uri,
-    UINT destinationWidth,
-    UINT destinationHeight,
-    ID2D1Bitmap **ppBitmap
-    );
+	/* SETTERS */
 
-	// SETTERS
+	//* Sets the color of the brush. *
 	void SetColor(int r, int g, int b, float a = 1.0f);
+	//* Sets the color of the brush. *
 	void SetColor(D2D1_COLOR_F color);
-	void SetFont(tstring const& fontName, bool bold, bool italic, float size);
-	void SetFont(IDWriteTextFormat* textFormat);
+	//* Sets the textformat. *
+	void SetFont(TextFormat* pTextFormat);
+	//* Sets the transformation matrix of the world. *
 	void SetTransform(D2D1_MATRIX_3X2_F transform);
+	//* Resets the transformation matrix of the world. *
 	void ResetTransform();
-
-	void SetParams(	ID2D1RenderTarget* pRenderTarget,
-					ID2D1Factory* pD2DFactory,
-					IDWriteFactory* pDWriteFactory,
-					ID2D1SolidColorBrush* pColorBrush,
-					IDWriteTextFormat* pTextFormat);
-
+	//* Initializes Blox2D - only used by engine. *
+	void Initialize(	ID2D1RenderTarget* pRenderTarget,
+						ID2D1Factory* pD2DFactory	);
+	//* Called when backbuffer is resized - only used by engine. *
 	void OnResize(ID2D1RenderTarget* pRenderTarget) { m_pRenderTarget = pRenderTarget; }
+	//* Turns on / off anti-aliasing. *
 	void SetAntiAliasing(bool AA);
+	//* Sets the windowhandel - only used by engine. *
 	void SetWindowHandle(HWND hwnd) { m_Hwnd = hwnd; }
+	//* Sets the window instance - only used by engine. *
 	void SetWindowInstance(HINSTANCE instance) { m_hInstance = instance; }
 
-	// GETTERS
+	/* GETTERS */
+
+	//* Returns the size of the window / backbuffer. *
 	Size2D GetWindowSize() const;
+	//* Returns the D2D factory - only used by engine. *
 	ID2D1Factory* GetFactory() const { return m_pD2DFactory; }
-	IDWriteFactory* GetWriteFactory() const { return m_pDWriteFactory; }
+	//* Returns the render target - only used by engine. *
+	ID2D1RenderTarget* GetBackBuffer() const { return m_pRenderTarget; }
+	//* Gets the window handle - only used by engine. *
 	HWND GetWindowHandle() const { return m_Hwnd; }
+	//* Gets the window instance - only used by engine. *
 	HINSTANCE GetWindowInstance() const { return m_hInstance; }
 	
-	// DRAW METHODS
-	void DrawGrid(int stepsize, D2D1_RECT_F area) const;
+	/* DRAW METHODS */
+
+	//* Draws a square grid in the given area with the given stepsize. *
+	void DrawGrid(float stepsize, D2D1_RECT_F area) const;
+	//* Fills background with the current color. *
 	void FillBackGround() const;
-	void DrawLine(int x, int y, int x2, int y2, float strokeSize = 1.0f) const;
-	void DrawLine(D2D1_POINT_2F start, D2D1_POINT_2F end, float strokeSize = 1.0f) const;
-	void DrawRect(int x, int y, int width, int height, float strokeSize = 1.0f) const;
+	//* Draws a line from x,y to x2,y2 with the given strokesize. *
+	void DrawLine(float x, float y, float x2, float y2, float strokeSize = 1.0f) const;
+	//* Draws a line from start point to end point with the given strokesize. *
+	void DrawLine(Point2D start, Point2D end, float strokeSize = 1.0f) const;
+	//* Draws the outline of a rect at position x,y with the given width / height and given strokesize. *
+	void DrawRect(float x, float y, float width, float height, float strokeSize = 1.0f) const;
+	//* Draws the outline of a rect description with the given strokesize. *
 	void DrawRect(D2D1_RECT_F rect, float strokeSize = 1.0f) const;
-	void FillRect(int x, int y, int width, int height) const;
+	//* Draws a filled rect at position x,y with the given width / height. *
+	void FillRect(float x, float y, float width, float height) const;
+	//* Draws a filled rect description. *
 	void FillRect(D2D1_RECT_F rect) const;
-	void DrawEllipse(int x, int y, int width, int height, float strokeSize= 1.0f) const;
-	void DrawEllipse(D2D1_POINT_2F coord, int width, int height, float strokeSize= 1.0f) const;
-	void DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize= 1.0f) const;
-	void FillEllipse(int x, int y, int width, int height) const;
-	void FillEllipse(D2D1_POINT_2F coord, int width, int height)const;
+	void DrawEllipse(float x, float y, float width, float height, float strokeSize = 1.0f) const;
+	void DrawEllipse(Point2D coord, float width, float height, float strokeSize = 1.0f) const;
+	void DrawEllipse(D2D1_ELLIPSE ellipse, float strokeSize = 1.0f) const;
+	void FillEllipse(float x, float y, float width, float height) const;
+	void FillEllipse(Point2D coord, float width, float height)const;
 	void FillEllipse(D2D1_ELLIPSE ellipse) const;
-	void DrawString(tstring const& text, int x, int y) const;
-	void DrawStringCentered(tstring const& text, int offSetX = 0, int offSetY = 0) const;
-	void DrawString(tstring const& text, D2D1_RECT_F rect, HORIZONTAL_ALIGN textAlignment, VERTICAL_ALIGN paragraphAlignment);
+	void DrawString(tstring const& text, float x, float y) const;
+	void DrawStringCentered(tstring const& text, float offSetX = 0, float offSetY = 0) const;
+	void DrawString(tstring const& text, D2D1_RECT_F rect);
 	void ShowFPS(float dTime, bool showGraph = false, float delayInterval = 1.0f);
-	void FillBlock(int x, int y, int size);
-	void FillBlock(D2D1_POINT_2F coord, int size, D2D1_COLOR_F color1, D2D1_COLOR_F color2);
-	void DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize) const;
+	void FillBlock(float x, float y, float size);
+	void FillBlock(D2D1_POINT_2F coord, float size, D2D1_COLOR_F color1, D2D1_COLOR_F color2);
+	void DrawPolygon(D2D1_POINT_2F pArr[], int nrPoints, bool close, float strokeSize = 1.0f) const;
 	void FillPolygon(D2D1_POINT_2F pArr[], int nrPoints) const;
-	void DrawBitmap(Bitmap* bitmap, int x, int y, float opacity = 1.0f, int width = 0, int height = 0);
-	void DrawRoundRect(int x, int y, int width, int height, int radius, float strokeSize = 1.0f) const;
+	void DrawBitmap(Image* bitmap, float x, float y, bool pixelPerfect = false, float opacity = 1.0f, float width = 0.0f, float height = 0.0f);
+	void DrawBitmap(Image* bitmap, float x, float y, D2D1_RECT_F areaToDraw, bool pixelPerfect = false);
+	void DrawRoundRect(float x, float y, float width, float height, float radius, float strokeSize = 1.0f) const;
 	void DrawRoundRect(D2D1_ROUNDED_RECT roundRect, float strokeSize = 1.0f) const;
-	void FillRoundRect(int x, int y, int width, int height, int radius) const;
+	void FillRoundRect(float x, float y, float width, float height, float radius) const;
 	void FillRoundRect(D2D1_ROUNDED_RECT roundRect) const;
+	void DrawGeometry(ID2D1Geometry* pGeometry);
 
 private:
 
 	ID2D1RenderTarget* m_pRenderTarget;
 	ID2D1Factory* m_pD2DFactory;
-	IDWriteFactory* m_pDWriteFactory;
 	ID2D1SolidColorBrush* m_pColorBrush;
 	IDWriteTextFormat* m_pTextFormat;
-	IWICImagingFactory *m_pWICFactory;
 
-	HORIZONTAL_ALIGN m_HorizontalAlignment;
-	VERTICAL_ALIGN m_VerticalAlignment;
+	TextFormat* m_pFPSFont;
 
 	vector<int> m_fpsHistory;
 	vector<float> m_dtimeHistory;
 
-	int m_FrameCount;
 	float m_TBase;
 	float m_GameTime;
 	int m_FPS;

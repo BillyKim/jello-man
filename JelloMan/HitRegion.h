@@ -13,8 +13,9 @@ class HitRegion
 {
 public:
 	// constructors
-	HitRegion(int type, int x, int y, int width, int height);
+	HitRegion(int type, float x, float y, float width, float height);
 	HitRegion(int type, D2D1_POINT_2F* points, int nrPoints);
+	HitRegion(Image* pImage, int r, int g, int b, IWICImagingFactory* pWICFactory);
 
 	// destructor
 	virtual  ~HitRegion();
@@ -32,8 +33,11 @@ public:
 	D2D1_POINT_2F CollisionTest(HitRegion* hitRect);
 	D2D1_RECT_F GetDimension();
 
+	ID2D1TransformedGeometry* GetGeometry() const
+	{ return m_pTransformedGeometry; }
+
 	// setters
-	void SetPosition(int x, int y);
+	void SetPosition(float x, float y);
 	void SetPosition(D2D1_POINT_2F pos);
 	void SetSize(int width, int height);
 
@@ -47,12 +51,16 @@ public:
 	static const int TYPE_POLYGON = 2;
 
 private:
+
+	/*Converts pixels into Geometry (internal use)*/
+	HRESULT GeometryFromPixels(IWICBitmapLock *lockPtr, ID2D1Geometry**GeometryPtrPtr, int r, int g, int b);
+
 	ID2D1Geometry* m_pGeometry;
 	ID2D1TransformedGeometry* m_pTransformedGeometry;
 
 	int m_Type;
-	int m_Width;
-	int m_Height;
+	float m_Width;
+	float m_Height;
 
 	D2D1_POINT_2F m_CurrentPos;
 	Matrix3x2F m_matWorld;

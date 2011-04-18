@@ -2,6 +2,8 @@
 
 #include "Blox2D_Engine.h"
 #include "HitRegion.h"
-#include "Bitmap.h"
+#include "Image.h"
 #include "Button.h"
 #include "TextBox.h"
+#include "Sprite.h"
+#include "TextFormat.h"

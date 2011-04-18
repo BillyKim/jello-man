@@ -21,9 +21,9 @@ public:
     //<---------------------------------------------------------------
 
     const vector<ModelMesh<T>*>& GetModelMeshes() const { return m_Meshes; }
-    ModelMesh<T>* AddMesh(const tstring& name)
+    ModelMesh<T>* AddMesh(const tstring& name, TOPOLOGY_TYPE topoType = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
     {
-	    ModelMesh<T>* mesh = new ModelMesh<T>(m_pDevice, name);
+	    ModelMesh<T>* mesh = new ModelMesh<T>(m_pDevice, name, topoType);
 	    m_Meshes.push_back(mesh);
 	    return mesh;
     }

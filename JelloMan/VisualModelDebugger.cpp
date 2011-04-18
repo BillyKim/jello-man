@@ -61,8 +61,8 @@ void VisualModelDebugger::Draw()
 	D3D10_VIEWPORT viewP;
 	viewP.TopLeftX = 0;
 	viewP.TopLeftY = 0;
-	viewP.Width = (UINT)BLOX_2D->GetWindowSize().width;
-	viewP.Height = (UINT)BLOX_2D->GetWindowSize().height;
+	viewP.Width = (UINT)BX2D->GetWindowSize().width;
+	viewP.Height = (UINT)BX2D->GetWindowSize().height;
 	viewP.MinDepth = 0.0f;
 	viewP.MaxDepth = 1.0f;
 
@@ -79,8 +79,8 @@ void VisualModelDebugger::Draw()
 			D3DXVECTOR3 pos2D;
 			D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
 
-			BLOX_2D->SetColor(255,255,255,0.5f);
-			BLOX_2D->FillEllipse(static_cast<int>(pos2D.x), static_cast<int>(pos2D.y), 10,10);*/
+			BX2D->SetColor(255,255,255,0.5f);
+			BX2D->FillEllipse(static_cast<int>(pos2D.x), static_cast<int>(pos2D.y), 10,10);*/
 
 			m_pLevelObjects[i]->Selected(true);
 		}
@@ -108,8 +108,8 @@ void VisualModelDebugger::RayCast()
 	D3D10_VIEWPORT viewP;
 	viewP.TopLeftX = 0;
 	viewP.TopLeftY = 0;
-	viewP.Width = (UINT)BLOX_2D->GetWindowSize().width;
-	viewP.Height = (UINT)BLOX_2D->GetWindowSize().height;
+	viewP.Width = (UINT)BX2D->GetWindowSize().width;
+	viewP.Height = (UINT)BX2D->GetWindowSize().height;
 	viewP.MinDepth = 0.0f;
 	viewP.MaxDepth = 1.0f;
 

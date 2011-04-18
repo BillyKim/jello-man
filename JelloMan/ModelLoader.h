@@ -28,11 +28,7 @@ private:
     void ReadBinSBObj(const tstring& assetName);
     void ReadASCIIObj(const tstring& assetName);
 
-	void CalculateTangent(	Vector3& v1, Vector3& v2, Vector3& v3,	// in
-							Vector3& n1,							// in
-							Vector2& t1, Vector2& t2, Vector2& t3,	// in
-							Vector3& tangent						// out
-						);
+	void CalculateTangents(VertexPosNormTanTex& vpntx1, VertexPosNormTanTex& vpntx2, VertexPosNormTanTex& vpntx3);
 
     void AddVertex(const Vector3& v);
     void AddNormal(const Vector3& v);

@@ -112,15 +112,8 @@ void ModelLoader::ReadBinObj(const tstring& assetName)
 
 			if ((v+1) % 3 == 0)
 			{
-				Vector3 tangent = Vector3(0,0,0);
-
-				CalculateTangent(	tempVertices[0], tempVertices[1], tempVertices[2],
-									norm,
-									tempTexCoords[0],  tempTexCoords[1],  tempTexCoords[2],
-									tangent	);
-
 				for (int i = 0; i < 3; ++i)
-					m_VPNTTData.push_back(VertexPosNormTanTex(tempVertices[i], tempNormals[i], tangent, tempTexCoords[i]));
+					m_VPNTTData.push_back(VertexPosNormTanTex(tempVertices[i], tempNormals[i], Vector3(0,0,0), tempTexCoords[i]));
 
 				tempVertices.clear();
 				tempNormals.clear();
@@ -130,10 +123,16 @@ void ModelLoader::ReadBinObj(const tstring& assetName)
 
         DWORD indices = stream.readDword() * 3;
         m_IndexData.clear();
+
         for (DWORD i = 0; i < indices; ++i)
         {
             DWORD index = stream.readDword();
             m_IndexData.push_back(index);
+
+			if (((i+1) % 3) == 0)
+			{
+				CalculateTangents(m_VPNTTData[m_IndexData[i]], m_VPNTTData[m_IndexData[i-1]], m_VPNTTData[m_IndexData[i-2]]);
+			}
         }
         m_pCurrentMesh->SetVertices(m_VPNTTData);
         m_pCurrentMesh->SetIndices(m_IndexData);
@@ -189,6 +188,8 @@ void ModelLoader::ReadBinSBObj(const tstring& assetName)
         m_IndexData.push_back(index2);
         m_IndexData.push_back(index1);
         m_IndexData.push_back(index0);
+
+		CalculateTangents(m_VPNTTData[index2], m_VPNTTData[index1], m_VPNTTData[index0]);
     }
     m_pCurrentSBMesh->SetVertices(m_VPNTTData);
     m_pCurrentSBMesh->SetIndices(m_IndexData);
@@ -293,15 +294,10 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
 
     unsigned int index[3];
 
-	Vector3 tangent = Vector3(0,0,0);
-	CalculateTangent(	m_VertexData[data[0][0] - 1], m_VertexData[data[1][0] - 1], m_VertexData[data[2][0] - 1],
-						m_NormalData[data[0][2] - 1],
-						m_TextureData[data[0][1] - 1],  m_TextureData[data[1][1] - 1],  m_TextureData[data[2][1] - 1],
-						tangent	);
-
     for (int i = 0; i < 3; ++i)
     {
         index[i] = m_VPNTTData.size();
+		Vector3 tangent = Vector3(0,0,0);
         VertexPosNormTanTex vpntt(
                 m_VertexData[data[i][0] - 1],
                 m_NormalData[data[i][2] - 1],
@@ -324,11 +320,20 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
     m_IndexData.push_back(index[2]);
     m_IndexData.push_back(index[1]);
     m_IndexData.push_back(index[0]);
+
+	CalculateTangents(m_VPNTTData[index[2]], m_VPNTTData[index[1]], m_VPNTTData[index[0]]);
 }
 
 void ModelLoader::FlushMesh()
 {
     ASSERT (m_pCurrentMesh != 0);
+	
+	// TANGENTS
+	for (unsigned int i = 0; i < m_VPNTTData.size() / 3; ++i)
+	{
+		CalculateTangents(m_VPNTTData[i*3],m_VPNTTData[(i*3)+1],m_VPNTTData[(i*3)+2]);
+	}
+
     m_pCurrentMesh->SetVertices(m_VPNTTData);
     m_pCurrentMesh->SetIndices(m_IndexData);
     m_VPNTTData.clear();
@@ -337,125 +342,55 @@ void ModelLoader::FlushMesh()
     m_IndexData.clear();
 }
 
-void ModelLoader::CalculateTangent(	Vector3& v1, Vector3& v2, Vector3& v3,	
-									Vector3& n1,							
-									Vector2& t1, Vector2& t2, Vector2& t3,	
-									Vector3& tangent	)
+void ModelLoader::CalculateTangents(VertexPosNormTanTex& vpntx1, VertexPosNormTanTex& vpntx2, VertexPosNormTanTex& vpntx3)
 {
-	/*Vector3 edge1, edge2;
+	Vector3& v1 = vpntx1.position;
+	Vector3& v2 = vpntx2.position;
+	Vector3& v3 = vpntx2.position;
 
-	edge1.X = v2.X- v1.X;
-	edge1.Y = v2.Y - v1.Y;
-	edge1.Z = v2.Z - v1.Z;
+	Vector3& n1 = vpntx1.normal;
+	Vector3& n2 = vpntx2.normal;
+	Vector3& n3 = vpntx3.normal;
 
-	float dp;
-	dp = n1.X * edge1.X + n1.Y * edge1.Y + n1.Z * edge1.Z;
+	Vector2& tx1 = vpntx1.tex;
+	Vector2& tx2 = vpntx2.tex;
+	Vector2& tx3 = vpntx3.tex;
 
-	edge1.X = edge1.X - n1.X * dp;
-	edge1.X = edge1.X - n1.X * dp;
-	edge1.Z = edge1.Z - n1.Z * dp;
+	Vector3 t1;
+	Vector3 t2;
+	Vector3 t3;
 
-	edge2.X = v3.X - v1.X;
-	edge2.X = v3.X - v1.X;
-	edge2.Z = v3.Z - v1.Z;
+	float x1 = v2.X - v1.X;
+	float x2 = v3.X - v1.X;
+	float y1 = v2.Y - v1.Y;
+	float y2 = v3.Y - v1.Y;
+	float z1 = v2.Z - v1.Z;
+	float z2 = v3.Z - v1.Z;
 
-	dp = n1.X * edge2.X + n1.X * edge2.X + n1.Z * edge2.Z;
+	float s1 = tx2.X - tx1.X;
+	float s2 = tx3.X - tx1.X;
+	float st1 = tx2.Y - tx1.Y;
+	float st2 = tx3.Y - tx1.Y;
 
-	edge2.X = edge2.X - n1.X * dp;
-	edge2.X = edge2.X - n1.X * dp;
-	edge2.Z = edge2.Z - n1.Z * dp;
+	float r = 1.0f / (s1 * st2 - s2 * st1);
 
-	Vector3 tcEdge1, tcEdge2;
+	Vector3 tan1((st2 * x1 - st1 * x2) * r, (st2 * y1 - st1 * y2) * r, (st2 * z1 - st1 * z2) * r );
+	Vector3 tan2((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r );
 
-	tcEdge1.X = t2.X - t1.X;
-	tcEdge1.X = t2.X - t1.X;
+	float n1tan1dot = n1.Dot(tan1);
+	t1 = n1 * n1tan1dot;
+	t1 = tan1 - t1;
+	t1.Normalize();
+	
+	t2 = n1 * n1tan1dot;
+	t2 = tan1 - t1;
+	t2.Normalize();
 
-	tcEdge2.X = t3.X - t1.X;
-	tcEdge2.X = t3.X - t1.X;
+	t3 = n1 * n1tan1dot;
+	t3 = tan1 - t1;
+	t3.Normalize();
 
-	if ((tcEdge2.X * tcEdge1.X) > (tcEdge1.X * tcEdge2.X))
-	{
-		tcEdge1.X = -tcEdge1.X;
-		tcEdge2.X = -tcEdge2.X;
-	}
-
-	float d = tcEdge1.X * tcEdge2.X - tcEdge2.X * tcEdge1.X;
-
-	tangent.X = 1; tangent.X = 0; tangent.Z = 0;
-
-	if (!(d > -0.0001f && d < 0.0001f))
-	{
-		tangent.X = (edge1.X * tcEdge2.X) -
-					(edge2.X * tcEdge1.X);
-
-		tangent.Y = (edge1.Y * tcEdge2.X) -
-					(edge2.Y * tcEdge1.X);
-
-		tangent.Z = (edge1.Z * tcEdge2.X) -
-					(edge2.Z * tcEdge1.X);
-
-		dp = (float)sqrt(	tangent.X * tangent.X +
-							tangent.Y * tangent.Y +
-							tangent.Z * tangent.Z	);
-
-		if (!(dp > -0.0001f && dp < 0.0001f))
-		{
-			dp = 1 / dp;
-			tangent.X *= dp;
-			tangent.Y *= dp;
-			tangent.Z *= dp;
-		}
-	}*/
-
-	Vector3 e0 = v2 - v1;
-	Vector3 e1 = v3 - v1;
-	Vector3 normal = e0.Cross(e1);
-
-	//using Eric Lengyel's approach with a few modifications
-	//from Mathematics for 3D Game Programmming and Computer Graphics
-	// want to be able to trasform a vector in Object Space to Tangent Space
-	// such that the x-axis cooresponds to the 's' direction and the
-	// y-axis corresponds to the 't' direction, and the z-axis corresponds
-	// to <0,0,1>, straight up out of the texture map
-
-	//let P = v1 - v0	
-	Vector3 P = v2 - v1;
-
-	//let Q = v2 - v0
-	Vector3 Q = v3 - v1;
-
-	float st1 = t2.X - t1.X;
-	float tt1 = t2.Y - t1.Y;
-	float st2 = t3.X - t1.X;
-	float tt2 = t3.Y - t1.Y;
-
-	//we need to solve the equation
-	/*P = s1*T + t1*B
-	floay Q = s2*T + t2*B*/
-	// for T and B
-	//this is a linear system with six unknowns and six equatinos, for TxTyTz BxByBz
-	//[px,py,pz] = [s1,t1] * [Tx,Ty,Tz]
-	// qx,qy,qz     s2,t2     Bx,By,Bz
-	//multiplying both sides by the inverse of the s,t matrix gives
-	//[Tx,Ty,Tz] = 1/(s1t2-s2t1) *  [t2,-t1] * [px,py,pz]
-	// Bx,By,Bz                      -s2,s1	    qx,qy,qz  
-	//solve this for the unormalized T and B to get from tangent to object space
-
-	float tmp = 0.0f;
-	if(fabsf(st1*tt2 - st2*tt1) <= 0.0001f)	
-	{
-		tmp = 1.0f;	
-	}
-	else
-	{
-		tmp = 1.0f/(st1*tt2 - st2*tt1 );
-	}
-
-	tangent.X = (tt2*P.X - tt1*Q.X);
-	tangent.Y = (tt2*P.Y - tt1*Q.Y);
-	tangent.Z = (tt2*P.Z - tt1*Q.Z);
-	tangent = tangent*tmp;
-
-	normal.Normalize();	
-	tangent.Normalize();
+	vpntx1.tangent += t1;
+	vpntx2.tangent += t2;
+	vpntx3.tangent += t3;
 }

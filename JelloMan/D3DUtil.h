@@ -180,3 +180,5 @@ D3DX10INLINE D3DXVECTOR3 RandUnitVec3()
 	D3DXVec3Normalize(&v, &v);
 	return v;
 }
+
+#undef LoadImage

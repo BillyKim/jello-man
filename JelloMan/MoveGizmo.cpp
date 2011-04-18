@@ -1,12 +1,14 @@
 #include "MoveGizmo.h"
-
+#include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 MoveGizmo::MoveGizmo()	:	m_bLockX(false),
 							m_bLockY(false),
 							m_bLockZ(false),
-							m_pRenderContext(0)
+							m_pRenderContext(0),
+							m_pAxisFont(0)
 {
+	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 }
 
 
@@ -29,8 +31,8 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 	D3D10_VIEWPORT viewP;
 	viewP.TopLeftX = 0;
 	viewP.TopLeftY = 0;
-	viewP.Width = (UINT)BLOX_2D->GetWindowSize().width;
-	viewP.Height = (UINT)BLOX_2D->GetWindowSize().height;
+	viewP.Width = (UINT)BX2D->GetWindowSize().width;
+	viewP.Height = (UINT)BX2D->GetWindowSize().height;
 	viewP.MinDepth = 0;
 	viewP.MaxDepth = 1;
 
@@ -56,9 +58,9 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 	D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
 
 	if (vLook.Dot(length) < 0 &&
-		pos2D.x < BLOX_2D->GetWindowSize().width &&
+		pos2D.x < BX2D->GetWindowSize().width &&
 		pos2D.x > 0 &&
-		pos2D.y < BLOX_2D->GetWindowSize().height &&
+		pos2D.y < BX2D->GetWindowSize().height &&
 		pos2D.y > 0)
 	{
 		// VIEWPORT PROJECTION
@@ -115,29 +117,30 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		// X
 		HitRegion hitRectX(
 			HitRegion::TYPE_ELLIPSE,
-			static_cast<int>(posLineX_2D.x),
-			static_cast<int>(posLineX_2D.y),
-			size,size);
+			posLineX_2D.x,
+			posLineX_2D.y,
+			(float)size,
+			(float)size);
 
-		BLOX_2D->SetColor(255, 0, 0);
-		BLOX_2D->DrawLine(
-			static_cast<int>(posLineX2_2D.x),
-			static_cast<int>(posLineX2_2D.y),
-			static_cast<int>(posLineX_2D.x),
-			static_cast<int>(posLineX_2D.y),
+		BX2D->SetColor(255, 0, 0);
+		BX2D->DrawLine(
+			posLineX2_2D.x,
+			posLineX2_2D.y,
+			posLineX_2D.x,
+			posLineX_2D.y,
 			2.0f);
 
-		BLOX_2D->FillEllipse(
-			static_cast<int>(posLineX_2D.x),
-			static_cast<int>(posLineX_2D.y),
-			static_cast<int>(size/2),
-			static_cast<int>(size/2));
+		BX2D->FillEllipse(
+			posLineX_2D.x,
+			posLineX_2D.y,
+			size/2.0f,
+			size/2.0f);
 	
-		BLOX_2D->SetColor(255, 0, 0);
-		BLOX_2D->SetFont(_T("Verdana"), false, false, 14);
-		BLOX_2D->DrawString(_T("X"),
-			static_cast<int>(posLineX_2D.x-5),
-			static_cast<int>(posLineX_2D.y) - 25);
+		BX2D->SetColor(255, 0, 0);
+		BX2D->SetFont(m_pAxisFont);
+		BX2D->DrawString(_T("X"),
+			posLineX_2D.x - 5,
+			posLineX_2D.y - 25);
 
 		// XY
 		D2D1_POINT_2F r[5];
@@ -161,26 +164,26 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		}
 
 		if (hitRectXY.HitTest(CONTROLS->GetMousePos()) || (m_bLockX == true && m_bLockY == true))
-			BLOX_2D->SetColor(150, 150, 255, 0.8f);
+			BX2D->SetColor(150, 150, 255, 0.8f);
 		else
-			BLOX_2D->SetColor(50, 50, 255, 0.4f);
+			BX2D->SetColor(50, 50, 255, 0.4f);
 
-		BLOX_2D->FillPolygon(r, 4);
+		BX2D->FillPolygon(r, 4);
 
-		BLOX_2D->SetColor(100, 100, 255, 0.8f);
-		BLOX_2D->DrawLine(r[0], r[1]);
-		BLOX_2D->DrawLine(r[1], r[2]);
-		BLOX_2D->DrawLine(r[2], r[3]);
-		BLOX_2D->DrawLine(r[3], r[0]);
+		BX2D->SetColor(100, 100, 255, 0.8f);
+		BX2D->DrawLine(r[0], r[1]);
+		BX2D->DrawLine(r[1], r[2]);
+		BX2D->DrawLine(r[2], r[3]);
+		BX2D->DrawLine(r[3], r[0]);
 
 		if (hitRectX.HitTest(CONTROLS->GetMousePos()))
 		{
-			BLOX_2D->SetColor(255, 255, 255);
-			BLOX_2D->DrawEllipse(
-				static_cast<int>(posLineX_2D.x),
-				static_cast<int>(posLineX_2D.y),
-				static_cast<int>(size/2),
-				static_cast<int>(size/2),
+			BX2D->SetColor(255, 255, 255);
+			BX2D->DrawEllipse(
+				posLineX_2D.x,
+				posLineX_2D.y,
+				size/2.0f,
+				size/2.0f,
 				2.0f);
 
 			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockZ == false)
@@ -197,29 +200,29 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 
 		if (m_bLockX)
 		{
-			BLOX_2D->SetColor(255,255,255);
-			BLOX_2D->DrawEllipse(
-				static_cast<int>(posLineX_2D.x),
-				static_cast<int>(posLineX_2D.y),
-				static_cast<int>(size/2),
-				static_cast<int>(size/2),
+			BX2D->SetColor(255,255,255);
+			BX2D->DrawEllipse(
+				posLineX_2D.x,
+				posLineX_2D.y,
+				size/2.0f,
+				size/2.0f,
 				2.0f);
 
 			if (type == TYPE_POINTLIGHT)
 			{
-				float diff = m_OldPointLightPos[id].x - mousePosPlusZX_3D.x;
+				float diff = m_OldLightPos[id].x - mousePosPlusZX_3D.x;
 
 				position.X -= diff;
 
-				m_OldPointLightPos[id].x = mousePosPlusZX_3D.x;
+				m_OldLightPos[id].x = mousePosPlusZX_3D.x;
 			}
 			else if (type == TYPE_SPOTLIGHT)
 			{
-				float diff = m_OldSpotLightPos[id].x - mousePosPlusZX_3D.x;
+				float diff = m_OldLightPos[id].x - mousePosPlusZX_3D.x;
 
 				position.X -= diff;
 
-				m_OldSpotLightPos[id].x = mousePosPlusZX_3D.x;
+				m_OldLightPos[id].x = mousePosPlusZX_3D.x;
 			}
 			else if (type == TYPE_MODEL)
 			{
@@ -233,9 +236,9 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		else
 		{
 			if (type == TYPE_POINTLIGHT)
-				m_OldPointLightPos[id].x = mousePosPlusZX_3D.x;
+				m_OldLightPos[id].x = mousePosPlusZX_3D.x;
 			else if (type == TYPE_SPOTLIGHT)
-				m_OldSpotLightPos[id].x = mousePosPlusZX_3D.x;
+				m_OldLightPos[id].x = mousePosPlusZX_3D.x;
 			else if (type == TYPE_MODEL)
 				m_OldModelPos[id].x = mousePosPlusZX_3D.x;
 		}
@@ -243,29 +246,31 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		// Y
 		HitRegion hitRectY(
 			HitRegion::TYPE_ELLIPSE,
-			static_cast<int>(posLineY_2D.x),
-			static_cast<int>(posLineY_2D.y),
-			size,
-			size);
+			posLineY_2D.x,
+			posLineY_2D.y,
+			(float)size,
+			(float)size);
 
-		BLOX_2D->SetColor(0, 255, 0);
-		BLOX_2D->DrawLine(static_cast<int>(posLineY2_2D.x),
-			static_cast<int>(posLineY2_2D.y),
-			static_cast<int>(posLineY_2D.x),
-			static_cast<int>(posLineY_2D.y),
+		BX2D->SetColor(0, 255, 0);
+		BX2D->DrawLine(
+			posLineY2_2D.x,
+			posLineY2_2D.y,
+			posLineY_2D.x,
+			posLineY_2D.y,
 			2.0f);
 
-		BLOX_2D->FillEllipse(
-			static_cast<int>(posLineY_2D.x),
-			static_cast<int>(posLineY_2D.y),
-			static_cast<int>(size/2),
-			static_cast<int>(size/2));
+		BX2D->FillEllipse(
+			posLineY_2D.x,
+			posLineY_2D.y,
+			size/2.0f,
+			size/2.0f);
 
-		BLOX_2D->SetColor(0, 255, 0);
-		BLOX_2D->SetFont(_T("Verdana"), false, false, 14);
-		BLOX_2D->DrawString(_T("Y"),
-			static_cast<int>(posLineY_2D.x-5),
-			static_cast<int>(posLineY_2D.y) - 25);
+		BX2D->SetColor(0, 255, 0);
+		BX2D->SetFont(m_pAxisFont);
+		BX2D->DrawString(
+			_T("Y"),
+			posLineY_2D.x - 5,
+			posLineY_2D.y - 25);
 	
 		//D2D1_POINT_2F r[4];
 		r[0].x = posLineY2_2D.x;
@@ -288,26 +293,26 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		}
 
 		if (hitRectYZ.HitTest(CONTROLS->GetMousePos()) || (m_bLockY == true && m_bLockZ == true))
-			BLOX_2D->SetColor(150, 150, 255, 0.8f);
+			BX2D->SetColor(150, 150, 255, 0.8f);
 		else
-			BLOX_2D->SetColor(50, 50, 255, 0.4f);
+			BX2D->SetColor(50, 50, 255, 0.4f);
 
-		BLOX_2D->FillPolygon(r,4);
+		BX2D->FillPolygon(r,4);
 
-		BLOX_2D->SetColor(100, 100, 255, 0.8f);
-		BLOX_2D->DrawLine(r[0],r[1]);
-		BLOX_2D->DrawLine(r[1],r[2]);
-		BLOX_2D->DrawLine(r[2],r[3]);
-		BLOX_2D->DrawLine(r[3],r[0]);
+		BX2D->SetColor(100, 100, 255, 0.8f);
+		BX2D->DrawLine(r[0],r[1]);
+		BX2D->DrawLine(r[1],r[2]);
+		BX2D->DrawLine(r[2],r[3]);
+		BX2D->DrawLine(r[3],r[0]);
 
 		if (hitRectY.HitTest(CONTROLS->GetMousePos()))
 		{
-			BLOX_2D->SetColor(255,255,255);
-			BLOX_2D->DrawEllipse(
-				static_cast<int>(posLineY_2D.x),
-				static_cast<int>(posLineY_2D.y),
-				static_cast<int>(size/2),
-				static_cast<int>(size/2),
+			BX2D->SetColor(255,255,255);
+			BX2D->DrawEllipse(
+				posLineY_2D.x,
+				posLineY_2D.y,
+				size/2.0f,
+				size/2.0f,
 				2.0f);
 
 			if (CONTROLS->LeftMBDown() && m_bLockX == false && m_bLockZ == false)
@@ -323,29 +328,29 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 
 		if (m_bLockY)
 		{
-			BLOX_2D->SetColor(255,255,255);
-			BLOX_2D->DrawEllipse(
-				static_cast<int>(posLineY_2D.x),
-				static_cast<int>(posLineY_2D.y),
-				static_cast<int>(size/2),
-				static_cast<int>(size/2),
+			BX2D->SetColor(255,255,255);
+			BX2D->DrawEllipse(
+				posLineY_2D.x,
+				posLineY_2D.y,
+				size/2.0f,
+				size/2.0f,
 				2.0f);
 			
 			if (type == TYPE_POINTLIGHT)
 			{
-				float diff = m_OldPointLightPos[id].y - mousePosPlusZY_3D.y;
+				float diff = m_OldLightPos[id].y - mousePosPlusZY_3D.y;
 
 				position.Y -= diff;
 
-				m_OldPointLightPos[id].y = mousePosPlusZY_3D.y;
+				m_OldLightPos[id].y = mousePosPlusZY_3D.y;
 			}
 			else if (type == TYPE_SPOTLIGHT)
 			{
-				float diff = m_OldSpotLightPos[id].y - mousePosPlusZY_3D.y;
+				float diff = m_OldLightPos[id].y - mousePosPlusZY_3D.y;
 
 				position.Y -= diff;
 
-				m_OldSpotLightPos[id].y = mousePosPlusZY_3D.y;
+				m_OldLightPos[id].y = mousePosPlusZY_3D.y;
 			}
 			else if (type == TYPE_MODEL)
 			{
@@ -359,9 +364,9 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		else
 		{
 			if (type == TYPE_POINTLIGHT)
-				m_OldPointLightPos[id].y = mousePosPlusZY_3D.y;
+				m_OldLightPos[id].y = mousePosPlusZY_3D.y;
 			else if (type == TYPE_SPOTLIGHT)
-				m_OldSpotLightPos[id].y = mousePosPlusZY_3D.y;
+				m_OldLightPos[id].y = mousePosPlusZY_3D.y;
 			else if (type == TYPE_MODEL)
 				m_OldModelPos[id].y = mousePosPlusZY_3D.y;
 		}
@@ -369,30 +374,31 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		// Z
 		HitRegion hitRectZ(
 			HitRegion::TYPE_ELLIPSE,
-			static_cast<int>(posLineZ_2D.x),
-			static_cast<int>(posLineZ_2D.y),
-			size,
-			size);
+			posLineZ_2D.x,
+			posLineZ_2D.y,
+			(float)size,
+			(float)size);
 
-		BLOX_2D->SetColor(255, 255, 0);
-		BLOX_2D->DrawLine(
-			static_cast<int>(posLineZ2_2D.x),
-			static_cast<int>(posLineZ2_2D.y),
-			static_cast<int>(posLineZ_2D.x),
-			static_cast<int>(posLineZ_2D.y),
+		BX2D->SetColor(255, 255, 0);
+		BX2D->DrawLine(
+			posLineZ2_2D.x,
+			posLineZ2_2D.y,
+			posLineZ_2D.x,
+			posLineZ_2D.y,
 			2.0f);
 
-		BLOX_2D->FillEllipse(
-			static_cast<int>(posLineZ_2D.x),
-			static_cast<int>(posLineZ_2D.y),
-			static_cast<int>(size/2),
-			static_cast<int>(size/2));
+		BX2D->FillEllipse(
+			posLineZ_2D.x,
+			posLineZ_2D.y,
+			size/2.0f,
+			size/2.0f);
 
-		BLOX_2D->SetColor(255, 255, 0);
-		BLOX_2D->SetFont(_T("Verdana"), false, false, 14);
-		BLOX_2D->DrawString(_T("Z"),
-			static_cast<int>(posLineZ_2D.x-5),
-			static_cast<int>(posLineZ_2D.y) - 25);
+		BX2D->SetColor(255, 255, 0);
+		BX2D->SetFont(m_pAxisFont);
+		BX2D->DrawString(
+			_T("Z"),
+			posLineZ_2D.x - 5,
+			posLineZ_2D.y - 25);
 
 		//D2D1_POINT_2F r[4];
 		r[0].x = posLineZX_2D.x;
@@ -415,26 +421,26 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		}
 
 		if (hitRectZX.HitTest(CONTROLS->GetMousePos()) || (m_bLockZ == true && m_bLockX == true))
-			BLOX_2D->SetColor(150, 150, 255, 0.8f);
+			BX2D->SetColor(150, 150, 255, 0.8f);
 		else
-			BLOX_2D->SetColor(50, 50, 255, 0.4f);
+			BX2D->SetColor(50, 50, 255, 0.4f);
 
-		BLOX_2D->FillPolygon(r,4);
+		BX2D->FillPolygon(r,4);
 
-		BLOX_2D->SetColor(100, 100, 255, 0.8f);
-		BLOX_2D->DrawLine(r[0],r[1]);
-		BLOX_2D->DrawLine(r[1],r[2]);
-		BLOX_2D->DrawLine(r[2],r[3]);
-		BLOX_2D->DrawLine(r[3],r[0]);
+		BX2D->SetColor(100, 100, 255, 0.8f);
+		BX2D->DrawLine(r[0],r[1]);
+		BX2D->DrawLine(r[1],r[2]);
+		BX2D->DrawLine(r[2],r[3]);
+		BX2D->DrawLine(r[3],r[0]);
 
 		if (hitRectZ.HitTest(CONTROLS->GetMousePos()))
 		{
-			BLOX_2D->SetColor(255,255,255);
-			BLOX_2D->DrawEllipse(
-				static_cast<int>(posLineZ_2D.x),
-				static_cast<int>(posLineZ_2D.y),
-				static_cast<int>(size/2),
-				static_cast<int>(size/2),
+			BX2D->SetColor(255,255,255);
+			BX2D->DrawEllipse(
+				posLineZ_2D.x,
+				posLineZ_2D.y,
+				size/2.0f,
+				size/2.0f,
 				2.0f);
 
 			if (CONTROLS->LeftMBDown() && m_bLockX == false && m_bLockY == false)
@@ -450,29 +456,29 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 
 		if (m_bLockZ)
 		{
-			BLOX_2D->SetColor(255,255,255);
-			BLOX_2D->DrawEllipse(
-				static_cast<int>(posLineZ_2D.x),
-				static_cast<int>(posLineZ_2D.y),
-				static_cast<int>(size/2),
-				static_cast<int>(size/2),
+			BX2D->SetColor(255,255,255);
+			BX2D->DrawEllipse(
+				posLineZ_2D.x,
+				posLineZ_2D.y,
+				size/2.0f,
+				size/2.0f,
 				2.0f);
 
 			if (type == TYPE_POINTLIGHT)
 			{
-				float diff = m_OldPointLightPos[id].z - mousePosPlusZZ_3D.z;
+				float diff = m_OldLightPos[id].z - mousePosPlusZZ_3D.z;
 
 				position.Z -= diff;
 
-				m_OldPointLightPos[id].z = mousePosPlusZZ_3D.z;
+				m_OldLightPos[id].z = mousePosPlusZZ_3D.z;
 			}
 			else if (type == TYPE_SPOTLIGHT)
 			{
-				float diff = m_OldSpotLightPos[id].z - mousePosPlusZZ_3D.z;
+				float diff = m_OldLightPos[id].z - mousePosPlusZZ_3D.z;
 
 				position.Z -= diff;
 
-				m_OldSpotLightPos[id].z = mousePosPlusZZ_3D.z;
+				m_OldLightPos[id].z = mousePosPlusZZ_3D.z;
 			}
 			else if (type == TYPE_MODEL)
 			{
@@ -486,9 +492,9 @@ void MoveGizmo::Show(Vector3& position, TYPE type, int id, LevelObject* pLevelOb
 		else
 		{
 			if (type == TYPE_POINTLIGHT)
-				m_OldPointLightPos[id].z = mousePosPlusZZ_3D.z;
+				m_OldLightPos[id].z = mousePosPlusZZ_3D.z;
 			else if (type == TYPE_SPOTLIGHT)
-				m_OldSpotLightPos[id].z = mousePosPlusZZ_3D.z;
+				m_OldLightPos[id].z = mousePosPlusZZ_3D.z;
 			else if (type == TYPE_MODEL)
 				m_OldModelPos[id].z = mousePosPlusZZ_3D.z;
 		}
@@ -501,15 +507,10 @@ void MoveGizmo::Tick(const RenderContext* pRenderContext, vector<LevelObject*> p
 
     //TODO
 
-	//while (m_pRenderContext->GetLightController()->GetPointLights().size() > m_OldPointLightPos.size())
-	//{
-	//	m_OldPointLightPos.push_back(D3DXVECTOR3(0,0,0));
-	//}
-
-	//while (m_pRenderContext->GetLightController()->GetSpotLights().size() > m_OldSpotLightPos.size())
-	//{
-	//	m_OldSpotLightPos.push_back(D3DXVECTOR3(0,0,0));
-	//}
+	while (m_pRenderContext->GetLightController()->GetLights().size() > m_OldLightPos.size())
+	{
+		m_OldLightPos.push_back(D3DXVECTOR3(0,0,0));
+	}
 
 	while (pLevelObjects.size() > m_OldModelPos.size())
 	{

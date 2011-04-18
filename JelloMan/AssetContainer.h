@@ -17,14 +17,14 @@ public:
     void AddAsset(const tstring &key, T* asset)
     {        
         #if defined DEBUG || _DEBUG
-	    wcout << "Adding Asset " << key << "\n";
+	    wcout << "Adding Asset: " << key << "\n";
         #endif
 	    m_Map[key] = asset;
     }
 	void RemoveAsset(const tstring &key)
     {
 	    #if defined DEBUG || _DEBUG
-	    wcout << "Releasing Asset " << key << "\n";
+	    wcout << "Releasing Asset: " << key << "\n";
         #endif
 
 	    delete m_Map[key];
@@ -36,9 +36,10 @@ public:
 	    for(it = m_Map.begin(); it != m_Map.end(); ++it)
 	    {
 	        #if defined DEBUG || _DEBUG
-	        wcout << "Releasing Asset " << (*it).first << "\n";
+	        wcout << "Releasing Asset: " << (*it).first << "\n";
             #endif
-		    delete (*it).second;
+
+			SafeDelete((*it).second);
 	    }
 	    m_Map.clear();
     }

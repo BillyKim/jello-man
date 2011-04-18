@@ -4,15 +4,18 @@
 #include "vertex.h"
 #include "Effect.h"
 
+typedef D3D10_PRIMITIVE_TOPOLOGY TOPOLOGY_TYPE;
+
 template<typename T>
 class ModelMesh
 {
 public:
-    ModelMesh(ID3D10Device* device, const tstring& name) : 
+    ModelMesh(ID3D10Device* device, const tstring& name, TOPOLOGY_TYPE topoType = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST) : 
 			      m_pDevice(device)
 			    , m_pIndexBuffer(0)
 			    , m_pVertexBuffer(0)
                 , m_Name(name)
+				, m_TopologyType(topoType)
     {
     }
     ~ModelMesh(void)
@@ -83,7 +86,7 @@ public:
 	    m_pDevice->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
         // Set primitive topology
-        m_pDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        m_pDevice->IASetPrimitiveTopology(m_TopologyType);
     }
     void Draw(Effect* effect) const
     {
@@ -106,5 +109,7 @@ private:
 	vector<DWORD> m_VecIndices;
 
     tstring m_Name;
+
+	TOPOLOGY_TYPE m_TopologyType;
 };
 
