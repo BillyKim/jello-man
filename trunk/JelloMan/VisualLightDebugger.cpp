@@ -306,8 +306,8 @@ void VisualLightDebugger::ShowLightInfo()
 		{
 			SpotLight* pSLight = dynamic_cast<SpotLight*>(pLight);
 
-			float angle = ToDegrees(pSLight->GetOpeningsAngle()) * 2.0f;
-			if (angle < 0.1f) angle = 0.0f;
+			float angle = ToDegrees(pSLight->GetOpeningsAngle());
+			//if (angle < 0.1f) angle = 0.0f; //would be weird for the debug -- should never be sub 0
 
 			stream << _T("Angle: ") << angle << _T("\n\n\n\n");
 
@@ -362,25 +362,23 @@ void VisualLightDebugger::ShowLightInfo()
 		{
 			SpotLight* pSLight = dynamic_cast<SpotLight*>(pLight);
 
-			// power
-			float power = pSLight->GetPower();
-
 			if (m_pPowerAddButton->Down())
 			{
-				power -= 0.1f;
+			    pSLight->AddOpeningsAngle(0.01f); //radians
+		        if (pSLight->GetOpeningsAngle() >= Pi)
+		        {
+			        pSLight->SetOpeningsAngle(Pi - 0.01f);
+		        }
 			}
 			
 			if (m_pPowerSubtractButton->Down())
 			{
-				power += 0.1f;
+			    pSLight->AddOpeningsAngle(-0.01f);
+		        if (pSLight->GetOpeningsAngle() < 0.01f)
+		        {
+			        pSLight->SetOpeningsAngle(0.01f);
+		        }
 			}
-
-			if (power < 0.1f)
-			{
-				power = 0.0f;
-			}
-
-			pSLight->SetPower(power);
 		}
 
 		pLight->SetAttenuationEnd(static_cast<float>(attenuationEnd));

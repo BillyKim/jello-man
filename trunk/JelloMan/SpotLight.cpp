@@ -1,8 +1,6 @@
 #include "SpotLight.h"
 #include "LightBehaviourNormal.h"
 #include "ContentManager.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 SpotLight::SpotLight():
 			m_Scale(1), 
@@ -317,27 +315,12 @@ void SpotLight::SetOpeningsAngle(float rad)
 }
 void SpotLight::AddOpeningsAngle(float rad)
 {
-	SetOpeningsAngle(-m_OpeningsAngle + rad);
+	SetOpeningsAngle(m_OpeningsAngle + rad);
 }
 
 float SpotLight::GetOpeningsAngle() const
 {
-	float power = m_Desc.power;
-
-	float angle = powf(M_E, (-(log(100.0f)))/power);
-	angle = acosf(angle*2);
-
-	return angle;
-}
-
-void SpotLight::SetPower(float power)
-{
-	m_Desc.power = power;
-}
-
-float SpotLight::GetPower() const
-{
-	return m_Desc.power;
+	return m_OpeningsAngle;
 }
 
 const SpotLightDesc& SpotLight::GetDesc() const

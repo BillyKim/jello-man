@@ -58,9 +58,6 @@ public:
 	virtual void AddOpeningsAngle(float rad);
 	virtual float GetOpeningsAngle() const;
 
-	virtual void SetPower(float power);
-	virtual float GetPower() const;
-
     virtual const SpotLightDesc& GetDesc() const;
     
     //this method should delete and init the lightbehaviour

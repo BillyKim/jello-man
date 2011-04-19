@@ -8,6 +8,7 @@ const float Pi		 = 3.1415927f;
 const float TwoPi	 = 6.2831853f;
 const float PiOver2  = 1.5707963f;
 const float PiOver4  = 0.7853982f;
+const float E        = 2.7182818f;
 //<----------------------------------
 
 template<typename T>
