@@ -231,16 +231,14 @@ void VisualLightDebugger::ShowLightInfo()
 
 	if (GetNrLightsSelected() == 1)
 	{
-		int type = 0;
+        LightType type = LightType_Point;
 		int selectedLight = 0;
 
 		for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
 		{
 			if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
 			{
-				if (m_pRenderContext->GetLightController()->GetLights()[i]->GetType() == LightType_Spot)
-					type = 1;
-
+				type = m_pRenderContext->GetLightController()->GetLights()[i]->GetType();
 				selectedLight = i;
 			}
 		}
@@ -250,7 +248,7 @@ void VisualLightDebugger::ShowLightInfo()
 		m_pAttenuationAddButton->Tick();
 		m_pAttenuationSubtractButton->Tick();
 
-		if (type == 1)
+		if (type == LightType_Spot)
 		{
 			m_pPowerAddButton->Tick();
 			m_pPowerSubtractButton->Tick();
@@ -304,11 +302,11 @@ void VisualLightDebugger::ShowLightInfo()
 		stream << _T("Multiplier: ") << pLight->GetMulitplier() << _T("\n\n\n\n");
 		stream << _T("Attenuation end: ") << pLight->GetAttenuationEnd() << _T("\n\n\n\n");
 
-		if (type == 1)
+        if (type == LightType_Spot)
 		{
 			SpotLight* pSLight = dynamic_cast<SpotLight*>(pLight);
 
-			float angle = (pSLight->GetOpeningsAngle() / (2 * M_PI)) * 360.0f * 2.0f;
+			float angle = ToDegrees(pSLight->GetOpeningsAngle()) * 2.0f;
 			if (angle < 0.1f) angle = 0.0f;
 
 			stream << _T("Angle: ") << angle << _T("\n\n\n\n");
@@ -360,7 +358,7 @@ void VisualLightDebugger::ShowLightInfo()
 			attenuationEnd = 0;
 		}
 
-		if (type == 1)
+		if (type == LightType_Spot)
 		{
 			SpotLight* pSLight = dynamic_cast<SpotLight*>(pLight);
 
@@ -473,7 +471,7 @@ void VisualLightDebugger::ShowLightInfo()
 		BX2D->DrawLine(10,330,190,330);
 		BX2D->DrawLine(10,387,190,387);
 
-		if (type == 1)
+		if (type == LightType_Spot)
 		{
 			m_pPowerAddButton->Show();
 			m_pPowerSubtractButton->Show();
