@@ -157,16 +157,6 @@ void Engine::Initialize()
 	cout << "-Blox2D Engine initialized\n";
 	#endif
 
-	// init physx
-	if (m_pGameConfig->UsingPhysX())
-	{
-		
-	}
-
-	#if defined DEBUG || _DEBUG
-	cout << "-PhysX Engine initialized\n";
-	#endif
-
 	Content->Init(m_pDXDevice);
 }
 

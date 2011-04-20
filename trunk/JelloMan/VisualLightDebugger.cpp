@@ -74,15 +74,15 @@ VisualLightDebugger::VisualLightDebugger()	:	m_bClick(false),
 	m_pPowerSubtractButton->SetHoverState(m_pAddSubtractBitmaps[3]);
 	m_pPowerSubtractButton->SetDownState(m_pAddSubtractBitmaps[3]);
 
-	// TEXTBOX
-	m_pTextBoxX = new TextBox();
-	m_pTextBoxX->SetBounds(30,85,80,20);
+	//// TEXTBOX
+	//m_pTextBoxX = new TextBox();
+	//m_pTextBoxX->SetBounds(30,85,80,20);
 
-	m_pTextBoxY = new TextBox();
-	m_pTextBoxY->SetBounds(30,115,80,20);
+	//m_pTextBoxY = new TextBox();
+	//m_pTextBoxY->SetBounds(30,115,80,20);
 
-	m_pTextBoxZ = new TextBox();
-	m_pTextBoxZ->SetBounds(30,145,80,20);
+	//m_pTextBoxZ = new TextBox();
+	//m_pTextBoxZ->SetBounds(30,145,80,20);
 
 	// FONT
 	m_pLightInfoFont = Content->LoadTextFormat(_T("Verdana"),10, false,false);
@@ -112,6 +112,24 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 	m_pRenderContext = pRenderContext;
 
 	CheckControls();
+
+	if (!m_pTextBoxX)
+	{
+		m_pTextBoxX = new TextBox();
+		m_pTextBoxX->SetBounds(30,85,80,20);
+	}
+
+	if (!m_pTextBoxY)
+	{
+		m_pTextBoxY = new TextBox();
+		m_pTextBoxY->SetBounds(30,115,80,20);
+	}
+
+	if (!m_pTextBoxZ)
+	{
+		m_pTextBoxZ = new TextBox();
+		m_pTextBoxZ->SetBounds(30,145,80,20);
+	}
 }
 
 void VisualLightDebugger::CheckControls()
