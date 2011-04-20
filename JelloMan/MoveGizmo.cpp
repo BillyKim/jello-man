@@ -428,7 +428,7 @@ void MoveGizmo::Show(Light* pLight, int id)
 	}
 }
 
-void MoveGizmo::Show(LevelObject* pLevelObject, int id)
+void MoveGizmo::Show(ILevelObject* pLevelObject, int id)
 {
 	// MATRIX
 	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -835,7 +835,7 @@ void MoveGizmo::Show(LevelObject* pLevelObject, int id)
 	}
 }
 
-void MoveGizmo::Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects)
+void MoveGizmo::Tick(const RenderContext* pRenderContext, vector<ILevelObject*> pLevelObjects)
 {
 	m_pRenderContext = pRenderContext;
 

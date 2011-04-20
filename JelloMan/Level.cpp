@@ -21,7 +21,7 @@ Level::~Level()
 {
 	delete m_pBaseGrid;
 	
-	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
+	for (vector<ILevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 		delete *it;
 }
 
@@ -166,23 +166,13 @@ void Level::Tick(const float dTime)
 	}
     if (CONTROLS->IsKeyPressed(VK_CONTROL))
 	{
-        //if (rand() % 2 == 0)
-        //{
-            TestSoftbody* pSB = new TestSoftbody(m_pRenderContext->GetCamera()->GetPosition());
-            pSB->Init(m_pPhysXEngine);
-            m_pLevelObjects.push_back(pSB);
-		    pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
-      //  }
-      //  else
-      //  {
-      //      TestPhysXSphere* pTestPhysXShere = new TestPhysXSphere(m_pPhysXEngine, m_pRenderContext->GetCamera()->GetPosition());
-		    //pTestPhysXShere->Init();
-		    //m_vecActor.push_back(pTestPhysXShere);
-		    //pTestPhysXShere->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
-      //  }
+        TestSoftbody* pSB = new TestSoftbody(m_pRenderContext->GetCamera()->GetPosition());
+        pSB->Init(m_pPhysXEngine);
+        m_pLevelObjects.push_back(pSB);
+		pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
 	}
 
-	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
+	for (vector<ILevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 	{
 		if (!m_bTickCharacter)
 		{
@@ -195,11 +185,11 @@ void Level::Tick(const float dTime)
 	}
 }
 
-void Level::DrawDeferred(const RenderContext* pRenderContext)
+void Level::DrawDeferred(RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
-	for (vector<LevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
+	for (vector<ILevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 	{
 		(*it)->Draw(pRenderContext);
 	}
@@ -208,9 +198,9 @@ void Level::DrawDeferred(const RenderContext* pRenderContext)
 
 void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
 {
-    for (vector<LevelObject*>::const_iterator lIt = m_pLevelObjects.cbegin(); lIt != m_pLevelObjects.cend(); ++lIt)
+    for (vector<ILevelObject*>::const_iterator lIt = m_pLevelObjects.cbegin(); lIt != m_pLevelObjects.cend(); ++lIt)
 	{
-		LevelObject* lobj = *lIt;
+		ILevelObject* lobj = *lIt;
         lobj->DrawShadow(pRenderContext, pPreShadowEffect);
 	}
 }
@@ -234,7 +224,7 @@ void Level::DrawForward(const RenderContext* pRenderContext)
 	}
 }
 
-void Level::AddLevelObject(LevelObject* pLevelObject)
+void Level::AddLevelObject(ILevelObject* pLevelObject)
 {
 	m_pLevelObjects.push_back(pLevelObject);
 }

@@ -53,12 +53,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\boost\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d2d1.lib;dwrite.lib;windowscodecs.lib;dxgi.lib;d3d10_1.lib;libboost_thread-vc100-mt-gd-1_46_1.lib;libboost_date_time-vc100-mt-gd-1_46_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Sebastiaan\School\2DAE\JelloMan\JelloMan\boost\date_time\build\msvc-10.0\debug\link-static\threading-multi;boost\thread\build\msvc-10.0\debug\link-static\threading-multi;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\boost\boost\date_time\build\msvc-10.0\debug\link-static\threading-multi;.\boost\boost\thread\build\msvc-10.0\debug\link-static\threading-multi;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,8 +110,12 @@
     <ClInclude Include="GameWinMain.h" />
     <ClInclude Include="AssetContainer.h" />
     <ClInclude Include="HitRegion.h" />
+    <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="ILevelObject.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageLoader.h" />
+    <ClInclude Include="ITransformable.h" />
+    <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelObject.h" />
     <ClInclude Include="Light.h" />

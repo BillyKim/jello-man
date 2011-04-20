@@ -94,6 +94,9 @@
     <Filter Include="Engine Files\Graphics\GUI\Models">
       <UniqueIdentifier>{ec27c9a8-64ed-431f-b0dc-237edf804e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Files\interfaces">
+      <UniqueIdentifier>{046d174a-bcb7-4f4b-8ae2-efe8bafdb5ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -350,6 +353,18 @@
     </ClInclude>
     <ClInclude Include="SplineLoader.h">
       <Filter>Engine Files\ContentManager</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawable.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="IUpdatable.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ILevelObject.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ITransformable.h">
+      <Filter>Game Files\interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

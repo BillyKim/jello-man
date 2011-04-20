@@ -581,7 +581,7 @@ void EditorGUI::Draw()
 		m_pColorPicker->PreviousColorSet(false);
 	}
 }
-void EditorGUI::Tick(const RenderContext* pRenderContext, vector<LevelObject*>& pLevelObjects)
+void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects)
 {
 	// BUTTONS
 	m_pLightButton->Tick();

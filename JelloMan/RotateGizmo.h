@@ -21,8 +21,8 @@ public:
 	virtual ~RotateGizmo();
 
 	// GENERAL
-	void Show(Vector3& position, Vector3& direction, TYPE type, int id, LevelObject* pLevelObject = 0);
-	void Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects);
+	void Show(Vector3& position, Vector3& direction, TYPE type, int id, ILevelObject* pLevelObject = 0);
+	void Tick(const RenderContext* pRenderContext, vector<ILevelObject*> pLevelObjects);
 
 private:
 

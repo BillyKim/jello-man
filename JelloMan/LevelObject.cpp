@@ -25,13 +25,6 @@ LevelObject::LevelObject()	:	m_pModel(0),
 
 LevelObject::~LevelObject()
 {
-	//delete m_pModel;
-	/*delete m_pEffect;
-	delete m_pEffectNormals;
-	delete m_pDiffuseMap;
-	delete m_pSpecMap;
-	delete m_pGlossMap;
-	delete m_pNormalMap;*/
 }
 
 void LevelObject::Init(PhysX* pPhysX)
@@ -64,13 +57,17 @@ void LevelObject::Init(PhysX* pPhysX)
 
 	m_bInitialized = true;
 }
+void LevelObject::Selected(bool selected)
+{
+    m_bIsSelected = selected;
+}
 
 void LevelObject::Tick(const float dTime)
 {
     Actor::Tick(dTime);
 }
 
-void LevelObject::Draw(const RenderContext* pRenderContext)
+void LevelObject::Draw(RenderContext* pRenderContext)
 {
 	if (m_bUseNormalMap)
 	{

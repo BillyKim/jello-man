@@ -3,7 +3,7 @@
 #include "Blox2D_Engine.h"
 #include "Vector3.h"
 #include "RenderContext.h"
-#include "LevelObject.h"
+#include "ILevelObject.h"
 #include "Light.h"
 
 class MoveGizmo
@@ -16,8 +16,8 @@ public:
 
 	// GENERAL
 	void Show(Light* pLight, int id);
-	void Show(LevelObject* pLevelObject, int id);
-	void Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects);
+	void Show(ILevelObject* pLevelObject, int id);
+	void Tick(const RenderContext* pRenderContext, vector<ILevelObject*> pLevelObjects);
 
 	// GETTERS
 	bool IsMoving() const;

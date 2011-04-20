@@ -17,6 +17,8 @@
 #include "Softbody.h"
 #include "PreShadowEffect.h"
 
+#include "ILevelObject.h"
+
 class Level
 {
 public:
@@ -28,11 +30,11 @@ public:
 	// GENERAL
 	void Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera);
 	void Tick(const float dTime);
-	void DrawDeferred(const RenderContext* pRenderContext);
+	void DrawDeferred(RenderContext* pRenderContext);
 	void DrawForward(const RenderContext* pRenderContext);
     void DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect);
 
-	void AddLevelObject(LevelObject* pLevelObject);
+	void AddLevelObject(ILevelObject* pLevelObject);
 
 	// SETTERS
 	void ShowGrid(bool show)
@@ -45,7 +47,7 @@ public:
 	{ m_bTickCharacter = tick; }
 
 	// GETTERS
-	vector<LevelObject*>& GetLevelObjects()
+	vector<ILevelObject*>& GetLevelObjects()
 	{ return m_pLevelObjects; }
 
 private:
@@ -59,7 +61,7 @@ private:
 
 	const RenderContext* m_pRenderContext;
 
-	vector<LevelObject*> m_pLevelObjects;
+	vector<ILevelObject*> m_pLevelObjects;
 
 	BaseGrid* m_pBaseGrid;
 

@@ -17,7 +17,7 @@ RotateGizmo::~RotateGizmo()
 }
 
 // GENERAL
-void RotateGizmo::Show(Vector3& position, Vector3& direction, TYPE type, int id, LevelObject* pLevelObject)
+void RotateGizmo::Show(Vector3& position, Vector3& direction, TYPE type, int id, ILevelObject* pLevelObject)
 {
 	// MATRIX
 	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -44,10 +44,7 @@ void RotateGizmo::Show(Vector3& position, Vector3& direction, TYPE type, int id,
 	}
 	else
 	{
-		pos = D3DXVECTOR3(
-			pLevelObject->GetPosition().X,
-			pLevelObject->GetPosition().Y,
-			pLevelObject->GetPosition().Z	);
+		pos = pLevelObject->GetPosition().ToD3DVector3();
 	}
 
 	Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
@@ -459,7 +456,7 @@ void RotateGizmo::Show(Vector3& position, Vector3& direction, TYPE type, int id,
 	}
 }
 
-void RotateGizmo::Tick(const RenderContext* pRenderContext, vector<LevelObject*> pLevelObjects)
+void RotateGizmo::Tick(const RenderContext* pRenderContext, vector<ILevelObject*> pLevelObjects)
 {
 	m_pRenderContext = pRenderContext;
 

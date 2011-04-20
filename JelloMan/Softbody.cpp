@@ -161,3 +161,68 @@ void Softbody::AddForce(const Vector3& force)
 {
     m_pSoftbody->addDirectedForceAtPos(m_CenterPoint, force, m_Radius, NX_FORCE);
 }
+
+void Softbody::Translate(const Vector3& add)
+{
+    Vector3* buffer = new Vector3[m_numPositions];
+    m_pSoftbody->getPositions(buffer);
+
+    for (int i = 0; i < m_numPositions; ++i)
+    {
+        buffer[i] += add;
+    }
+
+    m_pSoftbody->setPositions(buffer);
+    delete buffer;
+}
+void Softbody::SetPosition(const Vector3& pos)
+{
+    Vector3* buffer = new Vector3[m_numPositions];
+    m_pSoftbody->getPositions(buffer);
+
+    for (int i = 0; i < m_numPositions; ++i)
+    {
+        buffer[i] += -GetPosition() + pos;
+    }
+
+    m_pSoftbody->setPositions(buffer);
+    delete buffer;
+}
+const Vector3& Softbody::GetPosition() const
+{
+    return m_CenterPoint;
+}
+
+void Softbody::Rotate(const Vector3& axis, float angle)
+{
+    Vector3* buffer = new Vector3[m_numPositions];
+    m_pSoftbody->getPositions(buffer);
+
+    Matrix mtxRot = Matrix::CreateRotation(axis, angle);
+    for (int i = 0; i < m_numPositions; ++i)
+    {
+        buffer[i] -= GetPosition();
+        buffer[i] = Vector3::Transform(buffer[i], mtxRot).XYZ();
+        buffer[i] += GetPosition();
+    }
+
+    m_pSoftbody->setPositions(buffer);
+    delete buffer;
+}
+
+void Softbody::Scale(const Vector3& scale)
+{
+    Vector3* buffer = new Vector3[m_numPositions];
+    m_pSoftbody->getPositions(buffer);
+
+    Matrix mtxScale = Matrix::CreateScale(scale);
+    for (int i = 0; i < m_numPositions; ++i)
+    {
+        buffer[i] -= GetPosition();
+        buffer[i] = Vector3::Transform(buffer[i], mtxScale).XYZ();
+        buffer[i] += GetPosition();
+    }
+
+    m_pSoftbody->setPositions(buffer);
+    delete buffer;
+}

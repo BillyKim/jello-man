@@ -22,12 +22,17 @@ void TestSoftbody::Init(PhysX* pPhysX)
     m_pGlossMap = Content->LoadTexture2D(_T("Content/Textures/weapon_gloss.png"));
 }
 
+void TestSoftbody::Selected(bool selected)
+{
+    m_bIsSelected = selected;
+}
+
 void TestSoftbody::Tick(const float dTime)
 {
     TransformPositions();
 }
 
-void TestSoftbody::Draw(const RenderContext* pRenderContext)
+void TestSoftbody::Draw(RenderContext* pRenderContext)
 {
     m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->SetWorld(Matrix::Identity);

@@ -4,4 +4,14 @@ download: http://www.boost.org/  --v1.46.1
 
 unzip contents of folder "boost_1_46_1" here
 
-merdge when promped
+right click -> ../JelloMan/boost/_INSTALL_/boost
+tortois svn -> export
+export to ../JelloMan/boost/
+    override all
+
+
+cd ../JelloMan/boost/
+select all
+deselect .svn, _INSTALL_
+tortois svn -> add to ignore list ->
+ignore by name
