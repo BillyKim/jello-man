@@ -53,7 +53,6 @@ EditorGUI::~EditorGUI()
 	delete m_pLoadModelButton;
 	delete m_pShowGridButton;
 
-	delete m_pCameraBitmap;
 	delete m_pLightDebugger;
 	delete m_pColorPicker;
 	delete m_pMoveGizmo;

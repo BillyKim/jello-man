@@ -23,8 +23,6 @@ AudioEngine::AudioEngine(wstring projectName)
 	m_sSoundbank.append(L".xsb");
 	m_sGlobalSettings = projectName;
 	m_sGlobalSettings.append(L".xgs");
-
-	
 }
 
 AudioEngine::~AudioEngine(void)
@@ -33,8 +31,14 @@ AudioEngine::~AudioEngine(void)
 }
 void AudioEngine::Cleanup()
 {
-	if(m_pSoundBank)HR(m_pSoundBank->Destroy());
-	if(m_pWaveBank)HR(m_pWaveBank->Destroy());
+	HRESULT hr;
+
+	if(m_pSoundBank)
+		hr = m_pSoundBank->Destroy();
+
+	if(m_pWaveBank)
+		hr = m_pWaveBank->Destroy();
+
 	if(m_pXACT3Engine)
 	{
 		HR(m_pXACT3Engine->ShutDown());
