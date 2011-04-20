@@ -390,9 +390,14 @@ void MainGame::LoadScreen()
 
 	BX2D->ResetTransform();
 
-	BX2D->SetColor(255,255,255);
-	for (int i = 0; i < m_Orbs; ++i)
+	
+	for (int i = 0; i < 6; ++i)
 	{
+		if (i <= m_Orbs)
+			BX2D->SetColor(255,255,255);
+		else
+			BX2D->SetColor(255,255,255,0.2f);
+
 		BX2D->FillEllipse(Point2F(BX2D->GetWindowSize().width / 2 + ((i - 2) * 50) - 25, (BX2D->GetWindowSize().height / 2) + 200), 20,20);
 	}
 }
