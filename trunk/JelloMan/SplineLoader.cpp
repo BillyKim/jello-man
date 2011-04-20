@@ -22,8 +22,12 @@ Model<VertexPosCol>* SplineLoader::Load(ID3D10Device *pDXDevice, const tstring& 
     }
     else
     {
+		m_pCurrentModel = 0;
         m_pCurrentModel = new Model<VertexPosCol>(pDXDevice);
-        m_VertexData.clear();
+		m_VertexData.clear();
+		m_IndexData.clear();
+		m_VPNTTData.clear();
+		m_pCurrentMesh = 0;
 
         if (assetName.rfind(_T(".obj")) != -1)
             ReadASCIIObj(assetName,col); //assigns all meshes
@@ -58,7 +62,6 @@ void SplineLoader::ReadBinObj(const tstring& assetName, Color col)
         WORD nameLength = stream.readWord();
         char* name = new char[nameLength];
         stream.readBuffer(name, nameLength);
-        
 
         string tempname(name);
         delete name;
@@ -96,13 +99,7 @@ void SplineLoader::ReadASCIIObj(const tstring& assetName, Color col)
     while (stream.eof() == false)
     {
         getline(stream, line);
-        if (line.find("g", 0) == 0)
-        {
-            wchar_t s[40];
-            sscanf_s(line.c_str(), "g %s40", s, _countof(s));
-            AddMesh(s);
-        }
-        else if (line.find("v", 0) == 0) //v is 0'd char
+        if (line.find("v", 0) == 0) //v is 0'd char
         {
             Vector3 v;
             sscanf_s(line.c_str(), "v %f %f %f", &v.X, &v.Y, &v.Z);
@@ -151,6 +148,12 @@ void SplineLoader::ReadASCIIObj(const tstring& assetName, Color col)
 			if (index != 0)
 				m_IndexData.push_back(index - 1);
         }
+		else if (line.find("g", 0) == 0)
+        {
+            wchar_t s[40];
+            sscanf_s(line.c_str(), "g %s40", s, _countof(s));
+            AddMesh(s);
+        }
     }
 
     FlushMesh(); //apply last mesh
@@ -169,7 +172,7 @@ void SplineLoader::AddVertex(const Vector3& v, Color& col)
 void SplineLoader::AddMesh(const tstring& name)
 {
     if (m_pCurrentMesh != 0) //apply the vertex and indexbuffer to the mesh
-        FlushMesh();
+		FlushMesh();
 
 	m_pCurrentMesh = m_pCurrentModel->AddMesh(name, D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP);
 }
@@ -180,6 +183,6 @@ void SplineLoader::FlushMesh()
     m_pCurrentMesh->SetVertices(m_VPNTTData);
 	m_pCurrentMesh->SetIndices(m_IndexData);
 	m_IndexData.clear();
-    m_VPNTTMap.clear();
+	m_VertexData.clear();
     m_pCurrentMesh = 0;
 }
