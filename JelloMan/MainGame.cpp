@@ -412,7 +412,7 @@ void MainGame::LoadScreen()
 	BX2D->DrawStringCentered(_T(":D"),-20);
 
 	BX2D->ResetTransform();
-	
+
 	for (int i = 0; i < 6; ++i)
 	{
 		if (i <= m_Orbs)
@@ -420,6 +420,6 @@ void MainGame::LoadScreen()
 		else
 			BX2D->SetColor(255,255,255,0.2f);
 
-		BX2D->FillEllipse(Point2F(BX2D->GetWindowSize().width / 2 + ((i - 2) * 50) - 25, (BX2D->GetWindowSize().height / 2) + 200), 20,20);
+		BX2D->FillEllipse(Point2F(BX2D->GetWindowSize().width / 2 + ((i - 2) * 40) - 20, (BX2D->GetWindowSize().height / 2) + 200), 15,15);
 	}
 }
