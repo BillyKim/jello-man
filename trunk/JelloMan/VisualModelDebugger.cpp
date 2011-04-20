@@ -15,7 +15,7 @@ VisualModelDebugger::~VisualModelDebugger()
 }
 
 // GENERAL
-void VisualModelDebugger::Tick(const RenderContext* pRenderContex, vector<LevelObject*>& pLevelObjects)
+void VisualModelDebugger::Tick(const RenderContext* pRenderContex, vector<ILevelObject*>& pLevelObjects)
 {
 	m_pLevelObjects = pLevelObjects;
 	m_pRenderContext = pRenderContex;
@@ -71,11 +71,7 @@ void VisualModelDebugger::Draw()
 	{
 		if (m_ModelsSelected[i])
 		{
-			D3DXVECTOR3 pos(
-				m_pLevelObjects[i]->GetActor()->getGlobalPosition().x,
-				m_pLevelObjects[i]->GetActor()->getGlobalPosition().y,
-				m_pLevelObjects[i]->GetActor()->getGlobalPosition().z
-				);
+			D3DXVECTOR3 pos(m_pLevelObjects[i]->GetPosition());
 
 			D3DXVECTOR3 pos2D;
 			D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);

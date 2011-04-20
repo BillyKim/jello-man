@@ -5,14 +5,23 @@
 #include "Model.h"
 #include "RenderContext.h"
 #include "SoftbodyMesh.h"
+#include "ITransformable.h"
 
-class Softbody
+class Softbody : public ITransformable
 {
 public:
     virtual ~Softbody(void);
     
     void AddForce(const Vector3& force);
     void AddSpeed(const Vector3& speed);
+    
+	virtual void Translate(const Vector3& add);
+	virtual void SetPosition(const Vector3& pos);
+	virtual const Vector3& GetPosition() const;
+
+    virtual void Rotate(const Vector3& axis, float angle);
+
+	virtual void Scale(const Vector3& scale);
 
 protected:
     Softbody();

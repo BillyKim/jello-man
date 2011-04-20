@@ -11,7 +11,7 @@
 #include "MoveGizmo.h"
 #include "RotateGizmo.h"
 #include "LoadModelFromFile.h"
-#include "LevelObject.h"
+#include "ILevelObject.h"
 #include "VisualModelDebugger.h"
 
 class EditorGUI
@@ -32,7 +32,7 @@ public:
 	// GENERAL
 	void Initialize();
 	void Draw();
-	void Tick(const RenderContext* pRenderContext, vector<LevelObject*>& pLevelObjects);
+	void Tick(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects);
 
 	// GETTERS
 	Button* GetLightButton() const
@@ -120,7 +120,7 @@ private:
 
 	TextFormat* m_pInfoFont;
 
-	vector<LevelObject*>* m_pLevelObjects;
+	vector<ILevelObject*>* m_pLevelObjects;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);

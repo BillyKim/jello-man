@@ -10,7 +10,9 @@
 #include "DeferredPreEffect.h"
 #include "PreShadowEffect.h"
 
-class LevelObject : public Actor
+#include "ILevelObject.h"
+
+class LevelObject : public ILevelObject, public Actor
 {
 public:
     
@@ -20,9 +22,23 @@ public:
 
 	// GENERAL
     virtual void Init(PhysX* pPhysX);
+    virtual void Selected(bool selected);
+
+    //IUpdatable
 	virtual void Tick(float dTime);
-    virtual void Draw(const RenderContext* pRenderContext);
+
+    //IDrawable
+    virtual void Draw(RenderContext* pRenderContext);
     virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e);
+
+    //ITransformable
+    virtual void Rotate(const Vector3& axis, float angle) { Actor::Rotate(axis, angle); }
+
+    virtual void Translate(const Vector3& add) { Actor::Translate(add); }
+    virtual void SetPosition(const Vector3& pos) { Actor::SetPosition(pos); }
+    virtual const Vector3& GetPosition() const { return Actor::GetPosition(); }
+
+    virtual void Scale(const Vector3& scale) { Actor::Scale(scale); }
 
 	// SETTERS
 	void SetModelPath(tstring modelPath)
@@ -57,9 +73,6 @@ public:
 
 	void UseNormalMap(bool use)
 	{ m_bUseNormalMap = use; }
-
-	void Selected(bool selected)
-	{ m_bIsSelected = selected; }
 
 	// GETTERS
 	bool IsInitialized() const

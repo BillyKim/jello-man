@@ -3,9 +3,10 @@
 #include "D3DUtil.h"
 #include "Blox2D_Engine.h"
 #include "Controls.h"
-#include "LevelObject.h"
+#include "ILevelObject.h"
 #include "RenderContext.h"
 #include "PhysX.h"
+#include "Actor.h"
 
 class VisualModelDebugger
 {
@@ -16,7 +17,7 @@ public:
 	virtual ~VisualModelDebugger();
 
 	// GENERAL
-	void Tick(const RenderContext* pRenderContex, vector<LevelObject*>& pLevelObjects);
+	void Tick(const RenderContext* pRenderContex, vector<ILevelObject*>& pLevelObjects);
 	void CheckControls();
 	void Draw();
 	void DeselectAll();
@@ -40,7 +41,7 @@ private:
 	const PhysX* m_pPhysXEngine;
 
 	vector<bool> m_ModelsSelected;
-	vector<LevelObject*> m_pLevelObjects;
+	vector<ILevelObject*> m_pLevelObjects;
 
 	vector<bool> m_ActorsSelected;
 	vector<Actor*> m_pActors;
