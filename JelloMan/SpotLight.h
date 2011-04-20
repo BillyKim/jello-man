@@ -2,6 +2,7 @@
 #include "Light.h"
 #include "LightDesc.h"
 #include "Model.h"
+#include "PosColEffect.h"
 
 class SpotLight : public Light
 {
@@ -92,6 +93,9 @@ private:
 	Image* m_pSpotLightImage;
 
 	Model<VertexPosCol>* m_pAttenuationSpline;
+	Model<VertexPosCol>* m_pAttenuationSpline2;
+	Model<VertexPosCol>* m_pAttenuationSpline3;
+	PosColEffect* m_pEffect;
 
     void UpdateShadowCameraView();
     void UpdateShadowCameraProjection();

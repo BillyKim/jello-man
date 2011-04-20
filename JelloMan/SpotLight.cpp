@@ -14,7 +14,11 @@ SpotLight::SpotLight():
             m_vUp(0, 1, 0),
 			m_pHitRegion(0),
 			m_pSpotLightImage(0),
-			m_ShadowMapType(ShadowMapType_None)
+			m_ShadowMapType(ShadowMapType_None),
+			m_pAttenuationSpline(0),
+			m_pEffect(0),
+			m_pAttenuationSpline2(0),
+			m_pAttenuationSpline3(0)
 {
     SetBehaviour(new LightBehaviourNormal());
 
@@ -28,6 +32,11 @@ SpotLight::SpotLight():
     m_StartDesc = m_Desc;
 
 	m_pSpotLightImage = Content->LoadImage(_T("Content/Images/Editor/slight.png"));
+
+	m_pAttenuationSpline = Content->LoadSpline(_T("Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline2 = Content->LoadSpline(_T("Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline3 = Content->LoadSpline(_T("Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
 }
 SpotLight::SpotLight(const SpotLightDesc& desc):
 			m_Scale(1), 
@@ -42,12 +51,21 @@ SpotLight::SpotLight(const SpotLightDesc& desc):
 			m_pHitRegion(0),
 			m_Desc(desc),
 			m_pSpotLightImage(0),
-			m_ShadowMapType(ShadowMapType_None)
+			m_ShadowMapType(ShadowMapType_None),
+			m_pAttenuationSpline(0),
+			m_pEffect(0),
+			m_pAttenuationSpline2(0),
+			m_pAttenuationSpline3(0)
 {
 	SetBehaviour(new LightBehaviourNormal());
 	m_StartDesc = m_Desc;
 
 	m_pSpotLightImage = Content->LoadImage(_T("Content/Images/Editor/slight.png"));
+
+	m_pAttenuationSpline = Content->LoadSpline(_T("Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline2 = Content->LoadSpline(_T("Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline3 = Content->LoadSpline(_T("Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
 }
 SpotLight::~SpotLight()
 {
@@ -138,6 +156,46 @@ void SpotLight::Draw(const RenderContext* rc)
 			m_pSpotLightImage->GetDimensions().width / (8 * l),
 			m_pSpotLightImage->GetDimensions().height / (8 * l));
 	}
+
+	if (m_IsSelected)
+	{
+		// ATTENUATION
+		Matrix matWorld =
+			Matrix::CreateScale(
+			Vector3(m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f)) * 
+			Matrix::CreateRotationZ(M_PI_2) *
+			m_Rotation *
+			Matrix::CreateTranslation(
+			Vector3(m_Desc.position.X, m_Desc.position.Y, m_Desc.position.Z));
+
+		m_pEffect->SetWorld(matWorld);
+		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
+		m_pAttenuationSpline->Draw(m_pEffect);
+
+		matWorld =
+			Matrix::CreateScale(
+			Vector3(m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f)) * 
+			Matrix::CreateTranslation(
+			Vector3(m_Desc.position.X, m_Desc.position.Y, m_Desc.position.Z));
+
+		m_pEffect->SetWorld(matWorld);
+		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
+		m_pAttenuationSpline3->Draw(m_pEffect);
+	}
+	else
+	{
+		Matrix matWorld =
+			Matrix::CreateScale(
+			Vector3(0.5f,0.5f,0.5f)) *
+			Matrix::CreateRotationZ(M_PI_2) * 
+			m_Rotation * 
+			Matrix::CreateTranslation(
+			Vector3(m_Desc.position.X, m_Desc.position.Y, m_Desc.position.Z));
+
+		m_pEffect->SetWorld(matWorld);
+		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
+		m_pAttenuationSpline2->Draw(m_pEffect);
+	}
 }
 
 void SpotLight::Translate(const Vector3& add)
@@ -161,6 +219,8 @@ void SpotLight::Rotate(const Vector3& axis, float angle)
     m_Desc.direction = Vector3::Transform(m_Desc.direction, rot).XYZ();
     m_vUp = Vector3::Transform(m_vUp, rot).XYZ();
     UpdateShadowCameraView();
+
+	m_Rotation *= rot;
 }
 
 void SpotLight::Scale(const Vector3& scale)

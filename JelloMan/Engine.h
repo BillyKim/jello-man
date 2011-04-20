@@ -16,6 +16,7 @@
 #include "Controls.h"
 #include "Blox2D_Engine.h"
 #include "PhysX.h"
+#include "boost\thread\thread.hpp"
 
 class KeyboardState;
 class InputStateManager;

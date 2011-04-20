@@ -112,9 +112,9 @@ int Engine::Run()
 				OnRender();
 
 				if (!m_bInitialized)
-				{					
-					m_pGame->LoadResources(m_pDXDevice, m_pPhysXEngine);
-		
+				{
+					boost::thread t(&MainGame::LoadResources,m_pGame,m_pDXDevice, m_pPhysXEngine);
+
 					#if defined DEBUG || _DEBUG
 					cout << "---------------------------\n";
                     cout << ":::Resources Initialized:::\n";
@@ -170,14 +170,14 @@ void Engine::Initialize()
 	// init physx
 	if (m_pGameConfig->UsingPhysX())
 	{
-		m_pPhysXEngine = new PhysX();
-
-		m_pPhysXEngine->Init();
+		
 	}
 
 	#if defined DEBUG || _DEBUG
 	cout << "-PhysX Engine initialized\n";
 	#endif
+
+	Content->Init(m_pDXDevice);
 }
 
 void Engine::OnRender()
@@ -206,7 +206,7 @@ void Engine::OnRender()
 	{
 		m_pBackBufferRT->BeginDraw();
 
-		if (!m_bInitialized)
+		if (!m_pGame->ResourcesLoaded())
 		{
 			m_pGame->LoadScreen();
 		}

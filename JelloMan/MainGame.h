@@ -37,6 +37,9 @@ public:
 	void Release();
 	void LoadScreen();
 
+	bool ResourcesLoaded()
+	{ return m_bResourcesLoaded; }
+
 private:
 
 	// DATAMEMBERS
@@ -45,7 +48,8 @@ private:
 	bool m_bResourcesLoaded;
 	bool m_bDebug;
 
-	int m_Angle;
+	int m_Orbs;
+	tstring m_LoadingText;
 
 	TextFormat* m_pDefaultFont;
 	TextFormat* m_pHappyFaceFont;

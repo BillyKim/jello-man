@@ -33,7 +33,6 @@ private:
     vector<Vector3> m_VertexData;
 
     vector<VertexPosCol> m_VPNTTData;
-    map<string, DWORD> m_VPNTTMap;
 	vector<DWORD> m_IndexData;
 
     Model<VertexPosCol>* m_pCurrentModel;

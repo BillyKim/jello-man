@@ -95,7 +95,7 @@ public:
         for(UINT p = 0; p < effect->GetNumPasses(); ++p)
         {
             effect->GetCurrentTechnique()->GetPassByIndex(p)->Apply(0);
-		    m_pDevice->DrawIndexed(m_VecIndices.size(), 0, 0); 
+			m_pDevice->DrawIndexed(m_VecIndices.size(), 0, 0); 
         }
     }
 
