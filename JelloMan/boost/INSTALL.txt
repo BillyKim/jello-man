@@ -1,0 +1,7 @@
+Install boost here
+
+download: http://www.boost.org/  --v1.46.1
+
+unzip contents of folder "boost_1_46_1" here
+
+merdge when promped
