@@ -1,6 +1,8 @@
 #include "SpotLight.h"
 #include "LightBehaviourNormal.h"
 #include "ContentManager.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 SpotLight::SpotLight():
 			m_Scale(1), 
