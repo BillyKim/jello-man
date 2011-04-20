@@ -28,7 +28,7 @@ Image* ImageLoader::LoadImage(const tstring& fileNameRef, int newWidth, int newH
 {
 	if (m_pAssetContainer->IsAssetPresent(fileNameRef))
 	{
-		cout << "Image re-used: " << string(fileNameRef.begin(),fileNameRef.end()) << "\n";
+		//cout << "Image re-used: " << string(fileNameRef.begin(),fileNameRef.end()) << "\n";
 		return m_pAssetContainer->GetAsset(fileNameRef);
 	}
 
@@ -54,7 +54,7 @@ Image* ImageLoader::LoadImage(const tstring& fileNameRef, int newWidth, int newH
 	Image* pImage = new Image(fileNameRef, pBitmap, pConverter);
 
 	#if defined DEBUG || _DEBUG
-	cout << "Image loaded: " << string(fileNameRef.begin(),fileNameRef.end()) << "\n";
+	//cout << "Image loaded: " << string(fileNameRef.begin(),fileNameRef.end()) << "\n";
 	#endif
 
 	m_pAssetContainer->AddAsset(fileNameRef, pImage);

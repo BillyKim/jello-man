@@ -99,6 +99,9 @@ private:
 	// PhysX
 	PhysX* m_pPhysXEngine;
 
+	// threads
+	boost::thread m_LoadResourcesThread;
+
 private:
 	Engine(const Engine& t);
 	Engine& operator=(const Engine& t);

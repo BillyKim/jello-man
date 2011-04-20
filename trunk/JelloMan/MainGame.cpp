@@ -10,6 +10,7 @@
 #include "PointLight.h"
 #include "LightBehaviourBroken.h"
 #include "LightBehaviourRotator.h"
+#include "boost\thread\thread.hpp"
 
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
@@ -69,6 +70,9 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 
 void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 {
+	boost::mutex myMutex;
+	myMutex.lock();
+
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);
 
@@ -175,15 +179,15 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	++m_Orbs;
 	m_LoadingText = _T("audio");
 
-	// AUDIO
-	tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
-	m_pAudioEngine = new AudioEngine(projectLocation);
-	m_pAudioEngine->Initialize();
+	//// AUDIO
+	//tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
+	//m_pAudioEngine = new AudioEngine(projectLocation);
+	//m_pAudioEngine->Initialize();
 
-	m_pTestSound = new Sound(m_pAudioEngine,_T("BackgroundMusic"),_T("BackGroundMusicVolume"));
+	/*m_pTestSound = new Sound(m_pAudioEngine,_T("BackgroundMusic"),_T("BackGroundMusicVolume"));
 	m_pTestSound->PreLoad();
 	m_pTestSound->SetLoopCount(1);
-	m_pTestSound->SetVolume(90);
+	m_pTestSound->SetVolume(90);*/
 
 	++m_Orbs;
 	m_LoadingText = _T("editor GUI");
@@ -192,11 +196,31 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	m_pEditorGUI = new EditorGUI(m_pPhysXEngine);
 	m_pEditorGUI->Initialize();
 
+	#if defined DEBUG || _DEBUG
+	cout << "---------------------------\n";
+    cout << ":::Resources Initialized:::\n";
+    cout << "---------------------------\n";
+    cout << "\n";
+    cout << "\n";
+	cout << "   GAME EVENTS   \n";
+    cout << "-----------------\n";
+	#endif
+
 	m_bResourcesLoaded = true;
+
+	myMutex.unlock();
 }
 
 void MainGame::UpdateScene(const float dTime)
 {
+	if (!m_pAudioEngine)
+	{
+		// AUDIO
+		tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
+		m_pAudioEngine = new AudioEngine(projectLocation);
+		m_pAudioEngine->Initialize();
+	}
+
 	// dtime
 	m_dTtime = dTime;
 
@@ -224,7 +248,7 @@ void MainGame::UpdateScene(const float dTime)
 	}
 
 	m_pAudioEngine->DoWork();
-	m_pTestSound->Tick();
+	//m_pTestSound->Tick();
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
 	{	
@@ -352,7 +376,6 @@ void MainGame::Release()
 	}
 }
 
-
 void MainGame::LoadScreen()
 {
 	BX2D->SetColor(ColorF(ColorF::CornflowerBlue));
@@ -373,7 +396,7 @@ void MainGame::LoadScreen()
 	BX2D->SetFont(m_pLoadingResourcesFont);
 	m_pLoadingResourcesFont->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
 	m_pLoadingResourcesFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_BOTTOM);
-	BX2D->SetColor(0,0,0);
+	BX2D->SetColor(43,43,43);
 	BX2D->DrawString(stream.str(),RectF(10,0,	BX2D->GetWindowSize().width,
 															BX2D->GetWindowSize().height-10));
 
@@ -389,7 +412,6 @@ void MainGame::LoadScreen()
 	BX2D->DrawStringCentered(_T(":D"),-20);
 
 	BX2D->ResetTransform();
-
 	
 	for (int i = 0; i < 6; ++i)
 	{

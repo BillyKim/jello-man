@@ -113,18 +113,8 @@ int Engine::Run()
 
 				if (!m_bInitialized)
 				{
-					boost::thread t(&MainGame::LoadResources,m_pGame,m_pDXDevice, m_pPhysXEngine);
-
-					#if defined DEBUG || _DEBUG
-					cout << "---------------------------\n";
-                    cout << ":::Resources Initialized:::\n";
-                    cout << "---------------------------\n";
-                    cout << "\n";
-                    cout << "\n";
-					cout << "   GAME EVENTS   \n";
-                    cout << "-----------------\n";
-					#endif
-
+					m_LoadResourcesThread  = boost::thread(&MainGame::LoadResources,m_pGame,m_pDXDevice, m_pPhysXEngine);
+					
 					m_bInitialized = true;
 				}
 			}
@@ -212,6 +202,8 @@ void Engine::OnRender()
 		}
 		else
 		{
+			m_LoadResourcesThread.join();
+
 			m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
 			m_pGame->DrawScene();
 		}
@@ -442,7 +434,7 @@ HRESULT Engine::CreateDeviceIndependentResources()
     ID2D1GeometrySink *pSink = NULL;
 
 	// Create a Direct2D factory.
-	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
+	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, &m_pD2DFactory);
 
  //   if (SUCCEEDED(hr))
 	//{
