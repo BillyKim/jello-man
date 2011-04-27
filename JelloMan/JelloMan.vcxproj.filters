@@ -97,6 +97,9 @@
     <Filter Include="Game Files\interfaces">
       <UniqueIdentifier>{046d174a-bcb7-4f4b-8ae2-efe8bafdb5ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\PhysX\Joints">
+      <UniqueIdentifier>{65645979-3a44-4a16-89dc-e122a114b80c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -366,6 +369,12 @@
     <ClInclude Include="ITransformable.h">
       <Filter>Game Files\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="FixedJoint.h">
+      <Filter>Engine Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="RevoluteJoint.h">
+      <Filter>Engine Files\PhysX\Joints</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -616,6 +625,15 @@
     </ClCompile>
     <ClCompile Include="SplineLoader.cpp">
       <Filter>Engine Files\ContentManager</Filter>
+    </ClCompile>
+    <ClCompile Include="IJoint.h">
+      <Filter>Engine Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="FixedJoint.cpp">
+      <Filter>Engine Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="RevoluteJoint.cpp">
+      <Filter>Engine Files\PhysX\Joints</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
