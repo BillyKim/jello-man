@@ -28,11 +28,6 @@ LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
 
 	for (int i = 0; i < 6; ++i)
 	{
-		TextBox* pTextBox = new TextBox();
-		pTextBox->SetBounds(20, 120 + (i*80),120,20);
-
-		m_TextBoxes.push_back(pTextBox);
-
 		Button* pButton = new Button(150,122 + (i*80),15,15);
 		pButton->SetNormalState(m_LoadPathBitmaps[0]);
 		pButton->SetHoverState(m_LoadPathBitmaps[1]);
@@ -64,6 +59,17 @@ LoadModelFromFile::~LoadModelFromFile()
 // GENERAL
 void LoadModelFromFile::Tick()
 {
+	if (m_TextBoxes.size() == 0)
+	{
+		for (int i = 0; i < 6; ++i)
+		{
+			TextBox* pTextBox = new TextBox();
+			pTextBox->SetBounds(20, 120 + (i*80),120,20);
+
+			m_TextBoxes.push_back(pTextBox);
+		}
+	}
+
 	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 	{
 		(*it)->Tick();
@@ -273,7 +279,8 @@ void LoadModelFromFile::Clear()
 
 	for (int i = 0; i < 6; ++i)
 	{
-		m_TextBoxes[i]->SetText(_T(""));
+		if (m_TextBoxes.size() > 0)
+			m_TextBoxes[i]->SetText(_T(""));
 	}
 }
 

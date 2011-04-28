@@ -5,35 +5,36 @@
 #include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-EditorGUI::EditorGUI(PhysX* pPhysXEngine)	:	m_pLightButton(0),
-												m_pCameraBitmap(0),
-												m_bUsingCamera(false),
-												m_pMoveButton(0),
-												m_pGameModeButton(0),
-												m_pEditorModeButton(0),
-												m_pPointlightButton(0),
-												m_pSpotlightButton(0),
-												m_bGameModeDown(false),
-												m_bEditorModeDown(false),
-												m_pRenderContext(0),
-												m_bMoveable(false),
-												m_pColorPickerButton(0),
-												m_pApplyButton(0),
-												m_pRotateButton(0),
-												m_pLightDebugger(0),
-												m_pColorPicker(0),
-												m_pMoveGizmo(0),
-												m_pRotateGizmo(0),
-												m_pPlayModeButton(0),
-												m_Mode(MODE_EDITOR),
-												m_bPlayModeDown(false),
-												m_pLoadModelButton(0),
-												m_pLoadModelFromFile(0),
-												m_bNewModelLoaded(false),
-												m_pShowGridButton(0),
-												m_pModelDebugger(0),
-												m_pPhysXEngine(pPhysXEngine),
-												m_pLevelObjects(0)
+EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice)	:	m_pLightButton(0),
+																		m_pCameraBitmap(0),
+																		m_bUsingCamera(false),
+																		m_pMoveButton(0),
+																		m_pGameModeButton(0),
+																		m_pEditorModeButton(0),
+																		m_pPointlightButton(0),
+																		m_pSpotlightButton(0),
+																		m_bGameModeDown(false),
+																		m_bEditorModeDown(false),
+																		m_pRenderContext(0),
+																		m_bMoveable(false),
+																		m_pColorPickerButton(0),
+																		m_pApplyButton(0),
+																		m_pRotateButton(0),
+																		m_pLightDebugger(0),
+																		m_pColorPicker(0),
+																		m_pMoveGizmo(0),
+																		m_pRotateGizmo(0),
+																		m_pPlayModeButton(0),
+																		m_Mode(MODE_EDITOR),
+																		m_bPlayModeDown(false),
+																		m_pLoadModelButton(0),
+																		m_pLoadModelFromFile(0),
+																		m_bNewModelLoaded(false),
+																		m_pShowGridButton(0),
+																		m_pModelDebugger(0),
+																		m_pPhysXEngine(pPhysXEngine),
+																		m_pLevelObjects(0),
+																		m_pDXDevice(pDXDevice)
 {
 
 }
@@ -647,24 +648,17 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 			Vector3 look = pRenderContext->GetCamera()->GetLook();
 			look.Normalize();
 
-			SpotLightDesc sDesc;
-			sDesc.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
-
-			BYTE r = 180;
-			BYTE g = 180;
-			BYTE b = 200;
-            BYTE a = 255;
-
-			sDesc.color = Color(r, g, b, a);
-			sDesc.multiplier = 1.0f;
-			sDesc.attenuationStart = 0;
-			sDesc.attenuationEnd = 200;
-			sDesc.power = 2;
-			sDesc.direction = Vector3(0.0f,-1.0f,0.0f);
-
-            SpotLight* sl = new SpotLight(sDesc);
-			sl->InitEditor();
-			pRenderContext->GetLightController()->AddLight(sl);
+			SpotLight* sp2 = new SpotLight();
+				sp2->SetPosition(pRenderContext->GetCamera()->GetPosition() + look * 200);
+				sp2->SetColor(Color(0.9f, 0.9f, 0.9f, 1.0f));
+				sp2->SetMulitplier(2.0f);
+				sp2->SetAttenuationStart(1000);
+				sp2->SetAttenuationEnd(2000);
+				sp2->SetOpeningsAngle(ToRadians(90));
+				sp2->Rotate(Vector3::Forward, PiOver2);
+				sp2->SetShadowMap(m_pDXDevice, ShadowMapType1024x1024);
+			
+			pRenderContext->GetLightController()->AddLight(sp2);
 
 			m_pLightDebugger->DeselectAllLights();
 			m_pMoveButton->Deactivate();

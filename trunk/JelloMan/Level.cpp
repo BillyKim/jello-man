@@ -61,7 +61,7 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	pLevelObject->UseNormalMap(true);
 	pLevelObject->UseSimplifiedPhysXMesh(false);
 
-	pLevelObject->SetModelPath(_T("Content/Models/as_val.binobj"));
+	pLevelObject->SetModelPath(_T("Content/Models/as_val.obj"));
 	pLevelObject->SetPhysXModelPath(_T("Content/Models/as_val.nxconcave"));
 
 	pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_color.png"));
@@ -80,98 +80,6 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 
 void Level::Tick(const float dTime)
 {
-    if (CONTROLS->IsKeyPressed(VK_SPACE))
-	{
-		int r = rand() % 3;
-        if (r == 0)
-        {
-		    // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
-			LevelObject* pLevelObject = new LevelObject();
-
-			pLevelObject->UseNormalMap(true);
-			pLevelObject->UseSimplifiedPhysXMesh(true);
-
-			pLevelObject->SetModelPath(_T("Content/Models/sphere50.binobj"));
-	
-			PhysXSphere sphere(50.0f, 1000);
-			pLevelObject->SetSimplifiedPhysXMesh(&sphere);
-
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
-			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
-
-			pLevelObject->SetRigid(true);
-
-			pLevelObject->Init(m_pPhysXEngine);
-
-			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
-
-			m_pLevelObjects.push_back(pLevelObject);
-
-			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
-        }
-        else if (r == 1)
-        {
-            // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
-			LevelObject* pLevelObject = new LevelObject();
-
-			pLevelObject->UseNormalMap(true);
-			pLevelObject->UseSimplifiedPhysXMesh(true);
-
-			pLevelObject->SetModelPath(_T("Content/Models/box50.binobj"));
-	
-			PhysXBox box(Vector3(50,50,50),1000);
-			pLevelObject->SetSimplifiedPhysXMesh(&box);
-
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
-			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
-
-			pLevelObject->SetRigid(true);
-
-			pLevelObject->Init(m_pPhysXEngine);
-
-			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
-
-			m_pLevelObjects.push_back(pLevelObject);
-
-			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
-        }
-		else
-		{
-			LevelObject* pLevelObject = new LevelObject();
-
-			pLevelObject->UseNormalMap(false);
-
-			pLevelObject->SetModelPath(_T("Content/Models/jman.binobj"));
-			pLevelObject->SetPhysXModelPath(_T("Content/Models/jman.nxconcave"));
-
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
-
-			pLevelObject->SetRigid(true);
-			pLevelObject->SetMass(1000);
-
-			pLevelObject->Init(m_pPhysXEngine);
-
-			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
-
-			m_pLevelObjects.push_back(pLevelObject);
-
-			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
-		}
-	}
-    if (CONTROLS->IsKeyPressed(VK_CONTROL))
-	{
-        TestSoftbody* pSB = new TestSoftbody(m_pRenderContext->GetCamera()->GetPosition());
-        pSB->Init(m_pPhysXEngine);
-        m_pLevelObjects.push_back(pSB);
-		pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
-	}
-
 	for (vector<ILevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
 	{
 		if (!m_bTickCharacter)

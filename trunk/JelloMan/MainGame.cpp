@@ -10,7 +10,8 @@
 #include "PointLight.h"
 #include "LightBehaviourBroken.h"
 #include "LightBehaviourRotator.h"
-#include "boost\thread\thread.hpp"
+#include "PhysXBox.h"
+#include "PhysXSphere.h"
 
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
@@ -33,7 +34,9 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pDefaultFont(0),
 							m_pHappyFaceFont(0),
 							m_pLoadingResourcesFont(0),
-							m_LoadingText(_T(""))
+							m_LoadingText(_T("")),
+							m_AlphaHappyFace(0),
+							m_pHappyEngineFont(0)
 {
 
 }
@@ -70,9 +73,6 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 
 void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 {
-	boost::mutex myMutex;
-	myMutex.lock();
-
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);
 
@@ -193,7 +193,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	m_LoadingText = _T("editor GUI");
 
 	// GUI
-	m_pEditorGUI = new EditorGUI(m_pPhysXEngine);
+	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice);
 	m_pEditorGUI->Initialize();
 
 	#if defined DEBUG || _DEBUG
@@ -207,12 +207,13 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	#endif
 
 	m_bResourcesLoaded = true;
-
-	myMutex.unlock();
 }
 
 void MainGame::UpdateScene(const float dTime)
 {
+	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_GAME)
+		CheckControls();
+
 	if (!m_pAudioEngine)
 	{
 		// AUDIO
@@ -252,9 +253,7 @@ void MainGame::UpdateScene(const float dTime)
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
 	{	
-		m_pPhysXEngine->FetchResults();
-		m_pLevel->Tick(dTime);
-		m_pPhysXEngine->Simulate(dTime);
+		m_PhysicsThread = boost::thread(&MainGame::UpdatePhysics, this, dTime);
 		m_pLevel->EditorMode(false);
 	}
 	else
@@ -357,7 +356,120 @@ void MainGame::DrawScene()
 	BX2D->SetColor(255,255,255);
 	BX2D->SetFont(m_pDefaultFont);
 
+	//m_PhysicsThread.join();
+
 	CONTROLS->ResetMouse();		
+}
+
+void MainGame::CheckControls()
+{
+	bool bWwaitOnFreePhysicsScene = true;
+	while (bWwaitOnFreePhysicsScene)
+	{
+		if (m_PhysicsSceneLock.try_lock())
+			break;
+	}
+
+	bool bWaitForScene = true;
+	while (bWaitForScene)
+	{
+		if (m_pPhysXEngine->GetScene()->isWritable())
+			break;
+	}
+
+	if (CONTROLS->IsKeyPressed(VK_SPACE))
+	{
+		int r = rand() % 3;
+        if (r == 0)
+        {
+		    // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
+			LevelObject* pLevelObject = new LevelObject();
+
+			pLevelObject->UseNormalMap(true);
+			pLevelObject->UseSimplifiedPhysXMesh(true);
+
+			pLevelObject->SetModelPath(_T("Content/Models/sphere50.binobj"));
+	
+			PhysXSphere sphere(50.0f, 1000);
+			pLevelObject->SetSimplifiedPhysXMesh(&sphere);
+
+			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
+			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
+			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
+			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+
+			pLevelObject->SetRigid(true);
+
+			pLevelObject->Init(m_pPhysXEngine);
+
+			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
+
+			m_pLevel->AddLevelObject(pLevelObject);
+
+			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
+        }
+        else if (r == 1)
+        {
+            // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
+			LevelObject* pLevelObject = new LevelObject();
+
+			pLevelObject->UseNormalMap(true);
+			pLevelObject->UseSimplifiedPhysXMesh(true);
+
+			pLevelObject->SetModelPath(_T("Content/Models/box50.binobj"));
+	
+			PhysXBox box(Vector3(50,50,50),1000);
+			pLevelObject->SetSimplifiedPhysXMesh(&box);
+
+			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
+			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
+			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
+			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+
+			pLevelObject->SetRigid(true);
+
+			pLevelObject->Init(m_pPhysXEngine);
+
+			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
+
+			m_pLevel->AddLevelObject(pLevelObject);
+
+			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
+        }
+		else
+		{
+			LevelObject* pLevelObject = new LevelObject();
+
+			pLevelObject->UseNormalMap(false);
+
+			pLevelObject->SetModelPath(_T("Content/Models/jman.binobj"));
+			pLevelObject->SetPhysXModelPath(_T("Content/Models/jman.nxconcave"));
+
+			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
+			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
+			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+
+			pLevelObject->SetRigid(true);
+			pLevelObject->SetMass(1000);
+
+			pLevelObject->Init(m_pPhysXEngine);
+
+			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
+
+			m_pLevel->AddLevelObject(pLevelObject);
+
+			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
+		}
+	}
+    if (CONTROLS->IsKeyPressed(VK_CONTROL))
+	{
+        TestSoftbody* pSB = new TestSoftbody(m_pRenderContext->GetCamera()->GetPosition());
+        pSB->Init(m_pPhysXEngine);
+        m_pLevel->AddLevelObject(pSB);
+		pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
+	}
+
+	m_PhysicsSceneLock.unlock();
 }
 
 void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
@@ -388,24 +500,29 @@ void MainGame::LoadScreen()
 	if (!m_pHappyFaceFont)
 		m_pHappyFaceFont = Content->LoadTextFormat(_T("Arial"),200,true,false);
 	if (!m_pLoadingResourcesFont)
-		m_pLoadingResourcesFont = Content->LoadTextFormat(_T("Arial"), 30, true, false);
+		m_pLoadingResourcesFont = Content->LoadTextFormat(_T("Arial"), 16, true, false);
+	if (!m_pHappyEngineFont)
+		m_pHappyEngineFont = Content->LoadTextFormat(_T("Arial"), 30, true, false);
 
 	tstringstream stream;
 	stream << _T("Loading: ") << m_LoadingText << _T("...");
 
 	BX2D->SetFont(m_pLoadingResourcesFont);
-	m_pLoadingResourcesFont->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
-	m_pLoadingResourcesFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_BOTTOM);
 	BX2D->SetColor(43,43,43);
-	BX2D->DrawString(stream.str(),RectF(10,0,	BX2D->GetWindowSize().width,
-															BX2D->GetWindowSize().height-10));
+	BX2D->DrawStringCentered(stream.str(), 0, 300);
+
+	BX2D->SetFont(m_pHappyEngineFont);
+	BX2D->DrawStringCentered(_T("HAPPY ENGINE"), 0, 150);
 
 	D2D1_MATRIX_3X2_F rot;
 	D2D1MakeRotateMatrix(90,Point2F(BX2D->GetWindowSize().width/2,
 									BX2D->GetWindowSize().height/2),&rot);
 	BX2D->SetTransform(rot);
 
-	BX2D->SetColor(255,255,255,0.5f);
+	if (m_Orbs / 6.0f > m_AlphaHappyFace)
+		m_AlphaHappyFace += 0.002f;
+
+	BX2D->SetColor(255,255,255,m_AlphaHappyFace);
 	BX2D->SetFont(m_pHappyFaceFont);
 	m_pHappyFaceFont->SetHorizontalAlignment(TEXT_ALIGNMENT_CENTER);
 	m_pHappyFaceFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_MIDDLE);
@@ -422,4 +539,20 @@ void MainGame::LoadScreen()
 
 		BX2D->FillEllipse(Point2F(BX2D->GetWindowSize().width / 2 + ((i - 2) * 40) - 20, (BX2D->GetWindowSize().height / 2) + 200), 15,15);
 	}
+}
+
+void MainGame::UpdatePhysics(const float dTime)
+{
+	bool bWwaitOnFreePhysicsScene = true;
+	while (bWwaitOnFreePhysicsScene)
+	{
+		if (m_PhysicsSceneLock.try_lock())
+			break;
+	}
+
+	m_pPhysXEngine->FetchResults();
+	m_pLevel->Tick(dTime);
+	m_pPhysXEngine->Simulate(dTime);
+
+	m_PhysicsSceneLock.unlock();
 }
