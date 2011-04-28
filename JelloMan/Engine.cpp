@@ -528,8 +528,8 @@ HRESULT Engine::CreateDeviceResources()
             swapDesc.BufferDesc.Width = nWidth;
             swapDesc.BufferDesc.Height = nHeight;
             swapDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-            swapDesc.BufferDesc.RefreshRate.Numerator = 60;
-            swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+            swapDesc.BufferDesc.RefreshRate.Numerator = 0;
+            swapDesc.BufferDesc.RefreshRate.Denominator = 0;
 	        swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	        swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
            

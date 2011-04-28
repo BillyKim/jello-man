@@ -26,7 +26,7 @@ public:
 	};
 
 	// CONSTRUCTOR - DESTRUCTOR
-	EditorGUI(PhysX* pPhysXEngine);
+	EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice);
 	virtual ~EditorGUI();
 
 	// GENERAL
@@ -121,6 +121,8 @@ private:
 	TextFormat* m_pInfoFont;
 
 	vector<ILevelObject*>* m_pLevelObjects;
+
+	ID3D10Device* m_pDXDevice;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	EditorGUI(const EditorGUI& t);

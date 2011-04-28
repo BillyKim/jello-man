@@ -17,6 +17,7 @@
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
 #include "PreShadowEffect.h"
+#include "boost\thread\thread.hpp"
 
 class AudioEngine;
 
@@ -33,7 +34,9 @@ public:
 	void LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine);
 	void UpdateScene(const float dTime);
 	void DrawScene();
+	void CheckControls();
 	void OnResize(ID3D10RenderTargetView* pRTView);
+
 	void Release();
 	void LoadScreen();
 
@@ -41,6 +44,8 @@ public:
 	{ return m_bResourcesLoaded; }
 
 private:
+
+	void UpdatePhysics(const float dTime);
 
 	// DATAMEMBERS
 	float m_dTtime;
@@ -50,10 +55,12 @@ private:
 
 	int m_Orbs;
 	tstring m_LoadingText;
+	float m_AlphaHappyFace;
 
 	TextFormat* m_pDefaultFont;
 	TextFormat* m_pHappyFaceFont;
 	TextFormat* m_pLoadingResourcesFont;
+	TextFormat* m_pHappyEngineFont;
 
 	EditorGUI* m_pEditorGUI;
 
@@ -76,4 +83,7 @@ private:
     PostProcessor* m_pPostProcessor;
     EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
     PreShadowEffect* m_pPreShadowEffect;
+
+	boost::thread m_PhysicsThread;
+	boost::mutex m_PhysicsSceneLock;
 };
