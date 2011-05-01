@@ -133,7 +133,7 @@ void PointLight::SetPosition(const Vector3& pos)
 {
 	m_Desc.position = pos;
 }
-const Vector3& PointLight::GetPosition() const
+Vector3 PointLight::GetPosition() const
 {
     return m_Desc.position;
 }
@@ -156,13 +156,9 @@ bool PointLight::IsEnabled() const
 	return m_IsEnabled;
 }
 
-void PointLight::Select()
+void PointLight::Selected(bool selected)
 {
-	m_IsSelected = true;
-}
-void PointLight::Deselect()
-{
-	m_IsSelected = false;
+	m_IsSelected = selected;
 }
 bool PointLight::IsSelected() const
 {

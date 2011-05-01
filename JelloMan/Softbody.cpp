@@ -167,7 +167,7 @@ void Softbody::Translate(const Vector3& add)
     Vector3* buffer = new Vector3[m_numPositions];
     m_pSoftbody->getPositions(buffer);
 
-    for (int i = 0; i < m_numPositions; ++i)
+    for (NxU32 i = 0; i < m_numPositions; ++i)
     {
         buffer[i] += add;
     }
@@ -180,7 +180,7 @@ void Softbody::SetPosition(const Vector3& pos)
     Vector3* buffer = new Vector3[m_numPositions];
     m_pSoftbody->getPositions(buffer);
 
-    for (int i = 0; i < m_numPositions; ++i)
+    for (NxU32 i = 0; i < m_numPositions; ++i)
     {
         buffer[i] += -GetPosition() + pos;
     }
@@ -188,7 +188,7 @@ void Softbody::SetPosition(const Vector3& pos)
     m_pSoftbody->setPositions(buffer);
     delete buffer;
 }
-const Vector3& Softbody::GetPosition() const
+Vector3 Softbody::GetPosition() const
 {
     return m_CenterPoint;
 }
@@ -199,7 +199,7 @@ void Softbody::Rotate(const Vector3& axis, float angle)
     m_pSoftbody->getPositions(buffer);
 
     Matrix mtxRot = Matrix::CreateRotation(axis, angle);
-    for (int i = 0; i < m_numPositions; ++i)
+    for (NxU32 i = 0; i < m_numPositions; ++i)
     {
         buffer[i] -= GetPosition();
         buffer[i] = Vector3::Transform(buffer[i], mtxRot).XYZ();
@@ -216,7 +216,7 @@ void Softbody::Scale(const Vector3& scale)
     m_pSoftbody->getPositions(buffer);
 
     Matrix mtxScale = Matrix::CreateScale(scale);
-    for (int i = 0; i < m_numPositions; ++i)
+    for (NxU32 i = 0; i < m_numPositions; ++i)
     {
         buffer[i] -= GetPosition();
         buffer[i] = Vector3::Transform(buffer[i], mtxScale).XYZ();

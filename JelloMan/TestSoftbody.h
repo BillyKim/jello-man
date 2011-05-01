@@ -15,13 +15,14 @@ public:
 
     virtual void Translate(const Vector3& add) { Softbody::Translate(add); }
     virtual void SetPosition(const Vector3& pos) { Softbody::SetPosition(pos); }
-    virtual const Vector3& GetPosition() const { return Softbody::GetPosition(); }
+    virtual Vector3 GetPosition() const { return Softbody::GetPosition(); }
 
     virtual void Scale(const Vector3& scale) { Softbody::Scale(scale); }
 
     //ILevelobject
     virtual void Init(PhysX* pPhysX);
     virtual void Selected(bool selected);
+    virtual bool IsSelected() const { return m_bIsSelected; }
 
     //IUpdateable
 	virtual void Tick(float dTime);

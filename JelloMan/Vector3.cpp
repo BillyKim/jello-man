@@ -27,6 +27,7 @@ const Vector3 Vector3::Right = Vector3(1, 0, 0);
 const Vector3 Vector3::Forward = Vector3(0, 0, -1);
 const Vector3 Vector3::One = Vector3(1, 1, 1);
 const Vector3 Vector3::Zero = Vector3(0, 0, 0);
+const Vector3 Vector3::Infinity = Vector3(FLT_MAX, FLT_MAX, FLT_MAX);
 
 //Copy en assignment
 Vector3::Vector3(const Vector3& v3) : X(v3.X), Y(v3.Y), Z(v3.Z)
@@ -59,6 +60,10 @@ Vector2 Vector3::YZ() const
 float Vector3::Length() const
 {
 	return sqrt(sqr(X) + sqr(Y) + sqr(Z));
+}
+float Vector3::LengthSqr() const
+{
+	return sqr(X) + sqr(Y) + sqr(Z);
 }
 
 void Vector3::ToFloat(float* f) const

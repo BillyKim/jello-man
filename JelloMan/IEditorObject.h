@@ -1,8 +1,7 @@
 #pragma once
+#include "ITransformable.h"
 
-#include "Vector3.h"
-
-class ITransformable
+class IEditorObject : public ITransformable
 {
 public:
     virtual void Rotate(const Vector3& axis, float angle) = 0;
@@ -12,4 +11,7 @@ public:
 	virtual Vector3 GetPosition() const = 0;
 
 	virtual void Scale(const Vector3& scale) = 0;
+    
+    virtual void Selected(bool selected) = 0;
+    virtual bool IsSelected() const = 0;
 };

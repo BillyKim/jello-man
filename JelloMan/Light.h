@@ -6,10 +6,7 @@
 #include "LightBehaviour.h"
 #include "Camera.h"
 #include "Blox2D_Engine.h"
-
-//
-//Percentage close filtering
-//SampleComparisonState Texture2D SampleCmp
+#include "IEditorObject.h"
 
 enum LightType
 {
@@ -26,7 +23,7 @@ enum ShadowMapType
 	ShadowMapType2048x2048 = 2048
 };
 
-class Light
+class Light : public IEditorObject
 {
 public:
     virtual void InitGame() = 0;
@@ -39,7 +36,7 @@ public:
 
 	virtual void Translate(const Vector3& add) = 0;
 	virtual void SetPosition(const Vector3& pos) = 0;
-	virtual const Vector3& GetPosition() const = 0;
+	virtual Vector3 GetPosition() const = 0;
 
 	virtual void Scale(const Vector3& scale) = 0;
 
@@ -49,8 +46,7 @@ public:
 	virtual void Disable() = 0;
 	virtual bool IsEnabled() const = 0;
 
-	virtual void Select() = 0;
-	virtual void Deselect() = 0;
+	virtual void Selected(bool selected) = 0;
 	virtual bool IsSelected() const = 0;
 
 	virtual bool HasShadowMap() const = 0;

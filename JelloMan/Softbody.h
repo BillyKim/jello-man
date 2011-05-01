@@ -17,7 +17,7 @@ public:
     
 	virtual void Translate(const Vector3& add);
 	virtual void SetPosition(const Vector3& pos);
-	virtual const Vector3& GetPosition() const;
+	virtual Vector3 GetPosition() const;
 
     virtual void Rotate(const Vector3& axis, float angle);
 

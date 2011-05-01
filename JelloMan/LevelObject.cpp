@@ -55,6 +55,8 @@ void LevelObject::Init(PhysX* pPhysX)
 		InitActor(pPhysX, *m_pPhysXShape, m_bRigid);
 	}
 
+    m_pActor->userData = dynamic_cast<ILevelObject*>(this);
+
 	m_bInitialized = true;
 }
 void LevelObject::Selected(bool selected)

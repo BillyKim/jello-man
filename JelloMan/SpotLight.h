@@ -21,7 +21,7 @@ public:
 
 	virtual void Translate(const Vector3& add);
 	virtual void SetPosition(const Vector3& pos);
-	virtual const Vector3& GetPosition() const;
+	virtual Vector3 GetPosition() const;
 
 	virtual void Scale(const Vector3& scale);
 
@@ -31,8 +31,7 @@ public:
 	virtual void Disable();
 	virtual bool IsEnabled() const;
 
-	virtual void Select();
-	virtual void Deselect();
+	virtual void Selected(bool selected);
 	virtual bool IsSelected() const;
 
 	virtual bool HasShadowMap() const;
