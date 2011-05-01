@@ -22,6 +22,7 @@ public:
     static const Vector3 Forward;
     static const Vector3 One;
     static const Vector3 Zero;
+    static const Vector3 Infinity;
 
 	//Copy en assignment
 	Vector3(const Vector3& v);
@@ -35,6 +36,7 @@ public:
 	Vector2 XZ() const; 
 	Vector2 YZ() const; 
 	float Length() const; 
+	float LengthSqr() const; 
     void ToFloat(float* f) const;
 	D3DXVECTOR3 ToD3DVector3() const;
 	//<------------------

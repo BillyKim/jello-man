@@ -11,6 +11,9 @@ Vector2::Vector2(float x, float y): X(x), Y(y)
 Vector2::Vector2(const D3DXVECTOR2& v2): X(v2.x), Y(v2.y)
 {
 }
+Vector2::Vector2(const Point2D& point): X(point.x), Y(point.y)
+{
+}
 
 //Static
 const Vector2 Vector2::One = Vector2(1, 1);

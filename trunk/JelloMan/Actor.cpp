@@ -72,7 +72,7 @@ void Actor::SetPosition(const Vector3& pos)
 	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
 	m_pActor->setGlobalPose(mat);
 }
-const Vector3& Actor::GetPosition() const
+Vector3 Actor::GetPosition() const
 {
 	if (m_pActor)
 	{

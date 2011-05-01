@@ -2,35 +2,225 @@
 #include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-MoveGizmo::MoveGizmo()	:	m_bLockX(false),
-							m_bLockY(false),
-							m_bLockZ(false),
-							m_pRenderContext(0),
-							m_pAxisFont(0)
+MoveGizmo::MoveGizmo()	:	m_pRenderContext(0),
+								m_pAxisFont(0),
+                                m_bLockX(false),
+                                m_bLockY(false),
+                                m_bLockZ(false),
+                                m_vAnchor(Vector3::Zero)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
+
+    ZeroMemory(&m_ViewPort, sizeof(m_ViewPort));
+    m_ViewPort.MinDepth = 0;
+    m_ViewPort.MaxDepth = 1;
+    m_ViewPort.TopLeftX = 0;
+    m_ViewPort.TopLeftY = 0;
 }
 
 
 MoveGizmo::~MoveGizmo()
 {
-	m_pRenderContext = 0;
+}
+
+void MoveGizmo::Draw()
+{
+    if (m_vCenterPos != Vector3::Infinity)
+        DrawGizmo(m_vCenterPos);
+}
+
+void MoveGizmo::DrawAxis(const Vector3& pos, Axis axis,
+                           const Matrix& world, const Matrix& view, const Matrix& projection)
+{
+	BX2D->SetFont(m_pAxisFont);
+    tstring label = _T("");
+    Vector3 vAxis;
+    bool isSelected = false;
+    D2D1_COLOR_F color;
+    color.a = 1.0f;
+    switch (axis)
+    {
+        case Axis_X: 
+            label = _T("X"); 
+            vAxis = Vector3::Right; 
+            if (m_bLockX) isSelected = true;
+            color.r = 1.0f;
+            break;
+        case Axis_Y: 
+            label = _T("Y"); 
+            vAxis = Vector3::Up;  
+            if (m_bLockY) isSelected = true;
+            color.g = 1.0f;
+            break;
+        case Axis_Z: 
+            label = _T("Z"); 
+            vAxis = -Vector3::Forward; 
+            if (m_bLockZ) isSelected = true; 
+            color.r = 1.0f; color.g = 1.0f;
+            break;
+    }
+
+    BX2D->SetColor(color);
+
+    Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - pos;
+    float l = length.Length() * 0.001f;
+
+    Vector3 pointStart(pos + vAxis * AXIS_SMALL_LENGTH * l);
+    Vector3 pointEnd(pos + vAxis * AXIS_LENGTH * l);
+
+    pointStart = Vector3::Project(pointStart, &m_ViewPort, projection, view, world);
+    pointEnd = Vector3::Project(pointEnd, &m_ViewPort, projection, view, world);
+
+    BX2D->DrawLine(
+		pointStart.X,
+		pointStart.Y,
+		pointEnd.X,
+		pointEnd.Y,
+		2.0f);
+
+    if (isSelected)
+    {
+        BX2D->SetColor(255, 255, 255);
+        BX2D->FillEllipse(
+		pointEnd.X,
+		pointEnd.Y,
+		static_cast<float>(END_ELLIPSE_RADIUS*2.5f),
+		static_cast<float>(END_ELLIPSE_RADIUS*2.5f));
+        BX2D->SetColor(color);
+    }
+
+	BX2D->FillEllipse(
+		pointEnd.X,
+		pointEnd.Y,
+		static_cast<float>(END_ELLIPSE_RADIUS*2),
+		static_cast<float>(END_ELLIPSE_RADIUS*2));
+
+	BX2D->DrawString(label,
+		pointStart.X,
+		pointStart.Y);
+    
+    
+}
+void MoveGizmo::Draw2Axis(const Vector3& pos, Axis axis1, Axis axis2,
+                           const Matrix& world, const Matrix& view, const Matrix& projection)
+{
+    Vector3 vAxis1, vAxis2;
+    bool isSelected = false;
+    //Init
+    #pragma region
+    switch (axis1)
+    {
+        case Axis_X: 
+            vAxis1 = Vector3::Right; 
+            isSelected = m_bLockX;
+            break;
+        case Axis_Y: 
+            vAxis1 = Vector3::Up;  
+            isSelected = m_bLockY;
+            break;
+        case Axis_Z: 
+            vAxis1 = -Vector3::Forward; 
+            isSelected = m_bLockZ; 
+            break;
+    }
+    switch (axis2)
+    {
+        case Axis_X: 
+            vAxis2 = Vector3::Right; 
+            isSelected = m_bLockX && isSelected;
+            break;
+        case Axis_Y: 
+            vAxis2 = Vector3::Up;  
+            isSelected = m_bLockY && isSelected;
+            break;
+        case Axis_Z: 
+            vAxis2 = -Vector3::Forward; 
+            isSelected = m_bLockZ && isSelected; 
+            break;
+    }
+    #pragma endregion
+
+    BX2D->SetColor(50, 50, 255, 0.5f);
+
+    Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - pos;
+    float l = length.Length() * 0.001f;
+
+    Vector3 p1 = Vector3::Project(pos, 
+        &m_ViewPort, projection, view, world);
+    Vector3 p2 = Vector3::Project(pos + vAxis1 * AXIS_SMALL_LENGTH * l,
+        &m_ViewPort, projection, view, world);
+    Vector3 p3 = Vector3::Project(pos + (vAxis1 + vAxis2) * AXIS_SMALL_LENGTH * l,
+        &m_ViewPort, projection, view, world);
+    Vector3 p4 = Vector3::Project(pos + vAxis2 * AXIS_SMALL_LENGTH * l, 
+        &m_ViewPort, projection, view, world);
+
+    D2D1_POINT_2F poly[4];
+    poly[0] = Point2F(p1.X , p1.Y);
+    poly[1] = Point2F(p2.X , p2.Y);
+    poly[2] = Point2F(p3.X , p3.Y);
+    poly[3] = Point2F(p4.X , p4.Y);
+
+    if (isSelected)
+    {
+        BX2D->SetColor(150, 150, 255, 0.5f);
+    }
+
+    BX2D->FillPolygon(poly, 4);
+    
+    BX2D->SetColor(100, 100, 255);
+    BX2D->DrawPolygon(poly, 4, true, 2);
+
+    
+}
+
+void MoveGizmo::DrawGizmo(const Vector3& pos)
+{
+	Matrix proj = m_pRenderContext->GetCamera()->GetProjection();
+	Matrix view = m_pRenderContext->GetCamera()->GetView();
+	Matrix world = Matrix::Identity;
+    
+    Vector3 objLook(pos - m_pRenderContext->GetCamera()->GetPosition());
+    objLook.Normalize();
+
+    if (objLook.Dot(m_pRenderContext->GetCamera()->GetLook()) > 0.5f)
+    {
+        Draw2Axis(pos, Axis_X, Axis_Y, world, view, proj);
+        Draw2Axis(pos, Axis_X, Axis_Z, world, view, proj);
+        Draw2Axis(pos, Axis_Y, Axis_Z, world, view, proj);
+        DrawAxis(pos, Axis_X, world, view, proj);
+        DrawAxis(pos, Axis_Y, world, view, proj);
+        DrawAxis(pos, Axis_Z, world, view, proj);
+    }
 }
 
 // GENERAL
-void MoveGizmo::Show(Light* pLight, int id)
+void MoveGizmo::Tick(const RenderContext* pRenderContext, ObjectSelecter* pObjectSelecter)
 {
-	/*if (pLight->GetType() == LightType_Point)
-	{
+    m_vCenterPos = pObjectSelecter->GetCenterPos();
+    if (m_vCenterPos != Vector3::Infinity)
+    {
+        // VIEWPORT
+	    m_ViewPort.Width = (UINT)BX2D->GetWindowSize().width;
+	    m_ViewPort.Height = (UINT)BX2D->GetWindowSize().height;
 
-	}*/
+	    m_pRenderContext = pRenderContext;
 
+        if (CONTROLS->LeftMBUp() == true)
+	        m_bLockX = m_bLockY = m_bLockZ = false;
+
+        if (m_bLockX || m_bLockY || m_bLockZ)
+            pObjectSelecter->AbortControls();
+
+        CheckControls(pObjectSelecter);
+    }
+}
+
+void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
+{ 
 	// MATRIX
-	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
-	D3DXMATRIX matView = m_pRenderContext->GetCamera()->GetView();
-
-	D3DXMATRIX matIdent;
-	D3DXMatrixIdentity(&matIdent);
+	Matrix matProj = m_pRenderContext->GetCamera()->GetProjection();
+	Matrix matView = m_pRenderContext->GetCamera()->GetView();
+	Matrix matWorld = Matrix::Identity;
 
 	// VIEWPORT
 	D3D10_VIEWPORT viewP;
@@ -41,822 +231,178 @@ void MoveGizmo::Show(Light* pLight, int id)
 	viewP.MinDepth = 0;
 	viewP.MaxDepth = 1;
 
-	// POSITION
-	D3DXVECTOR3 pos;
-	pos = D3DXVECTOR3(	pLight->GetPosition().X,
-						pLight->GetPosition().Y,
-						pLight->GetPosition().Z	);
-
 	Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
 
-	Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - Vector3(pos);
-	float l = length.Length();
-	l *= 0.001f;
+	Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - m_vCenterPos;
+    float l = length.Length() * 0.001f;
 
-	D3DXVECTOR3 pos2D;
-	D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
-
-	if (vLook.Dot(length) < 0 &&
-		pos2D.x < BX2D->GetWindowSize().width &&
-		pos2D.x > 0 &&
-		pos2D.y < BX2D->GetWindowSize().height &&
-		pos2D.y > 0)
-	{
-		// VIEWPORT PROJECTION
-		D3DXVECTOR3 posLineX_2D;
-		D3DXVECTOR3 posLineY_2D;
-		D3DXVECTOR3 posLineZ_2D;
-
-		D3DXVECTOR3 posLineX2_2D;
-		D3DXVECTOR3 posLineY2_2D;
-		D3DXVECTOR3 posLineZ2_2D;
-
-		D3DXVECTOR3 posLineXY_2D;
-		D3DXVECTOR3 posLineYZ_2D;
-		D3DXVECTOR3 posLineZX_2D;
-	
-		D3DXVECTOR3 posLineX = pos;
-		posLineX.x += l*100;
-		D3DXVECTOR3 posLineY = pos;
-		posLineY.y += l*100;
-		D3DXVECTOR3 posLineZ = pos;
-		posLineZ.z += l*100;
-
-		D3DXVECTOR3 posLineX2 = pos;
-		posLineX2.x += l*50;
-		D3DXVECTOR3 posLineY2 = pos;
-		posLineY2.y += l*50;
-		D3DXVECTOR3 posLineZ2 = pos;
-		posLineZ2.z += l*50;
-
-		D3DXVECTOR3 posLineXY = pos;
-		posLineXY.x += l*50;
-		posLineXY.y += l*50;
-		D3DXVECTOR3 posLineYZ = pos;
-		posLineYZ.y += l*50;
-		posLineYZ.z += l*50;
-		D3DXVECTOR3 posLineZX = pos;
-		posLineZX.z += l*50;
-		posLineZX.x += l*50;
-
-		D3DXVec3Project(&posLineX_2D, &posLineX, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineY_2D, &posLineY, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineZ_2D, &posLineZ, &viewP, &matProj, &matView, &matIdent);
-
-		D3DXVec3Project(&posLineX2_2D, &posLineX2, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineY2_2D, &posLineY2, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineZ2_2D, &posLineZ2, &viewP, &matProj, &matView, &matIdent);
-
-		D3DXVec3Project(&posLineXY_2D, &posLineXY, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineYZ_2D, &posLineYZ, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineZX_2D, &posLineZX, &viewP, &matProj, &matView, &matIdent);
-
-		int size = 10;
-
-		// X
-		HitRegion hitRectX(
-			HitRegion::TYPE_ELLIPSE,
-			posLineX_2D.x,
-			posLineX_2D.y,
-			(float)size,
-			(float)size);
-
-		BX2D->SetColor(255, 0, 0);
-		BX2D->DrawLine(
-			posLineX2_2D.x,
-			posLineX2_2D.y,
-			posLineX_2D.x,
-			posLineX_2D.y,
-			2.0f);
-
-		BX2D->FillEllipse(
-			posLineX_2D.x,
-			posLineX_2D.y,
-			size/2.0f,
-			size/2.0f);
-	
-		BX2D->SetColor(255, 0, 0);
-		BX2D->SetFont(m_pAxisFont);
-		BX2D->DrawString(_T("X"),
-			posLineX_2D.x - 5,
-			posLineX_2D.y - 25);
-
-		// XY
-		D2D1_POINT_2F r[5];
-		r[0].x = posLineXY_2D.x;
-		r[0].y = posLineXY_2D.y;
-		r[1].x = posLineY2_2D.x;
-		r[1].y = posLineY2_2D.y;
-		r[2].x = pos2D.x;
-		r[2].y = pos2D.y;
-		r[3].x = posLineX2_2D.x;
-		r[3].y = posLineX2_2D.y;
-		r[4].x = posLineXY_2D.x;
-		r[4].y = posLineXY_2D.y;
-
-		HitRegion hitRectXY(HitRegion::TYPE_POLYGON, &r[0], 5);
-						
-		if (hitRectXY.HitTest(CONTROLS->GetMousePos()))
-		{		
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockX == false && m_bLockZ == false)
-				m_bLockX = m_bLockY = true;
-		}
-
-		if (hitRectXY.HitTest(CONTROLS->GetMousePos()) || (m_bLockX == true && m_bLockY == true))
-			BX2D->SetColor(150, 150, 255, 0.8f);
-		else
-			BX2D->SetColor(50, 50, 255, 0.4f);
-
-		BX2D->FillPolygon(r, 4);
-
-		BX2D->SetColor(100, 100, 255, 0.8f);
-		BX2D->DrawLine(r[0], r[1]);
-		BX2D->DrawLine(r[1], r[2]);
-		BX2D->DrawLine(r[2], r[3]);
-		BX2D->DrawLine(r[3], r[0]);
-
-		if (hitRectX.HitTest(CONTROLS->GetMousePos()))
-		{
-			BX2D->SetColor(255, 255, 255);
-			BX2D->DrawEllipse(
-				posLineX_2D.x,
-				posLineX_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockZ == false)
-				m_bLockX = true;
-		}
-
-		if (!CONTROLS->LeftMBDown())
-			m_bLockX = m_bLockY = m_bLockZ = false;
-
-		D3DXVECTOR3 mousePosPlusZX(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.z);
-		D3DXVECTOR3 mousePosPlusZX_3D;
-		D3DXVec3Unproject(&mousePosPlusZX_3D, &mousePosPlusZX, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZX_3D.x -= l*100;
-
-		if (m_bLockX)
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineX_2D.x,
-				posLineX_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			float diff = m_OldLightPos[id].x - mousePosPlusZX_3D.x;
-
-			pLight->Translate(Vector3(-diff, 0, 0));
-
-			m_OldLightPos[id].x = mousePosPlusZX_3D.x;
-		}
-		else
-		{
-			m_OldLightPos[id].x = mousePosPlusZX_3D.x;
-		}
-
-		// Y
-		HitRegion hitRectY(
-			HitRegion::TYPE_ELLIPSE,
-			posLineY_2D.x,
-			posLineY_2D.y,
-			(float)size,
-			(float)size);
-
-		BX2D->SetColor(0, 255, 0);
-		BX2D->DrawLine(
-			posLineY2_2D.x,
-			posLineY2_2D.y,
-			posLineY_2D.x,
-			posLineY_2D.y,
-			2.0f);
-
-		BX2D->FillEllipse(
-			posLineY_2D.x,
-			posLineY_2D.y,
-			size/2.0f,
-			size/2.0f);
-
-		BX2D->SetColor(0, 255, 0);
-		BX2D->SetFont(m_pAxisFont);
-		BX2D->DrawString(
-			_T("Y"),
-			posLineY_2D.x - 5,
-			posLineY_2D.y - 25);
-	
-		//D2D1_POINT_2F r[4];
-		r[0].x = posLineY2_2D.x;
-		r[0].y = posLineY2_2D.y;
-		r[1].x = posLineYZ_2D.x;
-		r[1].y = posLineYZ_2D.y;
-		r[2].x = posLineZ2_2D.x;
-		r[2].y = posLineZ2_2D.y;
-		r[3].x = pos2D.x;
-		r[3].y = pos2D.y;
-		r[4].x = posLineY2_2D.x;
-		r[4].y = posLineY2_2D.y;
-
-		HitRegion hitRectYZ(HitRegion::TYPE_POLYGON, &r[0], 5);
-						
-		if (hitRectYZ.HitTest(CONTROLS->GetMousePos()))
-		{
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockX == false && m_bLockZ == false)
-				m_bLockY = m_bLockZ = true;
-		}
-
-		if (hitRectYZ.HitTest(CONTROLS->GetMousePos()) || (m_bLockY == true && m_bLockZ == true))
-			BX2D->SetColor(150, 150, 255, 0.8f);
-		else
-			BX2D->SetColor(50, 50, 255, 0.4f);
-
-		BX2D->FillPolygon(r,4);
-
-		BX2D->SetColor(100, 100, 255, 0.8f);
-		BX2D->DrawLine(r[0],r[1]);
-		BX2D->DrawLine(r[1],r[2]);
-		BX2D->DrawLine(r[2],r[3]);
-		BX2D->DrawLine(r[3],r[0]);
-
-		if (hitRectY.HitTest(CONTROLS->GetMousePos()))
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineY_2D.x,
-				posLineY_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			if (CONTROLS->LeftMBDown() && m_bLockX == false && m_bLockZ == false)
-			{
-				m_bLockY = true;
-			}
-		}
-
-		D3DXVECTOR3 mousePosPlusZY(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.z);
-		D3DXVECTOR3 mousePosPlusZY_3D;
-		D3DXVec3Unproject(&mousePosPlusZY_3D, &mousePosPlusZX, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZY_3D.y -= l*100;
-
-		if (m_bLockY)
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineY_2D.x,
-				posLineY_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-			
-			float diff = m_OldLightPos[id].y - mousePosPlusZY_3D.y;
-
-			pLight->Translate(Vector3(0, -diff, 0));
-
-			m_OldLightPos[id].y = mousePosPlusZY_3D.y;
-		}
-		else
-		{
-			m_OldLightPos[id].y = mousePosPlusZY_3D.y;
-		}
-	
-		// Z
-		HitRegion hitRectZ(
-			HitRegion::TYPE_ELLIPSE,
-			posLineZ_2D.x,
-			posLineZ_2D.y,
-			(float)size,
-			(float)size);
-
-		BX2D->SetColor(255, 255, 0);
-		BX2D->DrawLine(
-			posLineZ2_2D.x,
-			posLineZ2_2D.y,
-			posLineZ_2D.x,
-			posLineZ_2D.y,
-			2.0f);
-
-		BX2D->FillEllipse(
-			posLineZ_2D.x,
-			posLineZ_2D.y,
-			size/2.0f,
-			size/2.0f);
-
-		BX2D->SetColor(255, 255, 0);
-		BX2D->SetFont(m_pAxisFont);
-		BX2D->DrawString(
-			_T("Z"),
-			posLineZ_2D.x - 5,
-			posLineZ_2D.y - 25);
-
-		//D2D1_POINT_2F r[4];
-		r[0].x = posLineZX_2D.x;
-		r[0].y = posLineZX_2D.y;
-		r[1].x = posLineX2_2D.x;
-		r[1].y = posLineX2_2D.y;
-		r[2].x = pos2D.x;
-		r[2].y = pos2D.y;
-		r[3].x = posLineZ2_2D.x;
-		r[3].y = posLineZ2_2D.y;
-		r[4].x = posLineZX_2D.x;
-		r[4].y = posLineZX_2D.y;
-
-		HitRegion hitRectZX(HitRegion::TYPE_POLYGON, &r[0], 5);
-						
-		if (hitRectZX.HitTest(CONTROLS->GetMousePos()))
-		{
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockX == false && m_bLockZ == false)
-				m_bLockZ = m_bLockX = true;
-		}
-
-		if (hitRectZX.HitTest(CONTROLS->GetMousePos()) || (m_bLockZ == true && m_bLockX == true))
-			BX2D->SetColor(150, 150, 255, 0.8f);
-		else
-			BX2D->SetColor(50, 50, 255, 0.4f);
-
-		BX2D->FillPolygon(r,4);
-
-		BX2D->SetColor(100, 100, 255, 0.8f);
-		BX2D->DrawLine(r[0],r[1]);
-		BX2D->DrawLine(r[1],r[2]);
-		BX2D->DrawLine(r[2],r[3]);
-		BX2D->DrawLine(r[3],r[0]);
-
-		if (hitRectZ.HitTest(CONTROLS->GetMousePos()))
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineZ_2D.x,
-				posLineZ_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			if (CONTROLS->LeftMBDown() && m_bLockX == false && m_bLockY == false)
-			{
-				m_bLockZ = true;
-			}
-		}
-
-		D3DXVECTOR3 mousePosPlusZZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.z);
-		D3DXVECTOR3 mousePosPlusZZ_3D;
-		D3DXVec3Unproject(&mousePosPlusZZ_3D, &mousePosPlusZZ, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZZ_3D.z -= l*100;
-
-		if (m_bLockZ)
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineZ_2D.x,
-				posLineZ_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			float diff = m_OldLightPos[id].z - mousePosPlusZZ_3D.z;
-
-			pLight->Translate(Vector3(0, 0, -diff));
-
-			m_OldLightPos[id].z = mousePosPlusZZ_3D.z;
-		}
-		else
-		{
-			m_OldLightPos[id].z = mousePosPlusZZ_3D.z;
-		}
-	}
-}
-
-void MoveGizmo::Show(ILevelObject* pLevelObject, int id)
-{
-	// MATRIX
-	D3DXMATRIX matProj = m_pRenderContext->GetCamera()->GetProjection();
-	D3DXMATRIX matView = m_pRenderContext->GetCamera()->GetView();
-
-	D3DXMATRIX matIdent;
-	D3DXMatrixIdentity(&matIdent);
-
-	// VIEWPORT
-	D3D10_VIEWPORT viewP;
-	viewP.TopLeftX = 0;
-	viewP.TopLeftY = 0;
-	viewP.Width = (UINT)BX2D->GetWindowSize().width;
-	viewP.Height = (UINT)BX2D->GetWindowSize().height;
-	viewP.MinDepth = 0;
-	viewP.MaxDepth = 1;
-
-	
-	// POSITION
-	D3DXVECTOR3 pos;
-	pos = D3DXVECTOR3(
-		pLevelObject->GetPosition().X,
-		pLevelObject->GetPosition().Y,
-		pLevelObject->GetPosition().Z	);
-
-	Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
-
-	Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - Vector3(pos);
-	float l = length.Length();
-	l *= 0.001f;
-
-	D3DXVECTOR3 pos2D;
-	D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
+    //project position on screen
+	Vector3 pos2D(Vector3::Project(m_vCenterPos, &m_ViewPort, matProj, matView, matWorld));
 
 	if (vLook.Dot(length) < 0 &&
-		pos2D.x < BX2D->GetWindowSize().width &&
-		pos2D.x > 0 &&
-		pos2D.y < BX2D->GetWindowSize().height &&
-		pos2D.y > 0)
+		pos2D.X < BX2D->GetWindowSize().width &&
+		pos2D.X > 0 &&
+		pos2D.Y < BX2D->GetWindowSize().height &&
+		pos2D.Y > 0)
 	{
-		// VIEWPORT PROJECTION
-		D3DXVECTOR3 posLineX_2D;
-		D3DXVECTOR3 posLineY_2D;
-		D3DXVECTOR3 posLineZ_2D;
+		// VIEWPORT PROJECTION --->
+		Vector3 posLineX(m_vCenterPos);
+        posLineX.X += AXIS_LENGTH * l;
+		Vector3 posLineY(m_vCenterPos);
+		posLineY.Y += AXIS_LENGTH * l;
+		Vector3 posLineZ(m_vCenterPos);
+		posLineZ.Z += AXIS_LENGTH * l;
 
-		D3DXVECTOR3 posLineX2_2D;
-		D3DXVECTOR3 posLineY2_2D;
-		D3DXVECTOR3 posLineZ2_2D;
+        Vector3 posLineX_2D(Vector3::Project(posLineX, &m_ViewPort, matProj, matView, matWorld));
+		Vector3 posLineY_2D(Vector3::Project(posLineY, &m_ViewPort, matProj, matView, matWorld));
+		Vector3 posLineZ_2D(Vector3::Project(posLineZ, &m_ViewPort, matProj, matView, matWorld));
+        //<-------
 
-		D3DXVECTOR3 posLineXY_2D;
-		D3DXVECTOR3 posLineYZ_2D;
-		D3DXVECTOR3 posLineZX_2D;
-	
-		D3DXVECTOR3 posLineX = pos;
-		posLineX.x += l*100;
-		D3DXVECTOR3 posLineY = pos;
-		posLineY.y += l*100;
-		D3DXVECTOR3 posLineZ = pos;
-		posLineZ.z += l*100;
+		// Lock Checks ----->
+        bool setAnchor = false;
+        if (CONTROLS->LeftMBDown() == true)
+        {
+            if (m_bLockX == false && m_bLockY == false && m_bLockZ == false)
+            {
+                #pragma region
+                //X
+                    if (m_bLockY == false && m_bLockZ == false)
+                    {
+		                HitRegion hitRectX(
+			                                HitRegion::TYPE_ELLIPSE,
+			                                posLineX_2D.X,
+			                                posLineX_2D.Y,
+                                            (float)END_ELLIPSE_RADIUS * 2,
+			                                (float)END_ELLIPSE_RADIUS * 2);
 
-		D3DXVECTOR3 posLineX2 = pos;
-		posLineX2.x += l*50;
-		D3DXVECTOR3 posLineY2 = pos;
-		posLineY2.y += l*50;
-		D3DXVECTOR3 posLineZ2 = pos;
-		posLineZ2.z += l*50;
+		                if (hitRectX.HitTest(CONTROLS->GetMousePos()))
+		                {
+			                m_bLockX = true;
+                        }
+                    }	
+                //Y
+                    if (m_bLockX == false && m_bLockZ == false)
+                    {
+                        HitRegion hitRectY(
+			                                HitRegion::TYPE_ELLIPSE,
+			                                posLineY_2D.X,
+			                                posLineY_2D.Y,
+			                                (float)END_ELLIPSE_RADIUS * 2,
+			                                (float)END_ELLIPSE_RADIUS * 2);
 
-		D3DXVECTOR3 posLineXY = pos;
-		posLineXY.x += l*50;
-		posLineXY.y += l*50;
-		D3DXVECTOR3 posLineYZ = pos;
-		posLineYZ.y += l*50;
-		posLineYZ.z += l*50;
-		D3DXVECTOR3 posLineZX = pos;
-		posLineZX.z += l*50;
-		posLineZX.x += l*50;
+		                if (hitRectY.HitTest(CONTROLS->GetMousePos()))
+		                {
+				            m_bLockY = true;
+		                }
+                    }
+                //Z
+                    if (m_bLockX == false && m_bLockY == false)
+                    {
+                        HitRegion hitRectZ(
+			                                HitRegion::TYPE_ELLIPSE,
+			                                posLineZ_2D.X,
+			                                posLineZ_2D.Y,
+			                                (float)END_ELLIPSE_RADIUS * 2,
+			                                (float)END_ELLIPSE_RADIUS * 2);
 
-		D3DXVec3Project(&posLineX_2D, &posLineX, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineY_2D, &posLineY, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineZ_2D, &posLineZ, &viewP, &matProj, &matView, &matIdent);
+		                if (hitRectZ.HitTest(CONTROLS->GetMousePos()))
+		                {
+				            m_bLockZ = true;
+                        }
+                    }
+                
+                //XZ - XY - YZ
+                if (m_bLockX == false && m_bLockY == false && m_bLockZ == false)
+                {
+                    if (PolyCollisionCheck(m_vCenterPos, Vector3::Right * l, Vector3::Forward * -l, matProj, matView, matWorld))
+                    {
+                        m_bLockX = true;
+                        m_bLockZ = true;
+                    }
+                    else if (PolyCollisionCheck(m_vCenterPos, Vector3::Right * l, Vector3::Up * l, matProj, matView, matWorld))
+                    {
+                        m_bLockX = true;
+                        m_bLockY = true;
+                    }
+                    else if (PolyCollisionCheck(m_vCenterPos, Vector3::Up * l, Vector3::Forward * -l, matProj, matView, matWorld))
+                    {
+                        m_bLockY = true;
+                        m_bLockZ = true;
+                    }
+                }
+                #pragma endregion
+                setAnchor = (m_bLockX == true || m_bLockY == true || m_bLockZ == true);
+            }
+        }
+        //<---------------
+		    
+        if (m_bLockX || m_bLockY || m_bLockZ)
+        {
+            if (m_bLockX == true)
+            {
+                Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.Z);
+                Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
+                if (setAnchor)
+                    m_vAnchor.X = (mousePos3D - posLineX).X;
+                float diff = (mousePos3D - posLineX).X - m_vAnchor.X;
+                
+                for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+                {
+                    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
+                }
+            }
+            if (m_bLockY == true)
+            {
+                Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.Z);
+                Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
+                if (setAnchor)
+                    m_vAnchor.Y = (mousePos3D - posLineY).Y;
+                float diff = (mousePos3D - posLineY).Y - m_vAnchor.Y;
 
-		D3DXVec3Project(&posLineX2_2D, &posLineX2, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineY2_2D, &posLineY2, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineZ2_2D, &posLineZ2, &viewP, &matProj, &matView, &matIdent);
+                for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+                {
+                    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
+                }
+            }
+            if (m_bLockZ == true)
+            {
+                Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.Z);
+                Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
+                if (setAnchor)
+                    m_vAnchor.Z = (mousePos3D - posLineZ).Z;
+                float diff = (mousePos3D - posLineZ).Z - m_vAnchor.Z;
 
-		D3DXVec3Project(&posLineXY_2D, &posLineXY, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineYZ_2D, &posLineYZ, &viewP, &matProj, &matView, &matIdent);
-		D3DXVec3Project(&posLineZX_2D, &posLineZX, &viewP, &matProj, &matView, &matIdent);
+                for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+                {
+                    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
+                }
+            }
 
-		int size = 10;
-
-		// X
-		HitRegion hitRectX(
-			HitRegion::TYPE_ELLIPSE,
-			posLineX_2D.x,
-			posLineX_2D.y,
-			(float)size,
-			(float)size);
-
-		BX2D->SetColor(255, 0, 0);
-		BX2D->DrawLine(
-			posLineX2_2D.x,
-			posLineX2_2D.y,
-			posLineX_2D.x,
-			posLineX_2D.y,
-			2.0f);
-
-		BX2D->FillEllipse(
-			posLineX_2D.x,
-			posLineX_2D.y,
-			size/2.0f,
-			size/2.0f);
-	
-		BX2D->SetColor(255, 0, 0);
-		BX2D->SetFont(m_pAxisFont);
-		BX2D->DrawString(_T("X"),
-			posLineX_2D.x - 5,
-			posLineX_2D.y - 25);
-
-		// XY
-		D2D1_POINT_2F r[5];
-		r[0].x = posLineXY_2D.x;
-		r[0].y = posLineXY_2D.y;
-		r[1].x = posLineY2_2D.x;
-		r[1].y = posLineY2_2D.y;
-		r[2].x = pos2D.x;
-		r[2].y = pos2D.y;
-		r[3].x = posLineX2_2D.x;
-		r[3].y = posLineX2_2D.y;
-		r[4].x = posLineXY_2D.x;
-		r[4].y = posLineXY_2D.y;
-
-		HitRegion hitRectXY(HitRegion::TYPE_POLYGON, &r[0], 5);
-						
-		if (hitRectXY.HitTest(CONTROLS->GetMousePos()))
-		{		
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockX == false && m_bLockZ == false)
-				m_bLockX = m_bLockY = true;
-		}
-
-		if (hitRectXY.HitTest(CONTROLS->GetMousePos()) || (m_bLockX == true && m_bLockY == true))
-			BX2D->SetColor(150, 150, 255, 0.8f);
-		else
-			BX2D->SetColor(50, 50, 255, 0.4f);
-
-		BX2D->FillPolygon(r, 4);
-
-		BX2D->SetColor(100, 100, 255, 0.8f);
-		BX2D->DrawLine(r[0], r[1]);
-		BX2D->DrawLine(r[1], r[2]);
-		BX2D->DrawLine(r[2], r[3]);
-		BX2D->DrawLine(r[3], r[0]);
-
-		if (hitRectX.HitTest(CONTROLS->GetMousePos()))
-		{
-			BX2D->SetColor(255, 255, 255);
-			BX2D->DrawEllipse(
-				posLineX_2D.x,
-				posLineX_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockZ == false)
-				m_bLockX = true;
-		}
-
-		if (!CONTROLS->LeftMBDown())
-			m_bLockX = m_bLockY = m_bLockZ = false;
-
-		D3DXVECTOR3 mousePosPlusZX(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.z);
-		D3DXVECTOR3 mousePosPlusZX_3D;
-		D3DXVec3Unproject(&mousePosPlusZX_3D, &mousePosPlusZX, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZX_3D.x -= l*100;
-
-		if (m_bLockX)
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineX_2D.x,
-				posLineX_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			float diffX = m_OldModelPos[id].x - mousePosPlusZX_3D.x;
-
-			pLevelObject->Translate(Vector3(-diffX,0,0));
-
-			m_OldModelPos[id].x = mousePosPlusZX_3D.x;
-		}
-		else
-		{
-			m_OldModelPos[id].x = mousePosPlusZX_3D.x;
-		}
-
-		// Y
-		HitRegion hitRectY(
-			HitRegion::TYPE_ELLIPSE,
-			posLineY_2D.x,
-			posLineY_2D.y,
-			(float)size,
-			(float)size);
-
-		BX2D->SetColor(0, 255, 0);
-		BX2D->DrawLine(
-			posLineY2_2D.x,
-			posLineY2_2D.y,
-			posLineY_2D.x,
-			posLineY_2D.y,
-			2.0f);
-
-		BX2D->FillEllipse(
-			posLineY_2D.x,
-			posLineY_2D.y,
-			size/2.0f,
-			size/2.0f);
-
-		BX2D->SetColor(0, 255, 0);
-		BX2D->SetFont(m_pAxisFont);
-		BX2D->DrawString(
-			_T("Y"),
-			posLineY_2D.x - 5,
-			posLineY_2D.y - 25);
-	
-		//D2D1_POINT_2F r[4];
-		r[0].x = posLineY2_2D.x;
-		r[0].y = posLineY2_2D.y;
-		r[1].x = posLineYZ_2D.x;
-		r[1].y = posLineYZ_2D.y;
-		r[2].x = posLineZ2_2D.x;
-		r[2].y = posLineZ2_2D.y;
-		r[3].x = pos2D.x;
-		r[3].y = pos2D.y;
-		r[4].x = posLineY2_2D.x;
-		r[4].y = posLineY2_2D.y;
-
-		HitRegion hitRectYZ(HitRegion::TYPE_POLYGON, &r[0], 5);
-						
-		if (hitRectYZ.HitTest(CONTROLS->GetMousePos()))
-		{
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockX == false && m_bLockZ == false)
-				m_bLockY = m_bLockZ = true;
-		}
-
-		if (hitRectYZ.HitTest(CONTROLS->GetMousePos()) || (m_bLockY == true && m_bLockZ == true))
-			BX2D->SetColor(150, 150, 255, 0.8f);
-		else
-			BX2D->SetColor(50, 50, 255, 0.4f);
-
-		BX2D->FillPolygon(r,4);
-
-		BX2D->SetColor(100, 100, 255, 0.8f);
-		BX2D->DrawLine(r[0],r[1]);
-		BX2D->DrawLine(r[1],r[2]);
-		BX2D->DrawLine(r[2],r[3]);
-		BX2D->DrawLine(r[3],r[0]);
-
-		if (hitRectY.HitTest(CONTROLS->GetMousePos()))
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineY_2D.x,
-				posLineY_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			if (CONTROLS->LeftMBDown() && m_bLockX == false && m_bLockZ == false)
-			{
-				m_bLockY = true;
-			}
-		}
-
-		D3DXVECTOR3 mousePosPlusZY(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.z);
-		D3DXVECTOR3 mousePosPlusZY_3D;
-		D3DXVec3Unproject(&mousePosPlusZY_3D, &mousePosPlusZX, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZY_3D.y -= l*100;
-
-		if (m_bLockY)
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineY_2D.x,
-				posLineY_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-			
-			float diffY = m_OldModelPos[id].y - mousePosPlusZY_3D.y;
-
-			pLevelObject->Translate(Vector3(0, -diffY, 0));
-
-			m_OldModelPos[id].y = mousePosPlusZY_3D.y;
-		}
-		else
-		{
-			m_OldModelPos[id].y = mousePosPlusZY_3D.y;
-		}
-	
-		// Z
-		HitRegion hitRectZ(
-			HitRegion::TYPE_ELLIPSE,
-			posLineZ_2D.x,
-			posLineZ_2D.y,
-			(float)size,
-			(float)size);
-
-		BX2D->SetColor(255, 255, 0);
-		BX2D->DrawLine(
-			posLineZ2_2D.x,
-			posLineZ2_2D.y,
-			posLineZ_2D.x,
-			posLineZ_2D.y,
-			2.0f);
-
-		BX2D->FillEllipse(
-			posLineZ_2D.x,
-			posLineZ_2D.y,
-			size/2.0f,
-			size/2.0f);
-
-		BX2D->SetColor(255, 255, 0);
-		BX2D->SetFont(m_pAxisFont);
-		BX2D->DrawString(
-			_T("Z"),
-			posLineZ_2D.x - 5,
-			posLineZ_2D.y - 25);
-
-		//D2D1_POINT_2F r[4];
-		r[0].x = posLineZX_2D.x;
-		r[0].y = posLineZX_2D.y;
-		r[1].x = posLineX2_2D.x;
-		r[1].y = posLineX2_2D.y;
-		r[2].x = pos2D.x;
-		r[2].y = pos2D.y;
-		r[3].x = posLineZ2_2D.x;
-		r[3].y = posLineZ2_2D.y;
-		r[4].x = posLineZX_2D.x;
-		r[4].y = posLineZX_2D.y;
-
-		HitRegion hitRectZX(HitRegion::TYPE_POLYGON, &r[0], 5);
-						
-		if (hitRectZX.HitTest(CONTROLS->GetMousePos()))
-		{
-			if (CONTROLS->LeftMBDown() && m_bLockY == false && m_bLockX == false && m_bLockZ == false)
-				m_bLockZ = m_bLockX = true;
-		}
-
-		if (hitRectZX.HitTest(CONTROLS->GetMousePos()) || (m_bLockZ == true && m_bLockX == true))
-			BX2D->SetColor(150, 150, 255, 0.8f);
-		else
-			BX2D->SetColor(50, 50, 255, 0.4f);
-
-		BX2D->FillPolygon(r,4);
-
-		BX2D->SetColor(100, 100, 255, 0.8f);
-		BX2D->DrawLine(r[0],r[1]);
-		BX2D->DrawLine(r[1],r[2]);
-		BX2D->DrawLine(r[2],r[3]);
-		BX2D->DrawLine(r[3],r[0]);
-
-		if (hitRectZ.HitTest(CONTROLS->GetMousePos()))
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineZ_2D.x,
-				posLineZ_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			if (CONTROLS->LeftMBDown() && m_bLockX == false && m_bLockY == false)
-			{
-				m_bLockZ = true;
-			}
-		}
-
-		D3DXVECTOR3 mousePosPlusZZ(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.z);
-		D3DXVECTOR3 mousePosPlusZZ_3D;
-		D3DXVec3Unproject(&mousePosPlusZZ_3D, &mousePosPlusZZ, &viewP, &matProj, &matView, &matIdent);
-		mousePosPlusZZ_3D.z -= l*100;
-
-		if (m_bLockZ)
-		{
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(
-				posLineZ_2D.x,
-				posLineZ_2D.y,
-				size/2.0f,
-				size/2.0f,
-				2.0f);
-
-			float diffZ = m_OldModelPos[id].z - mousePosPlusZZ_3D.z;
-
-			pLevelObject->Translate(Vector3(0, 0, -diffZ));
-
-			m_OldModelPos[id].z = mousePosPlusZZ_3D.z;
-		}
-		else
-		{
-			m_OldModelPos[id].z = mousePosPlusZZ_3D.z;
-		}
+            pObjectSelecter->CalcCenterPos();
+        }
 	}
+
+    
 }
-
-void MoveGizmo::Tick(const RenderContext* pRenderContext, vector<ILevelObject*> pLevelObjects)
+bool MoveGizmo::PolyCollisionCheck(const Vector3& pos, const Vector3& vAxis1, const Vector3& vAxis2, 
+                                       const Matrix& proj, const Matrix& view, const Matrix& world)
 {
-	m_pRenderContext = pRenderContext;
+    Vector3 p1 = Vector3::Project(pos, 
+        &m_ViewPort, proj, view, world);
+    Vector3 p2 = Vector3::Project(pos + vAxis1 * AXIS_SMALL_LENGTH,
+        &m_ViewPort, proj, view, world);
+    Vector3 p3 = Vector3::Project(pos + (vAxis1 + vAxis2) * AXIS_SMALL_LENGTH,
+        &m_ViewPort, proj, view, world);
+    Vector3 p4 = Vector3::Project(pos + vAxis2 * AXIS_SMALL_LENGTH, 
+        &m_ViewPort, proj, view, world);
 
-    //TODO
+    D2D1_POINT_2F poly[4];
+    poly[0] = Point2F(p1.X , p1.Y);
+    poly[1] = Point2F(p2.X , p2.Y);
+    poly[2] = Point2F(p3.X , p3.Y);
+    poly[3] = Point2F(p4.X , p4.Y);
 
-	while (m_pRenderContext->GetLightController()->GetLights().size() > m_OldLightPos.size())
-	{
-		m_OldLightPos.push_back(D3DXVECTOR3(0,0,0));
-	}
-
-	while (pLevelObjects.size() > m_OldModelPos.size())
-	{
-		m_OldModelPos.push_back(D3DXVECTOR3(0,0,0));
-	}
-}
-
-// GETTERS
-bool MoveGizmo::IsMoving() const
-{
-	if (m_bLockX || m_bLockY || m_bLockZ)
-		return true;
-	else
-		return false;
+    HitRegion hitr(HitRegion::TYPE_POLYGON,
+            poly, 4);
+    return hitr.HitTest(CONTROLS->GetMousePos());
 }

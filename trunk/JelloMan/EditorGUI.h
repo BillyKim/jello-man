@@ -12,7 +12,7 @@
 #include "RotateGizmo.h"
 #include "LoadModelFromFile.h"
 #include "ILevelObject.h"
-#include "VisualModelDebugger.h"
+#include "ObjectSelecter.h"
 
 class EditorGUI
 {
@@ -116,9 +116,9 @@ private:
 
 	PhysX* m_pPhysXEngine;
 
-	VisualModelDebugger* m_pModelDebugger;
-
 	TextFormat* m_pInfoFont;
+
+    ObjectSelecter* m_pObjectSelecter;
 
 	vector<ILevelObject*>* m_pLevelObjects;
 

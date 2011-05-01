@@ -50,7 +50,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\boost\</AdditionalIncludeDirectories>
@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AudioEngine.h" />
+    <ClInclude Include="Axis.h" />
     <ClInclude Include="BaseGrid.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Blox2D_Engine.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="AssetContainer.h" />
     <ClInclude Include="HitRegion.h" />
     <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="IEditorObject.h" />
     <ClInclude Include="ILevelObject.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageLoader.h" />
@@ -133,6 +135,7 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="MoveGizmo.h" />
+    <ClInclude Include="ObjectSelecter.h" />
     <ClInclude Include="PhongEffect.h" />
     <ClInclude Include="PhysX.h" />
     <ClInclude Include="PhysXBox.h" />
@@ -147,6 +150,7 @@
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RevoluteJoint.h" />
     <ClInclude Include="RotateGizmo.h" />
+    <ClInclude Include="ScaleGizmo.h" />
     <ClInclude Include="Softbody.h" />
     <ClInclude Include="SoftbodyMesh.h" />
     <ClInclude Include="Sound.h" />
@@ -170,7 +174,6 @@
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="VisualLightDebugger.h" />
-    <ClInclude Include="VisualModelDebugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
@@ -221,6 +224,7 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelMesh.cpp" />
     <ClCompile Include="MoveGizmo.cpp" />
+    <ClCompile Include="ObjectSelecter.cpp" />
     <ClCompile Include="PhongEffect.cpp" />
     <ClCompile Include="PhysX.cpp" />
     <ClCompile Include="PhysXBox.cpp" />
@@ -235,6 +239,7 @@
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="RevoluteJoint.cpp" />
     <ClCompile Include="RotateGizmo.cpp" />
+    <ClCompile Include="ScaleGizmo.cpp" />
     <ClCompile Include="Softbody.cpp" />
     <ClCompile Include="SoftbodyMesh.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -258,7 +263,6 @@
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="vertex.cpp" />
     <ClCompile Include="VisualLightDebugger.cpp" />
-    <ClCompile Include="VisualModelDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lights.fx" />

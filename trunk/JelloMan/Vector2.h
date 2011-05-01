@@ -8,6 +8,7 @@ public:
 	Vector2();
 	Vector2(float x, float y);
 	explicit Vector2(const D3DXVECTOR2& v2);
+    explicit Vector2(const Point2D& point);
 
     //Static
     static const Vector2 One;     //Vector2(1, 1);

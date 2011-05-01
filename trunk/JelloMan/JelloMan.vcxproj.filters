@@ -324,9 +324,6 @@
     <ClInclude Include="RotateGizmo.h">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="VisualModelDebugger.h">
-      <Filter>Engine Files\Graphics\GUI\Models</Filter>
-    </ClInclude>
     <ClInclude Include="LoadModelFromFile.h">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
     </ClInclude>
@@ -374,6 +371,18 @@
     </ClInclude>
     <ClInclude Include="RevoluteJoint.h">
       <Filter>Engine Files\PhysX\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleGizmo.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSelecter.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="IEditorObject.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Axis.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -593,9 +602,6 @@
     <ClCompile Include="RotateGizmo.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="VisualModelDebugger.cpp">
-      <Filter>Engine Files\Graphics\GUI\Models</Filter>
-    </ClCompile>
     <ClCompile Include="LoadModelFromFile.cpp">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
     </ClCompile>
@@ -634,6 +640,12 @@
     </ClCompile>
     <ClCompile Include="RevoluteJoint.cpp">
       <Filter>Engine Files\PhysX\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="ScaleGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSelecter.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

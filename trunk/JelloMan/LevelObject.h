@@ -23,6 +23,7 @@ public:
 	// GENERAL
     virtual void Init(PhysX* pPhysX);
     virtual void Selected(bool selected);
+    virtual bool IsSelected() const { return m_bIsSelected; }
 
     //IUpdatable
 	virtual void Tick(float dTime);
@@ -36,7 +37,7 @@ public:
 
     virtual void Translate(const Vector3& add) { Actor::Translate(add); }
     virtual void SetPosition(const Vector3& pos) { Actor::SetPosition(pos); }
-    virtual const Vector3& GetPosition() const { return Actor::GetPosition(); }
+    virtual Vector3 GetPosition() const { return Actor::GetPosition(); }
 
     virtual void Scale(const Vector3& scale) { Actor::Scale(scale); }
 

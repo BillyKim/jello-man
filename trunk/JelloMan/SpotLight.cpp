@@ -210,7 +210,7 @@ void SpotLight::SetPosition(const Vector3& pos)
 	m_Desc.position = pos;
     UpdateShadowCameraView();
 }
-const Vector3& SpotLight::GetPosition() const
+Vector3 SpotLight::GetPosition() const
 {
     return m_Desc.position;
 }
@@ -244,13 +244,9 @@ bool SpotLight::IsEnabled() const
 	return m_IsEnabled;
 }
 
-void SpotLight::Select()
+void SpotLight::Selected(bool selected)
 {
-	m_IsSelected = true;
-}
-void SpotLight::Deselect()
-{
-	m_IsSelected = false;
+	m_IsSelected = selected;
 }
 bool SpotLight::IsSelected() const
 {

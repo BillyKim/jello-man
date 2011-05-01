@@ -3,41 +3,48 @@
 #include "Blox2D_Engine.h"
 #include "Vector3.h"
 #include "RenderContext.h"
-#include "LevelObject.h"
+#include "ITransformable.h"
+#include "ILevelObject.h"
+#include "ObjectSelecter.h"
+#include "Axis.h"
 
 class RotateGizmo
 {
 public:
-
-	enum TYPE
-	{
-		TYPE_SPOTLIGHT = 0,
-		TYPE_DIRECTIONALLIGHT = 1,
-		TYPE_MODEL = 2
-	};
-
 	// CONSTRUCTOR - DESTRUCTOR
 	RotateGizmo();
 	virtual ~RotateGizmo();
 
 	// GENERAL
-	void Show(Vector3& position, Vector3& direction, TYPE type, int id, ILevelObject* pLevelObject = 0);
-	void Tick(const RenderContext* pRenderContext, vector<ILevelObject*> pLevelObjects);
+	void Show(ITransformable* pLevelObject, int id);
+    void Tick(const RenderContext* pRenderContext, ObjectSelecter* pObjectSelecter);
+
+    // DRAW
+    void Draw();
 
 private:
+    static const int END_ELLIPSE_RADIUS = 5;
+    static const int AXIS_LENGTH = 100;
+
+    // DRAW
+    void DrawAxis(const Vector3& pos, Axis axis,
+                  const Matrix& world, const Matrix& view, const Matrix& projection);
+    void DrawGizmo(const Vector3& pos);
+
+    // CONTROLS
+    void CheckControls(ObjectSelecter* pObjectSelecter);
 
 	// DATAMEMBERS
 	const RenderContext* m_pRenderContext;
 
-	bool m_bLockXY;
-	bool m_bLockYZ;
-	bool m_bLockZX;
+	bool m_bLockX;
+	bool m_bLockY;
+	bool m_bLockZ;
 
-	vector<D3DXVECTOR3> m_OldLightPos;
-	vector<D3DXVECTOR3> m_OldModelPos;
-
-	vector<Vector3> m_OldModelRot;
+    D3D10_VIEWPORT m_ViewPort;
 
 	TextFormat* m_pAxisFont;
+
+    Vector3 m_vCenterPos;
 };
 

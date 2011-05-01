@@ -31,10 +31,10 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice)	:	m_pLightBut
 																		m_pLoadModelFromFile(0),
 																		m_bNewModelLoaded(false),
 																		m_pShowGridButton(0),
-																		m_pModelDebugger(0),
 																		m_pPhysXEngine(pPhysXEngine),
 																		m_pLevelObjects(0),
-																		m_pDXDevice(pDXDevice)
+																		m_pDXDevice(pDXDevice),
+                                                                        m_pObjectSelecter(new ObjectSelecter(pPhysXEngine))
 {
 
 }
@@ -59,7 +59,7 @@ EditorGUI::~EditorGUI()
 	delete m_pMoveGizmo;
 	delete m_pRotateGizmo;
 	delete m_pLoadModelFromFile;
-	delete m_pModelDebugger;
+	delete m_pObjectSelecter;
 }
 
 // GENERAL
@@ -240,9 +240,6 @@ void EditorGUI::Initialize()
 
 	m_pLoadModelFromFile = new LoadModelFromFile();
 
-	// MODEL DEBUGGER
-	m_pModelDebugger = new VisualModelDebugger(m_pPhysXEngine);
-
 	// FONT
 	m_pInfoFont = Content->LoadTextFormat(_T("Verdana"),10,false,false);
 }
@@ -264,24 +261,13 @@ void EditorGUI::Draw()
 		BX2D->SetAntiAliasing(true);
 
 		// MOVE GIZMO
-		for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
-		{
-			if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
-			{
-
-				if (m_bMoveable)
-					m_pMoveGizmo->Show(m_pRenderContext->GetLightController()->GetLights()[i], i);
-			}
-		}
-
-		for (unsigned int i = 0; i < m_pModelDebugger->GetModelsSelected().size(); ++i)
-		{
-			if (m_pModelDebugger->GetModelsSelected()[i] == true)
-			{
-				if (m_bMoveable)
-					m_pMoveGizmo->Show((*m_pLevelObjects)[i], i);
-			}
-		}
+        if (m_bMoveable || m_bRotateable)
+        {
+            if (m_bMoveable)
+                m_pMoveGizmo->Draw();
+            else if (m_bRotateable)
+                m_pRotateGizmo->Draw();
+        }
 
 		BX2D->SetAntiAliasing(false);
 	}
@@ -289,7 +275,7 @@ void EditorGUI::Draw()
 	{
 		m_pLightDebugger->DeselectAllLights();
 		m_pLightDebugger->HideTextBoxes();
-		m_pModelDebugger->DeselectAll();
+        m_pObjectSelecter->DeselectAll();
 	}
 
 	// BACKGROUND
@@ -537,11 +523,6 @@ void EditorGUI::Draw()
 		BX2D->DrawBitmap(m_pCameraBitmap, BX2D->GetWindowSize().width - 70, 90, true, 0.8f);
 	
 
-	if (m_Mode == MODE_EDITOR)
-	{
-		m_pModelDebugger->Draw();
-	}
-
 	BX2D->SetAntiAliasing(true);
 
 	if (m_pColorPickerButton->IsActive() && m_Mode == MODE_EDITOR)
@@ -599,9 +580,8 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
 		m_pColorPickerButton->Tick();
 
+    m_pObjectSelecter->Tick(m_pRenderContext, *m_pLevelObjects);
 	m_pLightDebugger->Tick(pRenderContext);
-	m_pMoveGizmo->Tick(pRenderContext, pLevelObjects);
-	m_pRotateGizmo->Tick(pRenderContext, pLevelObjects);
 
 	m_pLevelObjects = &pLevelObjects;
 
@@ -713,10 +693,10 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 	if (m_pRotateButton->Clicked())
 		m_pMoveButton->Deactivate();
 
-	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 0)
-	{
-		m_pModelDebugger->Tick(pRenderContext, pLevelObjects);
-	}
+    if (m_bMoveable)
+        m_pMoveGizmo->Tick(pRenderContext, m_pObjectSelecter);
+    else if (m_bRotateable)
+        m_pRotateGizmo->Tick(pRenderContext, m_pObjectSelecter);
 }
 
 // GETTERS
