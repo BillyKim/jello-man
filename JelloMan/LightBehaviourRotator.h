@@ -10,6 +10,11 @@ public:
     virtual void Init(Light* light);
 
     virtual void Tick(float dTime);
+    
+	//Serialize
+	virtual void Serialize(Serializer* pSerializer);
+	virtual void Deserialize(Serializer* pSerializer);
+    virtual DWORD GetUniqueIdentifier() { return SerializeTypes::LightBehaviourRotator; }
 
 private:
     Light* m_pLight;

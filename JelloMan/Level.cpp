@@ -2,6 +2,8 @@
 #include "ContentManager.h"
 #include "PhysXSphere.h"
 #include "PhysXBox.h"
+#include "SpotLight.h"
+#include "PointLight.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -21,8 +23,7 @@ Level::~Level()
 {
 	delete m_pBaseGrid;
 	
-	for (vector<ILevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
-		delete *it;
+	Clear();
 }
 
 // GENERAL
@@ -93,6 +94,79 @@ void Level::Tick(const float dTime)
 	}
 }
 
+void Level::AddLevelObject(ILevelObject* pLevelObject)
+{
+	m_pLevelObjects.push_back(pLevelObject);
+}
+
+// SERIALISATION
+ISerializable* GetObject(DWORD id)
+{
+    switch (id)
+    {
+        case SerializeTypes::SpotLight: return new SpotLight();
+        case SerializeTypes::PointLight: return new PointLight();
+        default: ASSERT(false, _T("File corrupt")); return 0;
+    }
+}
+void Level::Serialize(const string& path)
+{
+    Serializer s(path);
+
+    s.Begin(false);
+    for_each(m_pLevelObjects.cbegin(), m_pLevelObjects.cend(), [&](ILevelObject* obj)
+    {
+        ISerializable* is = dynamic_cast<ISerializable*>(obj);
+        if (is != 0)
+            s.Serialize(is);
+    });
+    for_each(m_pRenderContext->GetLightController()->GetLights().cbegin(), m_pRenderContext->GetLightController()->GetLights().cend(), [&](Light* light)
+    {
+        ISerializable* is = dynamic_cast<ISerializable*>(light);
+        if (is != 0)
+            s.Serialize(is);
+    });
+    s.End();
+}
+void Level::Deserialize(const string& path)
+{
+    Serializer s(path);
+
+    s.Begin(true);
+    
+    Clear();
+    while (s.eof() == false)
+    {
+        ISerializable* obj = s.Deserialize(GetObject);
+        
+        //Test is lvlObj
+        ILevelObject* lvlObj = dynamic_cast<ILevelObject*>(obj);
+        if (lvlObj != 0)
+        {
+            m_pLevelObjects.push_back(lvlObj);
+        }
+        else
+        {
+            Light* l = dynamic_cast<Light*>(obj);
+            if (l != 0)
+            {
+                m_pRenderContext->GetLightController()->AddLight(l);              
+            }
+        }
+    }
+    s.End();
+}
+void Level::Clear()
+{   
+    m_pRenderContext->GetLightController()->Clear();
+    for_each(m_pLevelObjects.cbegin(), m_pLevelObjects.cend(), [](ILevelObject* obj)
+    {
+		delete obj;
+    });
+    m_pLevelObjects.clear();
+}
+
+// DRAW
 void Level::DrawDeferred(RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
@@ -102,7 +176,6 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 		(*it)->Draw(pRenderContext);
 	}
 }
-
 
 void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
 {
@@ -130,9 +203,4 @@ void Level::DrawForward(const RenderContext* pRenderContext)
 
 		BX2D->SetAntiAliasing(false);
 	}
-}
-
-void Level::AddLevelObject(ILevelObject* pLevelObject)
-{
-	m_pLevelObjects.push_back(pLevelObject);
 }

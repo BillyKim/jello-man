@@ -68,6 +68,18 @@ Matrix Matrix::CreateScale(const Vector3& f)
     D3DXMatrixScaling(&m.m_Matrix, f.X, f.Y, f.Z);
     return m;
 }
+Matrix Matrix::CreateLookAt(const Vector3& pos, const Vector3& target, const Vector3& up)
+{
+    Matrix m;
+    D3DXMatrixLookAtLH(&m.m_Matrix, &pos.ToD3DVector3(), &target.ToD3DVector3(), &up.ToD3DVector3());
+    return m;
+}
+Matrix Matrix::CreatePerspectiveFov(float fov, float aspect, float zNear, float zFar)
+{
+    Matrix m;
+    D3DXMatrixPerspectiveFovLH(&m.m_Matrix, fov, aspect, zNear, zFar);
+    return m;
+}
 
 
 Matrix::Matrix(const Matrix& mat): m_Matrix(mat)

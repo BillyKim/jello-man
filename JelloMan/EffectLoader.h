@@ -46,7 +46,7 @@ public:
 		    {
 			    if(ErrorBlob)
                 {
-				    SIZE_T size = ErrorBlob->GetBufferSize();
+				    //SIZE_T size = ErrorBlob->GetBufferSize();
 				    LPVOID p_Data = ErrorBlob->GetBufferPointer();
 				    cout << ((LPCSTR)p_Data) << "\n";
 				    MessageBoxA( NULL, (LPCSTR)p_Data, "D3DX10CreateEffectFromFile Error", MB_OK );

@@ -7,6 +7,7 @@
 class PointLight : public Light
 {
 public:
+	PointLight();
 	PointLight(const PointLightDesc& desc);
 	~PointLight();
 
@@ -16,7 +17,7 @@ public:
 	virtual void Tick(float dTime);
 	virtual void Draw(const RenderContext* rc);
 
-	virtual void Rotate(const Vector3& axis, float angle) {} //pointlight has no rotation
+	virtual void Rotate(const Vector3&, float) {} //pointlight has no rotation
 
 	virtual void Translate(const Vector3& add);
 	virtual void SetPosition(const Vector3& pos);
@@ -34,7 +35,7 @@ public:
 	virtual bool IsSelected() const;
 
 	virtual bool HasShadowMap() const { return false; } //no shadowmaps for a pointlight
-    virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type) { cout << "Warning: trying to set shadowmap on a spotlight"; };
+    virtual void SetShadowMap(ID3D10Device*, ShadowMapType) { cout << "Warning: trying to set shadowmap on a spotlight"; };
 	virtual Texture2D* GetShadowMap() const { cout << "Warning: trying to get the shadowmap from a spotlight"; return 0; }
     virtual Camera* GetShadowCamera() const { cout << "Warning: trying to get the shadowcamera from a spotlight"; return 0;}
     virtual ShadowMapType GetShadowMapType() const { return ShadowMapType_None; };
@@ -61,6 +62,11 @@ public:
 	// EDITOR
 	HitRegion* GetHitRegion() const
 	{ return m_pHitRegion; }
+
+    // ISerializeable
+	virtual void Serialize(Serializer* pSerializer);
+	virtual void Deserialize(Serializer* pSerializer);
+    virtual DWORD GetUniqueIdentifier() { return SerializeTypes::PointLight; }
 
 private:
 	bool m_IsEnabled;

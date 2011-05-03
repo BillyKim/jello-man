@@ -106,8 +106,11 @@
     <Filter Include="Engine Files\Exceptions\IO">
       <UniqueIdentifier>{47ea9633-b10b-4235-8101-95de335cfc75}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\ContentManager\Core">
+    <Filter Include="Engine Files\Core">
       <UniqueIdentifier>{45d872af-e322-43d7-988e-aacd4f905e0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Terrain">
+      <UniqueIdentifier>{acaac779-21a2-40c0-947a-69d86b9e5581}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -166,25 +169,25 @@
       <Filter>Engine Files\Input</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="D3DUtil.h">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="GameTimer.h">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="GameWinMain.h">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="MainGame.h">
       <Filter>Game Files</Filter>
     </ClInclude>
     <ClInclude Include="GameConfig.h">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
       <Filter>Game Files</Filter>
@@ -309,9 +312,6 @@
     <ClInclude Include="PointLight.h">
       <Filter>Engine Files\Graphics\Light\types</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
-      <Filter>Engine Files\Graphics\Light\types</Filter>
-    </ClInclude>
     <ClInclude Include="LightDesc.h">
       <Filter>Engine Files\Graphics\Light\types\desc</Filter>
     </ClInclude>
@@ -393,14 +393,20 @@
     <ClInclude Include="Serializer.h">
       <Filter>Engine Files\Serialize</Filter>
     </ClInclude>
-    <ClInclude Include="ISerializable.h">
-      <Filter>Game Files\interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="FileNotFoundException.h">
       <Filter>Engine Files\Exceptions\IO</Filter>
     </ClInclude>
     <ClInclude Include="Exception.h">
       <Filter>Engine Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ISerializable.h">
+      <Filter>Engine Files\Serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="SerializeTypes.h">
+      <Filter>Engine Files\Serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Engine Files\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -453,22 +459,22 @@
       <Filter>Engine Files\Input</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameTimer.cpp">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameWinMain.cpp">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="MainGame.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
     <ClCompile Include="GameConfig.cpp">
-      <Filter>Engine Files\ContentManager\Core</Filter>
+      <Filter>Engine Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="vertex.cpp">
       <Filter>Engine Files\Graphics</Filter>
@@ -596,9 +602,6 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>Engine Files\Graphics\Light\types</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>Engine Files\Graphics\Light\types</Filter>
-    </ClCompile>
     <ClCompile Include="LightDesc.cpp">
       <Filter>Engine Files\Graphics\Light\types\desc</Filter>
     </ClCompile>
@@ -668,6 +671,9 @@
     <ClCompile Include="FileNotFoundException.cpp">
       <Filter>Engine Files\Exceptions\IO</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Engine Files\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx">
@@ -694,5 +700,6 @@
     <None Include="preShadowmapShader.fx">
       <Filter>Content\effect</Filter>
     </None>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

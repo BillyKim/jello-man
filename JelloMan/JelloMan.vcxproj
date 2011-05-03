@@ -98,7 +98,6 @@
     <ClInclude Include="DeferredPreEffect.h" />
     <ClInclude Include="DeferredPreEffectNormals.h" />
     <ClInclude Include="DeferredRenderer.h" />
-    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="EdgeDetectionPostEffect.h" />
     <ClInclude Include="EditorGUI.h" />
     <ClInclude Include="Effect.h" />
@@ -154,6 +153,7 @@
     <ClInclude Include="RevoluteJoint.h" />
     <ClInclude Include="RotateGizmo.h" />
     <ClInclude Include="Serializer.h" />
+    <ClInclude Include="SerializeTypes.h" />
     <ClInclude Include="Softbody.h" />
     <ClInclude Include="SoftbodyMesh.h" />
     <ClInclude Include="Sound.h" />
@@ -162,6 +162,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="TestObject.h" />
     <ClInclude Include="TestObject2.h" />
     <ClInclude Include="TestPhysXBox.h" />
@@ -195,7 +196,6 @@
     <ClCompile Include="DeferredPreEffect.cpp" />
     <ClCompile Include="DeferredPreEffectNormals.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="EdgeDetectionPostEffect.cpp" />
     <ClCompile Include="EditorGUI.cpp" />
     <ClCompile Include="Effect.cpp" />
@@ -252,6 +252,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TestObject.cpp" />
     <ClCompile Include="TestObject2.cpp" />
     <ClCompile Include="TestPhysXBox.cpp" />
@@ -269,6 +270,7 @@
     <ClCompile Include="VisualLightDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="lights.fx" />
     <None Include="phong.fx" />
     <None Include="poscol.fx" />

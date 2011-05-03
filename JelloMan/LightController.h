@@ -11,6 +11,8 @@ public:
     LightController(void);
     virtual ~LightController(void);
 
+    void Clear();
+
     void Tick(float dTime);
 
     void AddLight(Light* light);

@@ -38,6 +38,8 @@ public:
 	//* Loads new text format. *
 	TextFormat* LoadTextFormat(const tstring& fontName, float size, bool bold = false, bool italic = false);
 
+    ID3D10Device* GetDxDevice() { return m_pDevice; }
+
 	static ContentManager* GetSingleton();
 
 private:

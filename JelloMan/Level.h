@@ -36,6 +36,11 @@ public:
 
 	void AddLevelObject(ILevelObject* pLevelObject);
 
+    // SERIALISATION
+    void Serialize(const string& path);
+    void Deserialize(const string& path);
+    void Clear();
+
 	// SETTERS
 	void ShowGrid(bool show)
 	{ m_bShowGrid = show; }

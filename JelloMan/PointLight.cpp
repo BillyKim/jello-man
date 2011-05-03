@@ -4,6 +4,26 @@
 #include "ContentManager.h"
 #include "ModelMesh.h"
 
+
+PointLight::PointLight():
+    m_pLightBehaviour(0),
+    m_IsEnabled(true),
+    m_IsSelected(false),
+	m_pHitRegion(0),
+	m_pPointLightImage(0),
+	m_pAttenuationSpline(0),
+	m_pEffect(0)
+{
+    SetBehaviour(new LightBehaviourNormal());
+
+	m_pPointLightImage = Content->LoadImage(_T("Content/Images/Editor/plight.png"));
+
+	m_pAttenuationSpline = Content->LoadSpline(_T("Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
+
+    ZeroMemory(&m_Desc, sizeof(PointLightDesc));
+    ZeroMemory(&m_StartDesc, sizeof(PointLightDesc));
+}
 PointLight::PointLight(const PointLightDesc& desc): 
     m_pLightBehaviour(0),
     m_IsEnabled(true),
@@ -236,26 +256,24 @@ D3D10_RECT PointLight::CalcScissorRect(Camera* camera, UINT backbufferWidth, UIN
 
     return r;
 }
-//D3D10_RECT PointLight::CalcScissorRect(const Matrix& worldViewProj, UINT backbufferWidth, UINT backbufferHeight)
-//{
-//    Vector4 pos;
-//    pos = Vector3::Transform(m_Desc.position, worldViewProj);
-//
-//    float len = abs(pos.W);
-//	len *= 0.001f;
-//	float size = length / len * 1.1f;//len.Length();
-//
-//	pos.X /= pos.W;
-//	pos.Y /= pos.W;
-//
-//	pos.X += 1.f; pos.X /= 2;
-//	pos.Y += 1.f; pos.Y /= 2; pos.Y = 1 - pos.Y;
-//
-//	D3D10_RECT r;
-//	r.left = static_cast<LONG>(pos.X * backbufferWidth - size);
-//	r.right =  static_cast<LONG>(r.left + size * 2);
-//	r.top = static_cast<LONG>(pos.Y * backbufferHeight - size);
-//	r.bottom = static_cast<LONG>(r.top + size * 2);
-//
-//    return r;
-//}
+
+void PointLight::Serialize(Serializer* pSerializer)
+{
+    pSerializer->GetStream()->storeFloat(m_Desc.attenuationEnd);
+    pSerializer->GetStream()->storeFloat(m_Desc.attenuationStart);
+    pSerializer->GetStream()->storeColor(m_Desc.color);
+    pSerializer->GetStream()->storeFloat(m_Desc.multiplier);
+    pSerializer->GetStream()->storeVector3(m_Desc.position);
+
+    pSerializer->Serialize(m_pLightBehaviour);
+}
+void PointLight::Deserialize(Serializer* pSerializer)
+{
+    m_Desc.attenuationEnd = pSerializer->GetStream()->readFloat();
+    m_Desc.attenuationStart = pSerializer->GetStream()->readFloat();
+    m_Desc.color = pSerializer->GetStream()->readColor();
+    m_Desc.multiplier = pSerializer->GetStream()->readFloat();
+    m_Desc.position = pSerializer->GetStream()->readVector3();
+
+    SetBehaviour(dynamic_cast<LightBehaviour*>(pSerializer->Deserialize(LightBehaviour::Create)));
+}

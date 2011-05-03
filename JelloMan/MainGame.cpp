@@ -213,6 +213,11 @@ void MainGame::UpdateScene(const float dTime)
 {
 	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_GAME)
 		CheckControls();
+  
+    if (CONTROLS->IsKeyPressed('K'))
+        m_pLevel->Serialize("test.level");
+    else if (CONTROLS->IsKeyPressed('L'))
+        m_pLevel->Deserialize("test.level");
 
 	if (!m_pAudioEngine)
 	{

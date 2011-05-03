@@ -67,6 +67,11 @@ public:
 	HitRegion* GetHitRegion() const
 	{ return m_pHitRegion; }
 
+    // ISerializeable
+	virtual void Serialize(Serializer* pSerializer);
+	virtual void Deserialize(Serializer* pSerializer);
+    virtual DWORD GetUniqueIdentifier() { return SerializeTypes::SpotLight; }
+
 private:
 	bool m_IsEnabled;
 	bool m_IsSelected;
@@ -78,8 +83,6 @@ private:
     ShadowMapType m_ShadowMapType;
 
 	Matrix m_Rotation;
-    Vector3 m_Angles;
-	float m_Scale;
     float m_OpeningsAngle;
 
     LightBehaviour* m_pLightBehaviour;
