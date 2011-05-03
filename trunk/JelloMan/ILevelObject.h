@@ -11,7 +11,6 @@ public:
     virtual void Selected(bool selected) = 0;
     virtual bool IsSelected() const = 0;
 
-
     //ITransformable
     virtual void Rotate(const Vector3& axis, float angle) = 0;
 

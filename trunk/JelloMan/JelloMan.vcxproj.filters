@@ -26,9 +26,6 @@
     <Filter Include="Engine Files\Input">
       <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Core">
-      <UniqueIdentifier>{45d872af-e322-43d7-988e-aacd4f905e0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
@@ -100,6 +97,18 @@
     <Filter Include="Engine Files\PhysX\Joints">
       <UniqueIdentifier>{65645979-3a44-4a16-89dc-e122a114b80c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Serialize">
+      <UniqueIdentifier>{964f74cf-9c5d-4d15-9139-67def4f40feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Exceptions">
+      <UniqueIdentifier>{76574092-f52c-4fb9-9f15-54f8420694aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Exceptions\IO">
+      <UniqueIdentifier>{47ea9633-b10b-4235-8101-95de335cfc75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\ContentManager\Core">
+      <UniqueIdentifier>{45d872af-e322-43d7-988e-aacd4f905e0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -157,25 +166,25 @@
       <Filter>Engine Files\Input</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClInclude>
     <ClInclude Include="D3DUtil.h">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClInclude>
     <ClInclude Include="GameTimer.h">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClInclude>
     <ClInclude Include="GameWinMain.h">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClInclude>
     <ClInclude Include="MainGame.h">
       <Filter>Game Files</Filter>
     </ClInclude>
     <ClInclude Include="GameConfig.h">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
       <Filter>Game Files</Filter>
@@ -372,9 +381,6 @@
     <ClInclude Include="RevoluteJoint.h">
       <Filter>Engine Files\PhysX\Joints</Filter>
     </ClInclude>
-    <ClInclude Include="ScaleGizmo.h">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="ObjectSelecter.h">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClInclude>
@@ -383,6 +389,18 @@
     </ClInclude>
     <ClInclude Include="Axis.h">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Serializer.h">
+      <Filter>Engine Files\Serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="ISerializable.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="FileNotFoundException.h">
+      <Filter>Engine Files\Exceptions\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Engine Files\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -435,22 +453,22 @@
       <Filter>Engine Files\Input</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameTimer.cpp">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClCompile>
     <ClCompile Include="GameWinMain.cpp">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClCompile>
     <ClCompile Include="MainGame.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
     <ClCompile Include="GameConfig.cpp">
-      <Filter>Engine Files\Core</Filter>
+      <Filter>Engine Files\ContentManager\Core</Filter>
     </ClCompile>
     <ClCompile Include="vertex.cpp">
       <Filter>Engine Files\Graphics</Filter>
@@ -641,11 +659,14 @@
     <ClCompile Include="RevoluteJoint.cpp">
       <Filter>Engine Files\PhysX\Joints</Filter>
     </ClCompile>
-    <ClCompile Include="ScaleGizmo.cpp">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="ObjectSelecter.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer.cpp">
+      <Filter>Engine Files\Serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="FileNotFoundException.cpp">
+      <Filter>Engine Files\Exceptions\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
