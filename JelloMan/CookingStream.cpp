@@ -7,7 +7,7 @@ UserStream::UserStream(const char* filename, bool load) : fp(NULL)
 	errno_t err = 0;
 	err = fopen_s(&fp, filename, load ? "rb" : "wb");
 	if (err != 0)
-		cout << "ERROR OPENING FILE";
+		cout << "UserStream: ERROR opening file: " + string(filename);
 }
 
 UserStream::~UserStream()
