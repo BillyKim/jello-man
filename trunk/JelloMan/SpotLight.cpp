@@ -1,11 +1,8 @@
 #include "SpotLight.h"
 #include "LightBehaviourNormal.h"
 #include "ContentManager.h"
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 SpotLight::SpotLight():
-			m_Scale(1), 
             m_Rotation(Matrix::Identity),
 			m_IsEnabled(true),
 			m_IsSelected(false),
@@ -41,7 +38,6 @@ SpotLight::SpotLight():
 	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
 }
 SpotLight::SpotLight(const SpotLightDesc& desc):
-			m_Scale(1), 
             m_Rotation(Matrix::Identity),
 			m_IsEnabled(true),
 			m_IsSelected(false),
@@ -165,7 +161,7 @@ void SpotLight::Draw(const RenderContext* rc)
 		Matrix matWorld =
 			Matrix::CreateScale(
 			Vector3(m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f)) * 
-			Matrix::CreateRotationZ(M_PI_2) *
+            Matrix::CreateRotationZ(PiOver2) *
 			m_Rotation *
 			Matrix::CreateTranslation(
 			Vector3(m_Desc.position.X, m_Desc.position.Y, m_Desc.position.Z));
@@ -189,7 +185,7 @@ void SpotLight::Draw(const RenderContext* rc)
 		Matrix matWorld =
 			Matrix::CreateScale(
 			Vector3(0.5f,0.5f,0.5f)) *
-			Matrix::CreateRotationZ(M_PI_2) * 
+            Matrix::CreateRotationZ(PiOver2) * 
 			m_Rotation * 
 			Matrix::CreateTranslation(
 			Vector3(m_Desc.position.X, m_Desc.position.Y, m_Desc.position.Z));
@@ -391,4 +387,40 @@ void SpotLight::SetBehaviour(LightBehaviour* lightBehaviour)
     delete m_pLightBehaviour;
     m_pLightBehaviour = lightBehaviour;
     m_pLightBehaviour->Init(this);
+}
+
+void SpotLight::Serialize(Serializer* pSerializer)
+{
+    pSerializer->GetStream()->storeFloat(m_Desc.attenuationEnd);
+    pSerializer->GetStream()->storeFloat(m_Desc.attenuationStart);
+    pSerializer->GetStream()->storeColor(m_Desc.color);
+    pSerializer->GetStream()->storeFloat(m_Desc.multiplier);
+    pSerializer->GetStream()->storeVector3(m_Desc.position);
+    pSerializer->GetStream()->storeVector3(m_Desc.direction);
+    pSerializer->GetStream()->storeVector3(m_vUp);
+    pSerializer->GetStream()->storeFloat(m_Desc.power);
+    pSerializer->GetStream()->storeByte(static_cast<BYTE>(m_ShadowMapType));
+
+    pSerializer->Serialize(m_pLightBehaviour);
+}
+void SpotLight::Deserialize(Serializer* pSerializer)
+{
+    m_Desc.attenuationEnd = pSerializer->GetStream()->readFloat();
+    m_Desc.attenuationStart = pSerializer->GetStream()->readFloat();
+    m_Desc.color = pSerializer->GetStream()->readColor();
+    m_Desc.multiplier = pSerializer->GetStream()->readFloat();
+    m_Desc.position = pSerializer->GetStream()->readVector3();
+    m_Desc.direction = pSerializer->GetStream()->readVector3();
+    m_vUp = pSerializer->GetStream()->readVector3();
+    m_Rotation = Matrix::CreateLookAt(Vector3::Zero, m_Desc.direction, m_vUp);
+    m_Rotation *= Matrix::CreateRotation(m_vUp, -PiOver2);
+
+    m_Desc.power = pSerializer->GetStream()->readFloat();
+
+    SetShadowMap(Content->GetDxDevice(), static_cast<ShadowMapType>(pSerializer->GetStream()->readByte()));
+
+    UpdateShadowCameraProjection();
+    UpdateShadowCameraView();
+    
+    SetBehaviour(dynamic_cast<LightBehaviour*>(pSerializer->Deserialize(LightBehaviour::Create)));
 }

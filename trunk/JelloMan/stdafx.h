@@ -37,21 +37,21 @@ if ( false ) {} \
 else \
 struct LocalAssert \
 { \
-	int mLine; \
-	LocalAssert(int line=__LINE__) : mLine(line) {} \
-	LocalAssert(bool isOK, const TCHAR* message=_T("")) \
+        int mLine; \
+        LocalAssert(int line=__LINE__) : mLine(line) {} \
+        LocalAssert(bool isOK, const TCHAR* message=_T("")) \
     { \
-		if ( !isOK ) \
+                if ( !isOK ) \
         { \
-			tcout << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
-			__asm { int 3 } \
-		} \
-	} \
+                        tcout << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
+                        __asm { int 3 } \
+                } \
+        } \
 } myAsserter = LocalAssert
 #else
 #define ASSERT \
 if ( true ) {} else \
 struct NoAssert { \
-	NoAssert(bool isOK, const TCHAR* message=_T("")) {} \
+        NoAssert(bool isOK, const TCHAR* message=_T("")) {} \
 } myAsserter = NoAssert
 #endif

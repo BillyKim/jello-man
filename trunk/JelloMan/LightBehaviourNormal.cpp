@@ -11,3 +11,12 @@ LightBehaviourNormal::~LightBehaviourNormal(void)
 {
     //nothing to destroy
 }
+
+
+//Serialize
+void LightBehaviourNormal::Serialize(Serializer* pSerializer)
+{
+}
+void LightBehaviourNormal::Deserialize(Serializer* pSerializer)
+{
+}

@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Blox2D_Engine.h"
 #include "IEditorObject.h"
+#include "ISerializable.h"
 
 enum LightType
 {
@@ -23,7 +24,7 @@ enum ShadowMapType
 	ShadowMapType2048x2048 = 2048
 };
 
-class Light : public IEditorObject
+class Light : public IEditorObject, public ISerializable
 {
 public:
     virtual void InitGame() = 0;
@@ -74,5 +75,10 @@ public:
 
 	// EDITOR
 	virtual HitRegion* GetHitRegion() const = 0;
+
+    // ISerializeable
+	virtual void Serialize(Serializer* pSerializer) = 0;
+	virtual void Deserialize(Serializer* pSerializer) = 0;
+    virtual DWORD GetUniqueIdentifier() = 0;
 };
 

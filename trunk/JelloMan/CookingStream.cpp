@@ -68,6 +68,22 @@ Vector3	UserStream::readVector3() const
           z = readFloat();
     return Vector3(x, y, z);
 }
+Vector4	UserStream::readVector4() const
+{
+    float x = readFloat(), 
+          y = readFloat(),
+          z = readFloat(),
+          w = readFloat();
+    return Vector4(x, y, z, w);
+}
+Color UserStream::readColor() const
+{
+    float r = readFloat(), 
+          g = readFloat(),
+          b = readFloat(),
+          a = readFloat();
+    return Color(r, g, b, a);
+}
 
 void UserStream::readBuffer(void* buffer, NxU32 size)	const
 {
@@ -125,7 +141,22 @@ NxStream& UserStream::storeVector3(const Vector3& f)
     storeFloat(f.Z);
 	return *this;
 }
-
+NxStream& UserStream::storeVector4(const Vector4& f)
+{
+    storeFloat(f.X);
+    storeFloat(f.Y);
+    storeFloat(f.Z);
+    storeFloat(f.W);
+	return *this;
+}
+NxStream& UserStream::storeColor(const Color& c)
+{
+    storeFloat(c.R);
+    storeFloat(c.G);
+    storeFloat(c.B);
+    storeFloat(c.A);
+	return *this;
+}
 NxStream& UserStream::storeBuffer(const void* buffer, NxU32 size)
 {
 	size_t w = fwrite(buffer, size, 1, fp);

@@ -62,3 +62,13 @@ void LightBehaviourBroken::Tick(float dTime)
         m_pLight->SetMulitplier(m_Multiplier);
     }
 }
+
+//Serialize
+void LightBehaviourBroken::Serialize(Serializer* pSerializer)
+{
+    pSerializer->GetStream()->storeByte(static_cast<BYTE>(m_Type));
+}
+void LightBehaviourBroken::Deserialize(Serializer* pSerializer)
+{
+    m_Type = static_cast<BrokenLightType>(pSerializer->GetStream()->readByte());
+}
