@@ -170,18 +170,7 @@ void Engine::OnRender()
 		m_bResize = false;
 	}
 
-	// clearing rendertarget for new frame
-	//m_pDXDevice->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
-	//m_pDXDevice->ClearDepthStencilView(
-     //               m_pDepthStencilView,
-     //               D3D10_CLEAR_DEPTH,
-     //               1,
-     //               0
-     //               );
-
-	// main game cycle
-	
-	
+	// main game cycle	
 	if (m_pBackBufferRT)
 	{
 		m_pBackBufferRT->BeginDraw();
@@ -192,14 +181,14 @@ void Engine::OnRender()
 		}
 		else
 		{
-			m_LoadResourcesThread.join();
+			//m_UpdateThread = boost::thread(&MainGame::UpdateScene, m_pGame, m_GameTimer.GetDeltaTime());
 
 			m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
 			m_pGame->DrawScene();
 		}
 
 		m_pBackBufferRT->EndDraw();
-	}
+	}	
 
 	/*if (CONTROLS->LeftMBDown())
 	{
@@ -216,6 +205,12 @@ void Engine::OnRender()
 
 	// displaying backbuffer - vsync on
 	m_pSwapChain->Present(1, 0);
+
+	// getstatus of keys
+	unsigned char keys[Controls::NUMKEYS];
+	GetKeyboardState(keys);
+
+	CONTROLS->SetKeyboardState(keys);
 }
 
 LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
