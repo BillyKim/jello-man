@@ -73,7 +73,7 @@ public:
     }  
     void SetIA(Effect* effect) const
     {
-        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && effect != 0);
+        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && effect != 0, "");
 
 	    m_pDevice->IASetInputLayout(effect->GetInputLayout());
 

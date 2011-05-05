@@ -106,7 +106,7 @@ ISerializable* GetObject(DWORD id)
     {
         case SerializeTypes::SpotLight: return new SpotLight();
         case SerializeTypes::PointLight: return new PointLight();
-        default: ASSERT(false, _T("File corrupt")); return 0;
+        default: ASSERT(false, "File corrupt"); return 0;
     }
 }
 void Level::Serialize(const string& path)

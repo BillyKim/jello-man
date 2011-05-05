@@ -106,7 +106,7 @@ void Texture2D::BuildDepthMap()
 
 void Texture2D::BeginDraw()
 {
-    ASSERT(m_pDepthMapDSV != 0);
+    ASSERT(m_pDepthMapDSV != 0, "");
 
     m_pDevice->OMGetRenderTargets(1, &m_pPrevRenderTarget, &m_pPrevDSV);
     UINT num = 1;
@@ -127,7 +127,7 @@ void Texture2D::EndDraw()
 }
 void Texture2D::Clear(const Vector4& color)
 {
-    ASSERT(m_pColorMapRTV != 0);
+    ASSERT(m_pColorMapRTV != 0, "");
     float c[4];
     color.ToFloat4(c);
     m_pDevice->ClearRenderTargetView(m_pColorMapRTV, c);

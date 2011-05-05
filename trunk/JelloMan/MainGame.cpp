@@ -71,7 +71,7 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 	refGameConfig.UsePhysX(true);
 }
 
-void MainGame::LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
+void MainGame::LoadResources(ID3D10Device* pDXDevice)
 {
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);

@@ -13,14 +13,14 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pTexelSize(GetVariableByName("t0")->AsScalar()),
                     m_pInputLayout(0), m_VertexStride(0)
 {
-    ASSERT(m_pColorMap->IsValid());
-    ASSERT(m_pNormalSpecMap->IsValid());
-    ASSERT(m_pPosGlossMap->IsValid());
-    ASSERT(m_pShadowMap->IsValid());
-    ASSERT(m_pPointLight->IsValid());
-    ASSERT(m_pCamPos->IsValid());
-    ASSERT(m_pMtxLightWVP->IsValid());
-    ASSERT(m_pTexelSize->IsValid());
+    ASSERT(m_pColorMap->IsValid(), "");
+    ASSERT(m_pNormalSpecMap->IsValid(), "");
+    ASSERT(m_pPosGlossMap->IsValid(), "");
+    ASSERT(m_pShadowMap->IsValid(), "");
+    ASSERT(m_pPointLight->IsValid(), "");
+    ASSERT(m_pCamPos->IsValid(), "");
+    ASSERT(m_pMtxLightWVP->IsValid(), "");
+    ASSERT(m_pTexelSize->IsValid(), "");
 
     CreateInputLayout<VertexPosTex>(pDevice, this, &m_pInputLayout, m_VertexStride);
 }
@@ -72,7 +72,7 @@ void DeferredPostEffect::SetCameraPosition(const Vector3& camPos)
 }
 ID3D10InputLayout* DeferredPostEffect::GetInputLayout() const
 {
-    ASSERT(m_pInputLayout != 0);
+    ASSERT(m_pInputLayout != 0, "");
     return m_pInputLayout;
 }
 UINT DeferredPostEffect::GetVertexStride() const

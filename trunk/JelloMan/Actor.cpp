@@ -14,7 +14,7 @@ Actor::~Actor(void)
 
 void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 {
-	ASSERT(m_pActor == 0); //would be weird if the actor is already intialized
+	ASSERT(m_pActor == 0, ""); //would be weird if the actor is already intialized
 
 	m_pPhysX = pPhysX;
 	
@@ -43,7 +43,7 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 
 	m_pActor = m_pPhysX->GetScene()->createActor(actorDesc);
 
-    ASSERT(m_pActor != 0);
+    ASSERT(m_pActor != 0, "");
 }
 
 void Actor::Tick(float dTime)
@@ -58,7 +58,7 @@ void Actor::AddForce(const Vector3& pos)
 }
 void Actor::Translate(const Vector3& pos)
 {
-	ASSERT(m_pActor != 0);
+	ASSERT(m_pActor != 0, "");
     m_WorldMatrix *= Matrix::CreateTranslation(pos);
 
 	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
@@ -66,7 +66,7 @@ void Actor::Translate(const Vector3& pos)
 }
 void Actor::SetPosition(const Vector3& pos)
 {
-	ASSERT(m_pActor != 0);
+	ASSERT(m_pActor != 0, "");
     m_WorldMatrix *= Matrix::CreateTranslation(-GetPosition() + pos);
 
 	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
@@ -86,7 +86,7 @@ Vector3 Actor::GetPosition() const
 }
 void Actor::Rotate(const Vector3& axis, float angle)
 {
-	ASSERT(m_pActor != 0);
+	ASSERT(m_pActor != 0, "");
     Vector3 pos = GetPosition();
     m_WorldMatrix *= Matrix::CreateTranslation(-pos);
     m_WorldMatrix *= Matrix::CreateRotation(axis, angle);
@@ -97,7 +97,7 @@ void Actor::Rotate(const Vector3& axis, float angle)
 }
 void Actor::Scale(const Vector3& scale)
 {
-	ASSERT(m_pActor != 0);
+	ASSERT(m_pActor != 0, "");
     Vector3 pos = GetPosition();
     m_WorldMatrix *= Matrix::CreateTranslation(-pos);
     m_WorldMatrix *= Matrix::CreateScale(scale);

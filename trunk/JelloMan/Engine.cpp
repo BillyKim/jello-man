@@ -113,7 +113,7 @@ int Engine::Run()
 
 				if (!m_bInitialized)
 				{
-					m_LoadResourcesThread  = boost::thread(&MainGame::LoadResources,m_pGame,m_pDXDevice, m_pPhysXEngine);
+					m_LoadResourcesThread  = boost::thread(&MainGame::LoadResources, m_pGame, m_pDXDevice);
 					
 					m_bInitialized = true;
 				}
@@ -466,7 +466,7 @@ HRESULT Engine::CreateDeviceResources()
     IDXGIFactory *pDXGIFactory = NULL;
     IDXGISurface *pSurface = NULL;
 
-    ASSERT(m_hMainWnd != 0);
+    ASSERT(m_hMainWnd != 0, "");
 
     GetClientRect(m_hMainWnd, &rcClient);
 

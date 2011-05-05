@@ -75,7 +75,7 @@ void DeferredRenderer::OnResize()
 }
 void DeferredRenderer::OnResized(UINT width, UINT height)
 {
-    ASSERT(m_pDepthDSV == 0 && m_RenderTargets[0] == 0 && m_pSRV[0] == 0, _T("OnResize() must be called first!"));
+    ASSERT(m_pDepthDSV == 0 && m_RenderTargets[0] == 0 && m_pSRV[0] == 0, "OnResize() must be called first!");
 
     m_Width = width;
     m_Height = height;
@@ -195,8 +195,8 @@ void DeferredRenderer::Begin()
 
 void DeferredRenderer::End(const RenderContext* pRenderContext)
 { 
-    ASSERT(m_pPrevBackbuffer != 0, _T("Begin has not been called or backbuffer got lost"));
-    ASSERT(m_pDepthDSV != 0);
+    ASSERT(m_pPrevBackbuffer != 0, "Begin has not been called or backbuffer got lost");
+    ASSERT(m_pDepthDSV != 0, "");
     m_pDevice->OMSetRenderTargets(1, &m_pPrevBackbuffer, NULL); //depth = 0, no depthbuffer needed in postprocessing
     m_pDevice->RSSetViewports(1, &m_Viewport);
 
@@ -249,7 +249,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 		        m_pEffect->SetSpotLight(sl->GetDesc());
             }
             else
-                ASSERT(false);
+                ASSERT(false, "");
             
             if (pLight->HasShadowMap() == true)
             {

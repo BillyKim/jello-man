@@ -59,7 +59,7 @@ public:
         }
         else
         {
-            ASSERT(vertices.size() == m_VecVertices.size());
+            ASSERT(vertices.size() == m_VecVertices.size(), "");
 
             void *pVertices;
             HR(m_pVertexBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &pVertices));
@@ -107,7 +107,7 @@ public:
 
     void Draw(Effect* effect)
     {
-        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && effect != 0);
+        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && effect != 0, "");
 
 	    m_pDevice->IASetInputLayout(effect->GetInputLayout());
 

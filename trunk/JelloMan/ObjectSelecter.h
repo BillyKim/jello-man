@@ -17,7 +17,7 @@ public:
 	virtual ~ObjectSelecter();
 
 	// GENERAL
-    void Tick(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects);
+    void Tick(const RenderContext* pRenderContext);
 	void Draw(const RenderContext* pRenderContext);
 	void DeselectAll();
     void AbortControls();
@@ -30,8 +30,8 @@ public:
 private:
 
     bool TrySelectLight(const RenderContext* pRenderContext);
-	bool TrySelectObject(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects);
-	void CheckControls(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects);
+	bool TrySelectObject(const RenderContext* pRenderContext);
+	void CheckControls(const RenderContext* pRenderContext);
 
 	// DATAMEMBERS
 	bool m_bClick;

@@ -7,9 +7,9 @@ EdgeDetectionPostEffect::EdgeDetectionPostEffect(ID3D10Device* pDXDevice, ID3D10
                 m_pMapHeight(GetVariableByName("bbHeight")->AsScalar()),
                 m_pInputLayout(0), m_VertexStride(0)
 {
-    ASSERT(m_pColorMap->IsValid());
-    ASSERT(m_pMapWidth->IsValid());
-    ASSERT(m_pMapHeight->IsValid());
+    ASSERT(m_pColorMap->IsValid(), "");
+    ASSERT(m_pMapWidth->IsValid(), "");
+    ASSERT(m_pMapHeight->IsValid(), "");
 
     CreateInputLayout<VertexPosTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
@@ -36,7 +36,7 @@ Effect* EdgeDetectionPostEffect::GetEffect()
 
 ID3D10InputLayout* EdgeDetectionPostEffect::GetInputLayout() const
 {
-    ASSERT(m_pInputLayout != 0);
+    ASSERT(m_pInputLayout != 0, "");
     return m_pInputLayout;
 }
 UINT EdgeDetectionPostEffect::GetVertexStride() const

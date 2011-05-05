@@ -12,8 +12,8 @@ PhongEffect::PhongEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect):
                     m_pLightColor(GetVariableBySemantic("LightColor")->AsVector()),
                     m_pCamDir(GetVariableBySemantic("CamDirection")->AsVector())*/
 {
-    ASSERT(m_pMtxWVP->IsValid());
-    ASSERT(m_pMtxWorld->IsValid());
+    ASSERT(m_pMtxWVP->IsValid(), "");
+    ASSERT(m_pMtxWorld->IsValid(), "");
 
     CreateInputLayout<VertexPosNormTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
@@ -69,7 +69,7 @@ void PhongEffect::SetWorld(const Matrix& world)
 
 ID3D10InputLayout* PhongEffect::GetInputLayout() const
 {
-    ASSERT(m_pInputLayout != 0);
+    ASSERT(m_pInputLayout != 0, "");
     return m_pInputLayout;
 }
 UINT PhongEffect::GetVertexStride() const

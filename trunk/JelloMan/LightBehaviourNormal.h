@@ -12,8 +12,8 @@ public:
     virtual void Tick(float) {}
 
 	//Serialize
-	virtual void Serialize(Serializer* pSerializer);
-	virtual void Deserialize(Serializer* pSerializer);
+	virtual void Serialize(Serializer*);
+	virtual void Deserialize(Serializer*);
     virtual DWORD GetUniqueIdentifier() { return SerializeTypes::LightBehaviourNormal; }
 };
 

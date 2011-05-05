@@ -11,11 +11,11 @@ DeferredPreEffect::DeferredPreEffect(ID3D10Device* pDXDevice, ID3D10Effect* pEff
 				m_bSelected(GetVariableBySemantic("Selected")->AsScalar()),
                 m_pInputLayout(0), m_VertexStride(0)
 {    
-    ASSERT(m_pWorld->IsValid());
-    ASSERT(m_pWVP->IsValid());
-    ASSERT(m_pDiffuseMap->IsValid());
-    ASSERT(m_pSpecMap->IsValid());
-    ASSERT(m_pGlossMap->IsValid());
+    ASSERT(m_pWorld->IsValid(), "");
+    ASSERT(m_pWVP->IsValid(), "");
+    ASSERT(m_pDiffuseMap->IsValid(), "");
+    ASSERT(m_pSpecMap->IsValid(), "");
+    ASSERT(m_pGlossMap->IsValid(), "");
 
     CreateInputLayout<VertexPosNormTanTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
@@ -55,7 +55,7 @@ void DeferredPreEffect::Selected(bool selected)
 
 ID3D10InputLayout* DeferredPreEffect::GetInputLayout() const
 {
-    ASSERT(m_pInputLayout != 0);
+    ASSERT(m_pInputLayout != 0, "");
     return m_pInputLayout;
 }
 UINT DeferredPreEffect::GetVertexStride() const

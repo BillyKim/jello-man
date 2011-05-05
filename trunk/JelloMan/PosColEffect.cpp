@@ -6,8 +6,8 @@ PosColEffect::PosColEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect):
                 m_pMtxWorld(GetVariableBySemantic("World")->AsMatrix()),
                 m_pInputLayout(0), m_VertexStride(0)
 {
-    ASSERT(m_pMtxWVP->IsValid());
-    ASSERT(m_pMtxWorld->IsValid());
+    ASSERT(m_pMtxWVP->IsValid(), "");
+    ASSERT(m_pMtxWorld->IsValid(), "");
 
     CreateInputLayout<VertexPosCol>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
@@ -31,7 +31,7 @@ void PosColEffect::SetWorld(const Matrix& world)
 
 ID3D10InputLayout* PosColEffect::GetInputLayout() const
 {
-    ASSERT(m_pInputLayout != 0);
+    ASSERT(m_pInputLayout != 0, "");
     return m_pInputLayout;
 }
 UINT PosColEffect::GetVertexStride() const

@@ -290,7 +290,7 @@ void ModelLoader::AddMesh(const tstring& name)
 }
 void ModelLoader::AddTri(const vector<vector<int>>& data)
 {
-    ASSERT (m_pCurrentMesh != 0);
+    ASSERT (m_pCurrentMesh != 0, "");
 
     unsigned int index[3];
 
@@ -326,7 +326,7 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
 
 void ModelLoader::FlushMesh()
 {
-    ASSERT (m_pCurrentMesh != 0);
+    ASSERT(m_pCurrentMesh != 0, "");
 	
 	// TANGENTS
 	for (unsigned int i = 0; i < m_VPNTTData.size() / 3; ++i)

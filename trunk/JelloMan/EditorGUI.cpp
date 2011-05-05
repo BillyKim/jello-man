@@ -580,7 +580,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
 		m_pColorPickerButton->Tick();
 
-    m_pObjectSelecter->Tick(m_pRenderContext, *m_pLevelObjects);
+    m_pObjectSelecter->Tick(m_pRenderContext);
 	m_pLightDebugger->Tick(pRenderContext);
 
 	m_pLevelObjects = &pLevelObjects;

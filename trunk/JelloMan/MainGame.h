@@ -34,7 +34,7 @@ public:
 
 	// GENERAL
 	void Initialize(GameConfig& refGameConfig);
-	void LoadResources(ID3D10Device* pDXDevice, PhysX* pPhysXEngine);
+	void LoadResources(ID3D10Device* pDXDevice);
 	void UpdateScene(const float dTime);
 	void DrawScene();
 	void CheckControls();
