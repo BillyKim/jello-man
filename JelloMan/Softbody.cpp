@@ -17,8 +17,8 @@ Softbody::~Softbody(void)
 
 void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const tstring& path, const Vector3& pos)
 {
-	ASSERT(m_pSoftbody == 0); //would be weird if the actor is already intialized
-    ASSERT(pSoftbodyMesh != 0);
+	ASSERT(m_pSoftbody == 0, ""); //would be weird if the actor is already intialized
+    ASSERT(pSoftbodyMesh != 0, "");
 
 	m_pPhysX = pPhysX;
 
@@ -46,7 +46,8 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
 	NxSoftBodyDesc softbodyDesc;
 	
 	string str = string(path.begin(), path.end());
-	NxSoftBodyMesh* pMesh = m_pPhysX->GetSDK()->createSoftBodyMesh(UserStream(str.c_str(), true));
+	UserStream stream(UserStream(str.c_str(), true));
+	NxSoftBodyMesh* pMesh = m_pPhysX->GetSDK()->createSoftBodyMesh(stream);
 	softbodyDesc.softBodyMesh = pMesh;
 	softbodyDesc.particleRadius = 8.0f;
     softbodyDesc.volumeStiffness = 0.9f;
@@ -73,7 +74,7 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
     m_Dimension = Vector3(dim);
     m_Radius = m_Dimension.Length() / 2.0f;
 
-    ASSERT(m_pSoftbody != 0);
+    ASSERT(m_pSoftbody != 0, "");
 }
 
 void Softbody::TransformPositions()
@@ -105,7 +106,7 @@ void Softbody::TransformPositions()
 
     m_CenterPoint = (maxP + minP) / 2.0f;
     m_Dimension = maxP - minP;
-    ASSERT(m_Dimension.X >= 0 && m_Dimension.Y >= 0 && m_Dimension.Z >= 0);
+    ASSERT(m_Dimension.X >= 0 && m_Dimension.Y >= 0 && m_Dimension.Z >= 0, "");
     m_Radius = m_Dimension.Length() / 2.0f;
 
     const vector<DWORD>& ind = m_pSoftbodyMesh->GetIndices();

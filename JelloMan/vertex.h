@@ -153,6 +153,7 @@ void GetInputElementDesc(D3D10_INPUT_ELEMENT_DESC& desc,
 template <typename T>
 void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
 {
+#pragma warning(disable:4127)
     if (sizeof(T) == sizeof(VertexPos))
     {
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
@@ -219,5 +220,8 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         elements = desc.size();
     }
     else
-        ASSERT(false);
+	{
+        ASSERT(false, "");
+	}
+#pragma warning(default:4127)
 }

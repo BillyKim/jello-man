@@ -19,7 +19,7 @@ PhysXMesh::PhysXMesh(PhysX* physX, const string& path, float mass): m_pShapeDesc
     }
     else
     {
-        ASSERT("Wrong extension");
+        ASSERT(false, "Wrong extension");
     }
 }
 

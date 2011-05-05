@@ -3,7 +3,9 @@
 // Include Files
 //-----------------------------------------------------
 #include "NxPhysics.h"
+#pragma warning(disable: 4100)
 #include "ControllerManager.h"
+#pragma warning(default: 4100)
 #include <vector>
 #include "D3DUtil.h"
 

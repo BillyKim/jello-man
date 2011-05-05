@@ -56,7 +56,7 @@ void Serializer::End()
 
 void Serializer::Serialize(ISerializable* obj)
 {
-	ASSERT(m_Stream != 0);
+	ASSERT(m_Stream != 0, "");
     if (obj != 0)
     {
         WriteHeader(obj);

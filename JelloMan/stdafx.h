@@ -31,27 +31,56 @@
 // Assert Macro
 //*****************************************************************************
 #define XMA2DEFS_ASSERT(a)
-#ifndef NDEBUG
-#define ASSERT \
-if ( false ) {} \
-else \
-struct LocalAssert \
-{ \
-        int mLine; \
-        LocalAssert(int line=__LINE__) : mLine(line) {} \
-        LocalAssert(bool isOK, const TCHAR* message=_T("")) \
-    { \
-                if ( !isOK ) \
-        { \
-                        tcout << "ERROR!! Assert failed on line " << LocalAssert().mLine << " in file '" << __FILE__ << "'\nBoodschap: \"" << message << "\"\n"; \
-                        __asm { int 3 } \
-                } \
-        } \
-} myAsserter = LocalAssert
+#if _DEBUG
+
+struct LocalAssert
+{
+	static void showAssert(int line, const char* file, bool isOk, const std::string& message = "")
+	{	
+		if (isOk == false) 
+		{
+			using namespace std;
+			stringstream stream;
+			stream << "ERROR! Assertion failure on line " << line << ", in file '" << file << "' \nInfo: " << message;
+			cout << stream.str();
+
+			stream << "\nPress abort to close process, Retry to debug, Ignore to continue";
+			int ret = MessageBoxA(0, stream.str().c_str(), "Error!", MB_ICONERROR | MB_ABORTRETRYIGNORE);
+			switch (ret)
+			{
+				case IDABORT: cout << "\n***Process aborted***"; ExitProcess(1); break;
+				case IDRETRY: cout << "--->Break"; __debugbreak(); break;
+				default: break;
+			}
+		}
+	}
+};
+
+#define ASSERT(isOk, message) \
+		LocalAssert::showAssert(__LINE__, __FILE__, isOk, message)
+
+
+struct LocalPanic
+{
+	static void showPanic(int line, const char* file, const std::string& message = "")
+	{
+		using namespace std;
+		stringstream stream;
+		stream << "Warning! Panic on line " << line << ", in file '" << file << "' \nInfo: " << message;
+		cout << stream.str();
+
+		stream << "\nDo you want to debug?";
+		int ret = MessageBoxA(0, stream.str().c_str(), "Warning!", MB_ICONWARNING | MB_YESNO);
+		switch (ret)
+		{
+			case IDYES: cout << "--->Break"; DebugBreak(); break;
+			default: break;
+		}
+	}
+};
+#define PANIC(message) LocalPanic::showPanic(__LINE__, __FILE__, message)
+
 #else
-#define ASSERT \
-if ( true ) {} else \
-struct NoAssert { \
-        NoAssert(bool isOK, const TCHAR* message=_T("")) {} \
-} myAsserter = NoAssert
+#define ASSERT(...)
+#define PANIC(...)
 #endif

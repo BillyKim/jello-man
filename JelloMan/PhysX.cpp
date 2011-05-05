@@ -19,7 +19,7 @@ PhysX::~PhysX(void)
 }
 class MyOutputStream : public NxUserOutputStream
 {
-    void reportError (NxErrorCode code, const char *message, const char* file, int line)
+    void reportError (NxErrorCode code, const char *message, const char* /*file*/, int /*line*/)
     {
         //this should be routed to the application
         //specific error handling. If this gets hit
@@ -28,14 +28,14 @@ class MyOutputStream : public NxUserOutputStream
         //however, code may  just be a warning or
         //information.
         
-        cout << "--Physx: " << message << "\n";
+        cout << "--Physx Error " << code << ": " << message << "\n";
     }
                 
-    NxAssertResponse reportAssertViolation (const char *message, const char *file,int line)
+    NxAssertResponse reportAssertViolation (const char *message, const char* /*file*/,int /*line*/)
     {
         //this should not get hit by
         // a properly debugged SDK!
-        ASSERT(0);
+        ASSERT(false, message);
         return NX_AR_CONTINUE;
     }
                 

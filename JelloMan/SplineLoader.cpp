@@ -179,7 +179,7 @@ void SplineLoader::AddMesh(const tstring& name)
 
 void SplineLoader::FlushMesh()
 {
-    ASSERT (m_pCurrentMesh != 0);
+    ASSERT (m_pCurrentMesh != 0, "");
     m_pCurrentMesh->SetVertices(m_VPNTTData);
 	m_pCurrentMesh->SetIndices(m_IndexData);
 	m_IndexData.clear();

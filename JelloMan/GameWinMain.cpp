@@ -11,8 +11,8 @@ void main()
 
 // windows subsystem
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
-				   PSTR cmdLine, int showCmd)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*prevInstance*/,
+				   PSTR /*cmdLine*/, int /*showCmd*/)
 {
 	//notify user if heap is corrupt
 	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL,0);

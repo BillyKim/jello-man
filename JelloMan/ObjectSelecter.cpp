@@ -19,15 +19,15 @@ ObjectSelecter::~ObjectSelecter()
 }
 
 // GENERAL
-void ObjectSelecter::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects)
+void ObjectSelecter::Tick(const RenderContext* pRenderContext)
 {
 	m_ViewPort.Width = (UINT)BX2D->GetWindowSize().width;
 	m_ViewPort.Height = (UINT)BX2D->GetWindowSize().height;
 
-    CheckControls(pRenderContext, pLevelObjects);
+    CheckControls(pRenderContext);
 }
 
-void ObjectSelecter::CheckControls(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects)
+void ObjectSelecter::CheckControls(const RenderContext* pRenderContext)
 {
 	if (CONTROLS->LeftMBDown())
 		m_bClick = true;
@@ -42,7 +42,7 @@ void ObjectSelecter::CheckControls(const RenderContext* pRenderContext, vector<I
                     DeselectAll();
                 if (TrySelectLight(pRenderContext) == false)
                 {
-                    if (TrySelectObject(pRenderContext, pLevelObjects) == true)
+                    if (TrySelectObject(pRenderContext) == true)
                         CalcCenterPos();
                 }
                 else
@@ -116,7 +116,7 @@ bool ObjectSelecter::TrySelectLight(const RenderContext* pRenderContext)
     else
         return false;
 }
-bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects)
+bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext)
 {
 	// MATRIX
 	Matrix matProj = pRenderContext->GetCamera()->GetProjection();
@@ -144,7 +144,7 @@ bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext, vector
 
 	if (shape && shape->getGlobalPosition() != NxVec3(0,0,0))
 	{
-        ASSERT(shape->getActor().userData != 0);
+        ASSERT(shape->getActor().userData != 0, "");
         ILevelObject* obj = reinterpret_cast<ILevelObject*>(shape->getActor().userData);
 
         if (obj->IsSelected())

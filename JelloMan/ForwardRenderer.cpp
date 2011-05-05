@@ -29,7 +29,7 @@ void ForwardRenderer::End()
 
 void ForwardRenderer::Clear(const Vector4& color, bool depthstencil) const
 {
-    ASSERT(m_pDepthStencil != 0 && m_pRenderTarget != 0);
+    ASSERT(m_pDepthStencil != 0 && m_pRenderTarget != 0, "");
 
     if (depthstencil)
         m_pDevice->ClearDepthStencilView(m_pDepthStencil, D3D10_CLEAR_DEPTH|D3D10_CLEAR_STENCIL, 1.0f, 0);
