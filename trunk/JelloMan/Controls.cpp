@@ -43,9 +43,24 @@ Controls* Controls::GetSingleton()
 bool Controls::IsKeyPressed(int vKey)
 {
 	// getstatus of keys
-	BOOL b = GetKeyboardState(m_Keys);
+	//BOOL b = GetKeyboardState(m_Keys);
 
-	if (m_Keys[vKey] & 0x80)
+	/*if (m_Keys[vKey] & 0x80)
+	{
+		if (m_bKeysPressed[vKey] == false)
+		{	
+			m_bKeysPressed[vKey] = true;
+			return true;
+		}
+		else return false;
+	}
+	else
+	{
+		m_bKeysPressed[vKey] = false;
+		return false;
+	}*/
+
+	if (GetAsyncKeyState(vKey) < 0)
 	{
 		if (m_bKeysPressed[vKey] == false)
 		{	
@@ -63,13 +78,13 @@ bool Controls::IsKeyPressed(int vKey)
 
 bool Controls::IsKeyDown(int vKey)
 {
-	// getstatus of keys
-	BOOL b = GetKeyboardState(m_Keys);
-
-	if (m_Keys[vKey] & 0x80)
+	/*if (m_Keys[vKey] & 0x80)
 		return true;
 	else
-		return false;
+		return false;*/
+
+	if (GetAsyncKeyState(vKey) < 0) return true;
+	else return false;
 }
 
 Point2D Controls::GetMouseMovement()
@@ -128,10 +143,8 @@ void Controls::SetRightMBDown(bool down)
 		m_bRC = true;
 	}
 }
-void Controls::ResetMouse()
+
+void Controls::SetKeyboardState(unsigned char keys[NUMKEYS])
 {
-	if (m_bRC && m_bRMBClicked)
-		m_bRC = false;
-	if (m_bLC && m_bLMBClicked)
-		m_bLC = false;
+	*m_Keys = *keys;
 }

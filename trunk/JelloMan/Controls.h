@@ -46,10 +46,10 @@ public:
 	void SetMouseWheelPos(short pos) {m_MouseWheelPos = pos;}
 	void SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT layout) { m_KBLayout = layout; }
 
-	void ResetMouse();
-
 	// CONSTANTS
 	static const int NUMKEYS = 256;
+
+	void SetKeyboardState(unsigned char keys[NUMKEYS]);
 
 private:
 
