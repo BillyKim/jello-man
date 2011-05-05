@@ -17,7 +17,10 @@
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
 #include "PreShadowEffect.h"
+
+#pragma warning(disable:4005)
 #include "boost\thread\thread.hpp"
+#pragma warning(default:4005)
 
 class AudioEngine;
 
@@ -84,6 +87,5 @@ private:
     EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
     PreShadowEffect* m_pPreShadowEffect;
 
-	boost::thread m_PhysicsThread;
-	boost::mutex m_PhysicsSceneLock;
+	boost::mutex m_UpdateSceneLock;
 };

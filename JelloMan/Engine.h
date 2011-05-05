@@ -16,7 +16,10 @@
 #include "Controls.h"
 #include "Blox2D_Engine.h"
 #include "PhysX.h"
+
+#pragma warning(disable:4005)
 #include "boost\thread\thread.hpp"
+#pragma warning(default:4005)
 
 class KeyboardState;
 class InputStateManager;
@@ -101,6 +104,7 @@ private:
 
 	// threads
 	boost::thread m_LoadResourcesThread;
+	boost::thread m_UpdateThread;
 
 private:
 	Engine(const Engine& t);
