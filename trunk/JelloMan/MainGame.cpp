@@ -253,12 +253,13 @@ void MainGame::UpdateScene(const float dTime)
 		m_pLevel->AddLevelObject(newLvlObj);
 	}
 
-	m_pAudioEngine->DoWork();
+	//m_pAudioEngine->DoWork();
 	//m_pTestSound->Tick();
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
-	{	
-		m_PhysicsThread = boost::thread(&MainGame::UpdatePhysics, this, dTime);
+	{
+		UpdatePhysics(dTime);
+
 		m_pLevel->EditorMode(false);
 	}
 	else
@@ -360,21 +361,10 @@ void MainGame::DrawScene()
 
 	BX2D->SetColor(255,255,255);
 	BX2D->SetFont(m_pDefaultFont);
-
-	//m_PhysicsThread.join();
-
-	CONTROLS->ResetMouse();		
 }
 
 void MainGame::CheckControls()
 {
-	bool bWwaitOnFreePhysicsScene = true;
-	while (bWwaitOnFreePhysicsScene)
-	{
-		if (m_PhysicsSceneLock.try_lock())
-			break;
-	}
-
 	bool bWaitForScene = true;
 	while (bWaitForScene)
 	{
@@ -473,8 +463,6 @@ void MainGame::CheckControls()
         m_pLevel->AddLevelObject(pSB);
 		pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
 	}
-
-	m_PhysicsSceneLock.unlock();
 }
 
 void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
@@ -548,16 +536,11 @@ void MainGame::LoadScreen()
 
 void MainGame::UpdatePhysics(const float dTime)
 {
-	bool bWwaitOnFreePhysicsScene = true;
-	while (bWwaitOnFreePhysicsScene)
-	{
-		if (m_PhysicsSceneLock.try_lock())
-			break;
-	}
+	//m_UpdateSceneLock.lock();
 
 	m_pPhysXEngine->FetchResults();
 	m_pLevel->Tick(dTime);
 	m_pPhysXEngine->Simulate(dTime);
 
-	m_PhysicsSceneLock.unlock();
+	//m_UpdateSceneLock.unlock();
 }
