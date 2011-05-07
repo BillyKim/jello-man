@@ -72,6 +72,7 @@ void DeferredRenderer::OnResize()
     for (int i = 0; i < MAXRENDERTARGETS + 1; ++i)
         SafeRelease(m_pSRV[i]);
     SafeRelease(m_pDepthDSV);
+    m_pPrevBackbuffer = 0;
 }
 void DeferredRenderer::OnResized(UINT width, UINT height)
 {
@@ -192,7 +193,16 @@ void DeferredRenderer::Begin()
         m_pDevice->ClearRenderTargetView(m_RenderTargets[i], c);
 }
 
-
+inline bool CullLight(Light* pLight, Camera* pCam)
+{
+    bool cull = false;
+    Vector3 vec = pCam->GetPosition() - pLight->GetPosition();
+    float len = vec.Length();
+    cull |= len > 10000;
+    vec /= len;
+    cull |= len > pLight->GetAttenuationEnd() && vec.Dot(pCam->GetLook()) > 0;
+    return cull;
+}
 void DeferredRenderer::End(const RenderContext* pRenderContext)
 { 
     ASSERT(m_pPrevBackbuffer != 0, "Begin has not been called or backbuffer got lost");
@@ -218,54 +228,59 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	    m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
       
         //Loop Lights
-        vector<Light*>::const_iterator itLight = pRenderContext->GetLightController()->GetLights().cbegin();
-	    for (; itLight != pRenderContext->GetLightController()->GetLights().cend(); ++itLight)
+	    for_each(pRenderContext->GetLightController()->GetLights().cbegin(), 
+                 pRenderContext->GetLightController()->GetLights().cend(), 
+                 [&](Light* pLight)
 	    {
-            //Get light
-            Light* pLight = *itLight;
-
             //Check if on
-			if (pLight->IsEnabled() == false)
-				continue;
-
-            if (pLight->GetType() == LightType_Point)
+			if (pLight->IsEnabled() == true && CullLight(pLight, pRenderContext->GetCamera()) == false)
             {
-                PointLight* pl = dynamic_cast<PointLight*>(pLight);
+                //PointLight
+                #pragma region
+                if (pLight->GetType() == LightType_Point)
+                {
+                    PointLight* pl = dynamic_cast<PointLight*>(pLight);
 
-			    m_pEffect->SetTechnique("tech_PointLightNoShadows");
+			        m_pEffect->SetTechnique("tech_PointLightNoShadows");
                 
-		        m_pEffect->SetPointLight(pl->GetDesc());
-            }
-            else if (pLight->GetType() == LightType_Spot)
-            {
-                SpotLight* sl = dynamic_cast<SpotLight*>(pLight);
+		            m_pEffect->SetPointLight(pl->GetDesc());
+                }
+                #pragma endregion
+                //SpotLight
+                #pragma region
+                else if (pLight->GetType() == LightType_Spot)
+                {
+                    SpotLight* sl = dynamic_cast<SpotLight*>(pLight);
 
-                if (sl->HasShadowMap())
-			        m_pEffect->SetTechnique("tech_SpotLightShadows");
+                    if (sl->HasShadowMap())
+			            m_pEffect->SetTechnique("tech_SpotLightShadows");
+                    else
+			            m_pEffect->SetTechnique("tech_SpotLightNoShadows");
+
+		            m_pEffect->SetSpotLight(sl->GetDesc());
+                }
+                #pragma endregion
                 else
-			        m_pEffect->SetTechnique("tech_SpotLightNoShadows");
-
-		        m_pEffect->SetSpotLight(sl->GetDesc());
-            }
-            else
-                ASSERT(false, "");
+                    ASSERT(false, "Lighttype not supported");
             
-            if (pLight->HasShadowMap() == true)
-            {
-                m_pEffect->SetShadowMap(pLight->GetShadowMap()->GetDepthMap());
-                m_pEffect->SetShadowWVP(pLight->GetShadowCamera()->GetViewProjection());
-                m_pEffect->SetShadowMapType(pLight->GetShadowMapType());
+                if (pLight->HasShadowMap() == true)
+                {
+                    m_pEffect->SetShadowMap(pLight->GetShadowMap()->GetDepthMap());
+                    m_pEffect->SetShadowWVP(pLight->GetShadowCamera()->GetViewProjection());
+                    m_pEffect->SetShadowMapType(pLight->GetShadowMapType());
+                }
+
+                D3D10_RECT scissorRect = pLight->CalcScissorRect(pRenderContext->GetCamera(), m_Viewport.Width, m_Viewport.Height);
+                //Calc scissor rect
+		        BX2D->SetColor(255,255,255,1.0f);
+		        BX2D->DrawRect((float)scissorRect.left, (float)scissorRect.top, (float)(scissorRect.right - scissorRect.left), (float)(scissorRect.bottom - scissorRect.top), 1.0f);
+
+		        m_pDevice->RSSetScissorRects(1, &scissorRect);
+
+			    m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0);	
+			    m_pDevice->DrawIndexed(6, 0, 0);
             }
-
-            D3D10_RECT scissorRect = pLight->CalcScissorRect(pRenderContext->GetCamera(), m_Viewport.Width, m_Viewport.Height);
-            //Calc scissor rect
-		    BX2D->SetColor(255,255,255,1.0f);
-		   // BX2D->DrawRect((float)scissorRect.left, (float)scissorRect.top, (float)(scissorRect.right - scissorRect.left), (float)(scissorRect.bottom - scissorRect.top), 1.0f);
-		    m_pDevice->RSSetScissorRects(1, &scissorRect);
-
-			m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0);	
-			m_pDevice->DrawIndexed(6, 0, 0);
-	    }
+	    });
 
 	    m_pDevice->RSSetScissorRects(0, NULL);
 	}
@@ -278,7 +293,11 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	}
 #pragma endregion
 
-    m_pDevice->OMSetRenderTargets(1, &m_pPrevBackbuffer, m_pPrevDepthStencil);
+    ID3D10RenderTargetView* targets[MAXRENDERTARGETS] = { m_pPrevBackbuffer, 0, 0 };
+    m_pDevice->OMSetRenderTargets(MAXRENDERTARGETS, targets, m_pPrevDepthStencil);
+
+    SafeRelease(m_pPrevBackbuffer);
+    SafeRelease(m_pPrevDepthStencil);
 
     m_pPrevBackbuffer = 0;
     m_pPrevDepthStencil = 0;

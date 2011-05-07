@@ -3,17 +3,23 @@
 Texture2D colorMap : ColorMap;
 Texture2D normalSpecMap : NormalSpecMap;
 Texture2D positionGlossMap : PositionGlossMap;
-
-Matrix mtxLightWVP;
 Texture2D shadowMap: ShadowMap;
 
-float3 vCamPos : CameraPosition;
+cbuffer cbPerFrame
+{
+	float3 vCamPos : CameraPosition;
+};
+cbuffer cbPerSpotLight
+{
+	float t0; //texel size
+	SpotLight spotLight : SpotLight;
+	Matrix mtxLightWVP;
+};
+cbuffer cbPerPointLight
+{
+	PointLight pointLight : PointLight;
+};
 
-
-PointLight pointLight : PointLight;
-SpotLight spotLight : SpotLight;
-
-float t0; //texel size
 
 BlendState blend
 {

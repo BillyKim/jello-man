@@ -306,11 +306,11 @@ void MainGame::DrawScene()
 	// --------------------------------------
 	//			   RENDER SCENE
 	// --------------------------------------
+    //Render ShadowMaps
+    #pragma region
     const vector<Light*>& lights = m_pRenderContext->GetLightController()->GetLights();
-    vector<Light*>::const_iterator it(lights.cbegin());
-    for (; it != lights.end(); ++it)
+    for_each(lights.cbegin(), lights.cend(), [&](Light* l)
     {
-        Light* l = *it;
         if (l->HasShadowMap() == true)
         {         
             m_pRenderContext->SetCamera(l->GetShadowCamera());
@@ -321,7 +321,8 @@ void MainGame::DrawScene()
 
             l->GetShadowMap()->EndDraw();
         }
-    }
+    });
+    #pragma endregion
 
     if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
 		m_pRenderContext->SetCamera(m_pTrackingCamera);

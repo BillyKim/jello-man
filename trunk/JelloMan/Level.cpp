@@ -179,11 +179,10 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 
 void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
 {
-    for (vector<ILevelObject*>::const_iterator lIt = m_pLevelObjects.cbegin(); lIt != m_pLevelObjects.cend(); ++lIt)
+    for_each(m_pLevelObjects.cbegin(), m_pLevelObjects.cend(), [&](ILevelObject* lobj)
 	{
-		ILevelObject* lobj = *lIt;
         lobj->DrawShadow(pRenderContext, pPreShadowEffect);
-	}
+	});
 }
 
 void Level::DrawForward(const RenderContext* pRenderContext)
