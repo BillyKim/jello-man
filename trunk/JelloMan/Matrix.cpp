@@ -53,7 +53,8 @@ Matrix Matrix::CreateRotationZ(float f)
 Matrix Matrix::CreateRotation(const Vector3& axis, float f)
 {
     Matrix m;
-    D3DXMatrixRotationAxis(&m.m_Matrix, &axis.ToD3DVector3(), f);
+    D3DXVECTOR3 pV = axis.ToD3DVector3();
+    D3DXMatrixRotationAxis(&m.m_Matrix, &pV, f);
     return m;
 }
 Matrix Matrix::CreateScale(float f)
@@ -71,7 +72,10 @@ Matrix Matrix::CreateScale(const Vector3& f)
 Matrix Matrix::CreateLookAt(const Vector3& pos, const Vector3& target, const Vector3& up)
 {
     Matrix m;
-    D3DXMatrixLookAtLH(&m.m_Matrix, &pos.ToD3DVector3(), &target.ToD3DVector3(), &up.ToD3DVector3());
+    D3DXVECTOR3 tmp_eye = pos.ToD3DVector3(),
+               tmp_at = target.ToD3DVector3(),
+               tmp_up = up.ToD3DVector3();
+    D3DXMatrixLookAtLH(&m.m_Matrix, &tmp_eye, &tmp_at, &tmp_up);
     return m;
 }
 Matrix Matrix::CreatePerspectiveFov(float fov, float aspect, float zNear, float zFar)

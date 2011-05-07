@@ -6,7 +6,7 @@ PreShadowEffect::PreShadowEffect(ID3D10Device* pDXDevice, ID3D10Effect* pEffect)
                 m_pWVP(GetVariableBySemantic("WorldViewProjection")->AsMatrix()),
                 m_pInputLayout(0), m_VertexStride(0)
 {    
-    ASSERT(m_pWVP->IsValid(), "");
+    ASSERT(m_pWVP->IsValid() != 0, "");
 
     CreateInputLayout<VertexPosNormTanTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }

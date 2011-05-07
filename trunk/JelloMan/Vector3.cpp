@@ -123,7 +123,9 @@ Vector3 Vector3::Cross(const Vector3& v) const
 {
 	D3DXVECTOR3 temp;
 	
-	D3DXVec3Cross(&temp, &this->ToD3DVector3(), &v.ToD3DVector3());
+    D3DXVECTOR3 pV1 = this->ToD3DVector3(), 
+                pV2 = v.ToD3DVector3();
+	D3DXVec3Cross(&temp, &pV1, &pV2);
 
 	return Vector3(temp);
 }

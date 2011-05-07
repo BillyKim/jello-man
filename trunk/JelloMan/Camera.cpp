@@ -231,7 +231,9 @@ void Camera::BuildViewMatrix()
 	D3DXVec3Cross(&rightW, &upW, &lookW);
 	D3DXVec3Normalize(&rightW, &rightW);
 
-	D3DXMatrixLookAtLH(&m_matView, &posW, &(lookW+posW), &upW);
+    D3DXVECTOR3 lookWPlusPosW = lookW + posW;
+
+	D3DXMatrixLookAtLH(&m_matView, &posW, &lookWPlusPosW, &upW);
 }
 void Camera::BuildProjectionMatrix()
 {

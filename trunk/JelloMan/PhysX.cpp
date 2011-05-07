@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "PhysX.h"
+#pragma warning(disable: 4512)
 #include "NxCapsuleController.h"
+#pragma warning(default: 4512)
 
 #pragma comment(lib, "PhysXLoader.lib")
 //#pragma comment(lib, "NxCharacter.lib")
@@ -81,7 +83,7 @@ bool PhysX::Init(void)
 	planeDesc.d=-5;//set plane below origine
 	NxActorDesc actorDesc;
 	actorDesc.shapes.pushBack(&planeDesc);
-	NxActor* plane = m_pScene->createActor(actorDesc);
+	m_pScene->createActor(actorDesc); //groundplane
 
 	NxReal myTimestep = 1/60.0f;
 	m_pScene->setTiming(myTimestep, 8, NX_TIMESTEP_FIXED);//4 substeps

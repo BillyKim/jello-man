@@ -216,8 +216,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
         //Set vars needed for LIT
 	    m_pEffect->SetNormalSpecMap(m_pSRV[DeferredRenderMap_Normal]);
 	    m_pEffect->SetPosGlossMap(m_pSRV[DeferredRenderMap_Position]);
-        
-		bool first = true;
+      
         //Loop Lights
         vector<Light*>::const_iterator itLight = pRenderContext->GetLightController()->GetLights().cbegin();
 	    for (; itLight != pRenderContext->GetLightController()->GetLights().cend(); ++itLight)

@@ -13,14 +13,14 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pTexelSize(GetVariableByName("t0")->AsScalar()),
                     m_pInputLayout(0), m_VertexStride(0)
 {
-    ASSERT(m_pColorMap->IsValid(), "");
-    ASSERT(m_pNormalSpecMap->IsValid(), "");
-    ASSERT(m_pPosGlossMap->IsValid(), "");
-    ASSERT(m_pShadowMap->IsValid(), "");
-    ASSERT(m_pPointLight->IsValid(), "");
-    ASSERT(m_pCamPos->IsValid(), "");
-    ASSERT(m_pMtxLightWVP->IsValid(), "");
-    ASSERT(m_pTexelSize->IsValid(), "");
+    ASSERT(m_pColorMap->IsValid() != 0, "");
+    ASSERT(m_pNormalSpecMap->IsValid() != 0, "");
+    ASSERT(m_pPosGlossMap->IsValid() != 0, "");
+    ASSERT(m_pShadowMap->IsValid() != 0, "");
+    ASSERT(m_pPointLight->IsValid() != 0, "");
+    ASSERT(m_pCamPos->IsValid() != 0, "");
+    ASSERT(m_pMtxLightWVP->IsValid() != 0, "");
+    ASSERT(m_pTexelSize->IsValid() != 0, "");
 
     CreateInputLayout<VertexPosTex>(pDevice, this, &m_pInputLayout, m_VertexStride);
 }
