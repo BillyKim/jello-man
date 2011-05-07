@@ -118,11 +118,15 @@ void Texture2D::BeginDraw()
 }
 void Texture2D::EndDraw()
 {
+    ASSERT(m_pPrevRenderTarget != 0, "Texture2D::Begin() must be called first,  or backbuffer got lost");
+
     if (m_pColorMapSRV && m_MakeMips)
         m_pDevice->GenerateMips(m_pColorMapSRV);
     
-    ID3D10RenderTargetView* renderTargets[1] = { m_pPrevRenderTarget };
-    m_pDevice->OMSetRenderTargets(1, renderTargets, m_pPrevDSV);
+    m_pDevice->OMSetRenderTargets(1, &m_pPrevRenderTarget, m_pPrevDSV);
+
+    SafeRelease(m_pPrevRenderTarget);
+    SafeRelease(m_pPrevDSV);
 }
 void Texture2D::Clear(const Vector4& color)
 {

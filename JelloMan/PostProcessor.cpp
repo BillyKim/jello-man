@@ -54,6 +54,8 @@ void PostProcessor::Begin()
 }
 void PostProcessor::End()
 {
+    ASSERT(m_pPrevBackBuffer != 0, "PostProcessor::Begin() must be called first,  or backbuffer got lost");
+
     m_pBuffer->EndDraw();
 
     m_pDXDevice->OMSetRenderTargets(1, &m_pPrevBackBuffer, NULL);
@@ -70,4 +72,6 @@ void PostProcessor::End()
     m_pEffect->GetEffect()->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertarget
 
     m_pDXDevice->OMSetRenderTargets(1, &m_pPrevBackBuffer, m_pPrevDepthStencilView);
+    SafeRelease(m_pPrevBackBuffer);
+    SafeRelease(m_pPrevDepthStencilView);
 }
