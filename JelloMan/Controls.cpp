@@ -100,7 +100,7 @@ Point2D Controls::GetMouseMovement()
 
 short Controls::GetMouseWheelPos()
 {
-	int mwPos = m_MouseWheelPos;
+	short mwPos = m_MouseWheelPos;
 	m_MouseWheelPos = 0;
 
 	return mwPos;

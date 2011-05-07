@@ -12,8 +12,8 @@ PhongEffect::PhongEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect):
                     m_pLightColor(GetVariableBySemantic("LightColor")->AsVector()),
                     m_pCamDir(GetVariableBySemantic("CamDirection")->AsVector())*/
 {
-    ASSERT(m_pMtxWVP->IsValid(), "");
-    ASSERT(m_pMtxWorld->IsValid(), "");
+    ASSERT(m_pMtxWVP->IsValid() != 0, "");
+    ASSERT(m_pMtxWorld->IsValid() != 0, "");
 
     CreateInputLayout<VertexPosNormTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
