@@ -1,7 +1,7 @@
 #pragma once
 
 #include "D3DUtil.h"
-#include "Blox2D_Engine.h"
+#include "Blox2D.h"
 
 // Copyright Kevin Hoefman - kevin.hoefman@howest.be
 // http://www.digitalartsandentertainment.be/

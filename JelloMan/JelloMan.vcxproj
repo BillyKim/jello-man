@@ -84,8 +84,8 @@
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Axis.h" />
     <ClInclude Include="BaseGrid.h" />
+    <ClInclude Include="Blox2DEngine.h" />
     <ClInclude Include="Blox2D.h" />
-    <ClInclude Include="Blox2D_Engine.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
@@ -137,7 +137,10 @@
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelMesh.h" />
     <ClInclude Include="MoveGizmo.h" />
+    <ClInclude Include="Fluid.h" />
     <ClInclude Include="ObjectSelecter.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleFactory.h" />
     <ClInclude Include="PhongEffect.h" />
     <ClInclude Include="PhysX.h" />
     <ClInclude Include="PhysXBox.h" />
@@ -183,7 +186,7 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BaseGrid.cpp" />
-    <ClCompile Include="Blox2D.cpp" />
+    <ClCompile Include="Blox2DEngine.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -228,7 +231,9 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelMesh.cpp" />
     <ClCompile Include="MoveGizmo.cpp" />
+    <ClCompile Include="Fluid.cpp" />
     <ClCompile Include="ObjectSelecter.cpp" />
+    <ClCompile Include="ParticleFactory.cpp" />
     <ClCompile Include="PhongEffect.cpp" />
     <ClCompile Include="PhysX.cpp" />
     <ClCompile Include="PhysXBox.cpp" />
@@ -271,6 +276,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="fluidsEffect.fx" />
     <None Include="lights.fx" />
     <None Include="phong.fx" />
     <None Include="poscol.fx" />

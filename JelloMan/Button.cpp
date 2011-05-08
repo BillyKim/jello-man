@@ -125,32 +125,32 @@ void Button::Show()
 	if (m_State == STATE_NORMAL)
 	{
 		if (m_pNormalBitmap)
-			BX2D->DrawBitmap(m_pNormalBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
+			BX2D->DrawImage(m_pNormalBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_HOVER)
 	{
 		if (m_pHoverBitmap)
-			BX2D->DrawBitmap(m_pHoverBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
+			BX2D->DrawImage(m_pHoverBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DOWN)
 	{
 		if (m_pDownBitmap)
-			BX2D->DrawBitmap(m_pDownBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
+			BX2D->DrawImage(m_pDownBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DEACTIVATED)
 	{
 		if (m_pDeactivatedBitmap)
-			BX2D->DrawBitmap(m_pDeactivatedBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
+			BX2D->DrawImage(m_pDeactivatedBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DEACTIVATED_HOVER)
 	{
 		if (m_pDeactivatedHoverBitmap)
-			BX2D->DrawBitmap(m_pDeactivatedHoverBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
+			BX2D->DrawImage(m_pDeactivatedHoverBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 	else if (m_State == STATE_DEACTIVATED_DOWN)
 	{
 		if (m_pDeactivatedDownBitmap)
-			BX2D->DrawBitmap(m_pDeactivatedDownBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
+			BX2D->DrawImage(m_pDeactivatedDownBitmap, m_Pos.x, m_Pos.y, true, m_Opacity);
 	}
 }
 

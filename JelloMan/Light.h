@@ -5,7 +5,7 @@
 #include "Color.h"
 #include "LightBehaviour.h"
 #include "Camera.h"
-#include "Blox2D_Engine.h"
+#include "Blox2D.h"
 #include "IEditorObject.h"
 #include "ISerializable.h"
 

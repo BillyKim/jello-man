@@ -154,7 +154,7 @@ void MoveGizmo::Draw2Axis(const Vector3& pos, Axis axis1, Axis axis2,
     Vector3 p4 = Vector3::Project(pos + vAxis2 * AXIS_SMALL_LENGTH * l, 
         &m_ViewPort, projection, view, world);
 
-    D2D1_POINT_2F poly[4];
+	Point2D* poly = new Point2D[4];
     poly[0] = Point2F(p1.X , p1.Y);
     poly[1] = Point2F(p2.X , p2.Y);
     poly[2] = Point2F(p3.X , p3.Y);
@@ -169,8 +169,6 @@ void MoveGizmo::Draw2Axis(const Vector3& pos, Axis axis1, Axis axis2,
     
     BX2D->SetColor(100, 100, 255);
     BX2D->DrawPolygon(poly, 4, true, 2);
-
-    
 }
 
 void MoveGizmo::DrawGizmo(const Vector3& pos)

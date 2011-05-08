@@ -4,7 +4,7 @@
 #include <vector>
 #include "Controls.h"
 #include "GameTimer.h"
-#include "Blox2D.h"
+#include "Blox2DEngine.h"
 
 //-----------------------------------------------------------------
 // HitRegion Class

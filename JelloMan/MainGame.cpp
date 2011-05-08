@@ -64,8 +64,8 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 {
 	// TEST - gameconfig word nog file!
 	refGameConfig.SetTitle(_T("Happy Engine"));
-	refGameConfig.SetWindowWidth(1800);
-	refGameConfig.SetWindowHeight(1000);
+	refGameConfig.SetWindowWidth(1280);
+	refGameConfig.SetWindowHeight(720);
 	refGameConfig.SetBlox2DAntiAliasing(true);
 	refGameConfig.SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT_AZERTY);
 	refGameConfig.UsePhysX(true);
@@ -537,11 +537,7 @@ void MainGame::LoadScreen()
 
 void MainGame::UpdatePhysics(const float dTime)
 {
-	//m_UpdateSceneLock.lock();
-
 	m_pPhysXEngine->FetchResults();
 	m_pLevel->Tick(dTime);
 	m_pPhysXEngine->Simulate(dTime);
-
-	//m_UpdateSceneLock.unlock();
 }

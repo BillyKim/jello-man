@@ -1,7 +1,7 @@
 #pragma once
 
 #include "D3DUtil.h"
-#include "Blox2D_Engine.h"
+#include "Blox2D.h"
 #include "Controls.h"
 #include "ILevelObject.h"
 #include "RenderContext.h"

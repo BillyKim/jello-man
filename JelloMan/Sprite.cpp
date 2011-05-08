@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-#include "Blox2D_Engine.h"
+#include "Blox2D.h"
 
 /* CONSTRUCTOR - DESTRUCTOR */
 Sprite::Sprite(Image* imgSpriteSheet, int nrAnimSteps) :	m_imgSpriteSheet(imgSpriteSheet),
@@ -24,7 +24,7 @@ void Sprite::Draw(float x, float y, int animStep) const
 	area.right = x + m_SpriteSize.width + (m_SpriteSize.width * animStep);
 	area.bottom = y + m_SpriteSize.height;
 
-	BX2D->DrawBitmap(m_imgSpriteSheet, x, y, area, false);
+	BX2D->DrawImage(m_imgSpriteSheet, x, y, area, false);
 }
 
 /* GETTERS */

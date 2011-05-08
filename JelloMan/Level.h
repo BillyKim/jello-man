@@ -6,7 +6,7 @@
 #include "TestObject.h"
 #include "TestObject2.h"
 #include "TestSoftbody.h"
-#include "Blox2D_Engine.h"
+#include "Blox2D.h"
 #include "RenderContext.h"
 #include "PostProcessor.h"
 #include "EdgeDetectionPostEffect.h"
@@ -16,8 +16,8 @@
 #include "BaseGrid.h"
 #include "Softbody.h"
 #include "PreShadowEffect.h"
-
 #include "ILevelObject.h"
+#include "Fluid.h"
 
 class Level
 {
@@ -73,6 +73,9 @@ private:
 	bool m_bShowGrid;
 	bool m_bTickCharacter;
 	bool m_bEditor;
+
+	Fluid* m_pTestFluid;
+	NxFluidEmitter* m_pEmitter;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);

@@ -126,15 +126,15 @@ void ColorPicker::Show()
 	BX2D->SetColor(0,0,0);
 	BX2D->DrawEllipse(m_ColorPickerSelectPos.x, m_ColorPickerSelectPos.y, 6, 6);
 
-	D2D1_POINT_2F r[4];
-	r[0].x = m_ColorPickerPos.x+273;
-	r[0].y = ((255-((m_Hue/360.0f)*255))+m_ColorPickerPos.y-1-5);
-	r[1].x = m_ColorPickerPos.x+278;
-	r[1].y = ((255-((m_Hue/360.0f)*255))+m_ColorPickerPos.y-1);
-	r[2].x = m_ColorPickerPos.x+273;
-	r[2].y = ((255-((m_Hue/360.0f)*255))+m_ColorPickerPos.y-1+5);
-	r[3].x = m_ColorPickerPos.x+273;
-	r[3].y = ((255-((m_Hue/360.0f)*255))+m_ColorPickerPos.y-1-5);
+	Point2D* r = new Point2D[4];
+	r[0].x = m_ColorPickerPos.x + 273;
+	r[0].y = ((255 - ((m_Hue / 360.0f) * 255)) + m_ColorPickerPos.y - 1 - 5);
+	r[1].x = m_ColorPickerPos.x + 278;
+	r[1].y = ((255 - ((m_Hue / 360.0f) * 255)) + m_ColorPickerPos.y - 1);
+	r[2].x = m_ColorPickerPos.x + 273;
+	r[2].y = ((255 - ((m_Hue / 360.0f) * 255)) + m_ColorPickerPos.y - 1 + 5);
+	r[3].x = m_ColorPickerPos.x + 273;
+	r[3].y = ((255 - ((m_Hue / 360.0f) * 255)) + m_ColorPickerPos.y - 1 - 5);
 
 	BX2D->SetColor(255,255,255);
 	BX2D->FillPolygon(r,4);

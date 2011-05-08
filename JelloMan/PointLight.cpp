@@ -1,6 +1,6 @@
 #include "PointLight.h"
 #include "LightBehaviourNormal.h"
-#include "Blox2D_Engine.h"
+#include "Blox2D.h"
 #include "ContentManager.h"
 #include "ModelMesh.h"
 
@@ -120,7 +120,7 @@ void PointLight::Draw(const RenderContext* rc)
 			BX2D->DrawEllipse(pos2D.x, pos2D.y, size / l, size / l, 2.0f / l);
 		}
 
-		BX2D->DrawBitmap(
+		BX2D->DrawImage(
 			m_pPointLightImage,
 			pos2D.x - (m_pPointLightImage->GetDimensions().width / (16 * l)),
 			pos2D.y - (m_pPointLightImage->GetDimensions().height / (16 * l)),

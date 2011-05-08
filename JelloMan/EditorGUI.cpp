@@ -520,7 +520,7 @@ void EditorGUI::Draw()
 
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != MODE_PLAY)
-		BX2D->DrawBitmap(m_pCameraBitmap, BX2D->GetWindowSize().width - 70, 90, true, 0.8f);
+		BX2D->DrawImage(m_pCameraBitmap, BX2D->GetWindowSize().width - 70, 90, true, 0.8f);
 	
 
 	BX2D->SetAntiAliasing(true);

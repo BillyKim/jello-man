@@ -4,6 +4,8 @@
 #include "PhysXBox.h"
 #include "SpotLight.h"
 #include "PointLight.h"
+#include "Particle.h"
+#include "ParticleFactory.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -13,7 +15,9 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_bShowGrid(false),
 				m_bTickCharacter(false),
 				m_pCharacter(0),
-				m_bEditor(true)
+				m_bEditor(true),
+				m_pTestFluid(0),
+				m_pEmitter(0)
 {
 
 }
@@ -22,6 +26,7 @@ Level::Level(ID3D10Device* pDXDevice)	:
 Level::~Level()
 {
 	delete m_pBaseGrid;
+	delete m_pTestFluid;
 	
 	Clear();
 }
@@ -77,6 +82,56 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	pLevelObject->Translate(Vector3(0,200,0));
 
 	m_pLevelObjects.push_back(pLevelObject);
+
+	// TEST FLUID
+	int MAX_PARTICLES = 10000;
+
+	// setup fluid descriptor
+	NxFluidDesc fluidDesc;
+    fluidDesc.maxParticles                  = MAX_PARTICLES;
+    fluidDesc.kernelRadiusMultiplier		= 30.0f;
+    fluidDesc.restParticlesPerMeter			= 7.0f;
+	fluidDesc.motionLimitMultiplier			= 30.0f;
+	fluidDesc.packetSizeMultiplier			= 8;
+    fluidDesc.collisionDistanceMultiplier   = 0.1f;
+    fluidDesc.stiffness						= 50.0f;
+    fluidDesc.viscosity						= 50.0f;
+	fluidDesc.restDensity					= 10.0f;
+    fluidDesc.damping						= 0.0f;
+    fluidDesc.restitutionForStaticShapes	= 0.1f;
+	fluidDesc.dynamicFrictionForStaticShapes= 0.8f;
+	fluidDesc.simulationMethod				= NX_F_SPH;
+	fluidDesc.flags &= ~NX_FF_HARDWARE;
+
+	// create an attached emitter
+	NxFluidEmitterDesc emitterDesc;
+
+	emitterDesc.maxParticles = 0; // using fluid max particles
+
+	emitterDesc.dimensionX = 30.f;
+	emitterDesc.dimensionY = 30.f;
+
+	emitterDesc.type = NX_FE_CONSTANT_FLOW_RATE;
+
+	emitterDesc.rate = 300.0f;
+
+	emitterDesc.fluidVelocityMagnitude = 100.0f;
+
+	emitterDesc.shape = NX_FE_RECTANGULAR;
+	emitterDesc.particleLifetime = 10.0f; // in seconds
+
+	////attach to actor
+	//emitterDesc.flags |= NX_FEF_ADD_BODY_VELOCITY;
+	//emitterDesc.repulsionCoefficient = 300.0f;
+
+	emitterDesc.relPose.M.id();
+	emitterDesc.relPose.M.rotX(-NxHalfPiF32);
+	emitterDesc.relPose.t = NxVec3(100.0f,200.0f,0);
+	
+	m_pTestFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f,0.0f,1.0f,1.0f), 3.0f, m_pDXDevice);
+	ASSERT(m_pTestFluid, "fluid creation failed");
+
+	m_pEmitter = m_pTestFluid->GetNxFluid()->createEmitter(emitterDesc);
 }
 
 void Level::Tick(const float dTime)
@@ -189,6 +244,14 @@ void Level::DrawForward(const RenderContext* pRenderContext)
 {
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
+
+	if (m_pTestFluid)
+		m_pTestFluid->Draw(pRenderContext);
+
+	/*tstringstream stream;
+	stream << m_pEmitter->getNbParticlesEmitted();
+
+	BX2D->DrawString(stream.str(), 300,200);*/
 
 	// DRAW LIGHTS
 	if (m_bEditor)
