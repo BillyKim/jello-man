@@ -331,9 +331,10 @@ void Blox2DEngine::DrawPolygon(Point2D pArr[], unsigned int nrPoints, bool close
 	
 	pSink->Close();
 	SafeRelease(pSink);
-	SafeRelease(pPathGeometry);
 
 	m_pRenderTarget->DrawGeometry(pPathGeometry, m_pColorBrush, strokeSize);
+
+	SafeRelease(pPathGeometry);
 }
 
 void Blox2DEngine::FillPolygon(Point2D pArr[], unsigned int nrPoints) const
@@ -352,9 +353,10 @@ void Blox2DEngine::FillPolygon(Point2D pArr[], unsigned int nrPoints) const
 	
 	pSink->Close();
 	SafeRelease(pSink);
-	SafeRelease(pPathGeometry);
 
 	m_pRenderTarget->FillGeometry(pPathGeometry, m_pColorBrush);
+
+	SafeRelease(pPathGeometry);
 }
 
 void Blox2DEngine::DrawImage(Image* bitmap, float x, float y, bool pixelPerfect, float opacity, float width, float height)
