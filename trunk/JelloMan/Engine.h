@@ -1,13 +1,3 @@
-//=======================================================================================
-// d3dApp.h by Frank Luna (C) 2008 All Rights Reserved.
-
-// Simple Direct3D demo application class.  
-// Make sure you link: d3d10.lib d3dx10d.lib dxerr.lib dxguid.lib.
-// Link d3dx10.lib for release mode builds instead of d3dx10d.lib.
-//
-// Adapted for DAE GP1 by Bart Uyttenhove
-//=======================================================================================
-
 #pragma once
 
 #include "d3dUtil.h"
@@ -104,7 +94,6 @@ private:
 
 	// threads
 	boost::thread m_LoadResourcesThread;
-	boost::thread m_UpdateThread;
 
 private:
 	Engine(const Engine& t);

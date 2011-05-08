@@ -205,12 +205,6 @@ void Engine::OnRender()
 
 	// displaying backbuffer - vsync on
 	m_pSwapChain->Present(1, 0);
-
-	// getstatus of keys
-	unsigned char keys[Controls::NUMKEYS];
-	GetKeyboardState(keys);
-
-	CONTROLS->SetKeyboardState(keys);
 }
 
 LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
