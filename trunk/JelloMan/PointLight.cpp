@@ -16,10 +16,10 @@ PointLight::PointLight():
 {
     SetBehaviour(new LightBehaviourNormal());
 
-	m_pPointLightImage = Content->LoadImage(_T("Content/Images/Editor/plight.png"));
+	m_pPointLightImage = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 
     ZeroMemory(&m_Desc, sizeof(PointLightDesc));
     ZeroMemory(&m_StartDesc, sizeof(PointLightDesc));
@@ -37,10 +37,10 @@ PointLight::PointLight(const PointLightDesc& desc):
 {
     SetBehaviour(new LightBehaviourNormal());
 
-	m_pPointLightImage = Content->LoadImage(_T("Content/Images/Editor/plight.png"));
+	m_pPointLightImage = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 PointLight::~PointLight()
 {

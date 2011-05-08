@@ -694,32 +694,31 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="postdeferred.fx">
+    <None Include="Content\Effects\lights.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="predeferred.fx">
+    <None Include="Content\Effects\phong.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="phong.fx">
+    <None Include="Content\Effects\poscol.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="lights.fx">
+    <None Include="Content\Effects\postdeferred.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="postEdgeDetection.fx">
+    <None Include="Content\Effects\postEdgeDetection.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="poscol.fx">
+    <None Include="Content\Effects\predeferred.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="predeferredNormal.fx">
+    <None Include="Content\Effects\predeferredNormal.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="preShadowmapShader.fx">
+    <None Include="Content\Effects\preShadowmapShader.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="fluidsEffect.fx">
+    <None Include="Content\Effects\fluidsEffect.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

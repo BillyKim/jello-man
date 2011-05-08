@@ -68,10 +68,10 @@ void EditorGUI::Initialize()
 	// LIGHT BUTTON
 	m_pLightButton = new Button(60,7,36,36,true);
 
-	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_on_normal.png")));
-	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_on_hover.png")));
-	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_off_normal.png")));
-	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/lights_off_hover.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/lights_on_normal.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/lights_on_hover.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/lights_off_normal.png")));
+	m_pLightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/lights_off_hover.png")));
 
 	m_pLightButton->SetNormalState(m_pLightButtonBitmaps[0]);
 	m_pLightButton->SetHoverState(m_pLightButtonBitmaps[1]);
@@ -83,10 +83,10 @@ void EditorGUI::Initialize()
 	// MOVE BUTTON
 	m_pMoveButton = new Button(120,7,36,36,true);
 
-	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_on_normal.png")));
-	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_on_hover.png")));
-	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_off_normal.png")));
-	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/move_off_hover.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/move_on_normal.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/move_on_hover.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/move_off_normal.png")));
+	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/move_off_hover.png")));
 
 	m_pMoveButton->SetNormalState(m_pMoveButtonBitmaps[0]);
 	m_pMoveButton->SetHoverState(m_pMoveButtonBitmaps[1]);
@@ -100,8 +100,8 @@ void EditorGUI::Initialize()
 	// GAME MODE BUTTON
 	m_pGameModeButton = new Button(20,7,36,36);
 
-	m_pGameModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/game_mode_normal.png")));
-	m_pGameModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/game_mode_hover.png")));
+	m_pGameModeButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/game_mode_normal.png")));
+	m_pGameModeButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/game_mode_hover.png")));
 
 	m_pGameModeButton->SetNormalState(m_pGameModeButtonBitmaps[0]);
 	m_pGameModeButton->SetHoverState(m_pGameModeButtonBitmaps[1]);
@@ -110,8 +110,8 @@ void EditorGUI::Initialize()
 	// EDITOR MODE BUTTON
 	m_pEditorModeButton = new Button(20,43,36,36);
 
-	m_pEditorModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/editor_mode_normal.png")));
-	m_pEditorModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/editor_mode_hover.png")));
+	m_pEditorModeButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/editor_mode_normal.png")));
+	m_pEditorModeButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/editor_mode_hover.png")));
 
 	m_pEditorModeButton->SetNormalState(m_pEditorModeButtonBitmaps[0]);
 	m_pEditorModeButton->SetHoverState(m_pEditorModeButtonBitmaps[1]);
@@ -120,8 +120,8 @@ void EditorGUI::Initialize()
 	// POINTLIGHT BUTTON
 	m_pPointlightButton = new Button(216,7,36,36);
 
-	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/pointlight_normal.png")));
-	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/pointlight_hover.png")));
+	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_normal.png")));
+	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_hover.png")));
 
 	m_pPointlightButton->SetNormalState(m_pPointlightButtonBitmaps[0]);
 	m_pPointlightButton->SetHoverState(m_pPointlightButtonBitmaps[1]);
@@ -130,8 +130,8 @@ void EditorGUI::Initialize()
 	// SPOTLIGHT BUTTON
 	m_pSpotlightButton = new Button(250,7,36,36);
 
-	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/spotlight_normal.png")));
-	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/spotlight_hover.png")));
+	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_normal.png")));
+	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_hover.png")));
 
 	m_pSpotlightButton->SetNormalState(m_pSpotlightButtonBitmaps[0]);
 	m_pSpotlightButton->SetHoverState(m_pSpotlightButtonBitmaps[1]);
@@ -140,8 +140,8 @@ void EditorGUI::Initialize()
 	// COLOR PICKER BUTTON
 	m_pColorPickerButton = new Button(100,217,36,36,true);
 
-	m_pColorPickerButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/colorpicker_normal.png")));
-	m_pColorPickerButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/colorpicker_hover.png")));
+	m_pColorPickerButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/colorpicker_normal.png")));
+	m_pColorPickerButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/colorpicker_hover.png")));
 
 	m_pColorPickerButton->SetNormalState(m_pColorPickerButtonBitmaps[0]);
 	m_pColorPickerButton->SetHoverState(m_pColorPickerButtonBitmaps[1]);
@@ -155,8 +155,8 @@ void EditorGUI::Initialize()
 	// APPLY BUTTON
 	m_pApplyButton = new Button((int)(210 + 360),(int)(60 + 220),36,36);
 
-	m_pApplyButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/apply_normal.png")));
-	m_pApplyButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/apply_hover.png")));
+	m_pApplyButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/apply_normal.png")));
+	m_pApplyButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/apply_hover.png")));
 
 	m_pApplyButton->SetNormalState(m_pApplyButtonBitmaps[0]);
 	m_pApplyButton->SetHoverState(m_pApplyButtonBitmaps[1]);
@@ -165,10 +165,10 @@ void EditorGUI::Initialize()
 	// ROTATE BUTTON
 	m_pRotateButton = new Button(155,7,36,36,true);
 
-	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_on_normal.png")));
-	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_on_hover.png")));
-	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_off_normal.png")));
-	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/rotate_off_hover.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_normal.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_hover.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_off_normal.png")));
+	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_off_hover.png")));
 
 	m_pRotateButton->SetNormalState(m_pRotateButtonBitmaps[0]);
 	m_pRotateButton->SetHoverState(m_pRotateButtonBitmaps[1]);
@@ -182,8 +182,8 @@ void EditorGUI::Initialize()
 	// PLAY MODE BUTTON
 	m_pPlayModeButton = new Button(20,79,36,36);
 	
-	m_pPlayModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/play_mode_normal.png")));
-	m_pPlayModeButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/play_mode_hover.png")));
+	m_pPlayModeButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/play_mode_normal.png")));
+	m_pPlayModeButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/play_mode_hover.png")));
 
 	m_pPlayModeButton->SetNormalState(m_pPlayModeButtonBitmaps[0]);
 	m_pPlayModeButton->SetHoverState(m_pPlayModeButtonBitmaps[1]);
@@ -192,8 +192,8 @@ void EditorGUI::Initialize()
 	// LOAD MODEL BUTTON
 	m_pLoadModelButton = new Button(310,7,36,36, true);
 
-	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_model_normal.png")));
-	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_model_hover.png")));
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_normal.png")));
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_hover.png")));
 
 	m_pLoadModelButton->SetNormalState(m_pLoadModelButtonBitmaps[0]);
 	m_pLoadModelButton->SetHoverState(m_pLoadModelButtonBitmaps[1]);
@@ -208,10 +208,10 @@ void EditorGUI::Initialize()
 	// SHOW GRID BUTTON
 	m_pShowGridButton = new Button(370,7,36,36,true);
 
-	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_on_normal.png")));
-	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_on_hover.png")));
-	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_off_normal.png")));
-	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/grid_off_hover.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_normal.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_hover.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_off_normal.png")));
+	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_off_hover.png")));
 
 	m_pShowGridButton->SetNormalState(m_pShowGridButtonBitmaps[0]);
 	m_pShowGridButton->SetHoverState(m_pShowGridButtonBitmaps[1]);
@@ -224,7 +224,7 @@ void EditorGUI::Initialize()
 	m_pShowGridButton->SetState(Button::STATE_NORMAL);
 
 	// CAMERA
-	m_pCameraBitmap = Content->LoadImage(_T("Content/Images/Editor/camera.png"));
+	m_pCameraBitmap = Content->LoadImage(_T("../Content/Images/Editor/camera.png"));
 
 	// LIGHT DEBUGGER
 	m_pLightDebugger = new VisualLightDebugger();

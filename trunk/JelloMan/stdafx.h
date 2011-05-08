@@ -73,7 +73,7 @@ struct LocalPanic
 		int ret = MessageBoxA(0, stream.str().c_str(), "Warning!", MB_ICONWARNING | MB_YESNO);
 		switch (ret)
 		{
-			case IDYES: cout << "--->Break"; DebugBreak(); break;
+            case IDYES: cout << "--->Break"; __debugbreak(); break;
 			default: break;
 		}
 	}

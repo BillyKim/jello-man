@@ -102,7 +102,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 											static_cast<int>(BX2D->GetWindowSize().width),
 											static_cast<int>(BX2D->GetWindowSize().height));
 	
-	m_pEdgeDetectionEffect = Content->LoadEffect<EdgeDetectionPostEffect>(_T("postEdgeDetection.fx"));
+	m_pEdgeDetectionEffect = Content->LoadEffect<EdgeDetectionPostEffect>(_T("../Content/Effects/postEdgeDetection.fx"));
     m_pEdgeDetectionEffect->SetTechnique(0);
 
 	m_pPostProcessor->SetEffect(m_pEdgeDetectionEffect);
@@ -111,7 +111,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 								static_cast<int>(BX2D->GetWindowSize().height));
 	m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
 	
-    m_pPreShadowEffect = Content->LoadEffect<PreShadowEffect>(_T("preShadowmapShader.fx"));
+    m_pPreShadowEffect = Content->LoadEffect<PreShadowEffect>(_T("../Content/Effects/preShadowmapShader.fx"));
 
 	++m_Orbs;
 	m_LoadingText = _T("lightcontroller");
@@ -215,14 +215,14 @@ void MainGame::UpdateScene(const float dTime)
 		CheckControls();
   
     if (CONTROLS->IsKeyPressed('K'))
-        m_pLevel->Serialize("test.level");
+        m_pLevel->Serialize("../test.level");
     else if (CONTROLS->IsKeyPressed('L'))
-        m_pLevel->Deserialize("test.level");
+        m_pLevel->Deserialize("../test.level");
 
 	if (!m_pAudioEngine)
 	{
 		// AUDIO
-		tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
+		tstring projectLocation = tstring(_T("../Audio/Win/JelloMan"));
 		m_pAudioEngine = new AudioEngine(projectLocation);
 		m_pAudioEngine->Initialize();
 	}
@@ -384,15 +384,15 @@ void MainGame::CheckControls()
 			pLevelObject->UseNormalMap(true);
 			pLevelObject->UseSimplifiedPhysXMesh(true);
 
-			pLevelObject->SetModelPath(_T("Content/Models/sphere50.binobj"));
+			pLevelObject->SetModelPath(_T("../Content/Models/sphere50.binobj"));
 	
 			PhysXSphere sphere(50.0f, 1000);
 			pLevelObject->SetSimplifiedPhysXMesh(&sphere);
 
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
-			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
+			pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
+			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 			pLevelObject->SetRigid(true);
 
@@ -412,15 +412,15 @@ void MainGame::CheckControls()
 			pLevelObject->UseNormalMap(true);
 			pLevelObject->UseSimplifiedPhysXMesh(true);
 
-			pLevelObject->SetModelPath(_T("Content/Models/box50.binobj"));
+			pLevelObject->SetModelPath(_T("../Content/Models/box50.binobj"));
 	
 			PhysXBox box(Vector3(50,50,50),1000);
 			pLevelObject->SetSimplifiedPhysXMesh(&box);
 
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
-			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
+			pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
+			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 			pLevelObject->SetRigid(true);
 
@@ -438,12 +438,12 @@ void MainGame::CheckControls()
 
 			pLevelObject->UseNormalMap(false);
 
-			pLevelObject->SetModelPath(_T("Content/Models/jman.binobj"));
-			pLevelObject->SetPhysXModelPath(_T("Content/Models/jman.nxconcave"));
+			pLevelObject->SetModelPath(_T("../Content/Models/jman.binobj"));
+			pLevelObject->SetPhysXModelPath(_T("../Content/Models/jman.nxconcave"));
 
-			pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
+			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 			pLevelObject->SetRigid(true);
 			pLevelObject->SetMass(1000);

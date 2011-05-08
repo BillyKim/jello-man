@@ -48,15 +48,17 @@ SoftbodyMesh* ModelLoader::LoadSoftbodyMesh(ID3D10Device *pDXDevice, const tstri
     }
     else
     {
-        m_pCurrentSBMesh = new SoftbodyMesh(pDXDevice, _T("Softbody"));
-
         if (assetName.rfind(_T(".obj")) != -1)
         {
             wcout << L"Error: softbodymesh can not be an .obj -- " << assetName << "\n";
             return 0;
         }
-        else if (assetName.rfind(_T(".binobj")) != -1)
-            ReadBinSBObj(assetName);
+        else 
+        {          
+            m_pCurrentSBMesh = new SoftbodyMesh(pDXDevice, _T("Softbody"));
+            if (assetName.rfind(_T(".binobj")) != -1)
+                ReadBinSBObj(assetName);
+        }
 
         m_pSBAssetContainer->AddAsset(assetName, m_pCurrentSBMesh);
         return m_pCurrentSBMesh;

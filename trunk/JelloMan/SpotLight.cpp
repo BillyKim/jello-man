@@ -30,12 +30,12 @@ SpotLight::SpotLight():
     m_Desc.power = 1.0f;
     m_StartDesc = m_Desc;
 
-	m_pSpotLightImage = Content->LoadImage(_T("Content/Images/Editor/slight.png"));
+	m_pSpotLightImage = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline2 = Content->LoadSpline(_T("Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline3 = Content->LoadSpline(_T("Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline2 = Content->LoadSpline(_T("../Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline3 = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 SpotLight::SpotLight(const SpotLightDesc& desc):
             m_Rotation(Matrix::Identity),
@@ -58,12 +58,12 @@ SpotLight::SpotLight(const SpotLightDesc& desc):
 	SetBehaviour(new LightBehaviourNormal());
 	m_StartDesc = m_Desc;
 
-	m_pSpotLightImage = Content->LoadImage(_T("Content/Images/Editor/slight.png"));
+	m_pSpotLightImage = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline2 = Content->LoadSpline(_T("Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline3 = Content->LoadSpline(_T("Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline2 = Content->LoadSpline(_T("../Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline3 = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 SpotLight::~SpotLight()
 {

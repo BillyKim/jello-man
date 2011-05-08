@@ -18,7 +18,7 @@ BaseGrid::~BaseGrid()
 // GENERAL
 void BaseGrid::Init()
 {
-	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 
 	BuildVertexBuffer();
 }

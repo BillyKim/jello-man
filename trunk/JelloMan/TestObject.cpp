@@ -13,15 +13,15 @@ TestObject::~TestObject(void)
 
 void TestObject::Init(PhysX* pPhysX)
 {
-    m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Textures/weapon_diffuse.png"));
-    m_pSpecMap = Content->LoadTexture2D(_T("Content/Textures/weapon_spec.png"));
-    m_pGlossMap = Content->LoadTexture2D(_T("Content/Textures/weapon_gloss.png"));
+    m_pDiffuseMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_diffuse.png"));
+    m_pSpecMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_spec.png"));
+    m_pGlossMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_gloss.png"));
 
-    m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
+    m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("../Content/Effects/predeferred.fx"));
 
 //    m_pModel = Content->LoadModel(_T("Content/Models/lvl_opt_physX.binobj"));
 
-	PhysXMesh mesh = PhysXMesh(pPhysX, "Content/Models/lvl_opt_physX.nxconcave", 10000);
+	PhysXMesh mesh = PhysXMesh(pPhysX, "../Content/Models/lvl_opt_physX.nxconcave", 10000);
     InitActor(pPhysX, mesh, false);
 }
 

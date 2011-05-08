@@ -41,7 +41,7 @@ Fluid::Fluid(NxScene* pScene, NxFluidDesc &desc, const Color& particleColor,  fl
 	ASSERT(m_pFluid, "Fluid creation failed");
 
 	// render
-	m_pEffect = Content->LoadEffect<PosColEffect>(_T("poscol.fx"));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 
 Fluid::~Fluid()

@@ -44,12 +44,12 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	pCharacter->UseNormalMap(false);
 	pCharacter->UseSimplifiedPhysXMesh(false);
 
-	pCharacter->SetModelPath(_T("Content/Models/jman.binobj"));
-	pCharacter->SetPhysXModelPath(_T("Content/Models/jman.nxconcave"));
+	pCharacter->SetModelPath(_T("../Content/Models/jman.binobj"));
+	pCharacter->SetPhysXModelPath(_T("../Content/Models/jman.nxconcave"));
 
-	pCharacter->SetDiffusePath(_T("Content/Textures/weapon_diffuse.png"));
-	pCharacter->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-	pCharacter->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
+	pCharacter->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
+	pCharacter->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+	pCharacter->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 	pCharacter->SetRigid(false);
 
@@ -67,13 +67,13 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	pLevelObject->UseNormalMap(true);
 	pLevelObject->UseSimplifiedPhysXMesh(false);
 
-	pLevelObject->SetModelPath(_T("Content/Models/as_val.obj"));
-	pLevelObject->SetPhysXModelPath(_T("Content/Models/as_val.nxconcave"));
+	pLevelObject->SetModelPath(_T("../Content/Models/as_val.obj"));
+	pLevelObject->SetPhysXModelPath(_T("../Content/Models/as_val.nxconcave"));
 
-	pLevelObject->SetDiffusePath(_T("Content/Textures/weapon_color.png"));
-	pLevelObject->SetSpecPath(_T("Content/Textures/weapon_spec.png"));
-	pLevelObject->SetGlossPath(_T("Content/Textures/weapon_gloss.png"));
-	pLevelObject->SetNormalPath(_T("Content/Textures/weapon_normal.png"));
+	pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_color.png"));
+	pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+	pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
+	pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
 
 	pLevelObject->SetRigid(true);
 

@@ -15,11 +15,11 @@ LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
 											m_GlossPath(_T("")),
 											m_WorkingDirectory(_T(""))
 {
-	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/add_small_normal.png")));
-	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/add_small_hover.png")));
+	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_normal.png")));
+	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_hover.png")));
 
-	m_LoadModelBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_normal.png")));
-	m_LoadModelBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/load_hover.png")));
+	m_LoadModelBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_normal.png")));
+	m_LoadModelBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_hover.png")));
 
 	m_pbtnLoadModel = new Button(150, 600, 36, 36);
 	m_pbtnLoadModel->SetNormalState(m_LoadModelBitmaps[0]);
@@ -141,13 +141,13 @@ void LoadModelFromFile::Tick()
 				m_pLevelObject->UseNormalMap(false);
 
 			if (m_DiffusePath == _T(""))
-				m_DiffusePath = _T("Content/Textures/checker_1024.png");
+				m_DiffusePath = _T("../Content/Textures/checker_1024.png");
 
 			if (m_SpecPath == _T(""))
-				m_SpecPath = _T("Content/Textures/checker_1024.png");
+				m_SpecPath = _T("../Content/Textures/checker_1024.png");
 
 			if (m_GlossPath == _T(""))
-				m_GlossPath = _T("Content/Textures/checker_1024.png");
+				m_GlossPath = _T("../Content/Textures/checker_1024.png");
 
 			m_pLevelObject->UseSimplifiedPhysXMesh(false);
 

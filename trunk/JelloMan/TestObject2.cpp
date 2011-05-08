@@ -12,13 +12,13 @@ TestObject2::~TestObject2(void)
 
 void TestObject2::Init()
 {
-    //m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Models/testtex.png"));
-    //m_pSpecMap = Content->LoadTexture2D(_T("Content/Models/testtex.png"));
-    //m_pGlossMap = Content->LoadTexture2D(_T("Content/Models/testtex.png"));
+    //m_pDiffuseMap = Content->LoadTexture2D(_T("../Content/Models/testtex.png"));
+    //m_pSpecMap = Content->LoadTexture2D(_T("../Content/Models/testtex.png"));
+    //m_pGlossMap = Content->LoadTexture2D(_T("../Content/Models/testtex.png"));
 
-    m_pEffect = Content->LoadEffect<PhongEffect>(_T("phong.fx"));
+    m_pEffect = Content->LoadEffect<PhongEffect>(_T("../Content/Effects/phong.fx"));
 
-//    m_pModel = Content->LoadModel(_T("Content/Models/test3.obj"));
+//    m_pModel = Content->LoadModel(_T("../Content/Models/test3.obj"));
 }
 
 void TestObject2::Draw(const RenderContext* pRenderContext)
