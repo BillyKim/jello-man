@@ -12,14 +12,14 @@ TestSoftbody::~TestSoftbody()
 
 void TestSoftbody::Init(PhysX* pPhysX)
 {
-    SoftbodyMesh* pSBMesh = Content->LoadSoftbodyMesh(_T("Sphere50SB.binobj"));
-    InitSoftbody(pPhysX, pSBMesh, _T("Sphere50SB.nxsoftbody"), m_vPosition);
+    SoftbodyMesh* pSBMesh = Content->LoadSoftbodyMesh(_T("../Sphere50SB.binobj"));
+    InitSoftbody(pPhysX, pSBMesh, _T("../Sphere50SB.nxsoftbody"), m_vPosition);
 
-    m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
+    m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("../Content/Effects/predeferred.fx"));
 
-    m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Textures/weapon_diffuse.png"));
-    m_pSpecMap = Content->LoadTexture2D(_T("Content/Textures/weapon_spec.png"));
-    m_pGlossMap = Content->LoadTexture2D(_T("Content/Textures/weapon_gloss.png"));
+    m_pDiffuseMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_diffuse.png"));
+    m_pSpecMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_spec.png"));
+    m_pGlossMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_gloss.png"));
 }
 
 void TestSoftbody::Selected(bool selected)

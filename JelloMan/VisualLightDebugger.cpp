@@ -28,18 +28,18 @@ VisualLightDebugger::VisualLightDebugger()	:	m_bClick(false),
 {
 	
 	// POINT LIGHT
-	m_pPointLightBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/plight_normal.png")));
-	m_pPointLightBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/plight_hover.png")));
+	m_pPointLightBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/plight_normal.png")));
+	m_pPointLightBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/plight_hover.png")));
 
 	// SPOT LIGHT
-	m_pSpotLightBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/slight_normal.png")));
-	m_pSpotLightBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/slight_hover.png")));
+	m_pSpotLightBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/slight_normal.png")));
+	m_pSpotLightBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/slight_hover.png")));
 
 	// ADD - SUBTRACT BUTTON
-	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/add_small_normal.png")));
-	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/add_small_hover.png")));
-	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/subtract_small_normal.png")));
-	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("Content/Images/Editor/subtract_small_hover.png")));
+	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_normal.png")));
+	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_hover.png")));
+	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/subtract_small_normal.png")));
+	m_pAddSubtractBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/subtract_small_hover.png")));
 
 	// multiplier
 	m_pMultiplierAddButton = new Button(40,300,15,15);

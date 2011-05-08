@@ -17,13 +17,13 @@ TestPhysXSphere::~TestPhysXSphere(void)
 
 void TestPhysXSphere::Init()
 {
-    m_pDiffuseMap = Content->LoadTexture2D(_T("Content/Textures/weapon_diffuse.png"));
-    m_pSpecMap = Content->LoadTexture2D(_T("Content/Textures/weapon_spec.png"));
-    m_pGlossMap = Content->LoadTexture2D(_T("Content/Textures/weapon_gloss.png"));
+    m_pDiffuseMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_diffuse.png"));
+    m_pSpecMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_spec.png"));
+    m_pGlossMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_gloss.png"));
 
-    m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
+    m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("../Content/Effects/predeferred.fx"));
 
-    //m_pModel = Content->LoadModel(_T("Content/Models/sphere50.binobj"));
+    //m_pModel = Content->LoadModel(_T("../Content/Models/sphere50.binobj"));
 }
 
 void TestPhysXSphere::Draw(const RenderContext* pRenderContext)

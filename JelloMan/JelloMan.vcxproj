@@ -42,9 +42,13 @@
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Configuration)</IntDir>
+    <OutDir>$(SolutionDir)$bin</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -60,6 +64,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d2d1.lib;dwrite.lib;windowscodecs.lib;dxgi.lib;d3d10_1.lib;libboost_thread-vc100-mt-gd-1_46_1.lib;libboost_date_time-vc100-mt-gd-1_46_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\boost\boost\date_time\build\msvc-10.0\debug\link-static\threading-multi;.\boost\boost\thread\build\msvc-10.0\debug\link-static\threading-multi;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <Profile>false</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -275,16 +280,15 @@
     <ClCompile Include="VisualLightDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="fluidsEffect.fx" />
-    <None Include="lights.fx" />
-    <None Include="phong.fx" />
-    <None Include="poscol.fx" />
-    <None Include="postdeferred.fx" />
-    <None Include="postEdgeDetection.fx" />
-    <None Include="predeferred.fx" />
-    <None Include="predeferredNormal.fx" />
-    <None Include="preShadowmapShader.fx" />
+    <None Include="Content\Effects\lights.fx" />
+    <None Include="Content\Effects\fluidsEffect.fx" />
+    <None Include="Content\Effects\phong.fx" />
+    <None Include="Content\Effects\poscol.fx" />
+    <None Include="Content\Effects\postdeferred.fx" />
+    <None Include="Content\Effects\postEdgeDetection.fx" />
+    <None Include="Content\Effects\predeferred.fx" />
+    <None Include="Content\Effects\predeferredNormal.fx" />
+    <None Include="Content\Effects\preShadowmapShader.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

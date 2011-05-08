@@ -43,7 +43,7 @@ void DeferredRenderer::Init(UINT width, UINT height)
 {
     OnResized(width, height);
 
-	m_pEffect = ContentManager::GetSingleton()->LoadEffect<DeferredPostEffect>(_T("postdeferred.fx"));
+	m_pEffect = ContentManager::GetSingleton()->LoadEffect<DeferredPostEffect>(_T("../Content/Effects/postdeferred.fx"));
 
 	vector<VertexPosTex> vertices;
 

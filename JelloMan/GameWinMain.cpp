@@ -3,6 +3,10 @@
 #include "Engine.h"
 #include "MainGame.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
 // console subsystem
 void main()
 {
@@ -14,13 +18,15 @@ void main()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*prevInstance*/,
 				   PSTR /*cmdLine*/, int /*showCmd*/)
 {
+    //_CrtSetBreakAlloc(232);
+
 	//notify user if heap is corrupt
 	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL,0);
 
 	// Enable run-time memory leak check for debug builds.
-	#if defined(DEBUG) | defined(_DEBUG)
+	/*#if defined(DEBUG) | defined(_DEBUG)
 		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	#endif
+	#endif*/
 
 //***********************
 //get command line params
@@ -70,6 +76,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*prevInstance*/,
 
     string temp;
     cin >> temp;
+
+    _CrtDumpMemoryLeaks();
 
 	return ret;
 

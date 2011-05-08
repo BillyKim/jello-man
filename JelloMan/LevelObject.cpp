@@ -36,9 +36,9 @@ void LevelObject::Init(PhysX* pPhysX)
 	m_pNormalMap = Content->LoadTexture2D(m_NormalPath);
 	
 	if (m_bUseNormalMap)
-		m_pEffectNormals = Content->LoadEffect<DeferredPreEffectNormals>(_T("predeferredNormal.fx"));
+		m_pEffectNormals = Content->LoadEffect<DeferredPreEffectNormals>(_T("../Content/Effects/predeferredNormal.fx"));
 	else
-		m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("predeferred.fx"));
+		m_pEffect = Content->LoadEffect<DeferredPreEffect>(_T("../Content/Effects/predeferred.fx"));
 
     m_pModel = Content->LoadModel(m_ModelPath);
     

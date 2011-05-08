@@ -43,12 +43,8 @@ Image* ImageLoader::LoadImage(const tstring& fileNameRef, int newWidth, int newH
 		&pConverter);
 		
 	if (FAILED(hr))
-	{
-		tstringstream stream;
-		stream << _T("Error loading file: ") << fileNameRef;
-		
-		MessageBox(0,stream.str().c_str(),_T("Error!"),MB_OK);
-		exit(-1);
+	{		
+		PANIC("Error loading file: " + string(fileNameRef.cbegin(), fileNameRef.cend()));
 	}
 
 	Image* pImage = new Image(fileNameRef, pBitmap, pConverter);
