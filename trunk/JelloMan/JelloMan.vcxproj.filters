@@ -112,6 +112,9 @@
     <Filter Include="Engine Files\Terrain">
       <UniqueIdentifier>{acaac779-21a2-40c0-947a-69d86b9e5581}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\PhysX\Fluids">
+      <UniqueIdentifier>{ef259942-41c4-419f-a8a7-2a772120b849}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -249,9 +252,6 @@
     <ClInclude Include="RenderContext.h">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
     </ClInclude>
-    <ClInclude Include="Blox2D.h">
-      <Filter>Engine Files\Graphics\Blox2D</Filter>
-    </ClInclude>
     <ClInclude Include="Character.h">
       <Filter>Game Files</Filter>
     </ClInclude>
@@ -286,9 +286,6 @@
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
-      <Filter>Engine Files\Graphics\Blox2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Blox2D_Engine.h">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
     <ClInclude Include="TextBox.h">
@@ -407,6 +404,21 @@
     </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>Engine Files\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Engine Files\PhysX\Fluids</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleFactory.h">
+      <Filter>Engine Files\PhysX\Fluids</Filter>
+    </ClInclude>
+    <ClInclude Include="Fluid.h">
+      <Filter>Engine Files\PhysX\Fluids</Filter>
+    </ClInclude>
+    <ClInclude Include="Blox2DEngine.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Blox2D.h">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -538,9 +550,6 @@
     </ClCompile>
     <ClCompile Include="RenderContext.cpp">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
-    </ClCompile>
-    <ClCompile Include="Blox2D.cpp">
-      <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
       <Filter>Game Files</Filter>
@@ -674,6 +683,15 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>Engine Files\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleFactory.cpp">
+      <Filter>Engine Files\PhysX\Fluids</Filter>
+    </ClCompile>
+    <ClCompile Include="Fluid.cpp">
+      <Filter>Engine Files\PhysX\Fluids</Filter>
+    </ClCompile>
+    <ClCompile Include="Blox2DEngine.cpp">
+      <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="postdeferred.fx">
@@ -701,5 +719,8 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="ClassDiagram1.cd" />
+    <None Include="fluidsEffect.fx">
+      <Filter>Content\effect</Filter>
+    </None>
   </ItemGroup>
 </Project>

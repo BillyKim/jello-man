@@ -1,7 +1,7 @@
 #include "D3DUtil.h"
 
 #include "Controls.h"
-#include "Blox2D_Engine.h"
+#include "Blox2D.h"
 #include "GameConfig.h"
 #include "Level.h"
 #include "RenderContext.h"
@@ -86,6 +86,4 @@ private:
     PostProcessor* m_pPostProcessor;
     EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
     PreShadowEffect* m_pPreShadowEffect;
-
-	boost::mutex m_UpdateSceneLock;
 };

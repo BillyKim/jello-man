@@ -3,7 +3,7 @@
 //---------------------------
 #include "ImageLoader.h"
 #include "Image.h"
-#include "Blox2D.h"
+#include "Blox2DEngine.h"
 
 //---------------------------
 // Constructor & Destructor

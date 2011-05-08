@@ -154,7 +154,7 @@ void Engine::Initialize()
 	BX2D->SetWindowInstance(m_hAppInst);
 
 	#if defined DEBUG || _DEBUG
-	cout << "-Blox2D Engine initialized\n";
+	cout << "-Blox2DEngine Engine initialized\n";
 	#endif
 
 	Content->Init(m_pDXDevice);
@@ -687,7 +687,7 @@ HRESULT Engine::RecreateSizedResources()
 		else
 			m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
 
-		// sending new rendertarget to Blox2D
+		// sending new rendertarget to Blox2DEngine
 		BX2D->OnResize(m_pBackBufferRT);
 		m_pGame->OnResize(m_pRenderTargetView);
     }
