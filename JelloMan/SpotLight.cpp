@@ -401,7 +401,7 @@ void SpotLight::Serialize(Serializer* pSerializer)
     pSerializer->GetStream()->storeVector3(m_Desc.direction);
     pSerializer->GetStream()->storeVector3(m_vUp);
     pSerializer->GetStream()->storeFloat(m_Desc.power);
-    pSerializer->GetStream()->storeByte(static_cast<BYTE>(m_ShadowMapType));
+    pSerializer->GetStream()->storeWord(static_cast<WORD>(m_ShadowMapType));
 
     pSerializer->Serialize(m_pLightBehaviour);
 }
@@ -418,8 +418,10 @@ void SpotLight::Deserialize(Serializer* pSerializer)
     m_Rotation *= Matrix::CreateRotation(m_vUp, -PiOver2);
 
     m_Desc.power = pSerializer->GetStream()->readFloat();
+    //-(log(100.0f) / (log(cos(m_OpeningsAngle / 2.0f))));
+    m_OpeningsAngle = 2.0f*acos(pow(E, -log(100.0f) / m_Desc.power));
 
-    SetShadowMap(Content->GetDxDevice(), static_cast<ShadowMapType>(pSerializer->GetStream()->readByte()));
+    SetShadowMap(Content->GetDxDevice(), static_cast<ShadowMapType>(pSerializer->GetStream()->readWord()));
 
     UpdateShadowCameraProjection();
     UpdateShadowCameraView();
