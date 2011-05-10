@@ -3,8 +3,6 @@
 #include "D3DUtil.h"
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
-#include "TestObject.h"
-#include "TestObject2.h"
 #include "TestSoftbody.h"
 #include "Blox2D.h"
 #include "RenderContext.h"
@@ -12,7 +10,6 @@
 #include "EdgeDetectionPostEffect.h"
 #include "Character.h"
 #include "PhysX.h"
-#include "LevelObject.h"
 #include "BaseGrid.h"
 #include "Softbody.h"
 #include "PreShadowEffect.h"
@@ -60,7 +57,7 @@ private:
 	// DATAMEMBERS
 	ID3D10Device* m_pDXDevice;
 
-	Character* m_pCharacter;
+	//Character* m_pCharacter;
 
 	PhysX* m_pPhysXEngine;
 

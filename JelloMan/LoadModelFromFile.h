@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LevelObject.h"
+#include "ILevelObject.h"
 #include "Blox2D.h"
 
 class LoadModelFromFile
@@ -19,10 +19,10 @@ public:
 	void HideTextBoxes();
 
 	// GETTERS
-	LevelObject* GetLevelObject()
+	ILevelObject* GetLevelObject()
 	{ 
-	  m_bLevelObjectExtracted = true;
-	  return m_pLevelObject;
+	    m_bLevelObjectExtracted = true;
+	    return m_pLevelObject;
 	}
 
 	bool IsLoaded() const
@@ -46,7 +46,7 @@ private:
 	tstring m_SpecPath;
 	tstring m_GlossPath;
 
-	LevelObject* m_pLevelObject;
+	ILevelObject* m_pLevelObject;
 
 	vector<TextBox*> m_TextBoxes;
 	vector<Button*> m_Buttons;

@@ -53,10 +53,7 @@ using namespace std;
 	#endif
 #endif
 
-#if defined(DEBUG) || defined(_DEBUG)
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#endif
+
 
 // Direct2D headers
 #include <d2d1.h>
@@ -77,7 +74,13 @@ typedef D2D1_COLOR_F Color2D;
 typedef D2D1_SIZE_F Size2D;
 
 #include <d3d10.h>
+#if _DEBUG
+    #undef new
+#endif
 #include <d3dx10.h>
+#if _DEBUG
+    #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 #include <D3DX10Core.h>
 #pragma comment(lib, "d3d10.lib")
 #pragma comment(lib, "d3dx10.lib")
@@ -90,6 +93,7 @@ typedef D2D1_SIZE_F Size2D;
 #include <D3DX10Math.h>
 
 #include "MathHelper.h"
+
 
 //*****************************************************************************
 //Declare templates for releasing interfaces and deleting objects 

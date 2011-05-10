@@ -17,7 +17,14 @@ public:
 
 	Texture2D* Load(ID3D10Device* pDXDevice, const tstring& key);
 
+    Texture2D* LoadDefaultWhite(ID3D10Device* pDXDevice);
+    Texture2D* LoadDefaultGray(ID3D10Device* pDXDevice);
+    Texture2D* LoadDefaultBlack(ID3D10Device* pDXDevice);
+    Texture2D* LoadDefaultNormal(ID3D10Device* pDXDevice);
+
 private:
+	Texture2D* Load(ID3D10Device* pDXDevice, const tstring& key, bool skipLoadDefault);
+
 	TextureLoader(TextureLoader& t);
 	TextureLoader& operator=(TextureLoader& t);
 

@@ -5,6 +5,8 @@
 class ISerializable
 {
 public:
+    virtual ~ISerializable() {}
+
 	//Serialize
 	virtual void Serialize(Serializer* pSerializer) = 0;
 	virtual void Deserialize(Serializer* pSerializer) = 0;

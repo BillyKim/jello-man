@@ -1,5 +1,6 @@
 #include "LoadModelFromFile.h"
 #include "ContentManager.h"
+#include "SimpleObject.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
@@ -48,6 +49,7 @@ LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
 LoadModelFromFile::~LoadModelFromFile()
 {
 	delete m_pbtnUseNormalMap;
+    delete m_pbtnLoadModel;
 
 	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 		delete (*it);
@@ -130,36 +132,19 @@ void LoadModelFromFile::Tick()
 	{
 		if (m_ModelPath != _T("") && m_PhysXModelPath != _T(""))
 		{
-			m_pLevelObject = new LevelObject();
+            SimpleObject* pObj = new SimpleObject();
+			m_pLevelObject = pObj;
 
-			if (m_NormalPath != _T(""))
-			{
-				m_pLevelObject->UseNormalMap(true);
-				m_pLevelObject->SetNormalPath(m_NormalPath);
-			}
-			else
-				m_pLevelObject->UseNormalMap(false);
+			pObj->SetNormalPath(m_NormalPath);
 
-			if (m_DiffusePath == _T(""))
-				m_DiffusePath = _T("../Content/Textures/checker_1024.png");
-
-			if (m_SpecPath == _T(""))
-				m_SpecPath = _T("../Content/Textures/checker_1024.png");
-
-			if (m_GlossPath == _T(""))
-				m_GlossPath = _T("../Content/Textures/checker_1024.png");
-
-			m_pLevelObject->UseSimplifiedPhysXMesh(false);
-
-			m_pLevelObject->SetModelPath(m_ModelPath);
-			m_pLevelObject->SetPhysXModelPath(m_PhysXModelPath);
+			pObj->SetModelPath(m_ModelPath);
+			pObj->SetPhysXModel(m_PhysXModelPath);
 			
-			m_pLevelObject->SetDiffusePath(m_DiffusePath);
-			m_pLevelObject->SetSpecPath(m_SpecPath);
-			m_pLevelObject->SetGlossPath(m_GlossPath);
+			pObj->SetDiffusePath(m_DiffusePath);
+			pObj->SetSpecPath(m_SpecPath);
+			pObj->SetGlossPath(m_GlossPath);
 
-			m_pLevelObject->SetRigid(true);
-			m_pLevelObject->SetMass(1000);
+			pObj->SetRigid(true);
 
 			m_bIsLoaded = true;
 		}

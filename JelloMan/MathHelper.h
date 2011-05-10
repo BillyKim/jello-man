@@ -1,6 +1,7 @@
 #pragma once
 #include <D3DX10.h>
 
+
 //------Math Const-------------------
 const float INFINITY = FLT_MAX;
 const float EPSILON  = 0.001f;

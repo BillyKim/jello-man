@@ -68,7 +68,7 @@ VertexShaderOutput  VS(VertexShaderInput input)
 
 struct PixelShaderOutput
 {
-	float4 color : SV_TARGET0;
+	float4 colorGlow : SV_TARGET0;
 	float4 normalSpec : SV_TARGET1;
 	float4 positionGloss : SV_TARGET2;
 };
@@ -88,9 +88,12 @@ PixelShaderOutput  PS(VertexShaderOutput input)
 	float3 mtx1_tvec3 = mul(gNormalMap, basis1);
 //	mtx1_tvec3.b *= -1;
 
-	output.color = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, 1.0f);
-	if (selected)
-		output.color += float4(1.0f,1.0f,0.0f,0.5f);
+	output.colorGlow = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, selected?1.0f:0.0);
+    if (selected)
+    {
+        output.colorGlow.rgb = output.colorGlow.rgb * 0.5 + float3(1.0f, 1.0f, 0.0f) * 0.5;
+    }
+    output.colorGlow = saturate(output.colorGlow);
 
 	output.normalSpec = float4(mtx1_tvec3, specMap.Sample(mapSampler, input.texCoord).r);
 	output.positionGloss = float4(input.worldPos, glossMap.Sample(mapSampler, input.texCoord).r);

@@ -5,6 +5,8 @@
 class ITransformable
 {
 public:
+    virtual ~ITransformable() {}
+
     virtual void Rotate(const Vector3& axis, float angle) = 0;
 
 	virtual void Translate(const Vector3& add) = 0;

@@ -1,6 +1,6 @@
 #include "lights.fx"
 
-Texture2D colorMap : ColorMap;
+Texture2D colorGlowMap : ColorGlowMap;
 Texture2D normalSpecMap : NormalSpecMap;
 Texture2D positionGlossMap : PositionGlossMap;
 Texture2D shadowMap: ShadowMap;
@@ -65,7 +65,6 @@ struct VertexShaderOutput
 {
     float4 position : SV_POSITION;
 	float2 texCoord : TEXCOORD0;
-	float3 texCoordShadow : TEXCOORD1;
 };
 
 VertexShaderOutput  VS(VertexShaderInput input) 
@@ -81,7 +80,7 @@ VertexShaderOutput  VS(VertexShaderInput input)
 
 float3  PS_UNLIT(VertexShaderOutput input) : SV_TARGET
 {
-	float4 col = colorMap.Sample(mapSampler, input.texCoord);
+	float4 col = colorGlowMap.Sample(mapSampler, input.texCoord);
 	float3 endColor = float3(col.r,col.g,col.b);
 
 	return endColor;
@@ -108,8 +107,8 @@ float3  PS_Point(VertexShaderOutput input)
 
 	//DiffuseColor
 	float3 color = diff * pointLight.Color.rgb;
-	float4 col = colorMap.Sample(mapSampler, input.texCoord);
-	color *= col.rgb;
+	float4 col = colorGlowMap.Sample(mapSampler, input.texCoord);
+	color *= col.rgb * (1 + col.a);
 
 
 	//Phong
@@ -165,7 +164,7 @@ float3  PS_Spot(VertexShaderOutput input)
 
 	//DiffuseColor
 	float3 color = diff * spotLight.Color.rgb;
-	float4 col = colorMap.Sample(mapSampler, input.texCoord);
+	float4 col = colorGlowMap.Sample(mapSampler, input.texCoord);
 	color *= col.rgb;
 
 	//Phong

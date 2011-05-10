@@ -34,51 +34,51 @@ HRESULT TextFormatLoader::CreateWriteFactory()
 // GENERAL
 TextFormat* TextFormatLoader::LoadTextFormat(const tstring& fontName, float size, bool bold, bool italic)
 {
-	if (m_pAssetContainer->IsAssetPresent(fontName))
+    tstringstream streamId;
+    streamId << fontName << size << bold << italic;
+
+	if (m_pAssetContainer->IsAssetPresent(streamId.str()))
 	{
-		TextFormat* pTempFormat = m_pAssetContainer->GetAsset(fontName);
-		
-		if (	pTempFormat->GetTextFormatInfo().Bold == bold &&
-				pTempFormat->GetTextFormatInfo().FontSize == size &&
-				pTempFormat->GetTextFormatInfo().Italic == italic	)
-			
-			return pTempFormat;
+		TextFormat* pTempFormat = m_pAssetContainer->GetAsset(streamId.str());		
+		return pTempFormat;
 	}
+    else
+    {
+	    IDWriteTextFormat* pDWriteTextformat = 0;
 
-	IDWriteTextFormat* pDWriteTextformat;
+	    DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
+	    DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
 
-	DWRITE_FONT_WEIGHT weight = DWRITE_FONT_WEIGHT_NORMAL;
-	DWRITE_FONT_STYLE style = DWRITE_FONT_STYLE_NORMAL;
+	    if (bold) weight = DWRITE_FONT_WEIGHT_BOLD;
+	    if (italic) style = DWRITE_FONT_STYLE_ITALIC;
 
-	if (bold) weight = DWRITE_FONT_WEIGHT_BOLD;
-	if (italic) style = DWRITE_FONT_STYLE_ITALIC;
+	    HRESULT hr = m_pDWriteFactory->CreateTextFormat(
+		    fontName.c_str(),
+            NULL,
+            weight,
+            style,
+            DWRITE_FONT_STRETCH_NORMAL,
+            size,
+            L"", //locale
+            &pDWriteTextformat
+            );
 
-	HRESULT hr = m_pDWriteFactory->CreateTextFormat(
-		fontName.c_str(),
-        NULL,
-        weight,
-        style,
-        DWRITE_FONT_STRETCH_NORMAL,
-        size,
-        L"", //locale
-        &pDWriteTextformat
-        );
+	    TextFormat* pTextFormat = 0;
 
-	TextFormat* pTextFormat;
+	    if (SUCCEEDED(hr))
+	    {
+		    pTextFormat = new TextFormat(pDWriteTextformat);
+		    pTextFormat->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
+		    pTextFormat->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_TOP);
 
-	if (SUCCEEDED(hr))
-	{
-		pTextFormat = new TextFormat(pDWriteTextformat);
-		pTextFormat->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
-		pTextFormat->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_TOP);
+		    m_pAssetContainer->AddAsset(streamId.str(), pTextFormat);
+	    }
+	    else
+	    {
+		    MessageBox(0, _T("Error creating new textformat!"), _T("Error!"), MB_OK);
+		    exit(-1);
+	    }
 
-		m_pAssetContainer->AddAsset(fontName, pTextFormat);
-	}
-	else
-	{
-		MessageBox(0, _T("Error creating new textformat!"), _T("Error!"), MB_OK);
-		exit(-1);
-	}
-
-	return pTextFormat;
+	    return pTextFormat;
+    }
 }

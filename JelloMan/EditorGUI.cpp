@@ -702,7 +702,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 }
 
 // GETTERS
-LevelObject* EditorGUI::GetNewLevelObject()
+ILevelObject* EditorGUI::GetNewLevelObject()
 {
 	m_bNewModelLoaded = false;
 

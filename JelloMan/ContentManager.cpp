@@ -47,6 +47,17 @@ Texture2D* ContentManager::LoadTexture2D(const tstring& assetName)
 {
     return m_pTextureLoader->Load(m_pDevice, assetName);
 }
+Texture2D* ContentManager::LoadTexture2D(DefaultTextureType type)
+{
+    switch (type)
+    {
+        case DefaultTextureType_Black: return m_pTextureLoader->LoadDefaultBlack(m_pDevice);
+        case DefaultTextureType_White: return m_pTextureLoader->LoadDefaultWhite(m_pDevice);
+        case DefaultTextureType_Gray: return m_pTextureLoader->LoadDefaultGray(m_pDevice);
+        case DefaultTextureType_Normal: return m_pTextureLoader->LoadDefaultNormal(m_pDevice);
+        default: PANIC("Unrecognized DefaultTextureType"); return m_pTextureLoader->LoadDefaultGray(m_pDevice);
+    }
+}
 
 Model<VertexPosNormTanTex>* ContentManager::LoadModel(const tstring& assetName)
 {

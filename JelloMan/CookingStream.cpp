@@ -84,7 +84,51 @@ Color UserStream::readColor() const
           a = readFloat();
     return Color(r, g, b, a);
 }
-
+Matrix UserStream::readMatrix() const
+{
+    float mat[4][4];
+    mat[0][0] = readFloat(); mat[0][1] = readFloat(); mat[0][2] = readFloat(); mat[0][3] = readFloat();
+    mat[1][0] = readFloat(); mat[1][1] = readFloat(); mat[1][2] = readFloat(); mat[1][3] = readFloat();
+    mat[2][0] = readFloat(); mat[2][1] = readFloat(); mat[2][2] = readFloat(); mat[2][3] = readFloat();
+    mat[3][0] = readFloat(); mat[3][1] = readFloat(); mat[3][2] = readFloat(); mat[3][3] = readFloat();
+    Matrix m(   mat[0][0], mat[0][1], mat[0][2], mat[0][3],
+                mat[1][0], mat[1][1], mat[1][2], mat[1][3],
+                mat[2][0], mat[2][1], mat[2][2], mat[2][3],
+                mat[3][0], mat[3][1], mat[3][2], mat[3][3]);
+    return m;
+}
+string UserStream::readString()	const
+{
+    string ret("");
+	WORD buffSize;
+    char* buffer;
+    buffSize = readWord();
+    if (buffSize > 0)
+    {
+        buffer = new char[buffSize];
+        readBuffer(buffer, buffSize * sizeof(char));
+        ret = string(buffer);
+        ret = ret.substr(0, buffSize);
+        delete buffer;
+    }
+    return ret;
+}
+tstring UserStream::readTString() const
+{
+    tstring ret(_T(""));
+	WORD buffSize;
+    tchar* buffer;
+    buffSize = readWord();
+    if (buffSize > 0)
+    {
+        buffer = new tchar[buffSize];
+        readBuffer(buffer, buffSize * sizeof(tchar));
+        ret = tstring(buffer);
+        ret = ret.substr(0, buffSize);
+        delete buffer;
+    }
+    return ret;
+}
 void UserStream::readBuffer(void* buffer, NxU32 size)	const
 {
 	size_t w = fread(buffer, size, 1, fp);
@@ -149,6 +193,14 @@ NxStream& UserStream::storeVector4(const Vector4& f)
     storeFloat(f.W);
 	return *this;
 }
+NxStream& UserStream::storeMatrix(const Matrix& mat)
+{
+    storeFloat(mat(0, 0));  storeFloat(mat(0, 1));  storeFloat(mat(0, 2));  storeFloat(mat(0, 3));
+    storeFloat(mat(1, 0));  storeFloat(mat(1, 1));  storeFloat(mat(1, 2));  storeFloat(mat(1, 3));
+    storeFloat(mat(2, 0));  storeFloat(mat(2, 1));  storeFloat(mat(2, 2));  storeFloat(mat(2, 3));
+    storeFloat(mat(3, 0));  storeFloat(mat(3, 1));  storeFloat(mat(3, 2));  storeFloat(mat(3, 3));
+    return *this;
+}
 NxStream& UserStream::storeColor(const Color& c)
 {
     storeFloat(c.R);
@@ -156,6 +208,20 @@ NxStream& UserStream::storeColor(const Color& c)
     storeFloat(c.B);
     storeFloat(c.A);
 	return *this;
+}
+NxStream& UserStream::storeString(const string& str)
+{
+    storeWord(str.size());
+    if (str.size() > 0)
+        storeBuffer(str.c_str(), str.size() * sizeof(char));
+    return *this;
+}
+NxStream& UserStream::storeTString(const tstring& str)
+{
+    storeWord(str.size());
+    if (str.size() > 0)
+        storeBuffer(str.c_str(), str.size() * sizeof(tchar));
+    return *this;
 }
 NxStream& UserStream::storeBuffer(const void* buffer, NxU32 size)
 {

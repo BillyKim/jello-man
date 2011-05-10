@@ -6,6 +6,7 @@
 #include "PointLight.h"
 #include "Particle.h"
 #include "ParticleFactory.h"
+#include "SimpleObject.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -14,7 +15,7 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_pBaseGrid(new BaseGrid(pDXDevice)),
 				m_bShowGrid(false),
 				m_bTickCharacter(false),
-				m_pCharacter(0),
+				//m_pCharacter(0),
 				m_bEditor(true),
 				m_pTestFluid(0),
 				m_pEmitter(0)
@@ -37,51 +38,6 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	m_pPhysXEngine = pPhysXEngine;
 	
 	m_pBaseGrid->Init();
-
-	// CHARACTER
-	Character* pCharacter = new Character(pTrackingCamera);
-
-	pCharacter->UseNormalMap(false);
-	pCharacter->UseSimplifiedPhysXMesh(false);
-
-	pCharacter->SetModelPath(_T("../Content/Models/jman.binobj"));
-	pCharacter->SetPhysXModelPath(_T("../Content/Models/jman.nxconcave"));
-
-	pCharacter->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
-	pCharacter->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-	pCharacter->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
-
-	pCharacter->SetRigid(false);
-
-	pCharacter->Init(pPhysXEngine);
-
-	pCharacter->Translate(Vector3(0,0,0));
-
-	m_pCharacter = pCharacter;
-
-	m_pLevelObjects.push_back(pCharacter);
-
-	// LOAD NEW LEVELOBJECT
-	LevelObject* pLevelObject = new LevelObject();
-
-	pLevelObject->UseNormalMap(true);
-	pLevelObject->UseSimplifiedPhysXMesh(false);
-
-	pLevelObject->SetModelPath(_T("../Content/Models/as_val.obj"));
-	pLevelObject->SetPhysXModelPath(_T("../Content/Models/as_val.nxconcave"));
-
-	pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_color.png"));
-	pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-	pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
-	pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
-
-	pLevelObject->SetRigid(true);
-
-	pLevelObject->Init(pPhysXEngine);
-
-	pLevelObject->Translate(Vector3(0,200,0));
-
-	m_pLevelObjects.push_back(pLevelObject);
 
 	// TEST FLUID
 	int MAX_PARTICLES = 10000;
@@ -136,17 +92,10 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 
 void Level::Tick(const float dTime)
 {
-	for (vector<ILevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
+    for_each(m_pLevelObjects.begin(), m_pLevelObjects.end(), [&](ILevelObject* obj)
 	{
-		if (!m_bTickCharacter)
-		{
-			if ((*it) != m_pCharacter)
-				(*it)->Tick(dTime);
-		}
-		else
-			(*it)->Tick(dTime);
-		
-	}
+		obj->Tick(dTime);	
+	});
 }
 
 void Level::AddLevelObject(ILevelObject* pLevelObject)
@@ -161,12 +110,13 @@ ISerializable* GetObject(DWORD id)
     {
         case SerializeTypes::SpotLight: return new SpotLight();
         case SerializeTypes::PointLight: return new PointLight();
-        default: ASSERT(false, "File corrupt"); return 0;
+        case SerializeTypes::SimpleObject: return new SimpleObject();
+        default: PANIC("File corrupt!"); return 0;
     }
 }
 void Level::Serialize(const string& path)
 {
-    Serializer s(path);
+    Serializer s(path, m_pPhysXEngine);
 
     s.Begin(false);
     for_each(m_pLevelObjects.cbegin(), m_pLevelObjects.cend(), [&](ILevelObject* obj)
@@ -185,7 +135,7 @@ void Level::Serialize(const string& path)
 }
 void Level::Deserialize(const string& path)
 {
-    Serializer s(path);
+    Serializer s(path, m_pPhysXEngine);
 
     s.Begin(true);
     

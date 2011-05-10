@@ -7,10 +7,9 @@ class ISerializable;
 class Serializer
 {
 public:
-	Serializer(const std::string& file);
+	Serializer(const std::string& file, PhysX* pPhysX);
 	virtual ~Serializer();
 
-	void Init(const std::string& file);
 	void Begin(bool load);
 	void End();
 
@@ -21,6 +20,9 @@ public:
 
     UserStream* GetStream() { return m_Stream; }
 
+    //Usefull when deserializing
+    PhysX* GetPhysX() { return m_pPhysX; }
+
 private:
     void WriteHeader(ISerializable* obj);
 
@@ -29,5 +31,7 @@ private:
 
     DWORD m_NumSerialized;
     bool m_bLoad;
+
+    PhysX* m_pPhysX;
 };
 

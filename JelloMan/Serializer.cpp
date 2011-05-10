@@ -2,7 +2,9 @@
 #include "FileNotFoundException.h"
 #include "ISerializable.h"
 
-Serializer::Serializer(const std::string& file): m_Stream(0), m_Filename(file), m_bLoad(false), m_NumSerialized(0)
+Serializer::Serializer(const std::string& file, PhysX* pPhysX): 
+        m_Stream(0), m_Filename(file), m_bLoad(false), m_NumSerialized(0),
+            m_pPhysX(pPhysX)
 {
 }
 

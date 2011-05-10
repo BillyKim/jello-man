@@ -144,8 +144,8 @@ bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext)
 
 	if (shape && shape->getGlobalPosition() != NxVec3(0,0,0))
 	{
-        ASSERT(shape->getActor().userData != 0, "");
-        ILevelObject* obj = reinterpret_cast<ILevelObject*>(shape->getActor().userData);
+        ASSERT(shape->userData != 0, "Shape hasn't been set a userdata");
+        ILevelObject* obj = reinterpret_cast<ILevelObject*>(shape->userData);
 
         if (obj->IsSelected())
         {

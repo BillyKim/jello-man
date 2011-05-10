@@ -115,6 +115,9 @@
     <Filter Include="Engine Files\PhysX\Fluids">
       <UniqueIdentifier>{ef259942-41c4-419f-a8a7-2a772120b849}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Files\LevelObjects">
+      <UniqueIdentifier>{63683733-b1f3-41b9-8dbe-3bd38e3bdc0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -257,21 +260,6 @@
     </ClInclude>
     <ClInclude Include="Softbody.h">
       <Filter>Engine Files\PhysX</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelObject.h">
-      <Filter>Game Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TestPhysXSphere.h">
-      <Filter>Game Files\Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="TestObject.h">
-      <Filter>Game Files\Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="TestObject2.h">
-      <Filter>Game Files\Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="TestPhysXBox.h">
-      <Filter>Game Files\Tests</Filter>
     </ClInclude>
     <ClInclude Include="TestSoftbody.h">
       <Filter>Game Files\Tests</Filter>
@@ -420,6 +408,9 @@
     <ClInclude Include="Blox2D.h">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleObject.h">
+      <Filter>Game Files\LevelObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -557,21 +548,6 @@
     <ClCompile Include="Softbody.cpp">
       <Filter>Engine Files\PhysX</Filter>
     </ClCompile>
-    <ClCompile Include="LevelObject.cpp">
-      <Filter>Game Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestObject.cpp">
-      <Filter>Game Files\Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestObject2.cpp">
-      <Filter>Game Files\Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestPhysXBox.cpp">
-      <Filter>Game Files\Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="TestPhysXSphere.cpp">
-      <Filter>Game Files\Tests</Filter>
-    </ClCompile>
     <ClCompile Include="TestSoftbody.cpp">
       <Filter>Game Files\Tests</Filter>
     </ClCompile>
@@ -691,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="Blox2DEngine.cpp">
       <Filter>Engine Files\Graphics\Blox2D</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleObject.cpp">
+      <Filter>Game Files\LevelObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
