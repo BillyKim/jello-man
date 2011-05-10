@@ -56,6 +56,8 @@ void AudioEngine::Cleanup()
     if( m_pMapViewWaveBank )UnmapViewOfFile( m_pMapViewWaveBank );
     m_pMapViewWaveBank = NULL;
 
+    delete m_3DAudioDSPSettings.pMatrixCoefficients;
+
     CoUninitialize();
 
 }

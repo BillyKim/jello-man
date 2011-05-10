@@ -181,6 +181,10 @@ float& Matrix::operator()(UINT row, UINT column)
 {
     return m_Matrix(row, column);
 }
+float Matrix::operator()(UINT row, UINT column) const
+{
+    return m_Matrix(row, column);
+}
 
 // binary operators
 Matrix Matrix::operator*(const Matrix& mat) const

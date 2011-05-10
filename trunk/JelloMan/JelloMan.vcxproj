@@ -127,7 +127,6 @@
     <ClInclude Include="ITransformable.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="Level.h" />
-    <ClInclude Include="LevelObject.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightBehaviour.h" />
     <ClInclude Include="LightBehaviourBroken.h" />
@@ -168,13 +167,10 @@
     <ClInclude Include="SplineLoader.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="SimpleObject.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Terrain.h" />
-    <ClInclude Include="TestObject.h" />
-    <ClInclude Include="TestObject2.h" />
-    <ClInclude Include="TestPhysXBox.h" />
-    <ClInclude Include="TestPhysXSphere.h" />
     <ClInclude Include="TestSoftbody.h" />
     <ClInclude Include="TextBox.h" />
     <ClInclude Include="TextFormat.h" />
@@ -221,7 +217,6 @@
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="IJoint.h" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="LevelObject.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightBehaviour.cpp" />
     <ClCompile Include="LightBehaviourBroken.cpp" />
@@ -260,13 +255,10 @@
     <ClCompile Include="SplineLoader.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SimpleObject.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Terrain.cpp" />
-    <ClCompile Include="TestObject.cpp" />
-    <ClCompile Include="TestObject2.cpp" />
-    <ClCompile Include="TestPhysXBox.cpp" />
-    <ClCompile Include="TestPhysXSphere.cpp" />
     <ClCompile Include="TestSoftbody.cpp" />
     <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="TextFormat.cpp" />

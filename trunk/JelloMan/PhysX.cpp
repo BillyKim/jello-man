@@ -7,7 +7,32 @@
 #pragma comment(lib, "PhysXLoader.lib")
 //#pragma comment(lib, "NxCharacter.lib")
 
-PhysX::PhysX():m_pPhysicsSDK(0),m_pScene(0), m_pControllerManager(0)
+#pragma region MyOutputStream
+void MyOutputStream::reportError(NxErrorCode code, const char *message, const char*, int)
+{
+    //this should be routed to the application
+    //specific error handling. If this gets hit
+    //then you are in most cases using the SDK
+    //wrong and you need to debug your code!
+    //however, code may  just be a warning or
+    //information.
+        
+    cout << "--Physx: " << code << ": " << message << "\n";
+}              
+NxAssertResponse MyOutputStream::reportAssertViolation (const char *message, const char*, int)
+{
+    //this should not get hit by
+    // a properly debugged SDK!
+    ASSERT(false, message);
+    return NX_AR_CONTINUE;
+}               
+void MyOutputStream::print (const char *message)
+{
+    cout << "SDK says: %s\n" << message << "\n";
+}
+#pragma endregion
+
+PhysX::PhysX():m_pPhysicsSDK(0),m_pScene(0), m_pControllerManager(0), m_pUserOutputStream(0)
 {
 
 }
@@ -17,40 +42,15 @@ PhysX::~PhysX(void)
 	//NxReleaseControllerManager(m_pControllerManager);
 	if(m_pScene)m_pPhysicsSDK->releaseScene(*m_pScene);
 	if(m_pPhysicsSDK)m_pPhysicsSDK->release();
-	if(m_pAllocator) delete m_pAllocator;
+	//if(m_pAllocator) delete m_pAllocator;
+    delete m_pUserOutputStream;
 }
-class MyOutputStream : public NxUserOutputStream
-{
-    void reportError (NxErrorCode code, const char *message, const char* /*file*/, int /*line*/)
-    {
-        //this should be routed to the application
-        //specific error handling. If this gets hit
-        //then you are in most cases using the SDK
-        //wrong and you need to debug your code!
-        //however, code may  just be a warning or
-        //information.
-        
-        cout << "--Physx Error " << code << ": " << message << "\n";
-    }
-                
-    NxAssertResponse reportAssertViolation (const char *message, const char* /*file*/,int /*line*/)
-    {
-        //this should not get hit by
-        // a properly debugged SDK!
-        ASSERT(false, message);
-        return NX_AR_CONTINUE;
-    }
-                
-    void print (const char *message)
-    {
-         cout << "SDK says: %s\n" << message << "\n";
-    }
 
-} myOutputStream;
 bool PhysX::Init(void)
 {
 	//create PhysicsSDK object
-	m_pPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, new MyOutputStream());
+    m_pUserOutputStream = new MyOutputStream();
+	m_pPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, m_pUserOutputStream);
 	if(!m_pPhysicsSDK)
 	{
 		OutputDebugString(_T("Wrong SDK DLL version?"));
@@ -90,7 +90,7 @@ bool PhysX::Init(void)
 	
 	m_pScene->setUserTriggerReport(this);
 
-	m_pAllocator = new DAEAllocator();
+	//m_pAllocator = new DAEAllocator();
 	//m_pControllerManager = NxCreateControllerManager(m_pAllocator);
 	
 	return true;
@@ -108,7 +108,7 @@ void PhysX::FetchResults(void)
 	m_pScene->flushStream();
 
 	//Wait until physx calcs are done, then proceed
-	m_pScene->fetchResults(NX_ALL_FINISHED ,true);
+	m_pScene->fetchResults(NX_ALL_FINISHED, true);
 }
 
 //NxController* PhysX::CreateController(Character* player)

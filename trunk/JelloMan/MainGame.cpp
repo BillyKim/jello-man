@@ -12,6 +12,7 @@
 #include "LightBehaviourRotator.h"
 #include "PhysXBox.h"
 #include "PhysXSphere.h"
+#include "SimpleObject.h"
 
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
@@ -57,7 +58,7 @@ MainGame::~MainGame()
 
     delete Content;
 
-	m_pPhysXEngine = 0;
+    delete m_pPhysXEngine;
 }
 
 void MainGame::Initialize(GameConfig& refGameConfig)
@@ -242,7 +243,7 @@ void MainGame::UpdateScene(const float dTime)
 
 	if (m_pEditorGUI->NewModelLoaded())
 	{
-		LevelObject* newLvlObj = m_pEditorGUI->GetNewLevelObject();
+		ILevelObject* newLvlObj = m_pEditorGUI->GetNewLevelObject();
 		newLvlObj->Init(m_pPhysXEngine);
 
 		Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
@@ -298,7 +299,11 @@ void MainGame::UpdateScene(const float dTime)
 	else
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);
 
+    if (m_pEditorGUI->GetMode() == EditorGUI::MODE_EDITOR) //needed for raycast to work when object is moved
+        m_pPhysXEngine->FetchResults();
 	m_pEditorGUI->Tick(m_pRenderContext, m_pLevel->GetLevelObjects());
+    if (m_pEditorGUI->GetMode() == EditorGUI::MODE_EDITOR)
+        m_pPhysXEngine->Simulate(0.0f);
 }
 
 void MainGame::DrawScene()
@@ -379,15 +384,11 @@ void MainGame::CheckControls()
         if (r == 0)
         {
 		    // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
-			LevelObject* pLevelObject = new LevelObject();
-
-			pLevelObject->UseNormalMap(true);
-			pLevelObject->UseSimplifiedPhysXMesh(true);
+			SimpleObject* pLevelObject = new SimpleObject();
 
 			pLevelObject->SetModelPath(_T("../Content/Models/sphere50.binobj"));
 	
-			PhysXSphere sphere(50.0f, 1000);
-			pLevelObject->SetSimplifiedPhysXMesh(&sphere);
+            pLevelObject->SetPhysXModel(new PhysXSphere(50.0f, 1000));
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
 			pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
@@ -407,15 +408,11 @@ void MainGame::CheckControls()
         else if (r == 1)
         {
             // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
-			LevelObject* pLevelObject = new LevelObject();
-
-			pLevelObject->UseNormalMap(true);
-			pLevelObject->UseSimplifiedPhysXMesh(true);
+			SimpleObject* pLevelObject = new SimpleObject();
 
 			pLevelObject->SetModelPath(_T("../Content/Models/box50.binobj"));
 	
-			PhysXBox box(Vector3(50,50,50),1000);
-			pLevelObject->SetSimplifiedPhysXMesh(&box);
+            pLevelObject->SetPhysXModel(new PhysXBox(Vector3(50, 50, 50), 1000));
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
 			pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
@@ -434,19 +431,16 @@ void MainGame::CheckControls()
         }
 		else
 		{
-			LevelObject* pLevelObject = new LevelObject();
-
-			pLevelObject->UseNormalMap(false);
+			SimpleObject* pLevelObject = new SimpleObject();
 
 			pLevelObject->SetModelPath(_T("../Content/Models/jman.binobj"));
-			pLevelObject->SetPhysXModelPath(_T("../Content/Models/jman.nxconcave"));
+			pLevelObject->SetPhysXModel(_T("../Content/Models/jman.nxconcave"));
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
 			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
 			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 			pLevelObject->SetRigid(true);
-			pLevelObject->SetMass(1000);
 
 			pLevelObject->Init(m_pPhysXEngine);
 

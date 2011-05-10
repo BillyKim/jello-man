@@ -15,6 +15,7 @@ Button::Button(int posX, int posY, int width, int height, bool bToggleable)	:	m_
 																				m_pDeactivatedHoverBitmap(0),
 																				m_pDeactivatedDownBitmap(0),
 																				m_bToggleable(bToggleable),
+                                                                                m_pHitRect(0),
 																				m_bActivated(true),
 																				m_bHover(false),
 																				m_bClick(false),
@@ -31,7 +32,7 @@ Button::Button(int posX, int posY, int width, int height, bool bToggleable)	:	m_
 
 	m_Opacity = 1.0f;
 
-	m_pHitRect = new HitRegion(HitRegion::TYPE_RECTANGLE,(float)posX,(float)posY,(float)width,(float)height);
+	m_pHitRect = new HitRegion(HitRegion::TYPE_RECTANGLE, (float)posX, (float)posY, (float)width, (float)height);
 }
 
 // destructor

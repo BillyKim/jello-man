@@ -1,5 +1,6 @@
 #include "D3DUtil.h"
 
+#include "PhysX.h"
 #include "Controls.h"
 #include "Blox2D.h"
 #include "GameConfig.h"
@@ -11,7 +12,6 @@
 #include "Matrix.h"
 #include <vector>
 #include "EditorGUI.h"
-#include "PhysX.h"
 #include "PostProcessor.h"
 #include "EdgeDetectionPostEffect.h"
 #include "DeferredRenderer.h"
@@ -21,6 +21,7 @@
 #pragma warning(disable:4005)
 #include "boost\thread\thread.hpp"
 #pragma warning(default:4005)
+
 
 class AudioEngine;
 

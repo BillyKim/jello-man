@@ -56,7 +56,7 @@ public:
 	MODE GetMode() const
 	{ return m_Mode; }
 
-	LevelObject* GetNewLevelObject();
+	ILevelObject* GetNewLevelObject();
 
 	bool NewModelLoaded() const
 	{ return m_bNewModelLoaded; }

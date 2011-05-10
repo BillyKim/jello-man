@@ -58,6 +58,7 @@ public:
     Matrix operator- () const;
 
     float& operator()(UINT row, UINT column);
+    float operator()(UINT row, UINT column) const;
 
     // binary operators
     Matrix operator* (const Matrix& mat) const;

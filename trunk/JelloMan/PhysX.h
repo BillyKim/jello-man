@@ -9,30 +9,11 @@
 #include <vector>
 #include "D3DUtil.h"
 
-//class Character;
-
-class DAEAllocator : public NxUserAllocator
+class MyOutputStream : public NxUserOutputStream
 {
-public:        
-    void * malloc(NxU32 size)
-    {
-        return ::malloc(size);
-    }
-    
-    void * mallocDEBUG(NxU32 size,const char *fileName, int line)
-    {
-        return ::_malloc_dbg(size,_NORMAL_BLOCK, fileName, line);
-    }
-    
-    void * realloc(void * memory, NxU32 size)
-    {
-        return ::realloc(memory,size);
-    }
-    
-    void free(void * memory)
-    {
-		::free(memory);
-    }
+    void reportError (NxErrorCode code, const char *message, const char* /*file*/, int /*line*/);               
+    NxAssertResponse reportAssertViolation (const char *message, const char* /*file*/,int /*line*/);              
+    void print (const char *message);
 };
 
 class PhysX : public NxUserTriggerReport
@@ -73,10 +54,11 @@ private:
 
 	NxPhysicsSDK *m_pPhysicsSDK;
 	NxScene *m_pScene;
+    MyOutputStream* m_pUserOutputStream;
 
 	//std::vector<NxController*> m_Controllers;
 	NxControllerManager* m_pControllerManager;
-	DAEAllocator *m_pAllocator;
+	//DAEAllocator *m_pAllocator;
 private:
 	PhysX(const PhysX& t);
 	PhysX& operator=(const PhysX& t);

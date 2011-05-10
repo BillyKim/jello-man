@@ -12,7 +12,7 @@ public:
 	DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effect);
 	virtual ~DeferredPostEffect(void);
 
-	void SetColorMap(ID3D10ShaderResourceView* map);
+	void SetColorGlowMap(ID3D10ShaderResourceView* map);
 	void SetNormalSpecMap(ID3D10ShaderResourceView* map);
 	void SetPosGlossMap(ID3D10ShaderResourceView* map);
 
@@ -29,7 +29,7 @@ public:
     virtual UINT GetVertexStride() const;
 
 private:
-	ID3D10EffectShaderResourceVariable *m_pColorMap, 
+	ID3D10EffectShaderResourceVariable *m_pColorGlowMap, 
 									   *m_pNormalSpecMap, 
 									   *m_pPosGlossMap,
                                        *m_pShadowMap;

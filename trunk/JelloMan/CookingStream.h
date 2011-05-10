@@ -21,6 +21,9 @@ public:
     virtual		Vector3		    readVector3()                           const;
     virtual		Vector4		    readVector4()                           const;
     virtual		Color		    readColor()                             const;
+    virtual     Matrix          readMatrix()                            const;
+    virtual     string          readString()                            const;
+    virtual     tstring         readTString()                           const;
 	virtual		void			readBuffer(void* buffer, NxU32 size)	const;
 
 	virtual		NxStream&		storeByte(NxU8 b);
@@ -32,6 +35,9 @@ public:
     virtual		NxStream&		storeVector3(const Vector3& f);
     virtual		NxStream&		storeVector4(const Vector4& f);
     virtual		NxStream&		storeColor(const Color& f);
+    virtual     NxStream&       storeMatrix(const Matrix& mat);
+    virtual     NxStream&       storeString(const string& str);
+    virtual     NxStream&       storeTString(const tstring& str);
 	virtual		NxStream&		storeBuffer(const void* buffer, NxU32 size);
 
 	FILE*			fp;

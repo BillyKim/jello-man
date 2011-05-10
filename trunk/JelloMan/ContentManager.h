@@ -13,6 +13,14 @@ class EffectLoader;
 
 #define Content ContentManager::GetSingleton()
 
+enum DefaultTextureType
+{
+    DefaultTextureType_White,
+    DefaultTextureType_Black,
+    DefaultTextureType_Gray,
+    DefaultTextureType_Normal
+};
+
 class ContentManager
 {
 public:
@@ -27,6 +35,7 @@ public:
     }
 
 	Texture2D* LoadTexture2D(const tstring& assetName);
+	Texture2D* LoadTexture2D(DefaultTextureType type);
 
 	Model<VertexPosNormTanTex>* LoadModel(const tstring& assetName);
 	Model<VertexPosCol>* LoadSpline(const tstring& assetName, Color col);

@@ -5,6 +5,32 @@
 
 #pragma once
 
+#if _DEBUG
+    #include <NxPhysics.h>
+    #pragma warning(disable: 4100)
+    #include "ControllerManager.h"
+    #pragma warning(default: 4100)
+
+    #undef _malloca
+    #undef free
+    #undef malloc
+    #undef realloc
+    #undef new
+    #undef delete
+
+    //Tell crtdbg to give me information such as line number and source file
+    #define _CRTDBG_MAP_ALLOC
+    #include <crtdbg.h>
+#endif
+
+#include <stdlib.h>
+
+#if _DEBUG
+    #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
+
+
+
 //#include "targetver.h"
 
 //#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers, disables fileopendialog
@@ -14,7 +40,6 @@
 #include <windows.h>
 
 // C RunTime Header Files
-#include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
@@ -24,7 +49,27 @@
 #include <iostream>
 #include <fstream>
 
+#if _DEBUG
+    #undef new
+#endif
 
+#include "boost\thread\thread.hpp"
+#undef INT8_MIN
+#undef INT16_MIN
+#undef INT32_MIN
+#undef INT64_MIN
+#undef INT8_MAX
+#undef INT16_MAX
+#undef INT32_MAX
+#undef INT64_MAX
+#undef UINT8_MAX
+#undef UINT16_MAX
+#undef UINT32_MAX
+#undef UINT64_MAX
+
+#if _DEBUG
+    #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 
 
 //*****************************************************************************

@@ -5,6 +5,7 @@
 #include "Matrix.h"
 #include "RenderContext.h"
 #include "ITransformable.h"
+#include "ISerializable.h"
 
 class Actor : public ITransformable
 {
@@ -26,12 +27,14 @@ public:
 	// GETTERS
 	NxActor* GetActor() const
 	{ return m_pActor; }
-
+    
+	virtual void Serialize(Serializer* pSerializer) = 0;
+	virtual void Deserialize(Serializer* pSerializer) = 0;
 
 protected:
 	PhysX* m_pPhysX;
 	NxActor* m_pActor;
-	Matrix m_WorldMatrix;
+	Matrix m_mtxWorldMatrix;
 
 	void InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable);
 	//protected constructor

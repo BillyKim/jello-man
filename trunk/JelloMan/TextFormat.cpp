@@ -7,6 +7,7 @@ TextFormat::TextFormat(IDWriteTextFormat* pDWriteTextFormat)	:	m_pTextFormat(pDW
 
 TextFormat::~TextFormat()
 {
+    m_pTextFormat->Release();
 }
 
 // DEFAULT COPY & ASSIGNMENT OPERATOR

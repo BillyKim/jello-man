@@ -3,10 +3,6 @@
 #include "Engine.h"
 #include "MainGame.h"
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
 // console subsystem
 void main()
 {
@@ -18,7 +14,7 @@ void main()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*prevInstance*/,
 				   PSTR /*cmdLine*/, int /*showCmd*/)
 {
-    //_CrtSetBreakAlloc(232);
+    //_CrtSetBreakAlloc(4960);
 
 	//notify user if heap is corrupt
 	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL,0);

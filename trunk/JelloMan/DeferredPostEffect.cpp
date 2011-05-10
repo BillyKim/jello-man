@@ -2,7 +2,7 @@
 
 DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effect): 
 				Effect(pDevice, effect), 
-                    m_pColorMap(GetVariableBySemantic("ColorMap")->AsShaderResource()), 
+                    m_pColorGlowMap(GetVariableBySemantic("ColorGlowMap")->AsShaderResource()), 
                     m_pNormalSpecMap(GetVariableBySemantic("NormalSpecMap")->AsShaderResource()), 
                     m_pPosGlossMap(GetVariableBySemantic("PositionGlossMap")->AsShaderResource()),
                     m_pShadowMap(GetVariableBySemantic("ShadowMap")->AsShaderResource()),
@@ -13,7 +13,7 @@ DeferredPostEffect::DeferredPostEffect(ID3D10Device* pDevice, ID3D10Effect* effe
                     m_pTexelSize(GetVariableByName("t0")->AsScalar()),
                     m_pInputLayout(0), m_VertexStride(0)
 {
-    ASSERT(m_pColorMap->IsValid() != 0, "");
+    ASSERT(m_pColorGlowMap->IsValid() != 0, "");
     ASSERT(m_pNormalSpecMap->IsValid() != 0, "");
     ASSERT(m_pPosGlossMap->IsValid() != 0, "");
     ASSERT(m_pShadowMap->IsValid() != 0, "");
@@ -40,9 +40,9 @@ void DeferredPostEffect::SetSpotLight(const SpotLightDesc& light)
     m_pSpotLight->SetRawValue(&const_cast<SpotLightDesc&>(light), 0, sizeof(SpotLightDesc));
 }
 
-void DeferredPostEffect::SetColorMap(ID3D10ShaderResourceView* map)
+void DeferredPostEffect::SetColorGlowMap(ID3D10ShaderResourceView* map)
 {
-	m_pColorMap->SetResource(map);
+	m_pColorGlowMap->SetResource(map);
 }
 void DeferredPostEffect::SetNormalSpecMap(ID3D10ShaderResourceView* map)
 {

@@ -1,7 +1,7 @@
 #include "Actor.h"
 
 
-Actor::Actor(void): m_WorldMatrix(Matrix::Identity), m_pActor(0), m_pPhysX(0)
+Actor::Actor(void): m_mtxWorldMatrix(Matrix::Identity), m_pActor(0), m_pPhysX(0)
 {
 }
 
@@ -39,7 +39,7 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	}
 
 	actorDesc.shapes.push_back(shape.GetShape());
-	actorDesc.globalPose = static_cast<NxMat34>(m_WorldMatrix);
+	actorDesc.globalPose = static_cast<NxMat34>(m_mtxWorldMatrix);
 
 	m_pActor = m_pPhysX->GetScene()->createActor(actorDesc);
 
@@ -48,7 +48,7 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 
 void Actor::Tick(float dTime)
 {
-    m_WorldMatrix = m_pActor->getGlobalPose();
+    m_mtxWorldMatrix = m_pActor->getGlobalPose();
 }
 
 void Actor::AddForce(const Vector3& pos)
@@ -58,51 +58,60 @@ void Actor::AddForce(const Vector3& pos)
 }
 void Actor::Translate(const Vector3& pos)
 {
-	ASSERT(m_pActor != 0, "");
-    m_WorldMatrix *= Matrix::CreateTranslation(pos);
-
-	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
-	m_pActor->setGlobalPose(mat);
+    SetPosition(GetPosition() + pos);
 }
 void Actor::SetPosition(const Vector3& pos)
 {
 	ASSERT(m_pActor != 0, "");
-    m_WorldMatrix *= Matrix::CreateTranslation(-GetPosition() + pos);
-
-	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
-	m_pActor->setGlobalPose(mat);
+    m_pActor->setGlobalPosition(pos);
+    m_mtxWorldMatrix = m_pActor->getGlobalPose();
 }
 Vector3 Actor::GetPosition() const
 {
-	if (m_pActor)
-	{
-		return Vector3(
-			m_pActor->getGlobalPosition().x,
-			m_pActor->getGlobalPosition().y,
-			m_pActor->getGlobalPosition().z);
-	}
-
-	return Vector3(0,0,0);
+    ASSERT(m_pActor != 0, "");
+    return static_cast<Vector3>(m_pActor->getGlobalPosition());
 }
 void Actor::Rotate(const Vector3& axis, float angle)
 {
 	ASSERT(m_pActor != 0, "");
     Vector3 pos = GetPosition();
-    m_WorldMatrix *= Matrix::CreateTranslation(-pos);
-    m_WorldMatrix *= Matrix::CreateRotation(axis, angle);
-    m_WorldMatrix *= Matrix::CreateTranslation(pos);
+    m_mtxWorldMatrix *= Matrix::CreateTranslation(-pos);
+    m_mtxWorldMatrix *= Matrix::CreateRotation(axis, angle);
+    m_mtxWorldMatrix *= Matrix::CreateTranslation(pos);
 
-	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
+	NxMat34 mat = static_cast<NxMat34>(m_mtxWorldMatrix);
 	m_pActor->setGlobalPose(mat);
 }
 void Actor::Scale(const Vector3& scale)
 {
 	ASSERT(m_pActor != 0, "");
     Vector3 pos = GetPosition();
-    m_WorldMatrix *= Matrix::CreateTranslation(-pos);
-    m_WorldMatrix *= Matrix::CreateScale(scale);
-    m_WorldMatrix *= Matrix::CreateTranslation(pos);
+    m_mtxWorldMatrix *= Matrix::CreateTranslation(-pos);
+    m_mtxWorldMatrix *= Matrix::CreateScale(scale);
+    m_mtxWorldMatrix *= Matrix::CreateTranslation(pos);
 
-	NxMat34 mat = static_cast<NxMat34>(m_WorldMatrix);
+	NxMat34 mat = static_cast<NxMat34>(m_mtxWorldMatrix);
 	m_pActor->setGlobalPose(mat);
+}
+void Actor::Serialize(Serializer* pSerializer)
+{
+    Vector3 av((m_pActor->getAngularVelocity()));
+    pSerializer->GetStream()->storeVector3(av);
+
+    Vector3 lv((m_pActor->getLinearVelocity()));
+    pSerializer->GetStream()->storeVector3(lv);
+
+    pSerializer->GetStream()->storeMatrix(m_mtxWorldMatrix);
+}
+void Actor::Deserialize(Serializer* pSerializer)
+{
+    NxVec3 av(static_cast<NxVec3>(pSerializer->GetStream()->readVector3()));
+    m_pActor->setAngularVelocity(av);
+    
+    NxVec3 lv(static_cast<NxVec3>(pSerializer->GetStream()->readVector3()));
+    m_pActor->setLinearVelocity(lv);
+
+    m_mtxWorldMatrix = pSerializer->GetStream()->readMatrix();
+    NxMat34 mat(static_cast<NxMat34>(m_mtxWorldMatrix));
+    m_pActor->setGlobalPose(mat);
 }

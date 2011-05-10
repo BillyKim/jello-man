@@ -215,7 +215,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
     m_pDevice->ClearRenderTargetView(m_pPrevBackbuffer, c);
 
     //Set vars needed for UNLIT && LIT
-	m_pEffect->SetColorMap(m_pSRV[DeferredRenderMap_Color]);
+	m_pEffect->SetColorGlowMap(m_pSRV[DeferredRenderMap_Color]);
     m_pEffect->SetCameraPosition(pRenderContext->GetCamera()->GetPosition());	
 	
     m_pScreenMesh->SetIA(m_pEffect);
@@ -301,7 +301,7 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 
     m_pPrevBackbuffer = 0;
     m_pPrevDepthStencil = 0;
-	m_pEffect->SetColorMap(0);
+	m_pEffect->SetColorGlowMap(0);
 	m_pEffect->SetNormalSpecMap(0);
 	m_pEffect->SetPosGlossMap(0);
     m_pEffect->SetShadowMap(0);

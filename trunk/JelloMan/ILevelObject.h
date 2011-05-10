@@ -7,6 +7,8 @@
 class ILevelObject : public IUpdatable, public IDrawable, public IEditorObject
 {
 public:
+    virtual ~ILevelObject() {}
+
     virtual void Init(PhysX* pPhysX) = 0;
     virtual void Selected(bool selected) = 0;
     virtual bool IsSelected() const = 0;
