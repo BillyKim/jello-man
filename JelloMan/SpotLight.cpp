@@ -136,6 +136,8 @@ void SpotLight::Draw(const RenderContext* rc)
 			BX2D->FillEllipse(pos2D.x, pos2D.y, size / l, size / l);
 			BX2D->SetColor(30,30,30);
 			BX2D->DrawEllipse(pos2D.x, pos2D.y, size / l, size / l, 2.0f / l);
+			BX2D->SetColor(255,0,255);
+			BX2D->DrawEllipse(pos2D.x, pos2D.y, (size * 4) / l, (size * 4) / l, 2.0f);
 		}
 		else
 		{
