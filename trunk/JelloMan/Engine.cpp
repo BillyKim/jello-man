@@ -413,7 +413,7 @@ HRESULT Engine::CreateDeviceIndependentResources()
     ID2D1GeometrySink *pSink = NULL;
 
 	// Create a Direct2D factory.
-	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, &m_pD2DFactory);
+	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 
  //   if (SUCCEEDED(hr))
 	//{

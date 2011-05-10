@@ -90,9 +90,9 @@ void Fluid::Draw(const RenderContext* pRenderContext)
 	//viewPort.Width = BX2D->GetWindowSize().width;
 	//viewPort.Height = BX2D->GetWindowSize().height;
 
-	//for (int i = 0; i < mMaxParticles; ++i)
+	//for (int i = 0; i < m_MaxParticles; ++i)
 	//{
-	//	D3DXVECTOR3 pos3D(mParticleBuffer[i].position.x, mParticleBuffer[i].position.y, mParticleBuffer[i].position.z);
+	//	D3DXVECTOR3 pos3D(m_pParticleBuffer[i].position.X, m_pParticleBuffer[i].position.Y, m_pParticleBuffer[i].position.Z);
 	//	/*Vector3 pos3D(mParticleBuffer[i].position.x, mParticleBuffer[i].position.y, mParticleBuffer[i].position.z);*/
 	//	/*Vector3 pos2D(
 	//		Vector3::Project(pos3D, &viewPort, pRenderContext->GetCamera()->GetProjection(), pRenderContext->GetCamera()->GetView(), m_mtxWorld));*/

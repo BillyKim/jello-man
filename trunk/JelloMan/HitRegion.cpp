@@ -70,7 +70,6 @@ HitRegion::HitRegion(Image* pImage, int r, int g, int b, IWICImagingFactory* pWI
 																							m_pTransformedGeometry(0)
 {
 	SafeRelease(m_pGeometry);
-	IWICFormatConverter *convertor=0;
 
 	IWICBitmap *pIBitmap = 0;
 	HRESULT hr = pWICFactory->CreateBitmapFromSource(
