@@ -136,8 +136,8 @@ void SpotLight::Draw(const RenderContext* rc)
 			BX2D->FillEllipse(pos2D.x, pos2D.y, size / l, size / l);
 			BX2D->SetColor(30,30,30);
 			BX2D->DrawEllipse(pos2D.x, pos2D.y, size / l, size / l, 2.0f / l);
-			BX2D->SetColor(255,0,255);
-			BX2D->DrawEllipse(pos2D.x, pos2D.y, (size * 4) / l, (size * 4) / l, 2.0f);
+			BX2D->SetColor(200,200,200);
+			BX2D->DrawEllipse(pos2D.x, pos2D.y, (size * 4) / l, (size * 4) / l, 4.0f);
 		}
 		else
 		{
@@ -161,8 +161,8 @@ void SpotLight::Draw(const RenderContext* rc)
 	{
 		// ATTENUATION
 		Matrix matWorld =
-			Matrix::CreateScale(
-			Vector3(m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f)) * 
+			//Matrix::CreateScale(
+			//Vector3(m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f,m_Desc.attenuationEnd / 100.0f)) * 
             Matrix::CreateRotationZ(PiOver2) *
 			m_Rotation *
 			Matrix::CreateTranslation(

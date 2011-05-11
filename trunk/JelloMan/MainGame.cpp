@@ -84,7 +84,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 									static_cast<int>(BX2D->GetWindowSize().height),
 									true	);
     m_pEditorCamera->LookAt(Vector3(-500, 300, -500), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,10000.0f);
+	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,100000.0f);
 
 	m_pTrackingCamera = new Camera(	static_cast<int>(BX2D->GetWindowSize().width),
 									static_cast<int>(BX2D->GetWindowSize().height),
@@ -194,7 +194,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_LoadingText = _T("editor GUI");
 
 	// GUI
-	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice);
+	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice, m_pLevel);
 	m_pEditorGUI->Initialize();
 
 	#if defined DEBUG || _DEBUG
@@ -301,7 +301,9 @@ void MainGame::UpdateScene(const float dTime)
 
     if (m_pEditorGUI->GetMode() == EditorGUI::MODE_EDITOR) //needed for raycast to work when object is moved
         m_pPhysXEngine->FetchResults();
-	m_pEditorGUI->Tick(m_pRenderContext, m_pLevel->GetLevelObjects());
+
+	m_pEditorGUI->Tick(m_pRenderContext);
+
     if (m_pEditorGUI->GetMode() == EditorGUI::MODE_EDITOR)
         m_pPhysXEngine->Simulate(0.0f);
 }

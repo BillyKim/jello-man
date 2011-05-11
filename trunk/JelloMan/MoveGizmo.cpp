@@ -96,10 +96,8 @@ void MoveGizmo::DrawAxis(const Vector3& pos, Axis axis,
 		static_cast<float>(END_ELLIPSE_RADIUS*2));
 
 	BX2D->DrawString(label,
-		pointStart.X,
-		pointStart.Y);
-    
-    
+		pointEnd.X - 20,
+		pointEnd.Y - 10);
 }
 void MoveGizmo::Draw2Axis(const Vector3& pos, Axis axis1, Axis axis2,
                            const Matrix& world, const Matrix& view, const Matrix& projection)
@@ -258,8 +256,8 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 		// Lock Checks ----->
         bool setAnchor = false;
-        if (CONTROLS->LeftMBDown() == true)
-        {
+        /*if (CONTROLS->LeftMBDown() == true)
+        {*/
             if (m_bLockX == false && m_bLockY == false && m_bLockZ == false)
             {
                 #pragma region
@@ -331,52 +329,55 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
                 #pragma endregion
                 setAnchor = (m_bLockX == true || m_bLockY == true || m_bLockZ == true);
             }
-        }
+		//}
         //<---------------
 		    
         if (m_bLockX || m_bLockY || m_bLockZ)
         {
-            if (m_bLockX == true)
-            {
-                Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.Z);
-                Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
-                if (setAnchor)
-                    m_vAnchor.X = (mousePos3D - posLineX).X;
-                float diff = (mousePos3D - posLineX).X - m_vAnchor.X;
+			if (CONTROLS->LeftMBDown())
+			{
+				if (m_bLockX == true)
+				{
+					Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.Z);
+					Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
+					if (setAnchor)
+						m_vAnchor.X = (mousePos3D - posLineX).X;
+					float diff = (mousePos3D - posLineX).X - m_vAnchor.X;
                 
-                for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-                {
-                    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
-                }
-            }
-            if (m_bLockY == true)
-            {
-                Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.Z);
-                Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
-                if (setAnchor)
-                    m_vAnchor.Y = (mousePos3D - posLineY).Y;
-                float diff = (mousePos3D - posLineY).Y - m_vAnchor.Y;
+					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
+					}
+				}
+				if (m_bLockY == true)
+				{
+					Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.Z);
+					Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
+					if (setAnchor)
+						m_vAnchor.Y = (mousePos3D - posLineY).Y;
+					float diff = (mousePos3D - posLineY).Y - m_vAnchor.Y;
 
-                for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-                {
-                    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
-                }
-            }
-            if (m_bLockZ == true)
-            {
-                Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.Z);
-                Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
-                if (setAnchor)
-                    m_vAnchor.Z = (mousePos3D - posLineZ).Z;
-                float diff = (mousePos3D - posLineZ).Z - m_vAnchor.Z;
+					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
+					}
+				}
+				if (m_bLockZ == true)
+				{
+					Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.Z);
+					Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
+					if (setAnchor)
+						m_vAnchor.Z = (mousePos3D - posLineZ).Z;
+					float diff = (mousePos3D - posLineZ).Z - m_vAnchor.Z;
 
-                for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-                {
-                    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
-                }
-            }
+					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
+					}
+				}
 
-            pObjectSelecter->CalcCenterPos();
+				pObjectSelecter->CalcCenterPos();
+			}
         }
 	}
 

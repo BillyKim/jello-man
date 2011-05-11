@@ -97,8 +97,8 @@ void RotateGizmo::DrawAxis(const Vector3& pos, Axis axis,
 		static_cast<float>(END_ELLIPSE_RADIUS*2));
 
 	BX2D->DrawString(label,
-		pointStart.X - 20,
-		pointStart.Y - 10);
+		pointEnd.X - 20,
+		pointEnd.Y - 10);
     
     
 }
