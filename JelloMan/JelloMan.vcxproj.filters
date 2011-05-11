@@ -411,6 +411,9 @@
     <ClInclude Include="SimpleObject.h">
       <Filter>Game Files\LevelObjects</Filter>
     </ClInclude>
+    <ClInclude Include="LoadLevelFromFile.h">
+      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -670,6 +673,9 @@
     </ClCompile>
     <ClCompile Include="SimpleObject.cpp">
       <Filter>Game Files\LevelObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadLevelFromFile.cpp">
+      <Filter>Engine Files\Graphics\GUI\Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

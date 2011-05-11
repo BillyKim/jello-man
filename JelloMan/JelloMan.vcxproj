@@ -134,6 +134,7 @@
     <ClInclude Include="LightBehaviourRotator.h" />
     <ClInclude Include="LightDesc.h" />
     <ClInclude Include="LightController.h" />
+    <ClInclude Include="LoadLevelFromFile.h" />
     <ClInclude Include="LoadModelFromFile.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="Matrix.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="LightBehaviourRotator.cpp" />
     <ClCompile Include="LightDesc.cpp" />
     <ClCompile Include="LightController.cpp" />
+    <ClCompile Include="LoadLevelFromFile.cpp" />
     <ClCompile Include="LoadModelFromFile.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="Matrix.cpp" />

@@ -13,6 +13,8 @@
 #include "LoadModelFromFile.h"
 #include "ILevelObject.h"
 #include "ObjectSelecter.h"
+#include "Level.h"
+#include "LoadLevelFromFile.h"
 
 class EditorGUI
 {
@@ -26,13 +28,13 @@ public:
 	};
 
 	// CONSTRUCTOR - DESTRUCTOR
-	EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice);
+	EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice, Level* pLevel);
 	virtual ~EditorGUI();
 
 	// GENERAL
 	void Initialize();
 	void Draw();
-	void Tick(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects);
+	void Tick(const RenderContext* pRenderContext);
 
 	// GETTERS
 	Button* GetLightButton() const
@@ -88,6 +90,8 @@ private:
 	vector<Image*> m_pPlayModeButtonBitmaps;
 	Button* m_pLoadModelButton;
 	vector<Image*> m_pLoadModelButtonBitmaps;
+	Button* m_pLoadLevelButton;
+	vector<Image*> m_pLoadLevelButtonBitmaps;
 	Button* m_pShowGridButton;
 	vector<Image*> m_pShowGridButtonBitmaps;
 
@@ -112,7 +116,8 @@ private:
 
 	MODE m_Mode;
 
-	LoadModelFromFile* m_pLoadModelFromFile;
+	LoadModelFromFile* m_pModelLoader;
+	LoadLevelFromFile* m_pLevelLoader;
 
 	PhysX* m_pPhysXEngine;
 
@@ -120,7 +125,7 @@ private:
 
     ObjectSelecter* m_pObjectSelecter;
 
-	vector<ILevelObject*>* m_pLevelObjects;
+	Level* m_pLevel;
 
 	ID3D10Device* m_pDXDevice;
 

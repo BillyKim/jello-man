@@ -40,7 +40,7 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	m_pBaseGrid->Init();
 
 	// TEST FLUID
-	int MAX_PARTICLES = 10000;
+	int MAX_PARTICLES = 1000;
 
 	// setup fluid descriptor
 	NxFluidDesc fluidDesc;

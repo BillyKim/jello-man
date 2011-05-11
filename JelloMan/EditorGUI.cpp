@@ -5,36 +5,39 @@
 #include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice)	:	m_pLightButton(0),
-																		m_pCameraBitmap(0),
-																		m_bUsingCamera(false),
-																		m_pMoveButton(0),
-																		m_pGameModeButton(0),
-																		m_pEditorModeButton(0),
-																		m_pPointlightButton(0),
-																		m_pSpotlightButton(0),
-																		m_bGameModeDown(false),
-																		m_bEditorModeDown(false),
-																		m_pRenderContext(0),
-																		m_bMoveable(false),
-																		m_pColorPickerButton(0),
-																		m_pApplyButton(0),
-																		m_pRotateButton(0),
-																		m_pLightDebugger(0),
-																		m_pColorPicker(0),
-																		m_pMoveGizmo(0),
-																		m_pRotateGizmo(0),
-																		m_pPlayModeButton(0),
-																		m_Mode(MODE_EDITOR),
-																		m_bPlayModeDown(false),
-																		m_pLoadModelButton(0),
-																		m_pLoadModelFromFile(0),
-																		m_bNewModelLoaded(false),
-																		m_pShowGridButton(0),
-																		m_pPhysXEngine(pPhysXEngine),
-																		m_pLevelObjects(0),
-																		m_pDXDevice(pDXDevice),
-                                                                        m_pObjectSelecter(new ObjectSelecter(pPhysXEngine))
+EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice, Level* pLevel)
+	:	m_pLightButton(0),
+		m_pCameraBitmap(0),
+		m_bUsingCamera(false),
+		m_pMoveButton(0),
+		m_pGameModeButton(0),
+		m_pEditorModeButton(0),
+		m_pPointlightButton(0),
+		m_pSpotlightButton(0),
+		m_bGameModeDown(false),
+		m_bEditorModeDown(false),
+		m_pRenderContext(0),
+		m_bMoveable(false),
+		m_pColorPickerButton(0),
+		m_pApplyButton(0),
+		m_pRotateButton(0),
+		m_pLightDebugger(0),
+		m_pColorPicker(0),
+		m_pMoveGizmo(0),
+		m_pRotateGizmo(0),
+		m_pPlayModeButton(0),
+		m_Mode(MODE_EDITOR),
+		m_bPlayModeDown(false),
+		m_pLoadModelButton(0),
+		m_pModelLoader(0),
+		m_bNewModelLoaded(false),
+		m_pShowGridButton(0),
+		m_pPhysXEngine(pPhysXEngine),
+		m_pDXDevice(pDXDevice),
+        m_pObjectSelecter(new ObjectSelecter(pPhysXEngine)),
+		m_pLoadLevelButton(0),
+		m_pLevel(pLevel),
+		m_pLevelLoader(0)
 {
 
 }
@@ -53,13 +56,15 @@ EditorGUI::~EditorGUI()
 	delete m_pPlayModeButton;
 	delete m_pLoadModelButton;
 	delete m_pShowGridButton;
+	delete m_pLoadLevelButton;
 
 	delete m_pLightDebugger;
 	delete m_pColorPicker;
 	delete m_pMoveGizmo;
 	delete m_pRotateGizmo;
-	delete m_pLoadModelFromFile;
+	delete m_pModelLoader;
 	delete m_pObjectSelecter;
+	delete m_pLevelLoader;
 }
 
 // GENERAL
@@ -118,7 +123,7 @@ void EditorGUI::Initialize()
 	m_pEditorModeButton->SetDownState(m_pEditorModeButtonBitmaps[1]);
 
 	// POINTLIGHT BUTTON
-	m_pPointlightButton = new Button(216,7,36,36);
+	m_pPointlightButton = new Button(217,7,36,36);
 
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_normal.png")));
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_hover.png")));
@@ -128,7 +133,7 @@ void EditorGUI::Initialize()
 	m_pPointlightButton->SetDownState(m_pPointlightButtonBitmaps[1]);
 
 	// SPOTLIGHT BUTTON
-	m_pSpotlightButton = new Button(250,7,36,36);
+	m_pSpotlightButton = new Button(253,7,36,36);
 
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_normal.png")));
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_hover.png")));
@@ -163,7 +168,7 @@ void EditorGUI::Initialize()
 	m_pApplyButton->SetDownState(m_pApplyButtonBitmaps[1]);
 
 	// ROTATE BUTTON
-	m_pRotateButton = new Button(155,7,36,36,true);
+	m_pRotateButton = new Button(156,7,36,36,true);
 
 	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_normal.png")));
 	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_hover.png")));
@@ -190,23 +195,43 @@ void EditorGUI::Initialize()
 	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
 
 	// LOAD MODEL BUTTON
-	m_pLoadModelButton = new Button(310,7,36,36, true);
+	m_pLoadModelButton = new Button(312,7,36,36, true);
 
-	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_normal.png")));
-	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_hover.png")));
-
-	m_pLoadModelButton->SetNormalState(m_pLoadModelButtonBitmaps[0]);
-	m_pLoadModelButton->SetHoverState(m_pLoadModelButtonBitmaps[1]);
-	m_pLoadModelButton->SetDownState(m_pLoadModelButtonBitmaps[1]);
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_normal.png")));
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_hover.png")));
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_on_normal.png")));
+	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_on_hover.png")));
 
 	m_pLoadModelButton->SetDeactivatedState(m_pLoadModelButtonBitmaps[0]);
 	m_pLoadModelButton->SetDeactivatedStateHover(m_pLoadModelButtonBitmaps[1]);
 	m_pLoadModelButton->SetDeactivatedStateDown(m_pLoadModelButtonBitmaps[1]);
 
+	m_pLoadModelButton->SetNormalState(m_pLoadModelButtonBitmaps[2]);
+	m_pLoadModelButton->SetHoverState(m_pLoadModelButtonBitmaps[3]);
+	m_pLoadModelButton->SetDownState(m_pLoadModelButtonBitmaps[3]);
+
 	m_pLoadModelButton->SetState(Button::STATE_DEACTIVATED);
 
+	// LOAD LEVEL BUTTON
+	m_pLoadLevelButton = new Button(348,7,36,36, true);
+
+	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_normal.png")));
+	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_hover.png")));
+	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_on_normal.png")));
+	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_on_hover.png")));
+
+	m_pLoadLevelButton->SetDeactivatedState(m_pLoadLevelButtonBitmaps[0]);
+	m_pLoadLevelButton->SetDeactivatedStateHover(m_pLoadLevelButtonBitmaps[1]);
+	m_pLoadLevelButton->SetDeactivatedStateDown(m_pLoadLevelButtonBitmaps[1]);
+
+	m_pLoadLevelButton->SetNormalState(m_pLoadLevelButtonBitmaps[2]);
+	m_pLoadLevelButton->SetHoverState(m_pLoadLevelButtonBitmaps[3]);
+	m_pLoadLevelButton->SetDownState(m_pLoadLevelButtonBitmaps[3]);
+
+	m_pLoadLevelButton->SetState(Button::STATE_DEACTIVATED);
+
 	// SHOW GRID BUTTON
-	m_pShowGridButton = new Button(370,7,36,36,true);
+	m_pShowGridButton = new Button(408,7,36,36,true);
 
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_normal.png")));
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_hover.png")));
@@ -238,7 +263,8 @@ void EditorGUI::Initialize()
 	// ROTATE GIZMO
 	m_pRotateGizmo = new RotateGizmo();
 
-	m_pLoadModelFromFile = new LoadModelFromFile();
+	m_pModelLoader = new LoadModelFromFile();
+	m_pLevelLoader = new LoadLevelFromFile(m_pLevel);
 
 	// FONT
 	m_pInfoFont = Content->LoadTextFormat(_T("Verdana"),10,false,false);
@@ -303,17 +329,27 @@ void EditorGUI::Draw()
 		m_pLightDebugger->ShowLightInfo();
 
 		if (m_pLoadModelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0)
-			m_pLoadModelFromFile->Show();
+			m_pModelLoader->Show();
 		else
 		{
-			m_pLoadModelFromFile->Clear();
+			m_pModelLoader->Clear();
 			m_pLoadModelButton->Deactivate();
+		}
+
+		if (m_pLoadLevelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0)
+			m_pLevelLoader->Show();
+		else
+		{
+			m_pLevelLoader->Clear();
+			m_pLoadLevelButton->Deactivate();
 		}
 	}
 	else
 	{
 		m_pLoadModelButton->Deactivate();
-		m_pLoadModelFromFile->Clear();
+		m_pLoadLevelButton->Deactivate();
+		m_pModelLoader->Clear();
+		m_pLevelLoader->Clear();
 	}
 
 	// BUTTONS
@@ -510,6 +546,14 @@ void EditorGUI::Draw()
 		BX2D->DrawString(_T("Load new model from file and place it into the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
+	m_pLoadLevelButton->Show();
+	if (m_pLoadLevelButton->Hover() || m_pLoadLevelButton->Down())
+	{
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Load/save a level from/to a file."), 20, BX2D->GetWindowSize().height - 16);
+	}
+
 	m_pShowGridButton->Show();
 	if (m_pShowGridButton->Hover() || m_pShowGridButton->Down())
 	{
@@ -563,7 +607,7 @@ void EditorGUI::Draw()
 		m_pColorPicker->PreviousColorSet(false);
 	}
 }
-void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>& pLevelObjects)
+void EditorGUI::Tick(const RenderContext* pRenderContext)
 {
 	// BUTTONS
 	m_pLightButton->Tick();
@@ -576,6 +620,12 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 	m_pPlayModeButton->Tick();
 	m_pLoadModelButton->Tick();
 	m_pShowGridButton->Tick();
+	m_pLoadLevelButton->Tick();
+
+	if (m_pLoadLevelButton->Clicked())
+		m_pLoadModelButton->Deactivate();
+	if (m_pLoadModelButton->Clicked())
+		m_pLoadLevelButton->Deactivate();
 
 	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
 		m_pColorPickerButton->Tick();
@@ -584,8 +634,6 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 		m_pObjectSelecter->Tick(m_pRenderContext);
 
 	m_pLightDebugger->Tick(pRenderContext);
-
-	m_pLevelObjects = &pLevelObjects;
 
 	if (m_Mode == MODE_EDITOR)
 	{
@@ -651,18 +699,23 @@ void EditorGUI::Tick(const RenderContext* pRenderContext, vector<ILevelObject*>&
 	}
 
 	if (m_pLoadModelButton->IsActive())
-		m_pLoadModelFromFile->Tick();
+		m_pModelLoader->Tick();
 	else
-		m_pLoadModelFromFile->HideTextBoxes();
+		m_pModelLoader->HideTextBoxes();
+
+	if (m_pLoadLevelButton->IsActive())
+		m_pLevelLoader->Tick();
+	else
+		m_pLevelLoader->HideTextBoxes();
 	
-	if (m_pLoadModelFromFile->LevelObjectExtracted())
+	if (m_pModelLoader->LevelObjectExtracted())
 	{
-		m_pLoadModelFromFile->Clear();
+		m_pModelLoader->Clear();
 
 		m_pLoadModelButton->Deactivate();
 	}
 
-	if (m_pLoadModelFromFile->IsLoaded())
+	if (m_pModelLoader->IsLoaded())
 		m_bNewModelLoaded = true;
 
 	// CAMERA
@@ -706,5 +759,5 @@ ILevelObject* EditorGUI::GetNewLevelObject()
 {
 	m_bNewModelLoaded = false;
 
-	return m_pLoadModelFromFile->GetLevelObject();
+	return m_pModelLoader->GetLevelObject();
 }

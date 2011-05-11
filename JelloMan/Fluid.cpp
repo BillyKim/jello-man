@@ -82,13 +82,13 @@ void Fluid::Draw(const RenderContext* pRenderContext)
 		m_pDevice->Draw(m_VecVertices.size(), 0); 
 	}
 
-	//D3D10_VIEWPORT viewPort;
-	//viewPort.TopLeftX = 0;
-	//viewPort.TopLeftY = 0;
-	//viewPort.MinDepth = 0.0f;
-	//viewPort.MaxDepth = 1.0f;
-	//viewPort.Width = BX2D->GetWindowSize().width;
-	//viewPort.Height = BX2D->GetWindowSize().height;
+	/*D3D10_VIEWPORT viewPort;
+	viewPort.TopLeftX = 0;
+	viewPort.TopLeftY = 0;
+	viewPort.MinDepth = 0.0f;
+	viewPort.MaxDepth = 1.0f;
+	viewPort.Width = BX2D->GetWindowSize().width;
+	viewPort.Height = BX2D->GetWindowSize().height;*/
 
 	//for (int i = 0; i < m_MaxParticles; ++i)
 	//{
