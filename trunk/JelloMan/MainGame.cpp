@@ -337,7 +337,8 @@ void MainGame::DrawScene()
 		m_pRenderContext->SetCamera(m_pEditorCamera);
 
 	// POST PROCESS
-	//m_pPostProcessor->Begin();
+	if (m_pEditorGUI->GetPostFXButton()->IsActive())
+		m_pPostProcessor->Begin();
 
 	    // START DEFERRED
 	    m_pDeferredRenderer->Begin();
@@ -358,7 +359,8 @@ void MainGame::DrawScene()
 	    m_pForwardRenderer->End();
 
 	// POST PROCESS
-	//m_pPostProcessor->End();
+	if (m_pEditorGUI->GetPostFXButton()->IsActive())
+		m_pPostProcessor->End();
 		
 	// --------------------------------------
 
@@ -393,7 +395,7 @@ void MainGame::CheckControls()
             pLevelObject->SetPhysXModel(new PhysXSphere(50.0f, 1000));
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
+			//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
 			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
 			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
@@ -417,7 +419,7 @@ void MainGame::CheckControls()
             pLevelObject->SetPhysXModel(new PhysXBox(Vector3(50, 50, 50), 1000));
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
+			//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
 			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
 			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
@@ -468,6 +470,12 @@ void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
 	{
 		m_pDeferredRenderer->OnResized(	static_cast<int>(BX2D->GetWindowSize().width),
 										static_cast<int>(BX2D->GetWindowSize().height));
+
+		m_pTrackingCamera->OnResize(	static_cast<int>(BX2D->GetWindowSize().width),
+										static_cast<int>(BX2D->GetWindowSize().height));
+
+		m_pEditorCamera->OnResize(	static_cast<int>(BX2D->GetWindowSize().width),
+									static_cast<int>(BX2D->GetWindowSize().height));
 	}
 }
 void MainGame::Release()
@@ -535,5 +543,5 @@ void MainGame::UpdatePhysics(const float dTime)
 {
 	m_pPhysXEngine->FetchResults();
 	m_pLevel->Tick(dTime);
-	m_pPhysXEngine->Simulate(dTime);
+	m_pPhysXEngine->Simulate(1/60.0f);
 }
