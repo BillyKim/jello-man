@@ -118,6 +118,9 @@
     <Filter Include="Game Files\LevelObjects">
       <UniqueIdentifier>{63683733-b1f3-41b9-8dbe-3bd38e3bdc0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Graphics\GUI\Editor\Gizmos">
+      <UniqueIdentifier>{baaf9a6f-4e33-4e8d-90c9-6a63bd0f7f96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -312,12 +315,6 @@
     <ClInclude Include="EditorGUI.h">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="MoveGizmo.h">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="RotateGizmo.h">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="LoadModelFromFile.h">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
     </ClInclude>
@@ -413,6 +410,15 @@
     </ClInclude>
     <ClInclude Include="LoadLevelFromFile.h">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleGizmo.h">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateGizmo.h">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveGizmo.h">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -605,12 +611,6 @@
     <ClCompile Include="EditorGUI.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClCompile>
-    <ClCompile Include="MoveGizmo.cpp">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="RotateGizmo.cpp">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="LoadModelFromFile.cpp">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
     </ClCompile>
@@ -676,6 +676,15 @@
     </ClCompile>
     <ClCompile Include="LoadLevelFromFile.cpp">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
+    </ClCompile>
+    <ClCompile Include="ScaleGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveGizmo.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

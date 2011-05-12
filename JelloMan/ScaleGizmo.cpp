@@ -1,7 +1,7 @@
-#include "RotateGizmo.h"
+#include "ScaleGizmo.h"
 #include "ContentManager.h"
 
-RotateGizmo::RotateGizmo()	:	m_pRenderContext(0),
+ScaleGizmo::ScaleGizmo()	:	m_pRenderContext(0),
 								m_pAxisFont(0),
                                 m_bLockX(false),
                                 m_bLockY(false),
@@ -17,17 +17,17 @@ RotateGizmo::RotateGizmo()	:	m_pRenderContext(0),
 }
 
 
-RotateGizmo::~RotateGizmo()
+ScaleGizmo::~ScaleGizmo()
 {
 }
 
-void RotateGizmo::Draw()
+void ScaleGizmo::Draw()
 {
     if (m_vCenterPos != Vector3::Infinity)
         DrawGizmo(m_vCenterPos);
 }
 
-void RotateGizmo::DrawAxis(const Vector3& pos, Axis axis,
+void ScaleGizmo::DrawAxis(const Vector3& pos, Axis axis,
                            const Matrix& world, const Matrix& view, const Matrix& projection)
 {
 	BX2D->SetFont(m_pAxisFont);
@@ -102,7 +102,7 @@ void RotateGizmo::DrawAxis(const Vector3& pos, Axis axis,
     
     
 }
-void RotateGizmo::DrawGizmo(const Vector3& pos)
+void ScaleGizmo::DrawGizmo(const Vector3& pos)
 {
 	// MATRIX
 	Matrix proj = m_pRenderContext->GetCamera()->GetProjection();
@@ -121,7 +121,7 @@ void RotateGizmo::DrawGizmo(const Vector3& pos)
 }
 
 // GENERAL
-void RotateGizmo::Tick(const RenderContext* pRenderContext, ObjectSelecter* pObjectSelecter)
+void ScaleGizmo::Tick(const RenderContext* pRenderContext, ObjectSelecter* pObjectSelecter)
 {
     m_vCenterPos = pObjectSelecter->GetCenterPos();
     if (m_vCenterPos != Vector3::Infinity)
@@ -142,7 +142,7 @@ void RotateGizmo::Tick(const RenderContext* pRenderContext, ObjectSelecter* pObj
     }
 }
 
-void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
+void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 { 
 	// MATRIX
 	Matrix matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -235,7 +235,7 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
                     }
                 }
             #pragma endregion
-      //  }
+       // }
         //<---------------
 
 		if (CONTROLS->LeftMBDown() == true)
@@ -249,9 +249,20 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				{
 					obj->Rotate(Vector3::Right, move);
 				});*/
+
+				move += 1.0f;
+
+				if (move < 0)
+				{
+					1 / -move;
+				}
+
+				if (move == 0.0f)
+					move = 0.01f;
+
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Right, move);
+					pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
 				}
 			}
 			if (m_bLockY == true)
@@ -263,9 +274,20 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				{
 					obj->Rotate(Vector3::Up, move);
 				});*/
+
+				move += 1.0f;
+
+				if (move < 0)
+				{
+					1 / -move;
+				}
+
+				if (move == 0.0f)
+					move = 0.01f;
+
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Up, move);
+					pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
 				}
 			}
 			if (m_bLockZ == true)
@@ -277,9 +299,20 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				{
 					obj->Rotate(Vector3::Forward, move);
 				});*/
+
+				move += 1.0f;
+
+				if (move < 0)
+				{
+					1 / -move;
+				}
+
+				if (move == 0.0f)
+					move = 0.01f;
+
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Forward, move);
+					pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
 				}
 			}
 		}
