@@ -50,10 +50,10 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
     fluidDesc.restParticlesPerMeter			= 1.0f;
 	fluidDesc.motionLimitMultiplier			= 2.0f;
 	fluidDesc.packetSizeMultiplier			= 8;
-    fluidDesc.collisionDistanceMultiplier   = 0.1f;
-    fluidDesc.stiffness						= 50.0f;
-    fluidDesc.viscosity						= 50.0f;
-	fluidDesc.restDensity					= 10.0f;
+    fluidDesc.collisionDistanceMultiplier   = 0.5f;
+    fluidDesc.stiffness						= 5.0f;
+    fluidDesc.viscosity						= 5.0f;
+	fluidDesc.restDensity					= 5.0f;
     fluidDesc.damping						= 0.0f;
     fluidDesc.restitutionForStaticShapes	= 0.1f;
 	fluidDesc.dynamicFrictionForStaticShapes= 0.8f;

@@ -365,7 +365,7 @@ void MainGame::DrawScene()
 
 	// POST PROCESS
 	if (m_pEditorGUI->GetPostFXButton()->IsActive())
-		m_pPostProcessor->End();
+        m_pPostProcessor->End(m_pDeferredRenderer);
 		
 	// --------------------------------------
 

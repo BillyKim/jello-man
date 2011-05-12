@@ -312,3 +312,15 @@ void DeferredRenderer::SetLightMode(LightMode lMode)
 {
 	m_LightMode = lMode;
 }
+ID3D10ShaderResourceView* DeferredRenderer::GetColorGlowMap() const
+{
+    return m_pSRV[DeferredRenderMap_Position];
+}
+ID3D10ShaderResourceView* DeferredRenderer::GetNormalSpecMap() const
+{
+    return m_pSRV[DeferredRenderMap_Normal];
+}
+ID3D10ShaderResourceView* DeferredRenderer::GetPositionGlossMap() const
+{
+    return m_pSRV[DeferredRenderMap_Position];
+}

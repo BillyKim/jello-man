@@ -9,8 +9,11 @@ public:
 	EdgeDetectionPostEffect(ID3D10Device* pDevice, ID3D10Effect* effect);
 	virtual ~EdgeDetectionPostEffect(void);
 
-	void SetColorMap(ID3D10ShaderResourceView* map);
-    void SetColorMapSize(int width, int height);
+    virtual void SetBackbufferMap(ID3D10ShaderResourceView* map);
+    virtual void SetColorGlowMap(ID3D10ShaderResourceView* map) {};
+	virtual void SetNormalMap(ID3D10ShaderResourceView* map);
+	virtual void SetDepthMap(ID3D10ShaderResourceView* map);
+    virtual void SetBackbufferSize(int width, int height);
     Effect* GetEffect();
     
     virtual ID3D10InputLayout* GetInputLayout() const;
@@ -18,6 +21,8 @@ public:
 
 private:
 	ID3D10EffectShaderResourceVariable* m_pColorMap;
+	ID3D10EffectShaderResourceVariable* m_pNormalMap;
+	ID3D10EffectShaderResourceVariable* m_pDepthMap;
     ID3D10EffectScalarVariable* m_pMapWidth;
     ID3D10EffectScalarVariable* m_pMapHeight;
 

@@ -41,7 +41,7 @@ Fluid::Fluid(NxScene* pScene, NxFluidDesc &desc, const Color& particleColor,  fl
 	ASSERT(m_pFluid, "Fluid creation failed");
 
 	// render
-	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
+	m_pEffect = Content->LoadEffect<FluidEffect>(_T("../Content/Effects/fluidEffect.fx"));
 }
 
 Fluid::~Fluid()
@@ -61,7 +61,6 @@ void Fluid::Draw(const RenderContext* pRenderContext)
 
 	m_mtxWorld = Matrix::CreateTranslation(Vector3(0,0,0));
 
-	m_pEffect->SetWorld(m_mtxWorld);
 	m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 
 	m_pDevice->IASetInputLayout(m_pEffect->GetInputLayout());
@@ -115,20 +114,16 @@ void Fluid::BuildVertexBuffer()
 
 	for (int i = 0; i < m_MaxParticles; ++i)
 	{
-		m_VecVertices.push_back(VertexPosCol(	m_pParticleBuffer[i].position.X,
+		m_VecVertices.push_back(VertexPos(	m_pParticleBuffer[i].position.X,
 												m_pParticleBuffer[i].position.Y,
-												m_pParticleBuffer[i].position.Z,
-												m_ParticleColor.R,
-												m_ParticleColor.G,
-												m_ParticleColor.B,
-												m_ParticleColor.A));
+												m_pParticleBuffer[i].position.Z));
 	}
 
 	SafeRelease(m_pVertexBuffer);
 
 	D3D10_BUFFER_DESC bd;
 	bd.Usage = D3D10_USAGE_IMMUTABLE;
-	bd.ByteWidth = sizeof( VertexPosCol ) * m_VecVertices.size();
+	bd.ByteWidth = sizeof( VertexPos ) * m_VecVertices.size();
 	bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;

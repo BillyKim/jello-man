@@ -43,7 +43,7 @@ void PostProcessor::Init()
 void PostProcessor::SetEffect(PostProcessEffect* pEffect)
 {
     m_pEffect = pEffect;
-    m_pEffect->SetColorMapSize(m_Width, m_Height);
+    m_pEffect->SetBackbufferSize(m_Width, m_Height);
 }
 void PostProcessor::Begin()
 {
@@ -52,7 +52,7 @@ void PostProcessor::Begin()
     m_pBuffer->BeginDraw();
     m_pBuffer->Clear(Vector4(0, 0, 0, 1));
 }
-void PostProcessor::End()
+void PostProcessor::End(DeferredRenderer* deferredRenderer)
 {
     ASSERT(m_pPrevBackBuffer != 0, "PostProcessor::Begin() must be called first,  or backbuffer got lost");
 
@@ -64,11 +64,16 @@ void PostProcessor::End()
     Vector4(0, 0, 0, 1).ToFloat4(c);
     m_pDXDevice->ClearRenderTargetView(m_pPrevBackBuffer, c);
 
-    m_pEffect->SetColorMap(m_pBuffer->GetColorMap());
+    m_pEffect->SetBackbufferMap(m_pBuffer->GetColorMap());
+    m_pEffect->SetColorGlowMap(deferredRenderer->GetColorGlowMap());
+    m_pEffect->SetDepthMap(m_pBuffer->GetDepthMap());
+    m_pEffect->SetNormalMap(deferredRenderer->GetNormalSpecMap());
 
     m_pScreenMesh->Draw(m_pEffect->GetEffect());
 
-    m_pEffect->SetColorMap(0);
+    m_pEffect->SetBackbufferMap(0);
+    m_pEffect->SetNormalMap(0);
+    m_pEffect->SetDepthMap(0);
     m_pEffect->GetEffect()->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertarget
 
     m_pDXDevice->OMSetRenderTargets(1, &m_pPrevBackBuffer, m_pPrevDepthStencilView);
