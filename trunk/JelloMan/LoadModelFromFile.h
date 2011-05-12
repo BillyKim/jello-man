@@ -33,7 +33,8 @@ public:
 
 private:
 
-	tstring GetPath(tstring title, LPWSTR filter);
+	tstring GetPath(const tstring& title, LPWSTR filter);
+	tstring StripPath(const tstring& path);
 
 	// DATAMEMBERS
 	bool m_bIsLoaded;
