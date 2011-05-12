@@ -40,6 +40,10 @@ public:
 
     void SetClearColor(const Vector4& color);
 	void SetLightMode(LightMode lMode);
+    
+    ID3D10ShaderResourceView* GetColorGlowMap() const;
+    ID3D10ShaderResourceView* GetNormalSpecMap() const;
+    ID3D10ShaderResourceView* GetPositionGlossMap() const;
 
 private:
 

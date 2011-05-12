@@ -5,8 +5,11 @@
 class PostProcessEffect
 {
 public:
-	virtual void SetColorMap(ID3D10ShaderResourceView* map) = 0;
-    virtual void SetColorMapSize(int width, int height) = 0;
+	virtual void SetBackbufferMap(ID3D10ShaderResourceView* map) = 0;
+	virtual void SetColorGlowMap(ID3D10ShaderResourceView* map) = 0;
+	virtual void SetNormalMap(ID3D10ShaderResourceView* map) = 0;
+	virtual void SetDepthMap(ID3D10ShaderResourceView* map) = 0;
+    virtual void SetBackbufferSize(int width, int height) = 0;
     virtual Effect* GetEffect() = 0;
 private:
 };

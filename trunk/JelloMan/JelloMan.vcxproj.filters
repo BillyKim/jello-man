@@ -121,7 +121,10 @@
     <Filter Include="Game Files\LevelObjects\Character">
       <UniqueIdentifier>{0bcf8636-a223-42c3-a4f1-7bb5af383d1b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Graphics\GUI\Editor\Gizmos">      <UniqueIdentifier>{baaf9a6f-4e33-4e8d-90c9-6a63bd0f7f96}</UniqueIdentifier>    </Filter>  </ItemGroup>
+    <Filter Include="Engine Files\Graphics\GUI\Editor\Gizmos">
+      <UniqueIdentifier>{baaf9a6f-4e33-4e8d-90c9-6a63bd0f7f96}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
       <Filter>Engine Files\Graphics</Filter>
@@ -266,9 +269,6 @@
     </ClInclude>
     <ClInclude Include="TestSoftbody.h">
       <Filter>Game Files\Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="SoftbodyMesh.h">
-      <Filter>Engine Files\Graphics\Model</Filter>
     </ClInclude>
     <ClInclude Include="DeferredPreEffectNormals.h">
       <Filter>Engine Files\Graphics\Effect\deferred</Filter>
@@ -423,6 +423,12 @@
     <ClInclude Include="MoveGizmo.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
+    <ClInclude Include="FluidEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="SoftbodyMesh.h">
+      <Filter>Engine Files\Graphics\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -563,9 +569,6 @@
     <ClCompile Include="TestSoftbody.cpp">
       <Filter>Game Files\Tests</Filter>
     </ClCompile>
-    <ClCompile Include="SoftbodyMesh.cpp">
-      <Filter>Engine Files\Graphics\Model</Filter>
-    </ClCompile>
     <ClCompile Include="MathHelper.cpp">
       <Filter>Engine Files\Math</Filter>
     </ClCompile>
@@ -692,6 +695,12 @@
     <ClCompile Include="MoveGizmo.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
+    <ClCompile Include="FluidEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftbodyMesh.cpp">
+      <Filter>Engine Files\Graphics\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
@@ -718,7 +727,7 @@
     <None Include="Content\Effects\preShadowmapShader.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="Content\Effects\fluidsEffect.fx">
+    <None Include="Content\Effects\fluidEffect.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

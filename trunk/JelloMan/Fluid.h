@@ -2,10 +2,11 @@
 
 #include "D3DUtil.h"
 #include "RenderContext.h"
-#include "PosColEffect.h"
+#include "FluidEffect.h"
 #include "vertex.h"
 #include "Particle.h"
 #include "Color.h"
+#include "ModelMesh.h"
 
 class Fluid 
 {
@@ -48,11 +49,12 @@ private:
 	void BuildVertexBuffer();
 
 	ID3D10Device* m_pDevice;
+
 	ID3D10Buffer* m_pVertexBuffer;
 
-	vector<VertexPosCol> m_VecVertices;
+	vector<VertexPos> m_VecVertices;
 
-	PosColEffect* m_pEffect;
+    FluidEffect* m_pEffect;
 
 	Matrix m_mtxWorld;
 };

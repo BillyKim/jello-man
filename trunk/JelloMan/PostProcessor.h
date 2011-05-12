@@ -4,6 +4,7 @@
 #include "ModelMesh.h"
 #include "vertex.h"
 #include "PostProcessEffect.h"
+#include "DeferredRenderer.h"
 
 class PostProcessor
 {
@@ -14,7 +15,7 @@ public:
     void SetEffect(PostProcessEffect* pEffect);
 
     void Begin();
-    void End();
+    void End(DeferredRenderer* deferredRenderer);
 
 private:
     void Init();
