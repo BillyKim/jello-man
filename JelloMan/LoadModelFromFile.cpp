@@ -83,6 +83,8 @@ void LoadModelFromFile::Tick()
 	{
 		m_ModelPath = GetPath(_T("Load Model"), L"OBJ Files\0*.binobj;*.obj*\0\0");
 
+		m_ModelPath = StripPath(m_ModelPath);
+
 		m_TextBoxes[0]->SetText(m_ModelPath);
 
 		SetCurrentDirectory(m_WorkingDirectory.c_str());
@@ -90,6 +92,8 @@ void LoadModelFromFile::Tick()
 	if (m_Buttons[1]->Clicked())
 	{
 		m_PhysXModelPath = GetPath(_T("Load PhysX Model"), L"NX Files\0*.nxconvex;*.nxconcave*\0\0");
+
+		m_PhysXModelPath = StripPath(m_PhysXModelPath);
 		
 		m_TextBoxes[1]->SetText(m_PhysXModelPath);
 
@@ -99,6 +103,8 @@ void LoadModelFromFile::Tick()
 	{
 		m_NormalPath = GetPath(_T("Load Normal Map"), L"Image Files\0*.png\0\0");
 
+		m_NormalPath = StripPath(m_NormalPath);
+
 		m_TextBoxes[2]->SetText(m_NormalPath);
 
 		SetCurrentDirectory(m_WorkingDirectory.c_str());
@@ -106,6 +112,8 @@ void LoadModelFromFile::Tick()
 	if (m_Buttons[3]->Clicked())
 	{
 		m_DiffusePath = GetPath(_T("Load Diffuse map"), L"Image Files\0*.png\0\0");
+
+		m_DiffusePath = StripPath(m_DiffusePath);
 
 		m_TextBoxes[3]->SetText(m_DiffusePath);
 
@@ -115,6 +123,8 @@ void LoadModelFromFile::Tick()
 	{
 		m_SpecPath = GetPath(_T("Load Specular Map"), L"Image Files\0*.png\0\0");
 
+		m_SpecPath = StripPath(m_SpecPath);
+
 		m_TextBoxes[4]->SetText(m_SpecPath);
 
 		SetCurrentDirectory(m_WorkingDirectory.c_str());
@@ -122,6 +132,8 @@ void LoadModelFromFile::Tick()
 	if (m_Buttons[5]->Clicked())
 	{
 		m_GlossPath = GetPath(_T("Load Glossiness Map"), L"Image Files\0*.png\0\0");
+
+		m_GlossPath = StripPath(m_GlossPath);
 
 		m_TextBoxes[5]->SetText(m_GlossPath);
 
@@ -222,7 +234,7 @@ void LoadModelFromFile::HideTextBoxes()
 	}
 }
 
-tstring LoadModelFromFile::GetPath(tstring title, LPWSTR filter)
+tstring LoadModelFromFile::GetPath(const tstring& title, LPWSTR filter)
 {
 	wchar_t filePath[256];
 
@@ -269,4 +281,19 @@ void LoadModelFromFile::Clear()
 	}
 }
 
-// GETTERS
+tstring LoadModelFromFile::StripPath(const tstring& path)
+{
+	if (path == _T(""))
+		return _T("");
+
+	tstring workingDirectoryBuffer = m_WorkingDirectory.substr(0, m_WorkingDirectory.find(_T("\\bin")));
+
+	tstring relativePath = path.substr(workingDirectoryBuffer.size(), path.size() - 1);
+
+	tstringstream stream;
+	stream << _T("..") << relativePath;
+
+	relativePath = stream.str();
+
+	return relativePath;
+}
