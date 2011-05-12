@@ -92,6 +92,8 @@ void EditorGUI::Initialize()
 	m_pLightButton->SetDeactivatedStateHover(m_pLightButtonBitmaps[3]);
 	m_pLightButton->SetDeactivatedStateDown(m_pLightButtonBitmaps[3]);
 
+	m_pLightButton->SetState(Button::STATE_DEACTIVATED);
+
 	// MOVE BUTTON
 	m_pMoveButton = new Button(168,7,36,36,true);
 

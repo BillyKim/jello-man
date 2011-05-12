@@ -10,14 +10,7 @@
 #pragma region MyOutputStream
 void MyOutputStream::reportError(NxErrorCode code, const char *message, const char*, int)
 {
-    //this should be routed to the application
-    //specific error handling. If this gets hit
-    //then you are in most cases using the SDK
-    //wrong and you need to debug your code!
-    //however, code may  just be a warning or
-    //information.
-        
-    cout << "--Physx: " << code << ": " << message << "\n";
+  cout << "--Physx: " << code << ": " << message << "\n";
 }              
 NxAssertResponse MyOutputStream::reportAssertViolation (const char *message, const char*, int)
 {
@@ -32,7 +25,11 @@ void MyOutputStream::print (const char *message)
 }
 #pragma endregion
 
-PhysX::PhysX():m_pPhysicsSDK(0),m_pScene(0), m_pControllerManager(0), m_pUserOutputStream(0)
+PhysX::PhysX()
+	:	m_pPhysicsSDK(0),
+		m_pScene(0),
+		m_pControllerManager(0),
+		m_pUserOutputStream(0)
 {
 
 }
@@ -42,72 +39,63 @@ PhysX::~PhysX(void)
 	//NxReleaseControllerManager(m_pControllerManager);
 	if(m_pScene)m_pPhysicsSDK->releaseScene(*m_pScene);
 	if(m_pPhysicsSDK)m_pPhysicsSDK->release();
-	//if(m_pAllocator) delete m_pAllocator;
+
     delete m_pUserOutputStream;
 }
 
 bool PhysX::Init(void)
 {
-	//create PhysicsSDK object
     m_pUserOutputStream = new MyOutputStream();
 	m_pPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, m_pUserOutputStream);
-	if(!m_pPhysicsSDK)
-	{
-		OutputDebugString(_T("Wrong SDK DLL version?"));
-		return false;
-	}
-	//(if debug?)
+
+	ASSERT(m_pPhysicsSDK != 0, "Error creating PhysicsSDK");
+
 	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
 	m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
     m_pPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_ENERGY, 50000.0f);
     m_pPhysicsSDK->setParameter(NX_DYN_FRICT_SCALING, 100.0f);
     m_pPhysicsSDK->setParameter(NX_STA_FRICT_SCALING, 100.0f);
-	//create a scene object
+
 	NxSceneDesc sceneDesc;
 	sceneDesc.gravity.set(0, -981.0f, 0);
-    //sceneDesc.flags |= NX_SF_SEQUENTIAL_PRIMARY;
+
 	m_pScene = m_pPhysicsSDK->createScene(sceneDesc);
-	if(!m_pScene)
-	{
-		OutputDebugString(_T("Scene creation failed"));
-		return false;
-	}
-	// Set default material
+
+	ASSERT(m_pScene != 0, "Error creating physics scene");
+
 	NxMaterial* defaultMaterial = m_pScene->getMaterialFromIndex(0);
 	defaultMaterial->setRestitution(0.3f);
 	defaultMaterial->setStaticFriction(.6f);
 	defaultMaterial->setDynamicFriction(.2f);
 
-	// Create ground plane
 	NxPlaneShapeDesc planeDesc;
-	planeDesc.d=-5;//set plane below origine
+	planeDesc.d = -5;
+
 	NxActorDesc actorDesc;
 	actorDesc.shapes.pushBack(&planeDesc);
-	m_pScene->createActor(actorDesc); //groundplane
+
+	m_pScene->createActor(actorDesc);
 
 	NxReal myTimestep = 1/60.0f;
-	m_pScene->setTiming(myTimestep, 8, NX_TIMESTEP_FIXED);//4 substeps
+	m_pScene->setTiming(myTimestep, 8, NX_TIMESTEP_FIXED);
 	
 	m_pScene->setUserTriggerReport(this);
 
-	//m_pAllocator = new DAEAllocator();
 	//m_pControllerManager = NxCreateControllerManager(m_pAllocator);
 	
 	return true;
 }
-//fixed is best
+
 void PhysX::Simulate(float dt)
 {
-	NxReal myTimestep = dt;//1/60.0f;
-	m_pScene->simulate(myTimestep);//thread start met rekenen, er is een soort back en frontbuffer
+	NxReal myTimestep = dt;
+	m_pScene->simulate(myTimestep);
 }
+
 void PhysX::FetchResults(void)
 {
-	//Flushes any buffered commands so that they get executed. 
-	//Ensures that commands buffered in the system will continue to make forward progress until completion
 	m_pScene->flushStream();
 
-	//Wait until physx calcs are done, then proceed
 	m_pScene->fetchResults(NX_ALL_FINISHED, true);
 }
 
@@ -131,6 +119,7 @@ void PhysX::FetchResults(void)
 //	m_Controllers.push_back(c);
 //	return c;
 //}
+
 NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
 {
 	NxRaycastHit hit;

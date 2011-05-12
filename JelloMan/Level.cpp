@@ -40,14 +40,14 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	m_pBaseGrid->Init();
 
 	// TEST FLUID
-	int MAX_PARTICLES = 1000;
+	int MAX_PARTICLES = 10000;
 
 	// setup fluid descriptor
 	NxFluidDesc fluidDesc;
     fluidDesc.maxParticles                  = MAX_PARTICLES;
-    fluidDesc.kernelRadiusMultiplier		= 30.0f;
-    fluidDesc.restParticlesPerMeter			= 7.0f;
-	fluidDesc.motionLimitMultiplier			= 30.0f;
+    fluidDesc.kernelRadiusMultiplier		= 2.0f;
+    fluidDesc.restParticlesPerMeter			= 1.0f;
+	fluidDesc.motionLimitMultiplier			= 2.0f;
 	fluidDesc.packetSizeMultiplier			= 8;
     fluidDesc.collisionDistanceMultiplier   = 0.1f;
     fluidDesc.stiffness						= 50.0f;
@@ -81,13 +81,33 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	//emitterDesc.repulsionCoefficient = 300.0f;
 
 	emitterDesc.relPose.M.id();
-	emitterDesc.relPose.M.rotX(-NxHalfPiF32);
+	//emitterDesc.relPose.M.rotX(NxHalfPiF32);
 	emitterDesc.relPose.t = NxVec3(100.0f,200.0f,0);
 	
 	m_pTestFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f,0.0f,1.0f,1.0f), 3.0f, m_pDXDevice);
 	ASSERT(m_pTestFluid, "fluid creation failed");
 
 	m_pEmitter = m_pTestFluid->GetNxFluid()->createEmitter(emitterDesc);
+
+	// forcefield
+	NxForceFieldLinearKernelDesc linearKernelDesc;
+    linearKernelDesc.constant = NxVec3(1000,500,500);
+    
+    NxForceFieldLinearKernel* pLinearKernel;
+    pLinearKernel = pPhysXEngine->GetScene()->createForceFieldLinearKernel(linearKernelDesc);
+
+    NxForceFieldDesc fieldDesc;
+	fieldDesc.coordinates = NX_FFC_SPHERICAL;
+    fieldDesc.kernel = pLinearKernel;
+
+    NxForceField *pForceField; 
+    pForceField = pPhysXEngine->GetScene()->createForceField(fieldDesc);
+
+	NxForceFieldShape* s = NULL;
+	NxBoxForceFieldShapeDesc b;
+	b.dimensions = NxVec3(500, 700, 500);
+	b.pose.t = NxVec3(0, 350, 0);
+	s = pForceField->getIncludeShapeGroup().createShape(b);
 }
 
 void Level::Tick(const float dTime)
