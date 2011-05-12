@@ -121,7 +121,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
     m_pLightController = new LightController();
 	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController);
 
-    SpotLight* sp1 = new SpotLight();
+   /* SpotLight* sp1 = new SpotLight();
         sp1->SetPosition(Vector3(0.0f,600.0f,0.0f));
         sp1->SetColor(Color(0.9f, 0.002f, 0.002f, 1.0f));
         sp1->SetMulitplier(2.0f);
@@ -161,7 +161,10 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	    pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
 	    pl.attenuationEnd = 5000;
 	    pl.multiplier = 0.5f;
-	    m_pLightController->AddLight(new PointLight(pl));
+	    m_pLightController->AddLight(new PointLight(pl));*/
+
+	Image* test = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
+	Image* test2 = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
 
 	++m_Orbs;
 	m_LoadingText = _T("PhysX");
