@@ -55,6 +55,9 @@ public:
 	Button* GetShowGridButton() const
 	{ return m_pShowGridButton; }
 
+	Button* GetPostFXButton() const
+	{ return m_pPostFXButton; }
+
 	MODE GetMode() const
 	{ return m_Mode; }
 
@@ -94,6 +97,8 @@ private:
 	vector<Image*> m_pLoadLevelButtonBitmaps;
 	Button* m_pShowGridButton;
 	vector<Image*> m_pShowGridButtonBitmaps;
+	Button* m_pPostFXButton;
+	vector<Image*> m_pPostFXButtonBitmaps;
 
 	Image* m_pCameraBitmap;
 

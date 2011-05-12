@@ -4,8 +4,7 @@
 
 // CONSTRUCTOR - DESTRUCTOR
 LoadLevelFromFile::LoadLevelFromFile(Level* pLevel)
-	:	m_bIsLoaded(false),
-		m_LoadLevelPath(_T("")),
+	:	m_LoadLevelPath(_T("")),
 		m_SaveLevelPath(_T("")),
 		m_pLoadButton(0),
 		m_pSaveButton(0),
@@ -94,7 +93,7 @@ void LoadLevelFromFile::Tick()
 	}
 	if (m_Buttons[1]->Clicked())
 	{
-		m_SaveLevelPath = GetPath(_T("Save Level"), L"level Files\0*.level\0\0");
+		m_SaveLevelPath = GetPath(_T("Save Level"), L"Level Files\0*.level\0\0");
 		
 		m_TextBoxes[1]->SetText(m_SaveLevelPath);
 
@@ -108,8 +107,6 @@ void LoadLevelFromFile::Tick()
 			string s(m_LoadLevelPath.begin(), m_LoadLevelPath.end());
 
 			m_pLevel->Deserialize(s);
-
-			m_bIsLoaded = true;
 		}
 	}
 

@@ -37,7 +37,8 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice, Level* pLevel
         m_pObjectSelecter(new ObjectSelecter(pPhysXEngine)),
 		m_pLoadLevelButton(0),
 		m_pLevel(pLevel),
-		m_pLevelLoader(0)
+		m_pLevelLoader(0),
+		m_pPostFXButton(0)
 {
 
 }
@@ -57,6 +58,7 @@ EditorGUI::~EditorGUI()
 	delete m_pLoadModelButton;
 	delete m_pShowGridButton;
 	delete m_pLoadLevelButton;
+	delete m_pPostFXButton;
 
 	delete m_pLightDebugger;
 	delete m_pColorPicker;
@@ -86,7 +88,7 @@ void EditorGUI::Initialize()
 	m_pLightButton->SetDeactivatedStateDown(m_pLightButtonBitmaps[3]);
 
 	// MOVE BUTTON
-	m_pMoveButton = new Button(120,7,36,36,true);
+	m_pMoveButton = new Button(156,7,36,36,true);
 
 	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/move_on_normal.png")));
 	m_pMoveButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/move_on_hover.png")));
@@ -123,7 +125,7 @@ void EditorGUI::Initialize()
 	m_pEditorModeButton->SetDownState(m_pEditorModeButtonBitmaps[1]);
 
 	// POINTLIGHT BUTTON
-	m_pPointlightButton = new Button(217,7,36,36);
+	m_pPointlightButton = new Button(253,7,36,36);
 
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_normal.png")));
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_hover.png")));
@@ -133,7 +135,7 @@ void EditorGUI::Initialize()
 	m_pPointlightButton->SetDownState(m_pPointlightButtonBitmaps[1]);
 
 	// SPOTLIGHT BUTTON
-	m_pSpotlightButton = new Button(253,7,36,36);
+	m_pSpotlightButton = new Button(289,7,36,36);
 
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_normal.png")));
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_hover.png")));
@@ -168,7 +170,7 @@ void EditorGUI::Initialize()
 	m_pApplyButton->SetDownState(m_pApplyButtonBitmaps[1]);
 
 	// ROTATE BUTTON
-	m_pRotateButton = new Button(156,7,36,36,true);
+	m_pRotateButton = new Button(192,7,36,36,true);
 
 	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_normal.png")));
 	m_pRotateButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_hover.png")));
@@ -195,7 +197,7 @@ void EditorGUI::Initialize()
 	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
 
 	// LOAD MODEL BUTTON
-	m_pLoadModelButton = new Button(312,7,36,36, true);
+	m_pLoadModelButton = new Button(348,7,36,36, true);
 
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_normal.png")));
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_hover.png")));
@@ -213,7 +215,7 @@ void EditorGUI::Initialize()
 	m_pLoadModelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// LOAD LEVEL BUTTON
-	m_pLoadLevelButton = new Button(348,7,36,36, true);
+	m_pLoadLevelButton = new Button(384,7,36,36, true);
 
 	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_normal.png")));
 	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_hover.png")));
@@ -231,7 +233,7 @@ void EditorGUI::Initialize()
 	m_pLoadLevelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// SHOW GRID BUTTON
-	m_pShowGridButton = new Button(408,7,36,36,true);
+	m_pShowGridButton = new Button(444,7,36,36,true);
 
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_normal.png")));
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_hover.png")));
@@ -247,6 +249,24 @@ void EditorGUI::Initialize()
 	m_pShowGridButton->SetDeactivatedStateDown(m_pShowGridButtonBitmaps[3]);
 
 	m_pShowGridButton->SetState(Button::STATE_NORMAL);
+
+	// POST EFFECTS BUTTON
+	m_pPostFXButton = new Button(96,7,36,36,true);
+
+	m_pPostFXButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/posteffects_on_normal.png")));
+	m_pPostFXButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/posteffects_on_hover.png")));
+	m_pPostFXButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/posteffects_off_normal.png")));
+	m_pPostFXButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/posteffects_off_hover.png")));
+
+	m_pPostFXButton->SetNormalState(m_pPostFXButtonBitmaps[0]);
+	m_pPostFXButton->SetHoverState(m_pPostFXButtonBitmaps[1]);
+	m_pPostFXButton->SetDownState(m_pPostFXButtonBitmaps[1]);
+
+	m_pPostFXButton->SetDeactivatedState(m_pPostFXButtonBitmaps[2]);
+	m_pPostFXButton->SetDeactivatedStateHover(m_pPostFXButtonBitmaps[3]);
+	m_pPostFXButton->SetDeactivatedStateDown(m_pPostFXButtonBitmaps[3]);
+
+	m_pPostFXButton->SetState(Button::STATE_DEACTIVATED);
 
 	// CAMERA
 	m_pCameraBitmap = Content->LoadImage(_T("../Content/Images/Editor/camera.png"));
@@ -562,6 +582,14 @@ void EditorGUI::Draw()
 		BX2D->DrawString(_T("Shows 3D ground grid."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
+	m_pPostFXButton->Show();
+	if (m_pPostFXButton->Hover() || m_pPostFXButton->Down())
+	{
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Turns on/off post processing effects."), 20, BX2D->GetWindowSize().height - 16);
+	}
+
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != MODE_PLAY)
 		BX2D->DrawImage(m_pCameraBitmap, BX2D->GetWindowSize().width - 70, 90, true, 0.8f);
@@ -621,6 +649,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	m_pLoadModelButton->Tick();
 	m_pShowGridButton->Tick();
 	m_pLoadLevelButton->Tick();
+	m_pPostFXButton->Tick();
 
 	if (m_pLoadLevelButton->Clicked())
 		m_pLoadModelButton->Deactivate();

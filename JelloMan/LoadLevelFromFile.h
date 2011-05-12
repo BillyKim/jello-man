@@ -18,17 +18,11 @@ public:
 
 	void HideTextBoxes();
 
-	// GETTERS
-	bool IsLoaded() const
-	{ return m_bIsLoaded; }
-
 private:
 
 	tstring GetPath(tstring title, LPWSTR filter);
 
 	// DATAMEMBERS
-	bool m_bIsLoaded;
-
 	tstring m_LoadLevelPath;
 	tstring m_SaveLevelPath;
 

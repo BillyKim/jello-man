@@ -150,7 +150,7 @@ void Camera::Tick(const float dTime)
 
 void Camera::OnResize(int windowWidth, int windowHeight)
 {
-
+	SetAspectRatio(static_cast<float>(windowWidth/windowHeight));
 }
 
 // SETTERS
