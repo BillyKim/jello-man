@@ -8,13 +8,13 @@
 #include "RenderContext.h"
 #include "PostProcessor.h"
 #include "EdgeDetectionPostEffect.h"
-#include "Character.h"
 #include "PhysX.h"
 #include "BaseGrid.h"
 #include "Softbody.h"
 #include "PreShadowEffect.h"
 #include "ILevelObject.h"
 #include "Fluid.h"
+#include "SoftbodyCharacter.h"
 
 class Level
 {
@@ -57,7 +57,7 @@ private:
 	// DATAMEMBERS
 	ID3D10Device* m_pDXDevice;
 
-	//Character* m_pCharacter;
+	SoftbodyCharacter* m_pCharacter;
 
 	PhysX* m_pPhysXEngine;
 

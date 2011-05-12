@@ -14,7 +14,7 @@ LightBehaviourNormal::~LightBehaviourNormal(void)
 
 
 //Serialize
-void LightBehaviourNormal::Serialize(Serializer*)
+void LightBehaviourNormal::Serialize(Serializer*) const
 {
 }
 void LightBehaviourNormal::Deserialize(Serializer*)

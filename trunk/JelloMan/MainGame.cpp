@@ -460,13 +460,13 @@ void MainGame::CheckControls()
 			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 800000);
 		}
 	}
-    if (CONTROLS->IsKeyPressed(VK_CONTROL))
-	{
-        TestSoftbody* pSB = new TestSoftbody(m_pRenderContext->GetCamera()->GetPosition());
-        pSB->Init(m_pPhysXEngine);
-        m_pLevel->AddLevelObject(pSB);
-		pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
-	}
+ //   if (CONTROLS->IsKeyPressed(VK_CONTROL))
+	//{
+ //       TestSoftbody* pSB = new TestSoftbody(m_pRenderContext->GetCamera()->GetPosition());
+ //       pSB->Init(m_pPhysXEngine);
+ //       m_pLevel->AddLevelObject(pSB);
+	//	pSB->AddSpeed(m_pRenderContext->GetCamera()->GetLook() * 2000);
+	//}
 }
 
 void MainGame::OnResize(ID3D10RenderTargetView* pRTView)

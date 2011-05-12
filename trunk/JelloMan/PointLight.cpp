@@ -259,7 +259,7 @@ D3D10_RECT PointLight::CalcScissorRect(Camera* camera, UINT backbufferWidth, UIN
     return r;
 }
 
-void PointLight::Serialize(Serializer* pSerializer)
+void PointLight::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeFloat(m_Desc.attenuationEnd);
     pSerializer->GetStream()->storeFloat(m_Desc.attenuationStart);

@@ -9,10 +9,12 @@ public:
     virtual ~PhysXSphere(void);
     
     virtual NxShapeDesc* GetShape() const { return m_pSphereDesc; }
+
+	virtual void Scale(const Vector3& scale);
     
-	virtual void Serialize(Serializer* pSerializer);
+	virtual void Serialize(Serializer* pSerializer) const;
 	virtual void Deserialize(Serializer* pSerializer);
-    virtual DWORD GetUniqueIdentifier() { return SerializeTypes::PhysXShapeSphere; };
+    virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::PhysXShapeSphere; };
 
 private:
     NxSphereShapeDesc* m_pSphereDesc;

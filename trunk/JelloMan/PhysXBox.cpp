@@ -18,7 +18,7 @@ PhysXBox::~PhysXBox(void)
 }
 
 
-void PhysXBox::Serialize(Serializer* pSerializer)
+void PhysXBox::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeVector3(Vector3(m_pBoxShapeDesc->dimensions));
     pSerializer->GetStream()->storeFloat(m_pBoxShapeDesc->mass);

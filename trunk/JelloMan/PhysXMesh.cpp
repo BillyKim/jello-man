@@ -43,7 +43,7 @@ void PhysXMesh::Init(const string& path, float mass)
     }
 }
 
-void PhysXMesh::Serialize(Serializer* pSerializer)
+void PhysXMesh::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeString(m_Path);
     pSerializer->GetStream()->storeFloat(m_pShapeDesc->mass);

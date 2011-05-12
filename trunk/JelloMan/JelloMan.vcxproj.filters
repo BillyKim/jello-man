@@ -118,10 +118,10 @@
     <Filter Include="Game Files\LevelObjects">
       <UniqueIdentifier>{63683733-b1f3-41b9-8dbe-3bd38e3bdc0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Graphics\GUI\Editor\Gizmos">
-      <UniqueIdentifier>{baaf9a6f-4e33-4e8d-90c9-6a63bd0f7f96}</UniqueIdentifier>
+    <Filter Include="Game Files\LevelObjects\Character">
+      <UniqueIdentifier>{0bcf8636-a223-42c3-a4f1-7bb5af383d1b}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
+    <Filter Include="Engine Files\Graphics\GUI\Editor\Gizmos">      <UniqueIdentifier>{baaf9a6f-4e33-4e8d-90c9-6a63bd0f7f96}</UniqueIdentifier>    </Filter>  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
       <Filter>Engine Files\Graphics</Filter>
@@ -411,6 +411,9 @@
     <ClInclude Include="LoadLevelFromFile.h">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
     </ClInclude>
+    <ClInclude Include="SoftbodyCharacter.h">
+      <Filter>Game Files\LevelObjects\Character</Filter>
+    </ClInclude>
     <ClInclude Include="ScaleGizmo.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
@@ -676,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="LoadLevelFromFile.cpp">
       <Filter>Engine Files\Graphics\GUI\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftbodyCharacter.cpp">
+      <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
     <ClCompile Include="RotateGizmo.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>

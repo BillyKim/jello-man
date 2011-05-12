@@ -28,7 +28,7 @@ public:
     virtual void SetPosition(const Vector3& pos) { Actor::SetPosition(pos); }
     virtual Vector3 GetPosition() const { return Actor::GetPosition(); }
 
-    virtual void Scale(const Vector3& scale) { return Actor::Scale(scale); }
+	virtual void Scale(const Vector3& scale) { Actor::Scale(scale); }
     #pragma endregion
 
     #pragma region IUpdateable
@@ -43,9 +43,9 @@ public:
 
     #pragma region ISerializeable
     //ISerializeable
-	virtual void Serialize(Serializer* pSerializer);
+	virtual void Serialize(Serializer* pSerializer) const;
 	virtual void Deserialize(Serializer* pSerializer);
-    virtual DWORD GetUniqueIdentifier() { return SerializeTypes::SimpleObject; };
+    virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::SimpleObject; };
     #pragma endregion
 
     void SetDiffusePath(tstring path) { m_strDiffusePath = path; }

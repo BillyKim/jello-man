@@ -16,12 +16,12 @@ public:
 	void Serialize(ISerializable* obj);
     ISerializable* Deserialize(ISerializable* (*GetObject)(DWORD id));
 
-    bool eof();
+    bool eof() const;
 
-    UserStream* GetStream() { return m_Stream; }
+    UserStream* GetStream() const { return m_Stream; }
 
     //Usefull when deserializing
-    PhysX* GetPhysX() { return m_pPhysX; }
+    PhysX* GetPhysX() const { return m_pPhysX; }
 
 private:
     void WriteHeader(ISerializable* obj);

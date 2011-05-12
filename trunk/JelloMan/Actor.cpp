@@ -81,19 +81,37 @@ void Actor::Rotate(const Vector3& axis, float angle)
 
 	NxMat34 mat = static_cast<NxMat34>(m_mtxWorldMatrix);
 	m_pActor->setGlobalPose(mat);
+	
 }
 void Actor::Scale(const Vector3& scale)
 {
-	ASSERT(m_pActor != 0, "");
+	/*ASSERT(m_pActor != 0, "");
+
+	if (m_pActor->getShapes()[0]->isSphere())
+	{
+		NxSphereShape* shape = dynamic_cast<NxSphereShape*>(m_pActor->getShapes()[0]);
+		shape->setRadius(shape->getRadius() * ((scale.X + scale.Y + scale.Z) / 3.0f));
+	}
+	else if (m_pActor->getShapes()[0]->isBox())
+	{
+		NxBoxShape* shape = dynamic_cast<NxBoxShape*>(m_pActor->getShapes()[0]);
+		shape->setDimensions(Vector3(shape->getDimensions()) * scale);
+	}
+	else if (m_pActor->getShapes()[0]->isConvexMesh())
+	{
+		NxConvexMesh* shape = dynamic_cast<NxConvexMesh*>(m_pActor->getShapes()[0]);
+		shape->
+	}
+
     Vector3 pos = GetPosition();
     m_mtxWorldMatrix *= Matrix::CreateTranslation(-pos);
     m_mtxWorldMatrix *= Matrix::CreateScale(scale);
     m_mtxWorldMatrix *= Matrix::CreateTranslation(pos);
 
 	NxMat34 mat = static_cast<NxMat34>(m_mtxWorldMatrix);
-	m_pActor->setGlobalPose(mat);
+	m_pActor->setGlobalPose(mat);*/
 }
-void Actor::Serialize(Serializer* pSerializer)
+void Actor::Serialize(Serializer* pSerializer)  const
 {
     Vector3 av((m_pActor->getAngularVelocity()));
     pSerializer->GetStream()->storeVector3(av);

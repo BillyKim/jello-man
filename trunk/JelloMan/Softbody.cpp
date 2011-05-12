@@ -50,13 +50,13 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
 	NxSoftBodyMesh* pMesh = m_pPhysX->GetSDK()->createSoftBodyMesh(stream);
 	softbodyDesc.softBodyMesh = pMesh;
 	softbodyDesc.particleRadius = 8.0f;
-    softbodyDesc.volumeStiffness = 0.9f;
+    softbodyDesc.volumeStiffness = 0.8f;
     softbodyDesc.stretchingStiffness = 0.9f;
     softbodyDesc.friction = 1.0f;
     softbodyDesc.solverIterations = 8;
     softbodyDesc.flags = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION;
     softbodyDesc.meshData = meshData;
-    softbodyDesc.collisionResponseCoefficient = 0.1f;
+    softbodyDesc.collisionResponseCoefficient = 1.0f;
 	softbodyDesc.sleepLinearVelocity = 10;
 
     softbodyDesc.globalPose = static_cast<NxMat34>(Matrix::CreateTranslation(pos));
@@ -151,16 +151,29 @@ void Softbody::TransformPositions()
 
     }
 
-    m_pSoftbodyMesh->SetVertices(newVert);
+	m_TransformedVertices = newVert;
+}
+void Softbody::SetVertices()
+{    
+	if (m_TransformedVertices.size() != 0)
+		m_pSoftbodyMesh->SetVertices(m_TransformedVertices);
 }
 
 void Softbody::AddSpeed(const Vector3& speed)
 {
     m_pSoftbody->addDirectedForceAtPos(m_CenterPoint, speed, m_Radius, NX_VELOCITY_CHANGE);
 }
+void Softbody::AddSpeed(const Vector3& speed, const Vector3& pos)
+{
+    m_pSoftbody->addDirectedForceAtPos(pos, speed, m_Radius, NX_VELOCITY_CHANGE);
+}
 void Softbody::AddForce(const Vector3& force)
 {
-    m_pSoftbody->addDirectedForceAtPos(m_CenterPoint, force, m_Radius, NX_FORCE);
+	m_pSoftbody->addDirectedForceAtPos(m_CenterPoint, force, m_Radius, NX_FORCE);
+}
+void Softbody::AddForce(const Vector3& force, const Vector3& pos)
+{
+	m_pSoftbody->addDirectedForceAtPos(pos, force, m_Radius, NX_FORCE);
 }
 
 void Softbody::Translate(const Vector3& add)

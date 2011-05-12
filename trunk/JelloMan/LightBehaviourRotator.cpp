@@ -22,7 +22,7 @@ void LightBehaviourRotator::Tick(float dTime)
 }
 
 //Serialize
-void LightBehaviourRotator::Serialize(Serializer* pSerializer)
+void LightBehaviourRotator::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeFloat(m_Speed);
     pSerializer->GetStream()->storeVector3(m_Axis);
