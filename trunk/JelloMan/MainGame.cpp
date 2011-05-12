@@ -65,8 +65,8 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 {
 	// TEST - gameconfig word nog file!
 	refGameConfig.SetTitle(_T("Happy Engine"));
-	refGameConfig.SetWindowWidth(1280);
-	refGameConfig.SetWindowHeight(720);
+	refGameConfig.SetWindowWidth(1440);
+	refGameConfig.SetWindowHeight(900);
 	refGameConfig.SetBlox2DAntiAliasing(true);
 	refGameConfig.SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT_AZERTY);
 	refGameConfig.UsePhysX(true);
@@ -74,6 +74,8 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 
 void MainGame::LoadResources(ID3D10Device* pDXDevice)
 {
+	ASSERT(pDXDevice != 0, "DXDevice error while loading resources");
+
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);
 
@@ -183,7 +185,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	++m_Orbs;
 	m_LoadingText = _T("audio");
 
-	//// AUDIO
+	// AUDIO
 	//tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
 	//m_pAudioEngine = new AudioEngine(projectLocation);
 	//m_pAudioEngine->Initialize();
@@ -399,8 +401,8 @@ void MainGame::CheckControls()
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
 			//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
-			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
+			//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+			//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 			pLevelObject->SetRigid(true);
 
@@ -423,8 +425,8 @@ void MainGame::CheckControls()
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
 			//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
-			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
+			//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+			//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 			pLevelObject->SetRigid(true);
 
@@ -444,8 +446,8 @@ void MainGame::CheckControls()
 			pLevelObject->SetPhysXModel(_T("../Content/Models/jman.nxconcave"));
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
-			pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-			pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
+			//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+			//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
 			pLevelObject->SetRigid(true);
 
@@ -455,7 +457,7 @@ void MainGame::CheckControls()
 
 			m_pLevel->AddLevelObject(pLevelObject);
 
-			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
+			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 800000);
 		}
 	}
     if (CONTROLS->IsKeyPressed(VK_CONTROL))
@@ -474,11 +476,11 @@ void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
 		m_pDeferredRenderer->OnResized(	static_cast<int>(BX2D->GetWindowSize().width),
 										static_cast<int>(BX2D->GetWindowSize().height));
 
-		m_pTrackingCamera->OnResize(	static_cast<int>(BX2D->GetWindowSize().width),
+		/*m_pTrackingCamera->OnResize(	static_cast<int>(BX2D->GetWindowSize().width),
 										static_cast<int>(BX2D->GetWindowSize().height));
 
 		m_pEditorCamera->OnResize(	static_cast<int>(BX2D->GetWindowSize().width),
-									static_cast<int>(BX2D->GetWindowSize().height));
+									static_cast<int>(BX2D->GetWindowSize().height));*/
 	}
 }
 void MainGame::Release()
@@ -521,7 +523,7 @@ void MainGame::LoadScreen()
 	BX2D->SetTransform(rot);
 
 	if (m_Orbs / 6.0f > m_AlphaHappyFace)
-		m_AlphaHappyFace += 0.002f;
+		m_AlphaHappyFace += 0.004f;
 
 	BX2D->SetColor(255,255,255,m_AlphaHappyFace);
 	BX2D->SetFont(m_pHappyFaceFont);

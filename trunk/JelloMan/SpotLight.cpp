@@ -138,8 +138,6 @@ void SpotLight::Draw(const RenderContext* rc)
 			BX2D->DrawEllipse(pos2D.x, pos2D.y, size / l, size / l, 2.0f / l);
 			BX2D->SetColor(255,0,255);
 			BX2D->DrawEllipse(pos2D.x, pos2D.y, (size * 4) / l, (size * 4) / l, 4.0f);
-			BX2D->SetColor(255,255,255);
-			BX2D->DrawEllipse(pos2D.x, pos2D.y, (size * 4) / l, (size * 4) / l, 4.0f);
 		}
 		else
 		{
@@ -417,11 +415,12 @@ void SpotLight::Deserialize(Serializer* pSerializer)
     m_Desc.direction = pSerializer->GetStream()->readVector3();
     m_vUp = pSerializer->GetStream()->readVector3();
     m_Rotation = Matrix::CreateLookAt(Vector3::Zero, m_Desc.direction, m_vUp);
-    m_Rotation *= Matrix::CreateRotation(m_vUp, -PiOver2);
+    m_Rotation *= Matrix::CreateRotation(m_vUp, -Pi);
 
     m_Desc.power = pSerializer->GetStream()->readFloat();
     //-(log(100.0f) / (log(cos(m_OpeningsAngle / 2.0f))));
     m_OpeningsAngle = 2.0f*acos(pow(E, -log(100.0f) / m_Desc.power));
+	//m_Rotation = Matrix::
 
     SetShadowMap(Content->GetDxDevice(), static_cast<ShadowMapType>(pSerializer->GetStream()->readWord()));
 
