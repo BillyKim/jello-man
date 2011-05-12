@@ -160,6 +160,7 @@
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RevoluteJoint.h" />
     <ClInclude Include="RotateGizmo.h" />
+    <ClInclude Include="ScaleGizmo.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="SerializeTypes.h" />
     <ClInclude Include="Softbody.h" />
@@ -250,6 +251,7 @@
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="RevoluteJoint.cpp" />
     <ClCompile Include="RotateGizmo.cpp" />
+    <ClCompile Include="ScaleGizmo.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="Softbody.cpp" />
     <ClCompile Include="SoftbodyMesh.cpp" />

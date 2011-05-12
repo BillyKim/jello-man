@@ -15,6 +15,7 @@
 #include "ObjectSelecter.h"
 #include "Level.h"
 #include "LoadLevelFromFile.h"
+#include "ScaleGizmo.h"
 
 class EditorGUI
 {
@@ -99,6 +100,8 @@ private:
 	vector<Image*> m_pShowGridButtonBitmaps;
 	Button* m_pPostFXButton;
 	vector<Image*> m_pPostFXButtonBitmaps;
+	Button* m_pScaleButton;
+	vector<Image*> m_pScaleButtonBitmaps;
 
 	Image* m_pCameraBitmap;
 
@@ -110,6 +113,8 @@ private:
 
 	bool m_bMoveable;
 	bool m_bRotateable;
+	bool m_bScaleable;
+
 	bool m_bNewModelLoaded;
 
 	const RenderContext* m_pRenderContext;
@@ -118,6 +123,7 @@ private:
 	ColorPicker* m_pColorPicker;
 	MoveGizmo* m_pMoveGizmo;
 	RotateGizmo* m_pRotateGizmo;
+	ScaleGizmo* m_pScaleGizmo;
 
 	MODE m_Mode;
 

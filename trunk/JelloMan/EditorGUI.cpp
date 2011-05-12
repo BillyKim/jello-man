@@ -38,7 +38,10 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice, Level* pLevel
 		m_pLoadLevelButton(0),
 		m_pLevel(pLevel),
 		m_pLevelLoader(0),
-		m_pPostFXButton(0)
+		m_pPostFXButton(0),
+		m_pScaleButton(0),
+		m_bScaleable(false),
+		m_pScaleGizmo(0)
 {
 
 }
@@ -59,6 +62,7 @@ EditorGUI::~EditorGUI()
 	delete m_pShowGridButton;
 	delete m_pLoadLevelButton;
 	delete m_pPostFXButton;
+	delete m_pScaleButton;
 
 	delete m_pLightDebugger;
 	delete m_pColorPicker;
@@ -67,6 +71,7 @@ EditorGUI::~EditorGUI()
 	delete m_pModelLoader;
 	delete m_pObjectSelecter;
 	delete m_pLevelLoader;
+	delete m_pScaleGizmo;
 }
 
 // GENERAL
@@ -125,7 +130,7 @@ void EditorGUI::Initialize()
 	m_pEditorModeButton->SetDownState(m_pEditorModeButtonBitmaps[1]);
 
 	// POINTLIGHT BUTTON
-	m_pPointlightButton = new Button(253,7,36,36);
+	m_pPointlightButton = new Button(289,7,36,36);
 
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_normal.png")));
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_hover.png")));
@@ -135,7 +140,7 @@ void EditorGUI::Initialize()
 	m_pPointlightButton->SetDownState(m_pPointlightButtonBitmaps[1]);
 
 	// SPOTLIGHT BUTTON
-	m_pSpotlightButton = new Button(289,7,36,36);
+	m_pSpotlightButton = new Button(325,7,36,36);
 
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_normal.png")));
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_hover.png")));
@@ -186,6 +191,23 @@ void EditorGUI::Initialize()
 
 	m_pRotateButton->SetState(Button::STATE_DEACTIVATED);
 
+	// SCALE BUTTON
+	m_pScaleButton = new Button(228,7,36,36,true);
+
+	m_pScaleButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/scale_on_normal.png")));
+	m_pScaleButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/scale_on_hover.png")));
+	m_pScaleButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/scale_off_normal.png")));
+	m_pScaleButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/scale_off_hover.png")));
+
+	m_pScaleButton->SetNormalState(m_pScaleButtonBitmaps[0]);
+	m_pScaleButton->SetHoverState(m_pScaleButtonBitmaps[1]);
+	m_pScaleButton->SetDownState(m_pScaleButtonBitmaps[1]);
+	m_pScaleButton->SetDeactivatedState(m_pScaleButtonBitmaps[2]);
+	m_pScaleButton->SetDeactivatedStateHover(m_pScaleButtonBitmaps[3]);
+	m_pScaleButton->SetDeactivatedStateDown(m_pScaleButtonBitmaps[3]);
+
+	m_pScaleButton->SetState(Button::STATE_DEACTIVATED);
+
 	// PLAY MODE BUTTON
 	m_pPlayModeButton = new Button(20,79,36,36);
 	
@@ -197,7 +219,7 @@ void EditorGUI::Initialize()
 	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
 
 	// LOAD MODEL BUTTON
-	m_pLoadModelButton = new Button(348,7,36,36, true);
+	m_pLoadModelButton = new Button(384,7,36,36, true);
 
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_normal.png")));
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_hover.png")));
@@ -215,7 +237,7 @@ void EditorGUI::Initialize()
 	m_pLoadModelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// LOAD LEVEL BUTTON
-	m_pLoadLevelButton = new Button(384,7,36,36, true);
+	m_pLoadLevelButton = new Button(420,7,36,36, true);
 
 	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_normal.png")));
 	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_hover.png")));
@@ -233,7 +255,7 @@ void EditorGUI::Initialize()
 	m_pLoadLevelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// SHOW GRID BUTTON
-	m_pShowGridButton = new Button(444,7,36,36,true);
+	m_pShowGridButton = new Button(480,7,36,36,true);
 
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_normal.png")));
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_hover.png")));
@@ -283,6 +305,9 @@ void EditorGUI::Initialize()
 	// ROTATE GIZMO
 	m_pRotateGizmo = new RotateGizmo();
 
+	// SCALE GIZMO
+	m_pScaleGizmo = new ScaleGizmo();
+
 	m_pModelLoader = new LoadModelFromFile();
 	m_pLevelLoader = new LoadLevelFromFile(m_pLevel);
 
@@ -307,13 +332,13 @@ void EditorGUI::Draw()
 		BX2D->SetAntiAliasing(true);
 
 		// MOVE GIZMO
-        if (m_bMoveable || m_bRotateable)
-        {
-            if (m_bMoveable)
-                m_pMoveGizmo->Draw();
-            else if (m_bRotateable)
-                m_pRotateGizmo->Draw();
-        }
+       
+        if (m_bMoveable)
+            m_pMoveGizmo->Draw();
+        else if (m_bRotateable)
+            m_pRotateGizmo->Draw();
+		else if (m_bScaleable)
+			m_pScaleGizmo->Draw();
 
 		BX2D->SetAntiAliasing(false);
 	}
@@ -548,7 +573,7 @@ void EditorGUI::Draw()
 	{
 		BX2D->SetColor(255,255,255,0.5f);
 		BX2D->SetFont(m_pInfoFont);
-		BX2D->DrawString(_T("Move objects and lights present in the scene."), 20, BX2D->GetWindowSize().height - 16);
+		BX2D->DrawString(_T("Rotate objects and lights present in the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	if (m_pPlayModeButton->Hover() || m_pPlayModeButton->Down())
@@ -588,6 +613,14 @@ void EditorGUI::Draw()
 		BX2D->SetColor(255,255,255,0.5f);
 		BX2D->SetFont(m_pInfoFont);
 		BX2D->DrawString(_T("Turns on/off post processing effects."), 20, BX2D->GetWindowSize().height - 16);
+	}
+
+	m_pScaleButton->Show();
+	if (m_pScaleButton->Hover() || m_pScaleButton->Down())
+	{
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Scale objects and lights present in the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
 	// CAMERA
@@ -650,6 +683,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	m_pShowGridButton->Tick();
 	m_pLoadLevelButton->Tick();
 	m_pPostFXButton->Tick();
+	m_pScaleButton->Tick();
 
 	if (m_pLoadLevelButton->Clicked())
 		m_pLoadModelButton->Deactivate();
@@ -760,6 +794,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	{
 		m_bMoveable = true;
 		m_bRotateable = false;
+		m_bScaleable = false;
 	}
 	else
 		m_bMoveable = false;
@@ -768,19 +803,42 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	{
 		m_bMoveable = false;
 		m_bRotateable = true;
+		m_bScaleable = false;
 	}
 	else 
 		m_bRotateable = false;
 
+	if (m_pScaleButton->IsActive())
+	{
+		m_bMoveable = false;
+		m_bRotateable = false;
+		m_bScaleable = true;
+	}
+	else 
+		m_bScaleable = false;
+
 	if (m_pMoveButton->Clicked())
+	{
 		m_pRotateButton->Deactivate();
-	if (m_pRotateButton->Clicked())
+		m_pScaleButton->Deactivate();
+	}
+	else if (m_pRotateButton->Clicked())
+	{
 		m_pMoveButton->Deactivate();
+		m_pScaleButton->Deactivate();
+	}
+	else if (m_pScaleButton->Clicked())
+	{
+		m_pMoveButton->Deactivate();
+		m_pRotateButton->Deactivate();
+	}
 
     if (m_bMoveable)
         m_pMoveGizmo->Tick(pRenderContext, m_pObjectSelecter);
     else if (m_bRotateable)
         m_pRotateGizmo->Tick(pRenderContext, m_pObjectSelecter);
+	else if (m_bScaleable)
+		m_pScaleGizmo->Tick(pRenderContext, m_pObjectSelecter);
 }
 
 // GETTERS
