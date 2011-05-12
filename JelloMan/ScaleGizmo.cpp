@@ -250,11 +250,13 @@ void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 					obj->Rotate(Vector3::Right, move);
 				});*/
 
+				move *= -1;
+
 				move += 1.0f;
 
 				if (move < 0)
 				{
-					1 / -move;
+					move = 1 / -move;
 				}
 
 				if (move == 0.0f)
@@ -279,7 +281,7 @@ void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 				if (move < 0)
 				{
-					1 / -move;
+					move = 1 / -move;
 				}
 
 				if (move == 0.0f)
@@ -300,11 +302,13 @@ void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 					obj->Rotate(Vector3::Forward, move);
 				});*/
 
+				move *= -1;
+
 				move += 1.0f;
 
 				if (move < 0)
 				{
-					1 / -move;
+					move = 1 / -move;
 				}
 
 				if (move == 0.0f)
