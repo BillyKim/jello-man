@@ -391,7 +391,7 @@ void SpotLight::SetBehaviour(LightBehaviour* lightBehaviour)
     m_pLightBehaviour->Init(this);
 }
 
-void SpotLight::Serialize(Serializer* pSerializer)
+void SpotLight::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeFloat(m_Desc.attenuationEnd);
     pSerializer->GetStream()->storeFloat(m_Desc.attenuationStart);

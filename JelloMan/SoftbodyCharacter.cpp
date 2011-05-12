@@ -1,16 +1,16 @@
-#include "TestSoftbody.h"
+#include "SoftbodyCharacter.h"
 #include "ContentManager.h"
 
-TestSoftbody::TestSoftbody(const Vector3& pos): Softbody(), m_vPosition(pos)
+SoftbodyCharacter::SoftbodyCharacter(const Vector3& pos): Softbody(), m_vPosition(pos)
 {
 }
 
 
-TestSoftbody::~TestSoftbody()
+SoftbodyCharacter::~SoftbodyCharacter()
 {
 }
 
-void TestSoftbody::Init(PhysX* pPhysX)
+void SoftbodyCharacter::Init(PhysX* pPhysX)
 {
     SoftbodyMesh* pSBMesh = Content->LoadSoftbodyMesh(_T("../Sphere50SB.binobj"));
     InitSoftbody(pPhysX, pSBMesh, _T("../Sphere50SB.nxsoftbody"), m_vPosition);
@@ -22,17 +22,28 @@ void TestSoftbody::Init(PhysX* pPhysX)
     m_pGlossMap = Content->LoadTexture2D(_T("../Content/Textures/weapon_gloss.png"));
 }
 
-void TestSoftbody::Selected(bool selected)
+void SoftbodyCharacter::Selected(bool selected)
 {
     m_bIsSelected = selected;
 }
 
-void TestSoftbody::Tick(const float dTime)
+void SoftbodyCharacter::Tick(const float dTime)
 {
     TransformPositions();
+
+	if (CONTROLS->IsKeyDown(VK_CONTROL))
+		AddForce(Vector3::Up * -80000000000, GetPosition());
+	if (CONTROLS->IsKeyDown(VK_UP))
+		AddForce(Vector3::Forward * 800000000, GetPosition() + Vector3::Up * GetRadius());
+	if (CONTROLS->IsKeyDown(VK_DOWN))
+		AddForce(-Vector3::Forward * 800000000, GetPosition() + Vector3::Up * GetRadius());
+	if (CONTROLS->IsKeyDown(VK_LEFT))
+		AddForce(-Vector3::Right * 800000000, GetPosition() + Vector3::Up * GetRadius());
+	if (CONTROLS->IsKeyDown(VK_RIGHT))
+		AddForce(Vector3::Right * 800000000, GetPosition() + Vector3::Up * GetRadius());
 }
 
-void TestSoftbody::Draw(RenderContext* pRenderContext)
+void SoftbodyCharacter::Draw(RenderContext* pRenderContext)
 {
     m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->SetWorld(Matrix::Identity);
@@ -44,7 +55,7 @@ void TestSoftbody::Draw(RenderContext* pRenderContext)
 
     m_pSoftbodyMesh->Draw(m_pEffect);
 }
-void TestSoftbody::DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e)
+void SoftbodyCharacter::DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e)
 {
     e->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 	

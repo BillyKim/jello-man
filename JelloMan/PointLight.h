@@ -64,9 +64,9 @@ public:
 	{ return m_pHitRegion; }
 
     // ISerializeable
-	virtual void Serialize(Serializer* pSerializer);
+	virtual void Serialize(Serializer* pSerializer) const;
 	virtual void Deserialize(Serializer* pSerializer);
-    virtual DWORD GetUniqueIdentifier() { return SerializeTypes::PointLight; }
+    virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::PointLight; }
 
 private:
 	bool m_IsEnabled;

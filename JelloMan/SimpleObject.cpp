@@ -55,7 +55,6 @@ void SimpleObject::Init(PhysX* pPhysX)
     {
         m_pPhysXShape = new PhysXMesh(pPhysX, string(m_strPhysXModelPath.cbegin(), m_strPhysXModelPath.cend()), 10);
     }
-
     m_pEffect = Content->LoadEffect<DeferredPreEffectNormals>(_T("../Content/Effects/predeferredNormal.fx"));
     
     m_pPhysXShape->GetShape()->userData = dynamic_cast<ILevelObject*>(this);
@@ -91,7 +90,7 @@ void SimpleObject::DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e)
 #pragma endregion
 
 #pragma region ISerializeable
-void SimpleObject::Serialize(Serializer* pSerializer)
+void SimpleObject::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeTString(m_strDiffusePath);
     pSerializer->GetStream()->storeTString(m_strSpecPath);

@@ -13,6 +13,8 @@ public:
     virtual ~Softbody(void);
     
     void AddForce(const Vector3& force);
+    void AddForce(const Vector3& force, const Vector3& pos);
+    void AddSpeed(const Vector3& force, const Vector3& pos);
     void AddSpeed(const Vector3& speed);
     
 	virtual void Translate(const Vector3& add);
@@ -29,8 +31,12 @@ protected:
 
     void SetEffectParams();
     void TransformPositions();
+	void SetVertices();
 
     SoftbodyMesh* m_pSoftbodyMesh;
+	vector<VertexPosNormTanTex> m_TransformedVertices;
+
+	float GetRadius() const { return m_Radius; }
 
 private:
     static const int MAXTETRA = 10000;

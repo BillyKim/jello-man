@@ -28,7 +28,7 @@ public:
 	NxActor* GetActor() const
 	{ return m_pActor; }
     
-	virtual void Serialize(Serializer* pSerializer) = 0;
+	virtual void Serialize(Serializer* pSerializer)  const = 0;
 	virtual void Deserialize(Serializer* pSerializer) = 0;
 
 protected:

@@ -90,7 +90,7 @@ ISerializable* Serializer::Deserialize(ISerializable* (*GetObject)(DWORD id))
     return obj;
 }
 
-bool Serializer::eof()
+bool Serializer::eof() const
 {
     return m_NumSerialized <= 0;
 }

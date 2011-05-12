@@ -164,6 +164,7 @@
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="SerializeTypes.h" />
     <ClInclude Include="Softbody.h" />
+    <ClInclude Include="SoftbodyCharacter.h" />
     <ClInclude Include="SoftbodyMesh.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SplineLoader.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="ScaleGizmo.cpp" />
     <ClCompile Include="Serializer.cpp" />
     <ClCompile Include="Softbody.cpp" />
+    <ClCompile Include="SoftbodyCharacter.cpp" />
     <ClCompile Include="SoftbodyMesh.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SplineLoader.cpp" />

@@ -15,7 +15,7 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_pBaseGrid(new BaseGrid(pDXDevice)),
 				m_bShowGrid(false),
 				m_bTickCharacter(false),
-				//m_pCharacter(0),
+				m_pCharacter(0),
 				m_bEditor(true),
 				m_pTestFluid(0),
 				m_pEmitter(0)
@@ -28,6 +28,7 @@ Level::~Level()
 {
 	delete m_pBaseGrid;
 	delete m_pTestFluid;
+	delete m_pCharacter;
 	
 	Clear();
 }
@@ -89,6 +90,9 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 
 	m_pEmitter = m_pTestFluid->GetNxFluid()->createEmitter(emitterDesc);
 
+	m_pCharacter = new SoftbodyCharacter(Vector3(0, 500, 0));
+	m_pCharacter->Init(m_pPhysXEngine);
+
 	// forcefield
 	NxForceFieldLinearKernelDesc linearKernelDesc;
     linearKernelDesc.constant = NxVec3(1000,500,500);
@@ -116,6 +120,7 @@ void Level::Tick(const float dTime)
 	{
 		obj->Tick(dTime);	
 	});
+	m_pCharacter->Tick(dTime);
 }
 
 void Level::AddLevelObject(ILevelObject* pLevelObject)
@@ -200,6 +205,7 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 	{
 		(*it)->Draw(pRenderContext);
 	}
+	m_pCharacter->Draw(pRenderContext);
 }
 
 void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
@@ -208,6 +214,7 @@ void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreSh
 	{
         lobj->DrawShadow(pRenderContext, pPreShadowEffect);
 	});
+	m_pCharacter->DrawShadow(pRenderContext, pPreShadowEffect);
 }
 
 void Level::DrawForward(const RenderContext* pRenderContext)

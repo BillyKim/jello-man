@@ -18,7 +18,12 @@ PhysXSphere::~PhysXSphere(void)
 }
 
 
-void PhysXSphere::Serialize(Serializer* pSerializer)
+void PhysXSphere::Scale(const Vector3& scale)
+{
+	m_pSphereDesc->radius = m_pSphereDesc->radius * ((scale.X + scale.Y + scale.Z) / 3.0f);
+}
+
+void PhysXSphere::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeFloat(m_pSphereDesc->radius);
     pSerializer->GetStream()->storeFloat(m_pSphereDesc->mass);

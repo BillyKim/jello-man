@@ -77,8 +77,8 @@ public:
 	virtual HitRegion* GetHitRegion() const = 0;
 
     // ISerializeable
-	virtual void Serialize(Serializer* pSerializer) = 0;
+	virtual void Serialize(Serializer* pSerializer) const = 0;
 	virtual void Deserialize(Serializer* pSerializer) = 0;
-    virtual DWORD GetUniqueIdentifier() = 0;
+    virtual DWORD GetUniqueIdentifier() const = 0;
 };
 

@@ -10,10 +10,12 @@ public:
     virtual ~PhysXBox(void);
 
     virtual NxShapeDesc* GetShape() const { return m_pBoxShapeDesc; }
+	
+	virtual void Scale(const Vector3& scale) {};
 
-	virtual void Serialize(Serializer* pSerializer);
+	virtual void Serialize(Serializer* pSerializer) const;
 	virtual void Deserialize(Serializer* pSerializer);
-    virtual DWORD GetUniqueIdentifier() { return SerializeTypes::PhysXShapeBox; };
+    virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::PhysXShapeBox; };
 
 private:
     NxBoxShapeDesc* m_pBoxShapeDesc;

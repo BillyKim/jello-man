@@ -64,7 +64,7 @@ void LightBehaviourBroken::Tick(float dTime)
 }
 
 //Serialize
-void LightBehaviourBroken::Serialize(Serializer* pSerializer)
+void LightBehaviourBroken::Serialize(Serializer* pSerializer) const
 {
     pSerializer->GetStream()->storeByte(static_cast<BYTE>(m_Type));
 }
