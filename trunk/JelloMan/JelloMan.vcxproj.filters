@@ -429,6 +429,12 @@
     <ClInclude Include="SoftbodyMesh.h">
       <Filter>Engine Files\Graphics\Model</Filter>
     </ClInclude>
+    <ClInclude Include="FluidRenderer.h">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FluidPostEffect.h">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -701,6 +707,12 @@
     <ClCompile Include="SoftbodyMesh.cpp">
       <Filter>Engine Files\Graphics\Model</Filter>
     </ClCompile>
+    <ClCompile Include="FluidRenderer.cpp">
+      <Filter>Engine Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="FluidPostEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
@@ -728,6 +740,12 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="Content\Effects\fluidEffect.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\fluidPostEffect.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\blur.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

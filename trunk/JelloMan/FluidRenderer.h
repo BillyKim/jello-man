@@ -6,18 +6,18 @@
 #include "PostProcessEffect.h"
 #include "DeferredRenderer.h"
 
-class PostProcessor
+class FluidRenderer
 {
 public:
-    PostProcessor(ID3D10Device* pDXDevice, int backBufferWidth, int backBufferHeight);
-    ~PostProcessor(void);
+    FluidRenderer(ID3D10Device* pDXDevice, int backBufferWidth, int backBufferHeight);
+    ~FluidRenderer(void);
 
     void SetEffect(PostProcessEffect* pEffect);
 
     void OnResized(int backBufferWidth, int backBufferHeight);
 
     void Begin();
-    void End(DeferredRenderer* deferredRenderer);
+    void End();
 
 private:
     void Init();

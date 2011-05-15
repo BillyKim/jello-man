@@ -16,6 +16,10 @@
 #include "Fluid.h"
 #include "SoftbodyCharacter.h"
 
+#include "FluidPostEffect.h"
+
+
+
 class Level
 {
 public:
@@ -73,6 +77,8 @@ private:
 
 	Fluid* m_pTestFluid;
 	NxFluidEmitter* m_pEmitter;
+
+    PostProcessor* m_pFluidPostProcessor;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);
