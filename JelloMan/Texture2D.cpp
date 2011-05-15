@@ -111,10 +111,12 @@ void Texture2D::BeginDraw()
     m_pDevice->OMGetRenderTargets(1, &m_pPrevRenderTarget, &m_pPrevDSV);
 
     ID3D10RenderTargetView* renderTargets[1] = { m_pColorMapRTV };
+
     m_pDevice->OMSetRenderTargets(1, renderTargets, m_pDepthMapDSV);
+    m_pDevice->ClearDepthStencilView(m_pDepthMapDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
+
     m_pDevice->RSSetViewports(1, &m_Viewport);
 
-    m_pDevice->ClearDepthStencilView(m_pDepthMapDSV, D3D10_CLEAR_DEPTH, 1.0f, 0);
 }
 void Texture2D::EndDraw()
 {

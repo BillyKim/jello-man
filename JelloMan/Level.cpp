@@ -18,7 +18,8 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_pCharacter(0),
 				m_bEditor(true),
 				m_pTestFluid(0),
-				m_pEmitter(0)
+				m_pEmitter(0),
+                m_pFluidPostProcessor(0)
 {
 
 }
@@ -29,6 +30,7 @@ Level::~Level()
 	delete m_pBaseGrid;
 	delete m_pTestFluid;
 	delete m_pCharacter;
+    delete m_pFluidPostProcessor;
 	
 	Clear();
 }
@@ -112,6 +114,11 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 	b.dimensions = NxVec3(500, 700, 500);
 	b.pose.t = NxVec3(0, 350, 0);
 	s = pForceField->getIncludeShapeGroup().createShape(b);
+
+    m_pFluidPostProcessor = new PostProcessor(m_pDXDevice, 
+                                            static_cast<int>(BX2D->GetWindowSize().width), 
+                                            static_cast<int>(BX2D->GetWindowSize().height));
+    m_pFluidPostProcessor->SetEffect(Content->LoadEffect<FluidPostEffect>(_T("../Content/Effects/fluidPostEffect.fx")));
 }
 
 void Level::Tick(const float dTime)
@@ -219,12 +226,17 @@ void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreSh
 
 void Level::DrawForward(const RenderContext* pRenderContext)
 {
-	if (m_bShowGrid)
-		m_pBaseGrid->Draw(pRenderContext);
 
 	if (m_pTestFluid)
+    {
+        m_pFluidPostProcessor->Begin();
 		m_pTestFluid->Draw(pRenderContext);
+        m_pFluidPostProcessor->End(pRenderContext->GetDeferredRenderer());
+        //m_pFluidRenderer->End();
+    }
 
+	if (m_bShowGrid)
+		m_pBaseGrid->Draw(pRenderContext);
 	/*tstringstream stream;
 	stream << m_pEmitter->getNbParticlesEmitted();
 

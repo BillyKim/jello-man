@@ -113,6 +113,8 @@
     <ClInclude Include="FileNotFoundException.h" />
     <ClInclude Include="FixedJoint.h" />
     <ClInclude Include="FluidEffect.h" />
+    <ClInclude Include="FluidPostEffect.h" />
+    <ClInclude Include="FluidRenderer.h" />
     <ClInclude Include="ForwardRenderer.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GameTimer.h" />
@@ -212,6 +214,8 @@
     <ClCompile Include="FileNotFoundException.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
     <ClCompile Include="FluidEffect.cpp" />
+    <ClCompile Include="FluidPostEffect.cpp" />
+    <ClCompile Include="FluidRenderer.cpp" />
     <ClCompile Include="ForwardRenderer.cpp" />
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GameTimer.cpp" />
@@ -280,7 +284,9 @@
     <ClCompile Include="VisualLightDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\Effects\blur.fx" />
     <None Include="Content\Effects\fluidEffect.fx" />
+    <None Include="Content\Effects\fluidPostEffect.fx" />
     <None Include="Content\Effects\lights.fx" />
     <None Include="Content\Effects\phong.fx" />
     <None Include="Content\Effects\poscol.fx" />

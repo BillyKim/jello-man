@@ -86,7 +86,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 									static_cast<int>(BX2D->GetWindowSize().height),
 									true	);
     m_pEditorCamera->LookAt(Vector3(-500, 300, -500), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,100000.0f);
+	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,10000.0f);
 
 	m_pTrackingCamera = new Camera(	static_cast<int>(BX2D->GetWindowSize().width),
 									static_cast<int>(BX2D->GetWindowSize().height),
@@ -121,7 +121,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
-	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController);
+	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController, m_pDeferredRenderer);
 
    /* SpotLight* sp1 = new SpotLight();
         sp1->SetPosition(Vector3(0.0f,600.0f,0.0f));
@@ -481,6 +481,9 @@ void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
 
 		m_pEditorCamera->OnResize(	static_cast<int>(BX2D->GetWindowSize().width),
 									static_cast<int>(BX2D->GetWindowSize().height));*/
+
+        m_pPostProcessor->OnResized(	static_cast<int>(BX2D->GetWindowSize().width),
+										static_cast<int>(BX2D->GetWindowSize().height));
 	}
 }
 void MainGame::Release()

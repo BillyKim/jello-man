@@ -6,6 +6,8 @@
 //														\\
 //------------------------------------------------------\\
 
+#include "blur.fx"
+
 Texture2D backBuffer;
 Texture2D normalMap;
 Texture2D depthMap;

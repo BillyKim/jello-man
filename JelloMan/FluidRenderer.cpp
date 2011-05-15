@@ -1,9 +1,9 @@
-#include "PostProcessor.h"
+#include "FluidRenderer.h"
 #include <vector>
 
-PostProcessor::PostProcessor(ID3D10Device* pDXDevice, int backBufferWidth, int backBufferHeight): 
+FluidRenderer::FluidRenderer(ID3D10Device* pDXDevice, int backBufferWidth, int backBufferHeight): 
         m_pBuffer(new Texture2D(pDXDevice, backBufferWidth, backBufferHeight, true, false)),
-        m_pScreenMesh(new ModelMesh<VertexPosTex>(pDXDevice, _T("PostProcessorPlane"))),
+        m_pScreenMesh(new ModelMesh<VertexPosTex>(pDXDevice, _T("FluidPlane"))),
         m_pPrevBackBuffer(0),
         m_pPrevDepthStencilView(0),
         m_Width(backBufferWidth),
@@ -13,7 +13,7 @@ PostProcessor::PostProcessor(ID3D10Device* pDXDevice, int backBufferWidth, int b
     Init();
 }
 
-void PostProcessor::OnResized(int backBufferWidth, int backBufferHeight)
+void FluidRenderer::OnResized(int backBufferWidth, int backBufferHeight)
 {
     delete  m_pBuffer;
     m_pBuffer = new Texture2D(m_pDXDevice, backBufferWidth, backBufferHeight, true, false);
@@ -21,13 +21,13 @@ void PostProcessor::OnResized(int backBufferWidth, int backBufferHeight)
     m_Height = backBufferHeight;
 }
 
-PostProcessor::~PostProcessor(void)
+FluidRenderer::~FluidRenderer(void)
 {
     delete m_pBuffer;
     delete m_pScreenMesh;
 }
 
-void PostProcessor::Init()
+void FluidRenderer::Init()
 {
     vector<VertexPosTex> vertices;
 
@@ -47,19 +47,19 @@ void PostProcessor::Init()
 	m_pScreenMesh->SetVertices(vertices);
     m_pScreenMesh->SetIndices(indices);
 }
-void PostProcessor::SetEffect(PostProcessEffect* pEffect)
+void FluidRenderer::SetEffect(PostProcessEffect* pEffect)
 {
     m_pEffect = pEffect;
     m_pEffect->SetBackbufferSize(m_Width, m_Height);
 }
-void PostProcessor::Begin()
+void FluidRenderer::Begin()
 {
     m_pDXDevice->OMGetRenderTargets(1, &m_pPrevBackBuffer, &m_pPrevDepthStencilView);
 
     m_pBuffer->BeginDraw();
     m_pBuffer->Clear(Vector4(0, 0, 0, 1));
 }
-void PostProcessor::End(DeferredRenderer* deferredRenderer)
+void FluidRenderer::End()
 {
     ASSERT(m_pPrevBackBuffer != 0, "PostProcessor::Begin() must be called first,  or backbuffer got lost");
 
@@ -67,14 +67,11 @@ void PostProcessor::End(DeferredRenderer* deferredRenderer)
 
     m_pDXDevice->OMSetRenderTargets(1, &m_pPrevBackBuffer, NULL);
 
-    /*float c[4];
+    float c[4];
     Vector4(0, 0, 0, 1).ToFloat4(c);
-    m_pDXDevice->ClearRenderTargetView(m_pPrevBackBuffer, c);*/
+    m_pDXDevice->ClearRenderTargetView(m_pPrevBackBuffer, c);
 
     m_pEffect->SetBackbufferMap(m_pBuffer->GetColorMap());
-    m_pEffect->SetColorGlowMap(deferredRenderer->GetColorGlowMap());
-    m_pEffect->SetDepthMap(m_pBuffer->GetDepthMap());
-    m_pEffect->SetNormalMap(deferredRenderer->GetNormalSpecMap());
 
     m_pScreenMesh->Draw(m_pEffect->GetEffect());
 
