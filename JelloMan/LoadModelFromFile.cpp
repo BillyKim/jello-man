@@ -143,7 +143,15 @@ void LoadModelFromFile::Tick()
 	if (m_pbtnLoadModel->Clicked())
 	{
 		if (m_ModelPath != _T("") && m_PhysXModelPath != _T(""))
-		{
+		{        
+            bool rigid = false;
+            int ret = MessageBoxA(0, "Load as staticmesh?", "Loading: ", MB_ICONQUESTION | MB_YESNO);
+			switch (ret)
+			{
+                case IDYES: rigid = false; break;
+                default: rigid = true; break;
+            }
+
             SimpleObject* pObj = new SimpleObject();
 			m_pLevelObject = pObj;
 
@@ -156,7 +164,7 @@ void LoadModelFromFile::Tick()
 			pObj->SetSpecPath(m_SpecPath);
 			pObj->SetGlossPath(m_GlossPath);
 
-			pObj->SetRigid(true);
+			pObj->SetRigid(rigid);
 
 			m_bIsLoaded = true;
 		}

@@ -32,15 +32,15 @@ void SoftbodyCharacter::Tick(const float dTime)
     TransformPositions();
 
 	if (CONTROLS->IsKeyDown(VK_CONTROL))
-		AddForce(Vector3::Up * -80000000000, GetPosition());
+        AddForce(Vector3::Up * -80000000000, GetPosition());
 	if (CONTROLS->IsKeyDown(VK_UP))
-		AddForce(Vector3::Forward * 800000000, GetPosition() + Vector3::Up * GetRadius());
+		AddSpeed(Vector3::Forward * 800, GetPosition());
 	if (CONTROLS->IsKeyDown(VK_DOWN))
-		AddForce(-Vector3::Forward * 800000000, GetPosition() + Vector3::Up * GetRadius());
+		AddSpeed(-Vector3::Forward * 800, GetPosition());
 	if (CONTROLS->IsKeyDown(VK_LEFT))
-		AddForce(-Vector3::Right * 800000000, GetPosition() + Vector3::Up * GetRadius());
+		AddSpeed(-Vector3::Right * 800, GetPosition());
 	if (CONTROLS->IsKeyDown(VK_RIGHT))
-		AddForce(Vector3::Right * 800000000, GetPosition() + Vector3::Up * GetRadius());
+		AddSpeed(Vector3::Right * 800, GetPosition());
 }
 
 void SoftbodyCharacter::Draw(RenderContext* pRenderContext)
