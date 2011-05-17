@@ -123,6 +123,13 @@ void Level::Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera)
 
 void Level::Tick(const float dTime)
 {
+    if (CONTROLS->IsKeyPressed(VK_LMENU))
+    {
+        NxVec3 grav;
+        m_pPhysXEngine->GetScene()->getGravity(grav);
+        m_pPhysXEngine->GetScene()->setGravity(-grav);
+    }
+
     for_each(m_pLevelObjects.begin(), m_pLevelObjects.end(), [&](ILevelObject* obj)
 	{
 		obj->Tick(dTime);	
