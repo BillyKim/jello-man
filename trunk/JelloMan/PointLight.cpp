@@ -235,7 +235,7 @@ void PointLight::SetBehaviour(LightBehaviour* lightBehaviour)
     m_pLightBehaviour->Init(this);
 }
 
-D3D10_RECT PointLight::CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const
+D3D10_RECT PointLight::CalcScissorRect(Graphics::Camera::CameraBase* camera, UINT backbufferWidth, UINT backbufferHeight) const
 {
     Vector4 pos;
     pos = Vector3::Transform(m_Desc.position, camera->GetViewProjection());

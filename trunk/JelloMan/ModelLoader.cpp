@@ -71,7 +71,7 @@ void ModelLoader::ReadBinObj(const tstring& assetName)
         //Word: nameLength
             //buffer: name
         //DWord : #vert
-            //vector3: pos, vector3: norm, vector2: tex     : vertex
+            //vector3: pos, vector3: norm, vector3 tan, vector2: tex     : vertex
         //DWord : #triangles
             //DWord, DWord, DWord : triangle
         //...
@@ -87,40 +87,22 @@ void ModelLoader::ReadBinObj(const tstring& assetName)
         char* name = new char[nameLength];
         stream.readBuffer(name, nameLength);
         
-
         string tempname(name);
+        tempname = tempname.substr(0, nameLength);
         delete name;
         m_pCurrentMesh = m_pCurrentModel->AddMesh(tstring(tempname.cbegin(), tempname.cend()));
 
-
         m_VPNTTData.clear();
         DWORD vertices = stream.readDword();
-
-		vector<Vector3> tempVertices;
-		vector<Vector3> tempNormals;
-		vector<Vector2> tempTexCoords;
 
         for (DWORD v = 0; v < vertices; ++v)
         {
             Vector3 pos = stream.readVector3();
             Vector3 norm = stream.readVector3();
+            Vector3 tan = stream.readVector3();
             Vector2 tex = stream.readVector2();
 
-			tex.Y *= -1; // fixes texcoords
-
-			tempVertices.push_back(pos);
-			tempNormals.push_back(norm);
-			tempTexCoords.push_back(tex);
-
-			if ((v+1) % 3 == 0)
-			{
-				for (int i = 0; i < 3; ++i)
-					m_VPNTTData.push_back(VertexPosNormTanTex(tempVertices[i], tempNormals[i], Vector3(0,0,0), tempTexCoords[i]));
-
-				tempVertices.clear();
-				tempNormals.clear();
-				tempTexCoords.clear();
-			}
+            m_VPNTTData.push_back(VertexPosNormTanTex(pos, norm, tan, tex));
         }
 
         DWORD indices = stream.readDword() * 3;
@@ -130,11 +112,6 @@ void ModelLoader::ReadBinObj(const tstring& assetName)
         {
             DWORD index = stream.readDword();
             m_IndexData.push_back(index);
-
-			if (((i+1) % 3) == 0)
-			{
-				CalculateTangents(m_VPNTTData[m_IndexData[i]], m_VPNTTData[m_IndexData[i-1]], m_VPNTTData[m_IndexData[i-2]]);
-			}
         }
         m_pCurrentMesh->SetVertices(m_VPNTTData);
         m_pCurrentMesh->SetIndices(m_IndexData);

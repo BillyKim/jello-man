@@ -3,7 +3,6 @@
 #include "Blox2D.h"
 #include "Controls.h"
 #include <vector>
-#include "Camera.h"
 #include "RenderContext.h"
 #include "LightController.h"
 #include "VisualLightDebugger.h"

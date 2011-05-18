@@ -72,21 +72,26 @@ struct PixelShaderOutput
 	float4 normalSpec : SV_TARGET1;
 	float4 positionGloss : SV_TARGET2;
 };
+float3 CalcNormal(float3 normal, float3 tangent, float3 rgb)
+{
+	//NormalMap
+	tangent = normalize(tangent);
+	normal = normalize(normal);
+	float dottn = dot(tangent,normal);
+	tangent -= dottn * normal;
+	float3 binormal = normalize(cross(tangent,normal));
 
+	float3x3 assenstelsel = float3x3(binormal,tangent,normal);
+
+	float3 xyz = float3(rgb.x * 2 - 1, rgb.y * 2 - 1, rgb.z * 2 - 1) ;
+
+	return normalize(mul(float4(xyz, 0), assenstelsel));
+}
 PixelShaderOutput  PS(VertexShaderOutput input) 
 {
 	PixelShaderOutput output;
 
-	float3 normalize1 = normalize(input.normal);
-	float3 normalize2 = normalize(input.tangent);
-	float3 cross1 = cross(normalize1, normalize2);
-
-	float3x3 basis1 = float3x3(cross1, normalize2, normalize1);
-
-	float3 gNormalMap = 2.0f * normalMap.Sample(mapSampler, input.texCoord).rgb - 1.0f;
-
-	float3 mtx1_tvec3 = mul(gNormalMap, basis1);
-//	mtx1_tvec3.b *= -1;
+    float3 normal = CalcNormal(input.normal, input.tangent, normalMap.Sample(mapSampler, input.texCoord).rgb);
 
 	output.colorGlow = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, selected?1.0f:0.0);
     if (selected)
@@ -95,7 +100,7 @@ PixelShaderOutput  PS(VertexShaderOutput input)
     }
     output.colorGlow = saturate(output.colorGlow);
 
-	output.normalSpec = float4(mtx1_tvec3, specMap.Sample(mapSampler, input.texCoord).r);
+	output.normalSpec = float4(normal, specMap.Sample(mapSampler, input.texCoord).r);
 	output.positionGloss = float4(input.worldPos, glossMap.Sample(mapSampler, input.texCoord).r);
 
 	return output;

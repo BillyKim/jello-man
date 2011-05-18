@@ -29,11 +29,11 @@ public:
 	Model* Load(const string& assetName);
 
 private:
-    void ReadObj(const string& assetName, bool isSoftbody);
+    void ReadObj(const string& assetName);
     void ReadTet(const string& fileName);
     void LinkSBtoModel(const string& fileName);
 
-    void AddVertex(const Vector3& v, bool isSoftbody);
+    void AddVertex(const Vector3& v);
     void AddNormal(const Vector3& v);
     void AddTexCoord(const Vector2& v);
     void AddMesh(const string& name);
@@ -42,11 +42,13 @@ private:
     void AddSBLink(int t, const Vector3& bc);
     void FlushMesh();
 
+    void CalculateTangents();
+
     vector<Vector3> m_VertexData;
     vector<Vector3> m_NormalData;
     vector<Vector2> m_TextureData;
 
-    vector<VertexPosNormTex> m_VPNTData;
+    vector<VertexPosNormTanTex> m_VPNTData;
     map<string, DWORD> m_VPNTMap;
 
     vector<VertexPos> m_VPData;
@@ -59,7 +61,7 @@ private:
 
     Model* m_pCurrentModel;
     ModelMesh<VertexPos>* m_pCurrentPhysXMesh;
-    ModelMesh<VertexPosNormTex>* m_pCurrentDrawMesh;
+    ModelMesh<VertexPosNormTanTex>* m_pCurrentDrawMesh;
 
     ProgressInfo* m_pProgress;
 

@@ -258,7 +258,7 @@ Texture2D* SpotLight::GetShadowMap() const
 {
 	return m_ShadowMap;
 }
-Camera* SpotLight::GetShadowCamera() const
+Graphics::Camera::CameraBase* SpotLight::GetShadowCamera() const
 {
     return m_pShadowCamera;
 }
@@ -278,7 +278,7 @@ void SpotLight::SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type)
 	if (type != ShadowMapType_None)
 	{
 		m_ShadowMap = new Texture2D(pDXDevice, type, type, false);
-        m_pShadowCamera = new Camera(type, type, false);
+        m_pShadowCamera = new Graphics::Camera::CameraBase(type, type);
         m_pShadowCamera->SetPosition(m_Desc.position);    
 
         UpdateShadowCameraProjection();
@@ -299,7 +299,7 @@ void SpotLight::UpdateShadowCameraProjection()
         m_pShadowCamera->SetLens(1.0f, m_OpeningsAngle, 1.0f, m_Desc.attenuationEnd);
 }
 
-D3D10_RECT SpotLight::CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const
+D3D10_RECT SpotLight::CalcScissorRect(Graphics::Camera::CameraBase* camera, UINT backbufferWidth, UINT backbufferHeight) const
 {
     Vector4 pos;
     pos = Vector3::Transform(m_Desc.position, camera->GetViewProjection());

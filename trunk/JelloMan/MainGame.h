@@ -6,7 +6,8 @@
 #include "GameConfig.h"
 #include "Level.h"
 #include "RenderContext.h"
-#include "Camera.h"
+#include "FlyCamera.h"
+#include "FollowCamera.h"
 #include "Sound.h"
 #include "LightController.h"
 #include "Matrix.h"
@@ -70,8 +71,8 @@ private:
 
 	Level* m_pLevel;
 
-	Camera* m_pEditorCamera;
-	Camera* m_pTrackingCamera;
+	Graphics::Camera::FlyCamera* m_pEditorCamera;
+	Graphics::Camera::FollowCamera* m_pTrackingCamera;
 
     LightController* m_pLightController;
 

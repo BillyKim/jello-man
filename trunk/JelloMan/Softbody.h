@@ -16,6 +16,8 @@ public:
     void AddForce(const Vector3& force, const Vector3& pos);
     void AddSpeed(const Vector3& force, const Vector3& pos);
     void AddSpeed(const Vector3& speed);
+
+    Vector3 GetSpeed() const;
     
 	virtual void Translate(const Vector3& add);
 	virtual void SetPosition(const Vector3& pos);
@@ -38,11 +40,12 @@ protected:
 
 	float GetRadius() const { return m_Radius; }
 
-private:
-    static const int MAXTETRA = 10000;
-
+protected:  
 	NxSoftBody* m_pSoftbody;
 	PhysX* m_pPhysX;
+
+private:
+    static const int MAXTETRA = 10000;
 
     Vector3 m_arrPositions[MAXTETRA];
     NxU32 m_numPositions;

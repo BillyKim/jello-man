@@ -92,7 +92,7 @@
     <ClInclude Include="Blox2DEngine.h" />
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Button.h" />
-    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraBase.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
@@ -115,6 +115,8 @@
     <ClInclude Include="FluidEffect.h" />
     <ClInclude Include="FluidPostEffect.h" />
     <ClInclude Include="FluidRenderer.h" />
+    <ClInclude Include="FlyCamera.h" />
+    <ClInclude Include="FollowCamera.h" />
     <ClInclude Include="ForwardRenderer.h" />
     <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GameTimer.h" />
@@ -195,7 +197,7 @@
     <ClCompile Include="BaseGrid.cpp" />
     <ClCompile Include="Blox2DEngine.cpp" />
     <ClCompile Include="Button.cpp" />
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraBase.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
@@ -216,6 +218,8 @@
     <ClCompile Include="FluidEffect.cpp" />
     <ClCompile Include="FluidPostEffect.cpp" />
     <ClCompile Include="FluidRenderer.cpp" />
+    <ClCompile Include="FlyCamera.cpp" />
+    <ClCompile Include="FollowCamera.cpp" />
     <ClCompile Include="ForwardRenderer.cpp" />
     <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="GameTimer.cpp" />

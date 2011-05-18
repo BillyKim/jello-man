@@ -1,7 +1,7 @@
 #pragma once
 
 #include "D3DUtil.h"
-#include "Camera.h"
+#include "CameraBase.h"
 #include "LightController.h"
 class DeferredRenderer;
 
@@ -10,11 +10,11 @@ class RenderContext
 public:
 	
 	// CONSTRUCTOR - DESTRUCTOR
-    RenderContext(Camera* pCamera, LightController* pLichtController, DeferredRenderer* pDr);
+    RenderContext(Graphics::Camera::CameraBase* pCamera, LightController* pLichtController, DeferredRenderer* pDr);
 	virtual ~RenderContext();
 
 	// GETTERS
-	Camera* GetCamera() const
+	Graphics::Camera::CameraBase* GetCamera() const
 	{ return m_pCamera; }
 
 	LightController* GetLightController() const
@@ -24,13 +24,13 @@ public:
     { return m_pDeferredRenderer; }
 
 	// SETTERS
-	void SetCamera(Camera* pCamera)
+	void SetCamera(Graphics::Camera::CameraBase* pCamera)
 	{ m_pCamera = pCamera; }
 	
 private:
 
 	// DATAMEMBERS
-	Camera* m_pCamera;
+	Graphics::Camera::CameraBase* m_pCamera;
     LightController* m_pLightController;
     DeferredRenderer* m_pDeferredRenderer;
 

@@ -44,7 +44,7 @@ public:
 	virtual		NxU32			readDword()								const	{ NX_ASSERT(0);	return 0;	}
 	virtual		float			readFloat()								const	{ NX_ASSERT(0);	return 0.0f;}
 	virtual		double			readDouble()							const	{ NX_ASSERT(0);	return 0.0;	}
-	virtual		void			readBuffer(void* buffer, NxU32 size)	const	{ NX_ASSERT(0);				}
+	virtual		void			readBuffer(void*, NxU32)            	const	{ NX_ASSERT(0);				}
 
 	virtual		NxStream&		storeByte(NxU8 b);
 	virtual		NxStream&		storeWord(NxU16 w);
@@ -71,12 +71,12 @@ public:
 	virtual		double			readDouble()							const;
 	virtual		void			readBuffer(void* buffer, NxU32 size)	const;
 
-	virtual		NxStream&		storeByte(NxU8 b)							{ NX_ASSERT(0);	return *this;	}
-	virtual		NxStream&		storeWord(NxU16 w)							{ NX_ASSERT(0);	return *this;	}
-	virtual		NxStream&		storeDword(NxU32 d)							{ NX_ASSERT(0);	return *this;	}
-	virtual		NxStream&		storeFloat(NxReal f)						{ NX_ASSERT(0);	return *this;	}
-	virtual		NxStream&		storeDouble(NxF64 f)						{ NX_ASSERT(0);	return *this;	}
-	virtual		NxStream&		storeBuffer(const void* buffer, NxU32 size)	{ NX_ASSERT(0);	return *this;	}
+	virtual		NxStream&		storeByte(NxU8)		    					{ NX_ASSERT(0);	return *this;	}
+	virtual		NxStream&		storeWord(NxU16)							{ NX_ASSERT(0);	return *this;	}
+	virtual		NxStream&		storeDword(NxU32)							{ NX_ASSERT(0);	return *this;	}
+	virtual		NxStream&		storeFloat(NxReal)	    					{ NX_ASSERT(0);	return *this;	}
+	virtual		NxStream&		storeDouble(NxF64)		    				{ NX_ASSERT(0);	return *this;	}
+	virtual		NxStream&		storeBuffer(const void*, NxU32)	            { NX_ASSERT(0);	return *this;	}
 
 	mutable		const NxU8*		buffer;
 };

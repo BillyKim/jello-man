@@ -58,7 +58,7 @@ Model* ModelLoader::Load(const string& assetName)
 
     m_pCurrentModel->SetIsSoftBody(isSoftbody);
 
-    ReadObj(assetName, isSoftbody); //assigns all draw/physXmeshes
+    ReadObj(assetName); //assigns all draw/physXmeshes
 
     if (isSoftbody)
     {
@@ -71,7 +71,7 @@ Model* ModelLoader::Load(const string& assetName)
 
 #pragma region Read ASCII obj
 
-void ModelLoader::ReadObj(const string& assetName, bool isSoftbody)
+void ModelLoader::ReadObj(const string& assetName)
 {
     ifstream stream;
     stream.open(assetName.c_str());
@@ -122,7 +122,7 @@ void ModelLoader::ReadObj(const string& assetName, bool isSoftbody)
         {
             Vector3 v;
             sscanf_s(line.c_str(), "v %f %f %f", &v.X, &v.Y, &v.Z);
-            AddVertex(v, isSoftbody);
+            AddVertex(v);
         }
     }
     FlushMesh(); //apply last mesh
@@ -136,7 +136,7 @@ void ModelLoader::AddMesh(const string& name)
     if (name.find("PhysX_") == 0)
         m_pCurrentPhysXMesh = m_pCurrentModel->AddPhysXMesh(name);
     else if (m_pCurrentModel->IsSoftBody() == false)
-        m_pCurrentDrawMesh  = m_pCurrentModel->AddDrawMesh(name);
+        m_pCurrentDrawMesh = m_pCurrentModel->AddDrawMesh(name);
 }
 void ModelLoader::AddTri(const vector<vector<int>>& data)
 {
@@ -146,9 +146,10 @@ void ModelLoader::AddTri(const vector<vector<int>>& data)
         for (int i = 0; i < 3; ++i)
         {
             index[i] = m_VPNTData.size();
-            VertexPosNormTex vpnt(
+            VertexPosNormTanTex vpnt(
                     m_VertexData[data[i][0] - 1],
                     m_NormalData[data[i][2] - 1],
+                    Vector3(0, 0, 0),
                    m_TextureData[data[i][1] - 1]);
 
             stringstream stream;
@@ -198,6 +199,7 @@ void ModelLoader::FlushMesh()
     {
         if (m_pCurrentModel->IsSoftBody() == false)
         {
+            CalculateTangents();
             m_pCurrentDrawMesh->SetVertices(m_VPNTData);
             m_pCurrentDrawMesh->SetIndices(m_IndexData);
             m_VPNTData.clear();
@@ -326,7 +328,7 @@ void ModelLoader::LinkSBtoModel(const string& fileName)
     mesh->SetIndices(m_IndexData);
 }
 
-void ModelLoader::AddVertex(const Vector3& v, bool isSoftbody)
+void ModelLoader::AddVertex(const Vector3& v)
 {
 	Vector3 copy = v;
 	copy.Z *= -1;
@@ -342,7 +344,7 @@ void ModelLoader::AddTexCoord(const Vector2& v)
 {
 	Vector2 copy = v;
 	copy.Y *= -1;
-    m_TextureData.push_back(v);
+    m_TextureData.push_back(copy);
 }
 void ModelLoader::AddTetra(int t1, int t2, int t3, int t4)
 {
@@ -354,4 +356,74 @@ void ModelLoader::AddTetra(int t1, int t2, int t3, int t4)
 void ModelLoader::AddSBLink(int t, const Vector3& bc)
 {
     m_SBLinkData.push_back(SBLink(t, bc));
+}
+
+
+void ModelLoader::CalculateTangents()
+{
+    Vector3* tan1 = new Vector3[m_VPNTData.size()];
+    Vector3* tan2 = new Vector3[m_VPNTData.size()];
+    ZeroMemory(tan1, m_VPNTData.size() * 12);
+    ZeroMemory(tan2, m_VPNTData.size() * 12);
+    for (UINT i = 0; i < m_IndexData.size(); i += 3)
+    {
+        int i1 = m_IndexData[i], 
+            i2 = m_IndexData[i+1], 
+            i3 = m_IndexData[i+2];
+
+	    const Vector3& v1 = m_VPNTData[i1].position;
+	    const Vector3& v2 = m_VPNTData[i2].position;
+	    const Vector3& v3 = m_VPNTData[i3].position;
+
+	    const Vector2& tx1 = m_VPNTData[i1].tex;
+	    const Vector2& tx2 = m_VPNTData[i2].tex;
+	    const Vector2& tx3 = m_VPNTData[i3].tex;
+
+	    float x1 = v2.X - v1.X;
+	    float x2 = v3.X - v1.X;
+	    float y1 = v2.Y - v1.Y;
+	    float y2 = v3.Y - v1.Y;
+	    float z1 = v2.Z - v1.Z;
+	    float z2 = v3.Z - v1.Z;
+
+	    float s1 = tx2.X - tx1.X;
+	    float s2 = tx3.X - tx1.X;
+	    float t1 = tx2.Y - tx1.Y;
+	    float t2 = tx3.Y - tx1.Y;
+
+	    float r = 1.0f / (s1 * t2 - s2 * t1);
+
+	    Vector3 sdir(
+            (t2 * x1 - t1 * x2) * r, 
+            (t2 * y1 - t1 * y2) * r, 
+            (t2 * z1 - t1 * z2) * r );
+	    Vector3 tdir(
+            (s1 * x2 - s2 * x1) * r, 
+            (s1 * y2 - s2 * y1) * r, 
+            (s1 * z2 - s2 * z1) * r );
+
+        tan1[i1] += sdir;
+        tan1[i2] += sdir;
+        tan1[i3] += sdir;
+
+        tan2[i1] += tdir;
+        tan2[i2] += tdir;
+        tan2[i3] += tdir;
+    }
+
+    for (UINT i = 0; i < m_VPNTData.size(); ++i)
+    {
+        const Vector3& n = m_VPNTData[i].normal;
+        const Vector3& t = tan1[i];
+
+        m_VPNTData[i].tangent = (t - n * n.Dot(t));
+        m_VPNTData[i].tangent.Normalize();
+
+        if (m_VPNTData[i].tangent.Dot(m_VPNTData[i].normal) > 0.0001f)
+            PANIC("Tangent not loodrecht op Normal");
+    }
+
+
+    delete[] tan1;
+    delete[] tan2;
 }
