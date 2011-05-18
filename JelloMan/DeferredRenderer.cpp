@@ -193,7 +193,7 @@ void DeferredRenderer::Begin()
         m_pDevice->ClearRenderTargetView(m_RenderTargets[i], c);
 }
 
-inline bool CullLight(Light* pLight, Camera* pCam)
+inline bool CullLight(Light* pLight, Graphics::Camera::CameraBase* pCam)
 {
     bool cull = false;
     Vector3 vec = pCam->GetPosition() - pLight->GetPosition();

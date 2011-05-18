@@ -3,11 +3,12 @@
 #include "RenderContext.h"
 #include "DeferredPreEffect.h"
 #include "ILevelObject.h"
+#include "FollowCamera.h"
 
 class SoftbodyCharacter : public Softbody, public ILevelObject
 {
 public:
-    SoftbodyCharacter(const Vector3& pos);
+    SoftbodyCharacter(const Vector3& pos, Graphics::Camera::FollowCamera* pCamera);
     virtual ~SoftbodyCharacter(void);
 
     //ITransformable
@@ -37,6 +38,10 @@ private:
     Vector3 m_vPosition;
 
     Texture2D* m_pDiffuseMap, *m_pSpecMap, *m_pGlossMap;
+
+    float m_RotSpeed;
+
+    Graphics::Camera::FollowCamera* m_pCamera;
 
     bool m_bIsSelected;
 };

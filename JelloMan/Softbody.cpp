@@ -4,7 +4,6 @@
 
 Softbody::Softbody(): m_pSoftbody(0), m_pPhysX(0), m_numPositions(0), m_numIndices(0), m_Radius(0), m_CenterPoint(Vector3::Zero), m_Dimension(Vector3::Zero)
 {
-
 }
 
 Softbody::~Softbody(void)
@@ -51,7 +50,7 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
 	softbodyDesc.softBodyMesh = pMesh;
 	softbodyDesc.particleRadius = 8.0f;
     softbodyDesc.volumeStiffness = 0.8f;
-    softbodyDesc.stretchingStiffness = 0.9f;
+    softbodyDesc.stretchingStiffness = 0.6f;
     softbodyDesc.friction = 1.0f;
     softbodyDesc.solverIterations = 8;
     softbodyDesc.flags = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION;
@@ -101,12 +100,14 @@ void Softbody::TransformPositions()
         maxP = Max(maxP, position);
         minP = Min(minP, position);
 
+        m_CenterPoint += position;
+
         newVert.push_back(VertexPosNormTanTex(position, Vector3(), Vector3(), vert[i].tex));
     }
 
-    m_CenterPoint = (maxP + minP) / 2.0f;
+    m_CenterPoint /= size;
     m_Dimension = maxP - minP;
-    ASSERT(m_Dimension.X >= 0 && m_Dimension.Y >= 0 && m_Dimension.Z >= 0, "");
+    ASSERT(m_Dimension.X >= 0 && m_Dimension.Y >= 0 && m_Dimension.Z >= 0, "Softbody dimension == 0");
     m_Radius = m_Dimension.Length() / 2.0f;
 
     const vector<DWORD>& ind = m_pSoftbodyMesh->GetIndices();
@@ -176,31 +177,46 @@ void Softbody::AddForce(const Vector3& force, const Vector3& pos)
 	m_pSoftbody->addDirectedForceAtPos(pos, force, m_Radius, NX_FORCE);
 }
 
+Vector3 Softbody::GetSpeed() const
+{
+    return Vector3(m_pSoftbody->getVelocity(0));
+}
+
 void Softbody::Translate(const Vector3& add)
 {
-    Vector3* buffer = new Vector3[m_numPositions];
-    m_pSoftbody->getPositions(buffer);
+    if (m_numPositions == 0)
+    {
+        PANIC("Trying to move softbody with 0 positions");
+        return;
+    }
+    vector<Vector3> buffer;
+    buffer.reserve(m_numPositions);
+    m_pSoftbody->getPositions(&buffer[0]);
 
     for (NxU32 i = 0; i < m_numPositions; ++i)
     {
         buffer[i] += add;
     }
 
-    m_pSoftbody->setPositions(buffer);
-    delete buffer;
+    m_pSoftbody->setPositions(&buffer[0]);
 }
 void Softbody::SetPosition(const Vector3& pos)
 {
-    Vector3* buffer = new Vector3[m_numPositions];
-    m_pSoftbody->getPositions(buffer);
+    if (m_numPositions == 0)
+    {
+        PANIC("Trying to move softbody with 0 positions");
+        return;
+    }
+    vector<Vector3> buffer;
+    buffer.reserve(m_numPositions);
+    m_pSoftbody->getPositions(&buffer[0]);
 
     for (NxU32 i = 0; i < m_numPositions; ++i)
     {
         buffer[i] += -GetPosition() + pos;
     }
 
-    m_pSoftbody->setPositions(buffer);
-    delete buffer;
+    m_pSoftbody->setPositions(&buffer[0]);
 }
 Vector3 Softbody::GetPosition() const
 {

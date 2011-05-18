@@ -14,6 +14,8 @@
 #include "PhysXSphere.h"
 #include "SimpleObject.h"
 
+using namespace Graphics::Camera;
+
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
 							m_pEditorCamera(0),
@@ -75,6 +77,10 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 void MainGame::LoadResources(ID3D10Device* pDXDevice)
 {
 	ASSERT(pDXDevice != 0, "DXDevice error while loading resources");
+    
+	// PHYSX
+	m_pPhysXEngine = new PhysX();
+	m_pPhysXEngine->Init();
 
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);
@@ -82,16 +88,13 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_LoadingText = _T("camera");
 
 	// CAMERA
-	m_pEditorCamera = new Camera(	static_cast<int>(BX2D->GetWindowSize().width),
-									static_cast<int>(BX2D->GetWindowSize().height),
-									true	);
+	m_pEditorCamera = new FlyCamera(static_cast<int>(BX2D->GetWindowSize().width),
+									static_cast<int>(BX2D->GetWindowSize().height));
     m_pEditorCamera->LookAt(Vector3(-500, 300, -500), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,10000.0f);
 
-	m_pTrackingCamera = new Camera(	static_cast<int>(BX2D->GetWindowSize().width),
-									static_cast<int>(BX2D->GetWindowSize().height),
-									false	);
-	m_pTrackingCamera->LookAt(Vector3(-225, 115, -205), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	m_pTrackingCamera = new FollowCamera(static_cast<int>(BX2D->GetWindowSize().width),
+        static_cast<int>(BX2D->GetWindowSize().height), m_pPhysXEngine);
 	m_pTrackingCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
 
 	++m_Orbs;
@@ -170,10 +173,6 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
 	++m_Orbs;
 	m_LoadingText = _T("PhysX");
-		
-	// PHYSX
-	m_pPhysXEngine = new PhysX();
-	m_pPhysXEngine->Init();
 
 	++m_Orbs;
 	m_LoadingText = _T("level");
@@ -244,7 +243,10 @@ void MainGame::UpdateScene(const float dTime)
 		m_pEditorCamera->Tick(dTime);
 	}
 	else
+    {
 		m_pLevel->TickCharacter(true);
+        m_pTrackingCamera->Tick(dTime);
+    }
 
 	if (m_pEditorGUI->NewModelLoaded())
 	{
@@ -442,10 +444,10 @@ void MainGame::CheckControls()
 		{
 			SimpleObject* pLevelObject = new SimpleObject();
 
-			pLevelObject->SetModelPath(_T("../Content/Models/jman.binobj"));
-			pLevelObject->SetPhysXModel(_T("../Content/Models/jman.nxconcave"));
+			pLevelObject->SetModelPath(_T("../Content/Models/teapot.binobj"));
+			pLevelObject->SetPhysXModel(_T("../Content/Models/teapot.nxconvex"));
 
-			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
+			//pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
 			//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
 			//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 

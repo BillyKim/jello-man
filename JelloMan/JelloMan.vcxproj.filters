@@ -124,6 +124,9 @@
     <Filter Include="Engine Files\Graphics\GUI\Editor\Gizmos">
       <UniqueIdentifier>{baaf9a6f-4e33-4e8d-90c9-6a63bd0f7f96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Graphics\Camera">
+      <UniqueIdentifier>{6824b517-6403-46de-a02d-1efd70fea06e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -254,9 +257,6 @@
     </ClInclude>
     <ClInclude Include="CookingStream.h">
       <Filter>Engine Files\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Engine Files\Graphics\RenderContext</Filter>
     </ClInclude>
     <ClInclude Include="RenderContext.h">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -435,6 +435,15 @@
     <ClInclude Include="FluidPostEffect.h">
       <Filter>Engine Files\Graphics\Effect\post</Filter>
     </ClInclude>
+    <ClInclude Include="FlyCamera.h">
+      <Filter>Engine Files\Graphics\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowCamera.h">
+      <Filter>Engine Files\Graphics\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraBase.h">
+      <Filter>Engine Files\Graphics\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -559,9 +568,6 @@
     </ClCompile>
     <ClCompile Include="CookingStream.cpp">
       <Filter>Engine Files\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Engine Files\Graphics\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="RenderContext.cpp">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -712,6 +718,15 @@
     </ClCompile>
     <ClCompile Include="FluidPostEffect.cpp">
       <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClCompile>
+    <ClCompile Include="FlyCamera.cpp">
+      <Filter>Engine Files\Graphics\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowCamera.cpp">
+      <Filter>Engine Files\Graphics\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraBase.cpp">
+      <Filter>Engine Files\Graphics\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

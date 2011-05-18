@@ -18,6 +18,8 @@
 
 #include "FluidPostEffect.h"
 
+#include "FollowCamera.h"
+
 
 
 class Level
@@ -29,7 +31,7 @@ public:
 	virtual ~Level();
 
 	// GENERAL
-	void Initialize(PhysX* pPhysXEngine, Camera* pTrackingCamera);
+	void Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTrackingCamera);
 	void Tick(const float dTime);
 	void DrawDeferred(RenderContext* pRenderContext);
 	void DrawForward(const RenderContext* pRenderContext);

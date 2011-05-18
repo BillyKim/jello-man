@@ -10,6 +10,12 @@ public:
 	Vector3(const Vector2& v2, float z);
 	//Vector3(const NxVec3& v3);
 
+    //---Public Datamembers--->
+	float X;
+    float Y;
+    float Z;
+	//<------------------------
+
     //Static const
     static const Vector3 Up;
     static const Vector3 Right;
@@ -57,11 +63,5 @@ public:
 	bool operator!=(const Vector3& v) const;
 
 	//<-----------------------------------------
-
-	//---Public Datamembers--->
-	float X;
-    float Y;
-    float Z;
-	//<------------------------
 };
 

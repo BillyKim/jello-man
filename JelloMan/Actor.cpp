@@ -40,6 +40,7 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 
 	actorDesc.shapes.push_back(shape.GetShape());
 	actorDesc.globalPose = static_cast<NxMat34>(m_mtxWorldMatrix);
+    actorDesc.group = 0;
 
 	m_pActor = m_pPhysX->GetScene()->createActor(actorDesc);
 

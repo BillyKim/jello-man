@@ -80,3 +80,34 @@ struct VertexPNTSoftbody
     unsigned long tetra;
     Vector3 barycentricCoords;
 };
+struct VertexPosNormTanTex //12 + 12 + 12 + 8 = 44
+{
+	VertexPosNormTanTex():
+		position(0.0f, 0.0f, 0.0f),
+		normal(0.0f, 0.0f, 0.0f),
+		tangent(0.0f,0.0f,0.0f),
+		tex(0.0f, 0.0f)
+	{
+	}
+
+	VertexPosNormTanTex(	float x, float y, float z, 
+							float nx, float ny, float nz,
+							float tx, float ty, float tz,
+							float u, float v):
+		position(x,y,z), 
+		normal(nx,ny,nz),
+		tangent(tx,ty,tz),
+		tex(u,v)
+	{
+	}
+
+	VertexPosNormTanTex(const Vector3& p, const Vector3& n,  const Vector3& tg, const Vector2& t)
+		:position(p), normal(n), tangent(tg), tex(t)
+	{
+	}
+
+	Vector3 position;
+	Vector3 normal;
+	Vector3 tangent;
+	Vector2 tex;
+};

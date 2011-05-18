@@ -20,15 +20,15 @@ public:
 
     ~Model(void)
     {
-        for_each(m_DrawMeshes.cbegin(), m_DrawMeshes.cend(), DeleteModelMesh<VertexPosNormTex>);
+        for_each(m_DrawMeshes.cbegin(), m_DrawMeshes.cend(), DeleteModelMesh<VertexPosNormTanTex>);
         for_each(m_PhysXMeshes.cbegin(), m_PhysXMeshes.cend(), DeleteModelMesh<VertexPos>);
     }
     //<---------------------------------------------------------------
 
-    const vector<ModelMesh<VertexPosNormTex>*>& GetDrawMeshes() const { return m_DrawMeshes; }
-    ModelMesh<VertexPosNormTex>* AddDrawMesh(const string& name)
+    const vector<ModelMesh<VertexPosNormTanTex>*>& GetDrawMeshes() const { return m_DrawMeshes; }
+    ModelMesh<VertexPosNormTanTex>* AddDrawMesh(const string& name)
     {
-	    ModelMesh<VertexPosNormTex>* mesh = new ModelMesh<VertexPosNormTex>(name);
+	    ModelMesh<VertexPosNormTanTex>* mesh = new ModelMesh<VertexPosNormTanTex>(name);
 	    m_DrawMeshes.push_back(mesh);
 	    return mesh;
     }
@@ -63,7 +63,7 @@ public:
 private:
     bool m_IsSoftbody;
 
-    vector<ModelMesh<VertexPosNormTex>*> m_DrawMeshes;
+    vector<ModelMesh<VertexPosNormTanTex>*> m_DrawMeshes;
     vector<ModelMesh<VertexPos>*> m_PhysXMeshes;
 
     ModelMesh<VertexPos>* m_SoftbodyMesh;

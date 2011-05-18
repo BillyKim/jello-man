@@ -38,9 +38,9 @@ public:
     virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type);
 	virtual ShadowMapType GetShadowMapType() const;
 	virtual Texture2D* GetShadowMap() const;
-    virtual Camera* GetShadowCamera() const;
+    virtual Graphics::Camera::CameraBase* GetShadowCamera() const;
     
-    virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const;
+    virtual D3D10_RECT CalcScissorRect(Graphics::Camera::CameraBase* camera, UINT backbufferWidth, UINT backbufferHeight) const;
 
     virtual void SetColor(const Color& color);
     virtual const Color& GetColor() const;
@@ -86,7 +86,7 @@ private:
     float m_OpeningsAngle;
 
     LightBehaviour* m_pLightBehaviour;
-    Camera* m_pShadowCamera;
+    Graphics::Camera::CameraBase* m_pShadowCamera;
 
     Vector3 m_vUp;
 

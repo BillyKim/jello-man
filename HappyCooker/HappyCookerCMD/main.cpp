@@ -4,6 +4,13 @@
 #include "BinCooker.h"
 #include "SoftbodyCooker.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#include <stdlib.h>
+
+#if _DEBUG
+    #define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
 
 bool CookBin(Model* m, const string& outputFilename)
 {
@@ -84,7 +91,8 @@ int main()
 
     cout << "********HappyCooker********\n";
     cout << "\n";
-    while (true)
+    bool stop = false;
+    while (stop == false)
     {
         cout << "File:    -1 to stop\n";
         string file;
@@ -107,5 +115,8 @@ int main()
         delete model;
     }
     delete ml;
+
+    _CrtDumpMemoryLeaks();
+
     return 0;
 }

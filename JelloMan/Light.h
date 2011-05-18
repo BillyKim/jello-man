@@ -4,7 +4,7 @@
 #include "Vector3.h"
 #include "Color.h"
 #include "LightBehaviour.h"
-#include "Camera.h"
+#include "CameraBase.h"
 #include "Blox2D.h"
 #include "IEditorObject.h"
 #include "ISerializable.h"
@@ -53,10 +53,10 @@ public:
 	virtual bool HasShadowMap() const = 0;
     virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type) = 0;
 	virtual Texture2D* GetShadowMap() const = 0;
-    virtual Camera* GetShadowCamera() const = 0;
+    virtual Graphics::Camera::CameraBase* GetShadowCamera() const = 0;
     virtual ShadowMapType GetShadowMapType() const = 0;
 
-    virtual D3D10_RECT CalcScissorRect(Camera* camera, UINT backbufferWidth, UINT backbufferHeight) const = 0;
+    virtual D3D10_RECT CalcScissorRect(Graphics::Camera::CameraBase* camera, UINT backbufferWidth, UINT backbufferHeight) const = 0;
 
     virtual void SetColor(const Color& color) = 0;
     virtual const Color& GetColor() const = 0;
