@@ -111,8 +111,6 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
-	CheckControls();
-
 	if (!m_pTextBoxX)
 	{
 		m_pTextBoxX = new TextBox();
@@ -130,87 +128,6 @@ void VisualLightDebugger::Tick(const RenderContext* pRenderContext)
 		m_pTextBoxZ = new TextBox();
 		m_pTextBoxZ->SetBounds(30,145,80,20);
 	}
-}
-
-void VisualLightDebugger::CheckControls()
-{
-//	/*if (CONTROLS->IsKeyPressed(VK_DELETE))
-//	{
-//		int i = 0;
-//
-//		vector<PointLight>::iterator it = m_pRenderContext->GetLightController()->GetPointLights().begin();
-//
-//		vector<vector<PointLight>::iterator> positionsToDelete;
-//
-//		for (; it != m_pRenderContext->GetLightController()->GetPointLights().end(); ++it)
-//		{
-//			if (m_PLightsSelected[i])
-//				positionsToDelete.push_back(it);
-//
-//			++i;
-//		}
-//
-//		for (int i2 = 0; i2 < positionsToDelete.size(); ++i2)
-//		{
-//			m_pRenderContext->GetLightController()->GetPointLights().erase(positionsToDelete[i2]);
-//		}
-//	}*/
-//
-//	if (CONTROLS->IsKeyDown(VK_LCONTROL) && CONTROLS->IsKeyDown('D'))
-//	{
-//		DeselectAllLights();
-//	}
-//
-//	if (CONTROLS->LeftMBDown() || CONTROLS->RightMBDown())
-//	{
-//		m_pTextBoxX->LoseFocus();
-//		m_pTextBoxY->LoseFocus();
-//		m_pTextBoxZ->LoseFocus();
-//	}
-//
-//	if (!m_bLightsMoving)
-//	{
-//		if (CONTROLS->LeftMBDown())
-//			m_bClick = true;
-//
-//		if (CONTROLS->LeftMBUp())
-//		{
-//			if (m_bClick)
-//			{
-//				if (CONTROLS->IsKeyDown(VK_LCONTROL))
-//				{
-//					for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
-//					{
-//						if (m_pRenderContext->GetLightController()->GetLights()[i]->GetHitRegion()->HitTest(CONTROLS->GetMousePos()))
-//						{
-//							if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
-//								m_pRenderContext->GetLightController()->GetLights()[i]->Deselect();
-//							else
-//								m_pRenderContext->GetLightController()->GetLights()[i]->Select();
-//						}
-//					}
-//				}
-//				else
-//				{
-//					for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
-//					{
-//						if (m_pRenderContext->GetLightController()->GetLights()[i]->GetHitRegion()->HitTest(CONTROLS->GetMousePos()))
-//						{
-//							if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
-//								m_pRenderContext->GetLightController()->GetLights()[i]->Deselect();
-//							else
-//								m_pRenderContext->GetLightController()->GetLights()[i]->Select();
-//					
-//							DeselectAllLights(i);
-//						}
-//					}
-//				}
-//
-//			m_bClick = false;
-//
-//			}
-//		}
-//	}
 }
 
 void VisualLightDebugger::Draw()

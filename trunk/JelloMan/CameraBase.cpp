@@ -4,13 +4,13 @@ namespace Graphics{
 namespace Camera{
 
 // CONSTRUCTOR - DESTRUCTOR
-CameraBase::CameraBase(int windowWidth, int windowHeight) :	m_Speed(200.0f),
+CameraBase::CameraBase(int windowWidth, int windowHeight) :	m_Speed(2.0f),
 																		m_FastForward(4.0f),
 																		m_MouseSensitivity(100),
 																		m_FOV(PiOver4),
 																		m_AspectRatio(4.0f/3.0f),
 																		m_NearClippingPlane(0.1f),
-																		m_FarClippingPlane(10000.0f),
+																		m_FarClippingPlane(1000.0f),
 																		m_bIsActive(true)
 {
 	D3DXMatrixIdentity(&m_matView);

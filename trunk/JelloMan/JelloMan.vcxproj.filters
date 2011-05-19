@@ -423,6 +423,9 @@
     <ClInclude Include="MoveGizmo.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
+    <ClInclude Include="FluidsCharacter.h">
+      <Filter>Engine Files\PhysX\Fluids</Filter>
+    </ClInclude>
     <ClInclude Include="FluidEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClInclude>
@@ -706,6 +709,9 @@
     </ClCompile>
     <ClCompile Include="MoveGizmo.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
+    </ClCompile>
+    <ClCompile Include="FluidsCharacter.cpp">
+      <Filter>Engine Files\PhysX\Fluids</Filter>
     </ClCompile>
     <ClCompile Include="FluidEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>

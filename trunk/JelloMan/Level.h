@@ -15,6 +15,7 @@
 #include "ILevelObject.h"
 #include "Fluid.h"
 #include "SoftbodyCharacter.h"
+#include "FluidsCharacter.h"
 
 #include "FluidPostEffect.h"
 
@@ -64,6 +65,7 @@ private:
 	ID3D10Device* m_pDXDevice;
 
 	SoftbodyCharacter* m_pCharacter;
+	FluidsCharacter* m_pFluidsCharacter;
 
 	PhysX* m_pPhysXEngine;
 

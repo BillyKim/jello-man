@@ -51,13 +51,13 @@ bool PhysX::Init(void)
 	ASSERT(m_pPhysicsSDK != 0, "Error creating PhysicsSDK");
 
 	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
-	m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
-    m_pPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_ENERGY, 50000.0f);
-    m_pPhysicsSDK->setParameter(NX_DYN_FRICT_SCALING, 100.0f);
-    m_pPhysicsSDK->setParameter(NX_STA_FRICT_SCALING, 100.0f);
+	//m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
+    //m_pPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_ENERGY, 50000.0f);
+   /* m_pPhysicsSDK->setParameter(NX_DYN_FRICT_SCALING, 100.0f);
+    m_pPhysicsSDK->setParameter(NX_STA_FRICT_SCALING, 100.0f);*/
 
 	NxSceneDesc sceneDesc;
-	sceneDesc.gravity.set(0, -981.0f, 0);
+	sceneDesc.gravity.set(0, -9.81f, 0);
 
 	m_pScene = m_pPhysicsSDK->createScene(sceneDesc);
 
@@ -66,10 +66,10 @@ bool PhysX::Init(void)
 	NxMaterial* defaultMaterial = m_pScene->getMaterialFromIndex(0);
 	defaultMaterial->setRestitution(0.3f);
 	defaultMaterial->setStaticFriction(.6f);
-	defaultMaterial->setDynamicFriction(.2f);
+	defaultMaterial->setDynamicFriction(.5f);
 
 	NxPlaneShapeDesc planeDesc;
-	planeDesc.d = -5;
+	planeDesc.d = 0;
 
 	NxActorDesc actorDesc;
 	actorDesc.shapes.pushBack(&planeDesc);

@@ -57,8 +57,7 @@ void FlyCamera::Tick(const float dTime)
 		m_PosWorld += dir * finalSpeed * dTime;
 	}
 
-	// change FOV with mousewheel
-	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 5.0f);
+	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 500.0f);
 
 	if (angle != 0)
 	{

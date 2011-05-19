@@ -101,6 +101,7 @@ PixelShaderOutput  PS(VertexShaderOutput input)
     output.colorGlow = saturate(output.colorGlow);
 
 	output.normalSpec = float4(normal, specMap.Sample(mapSampler, input.texCoord).r);
+	//output.normalSpec.xyz = input.normal;
 	output.positionGloss = float4(input.worldPos, glossMap.Sample(mapSampler, input.texCoord).r);
 
 	return output;

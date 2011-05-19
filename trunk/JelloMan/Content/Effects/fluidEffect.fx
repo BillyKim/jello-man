@@ -52,7 +52,7 @@ float4 PS(GS_OUT input) : SV_TARGET
 [maxvertexcount(4)]
 void GS(point VertexShaderOutput input[1], inout TriangleStream<GS_OUT> triStream)
 {
-    float size = 10.0f;
+    float size = .2f;
     float4 v[4];
     v[0] = float4(-size, size*2, 0.0f, 0.0f);
     v[1] = float4(size, size*2, 0.0f, 0.0f);
