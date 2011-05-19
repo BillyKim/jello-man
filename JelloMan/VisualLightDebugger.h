@@ -15,7 +15,6 @@ public:
 
 	// GENERAL
 	void Tick(const RenderContext* renderContext);
-	void CheckControls();
 	void Draw();
 	void ShowLightInfo();
 

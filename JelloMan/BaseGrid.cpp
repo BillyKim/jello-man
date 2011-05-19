@@ -53,19 +53,19 @@ void BaseGrid::BuildVertexBuffer()
 	{
 		if (i == 50)
 		{
-			m_VecVertices.push_back(VertexPosCol(-5000.f,0.f,(float)(5000-(i*100)),0.f,.25f,.5f,.4f));
-			m_VecVertices.push_back(VertexPosCol(5000.f,0.f,(float)(5000-(i*100)),0.f,.25f,.5f,.4f));
+			m_VecVertices.push_back(VertexPosCol(-50.f,0.f,(float)(50-i),0.f,.25f,.5f,.4f));
+			m_VecVertices.push_back(VertexPosCol(50.f,0.f,(float)(50-i),0.f,.25f,.5f,.4f));
 
-			m_VecVertices.push_back(VertexPosCol((float)(5000-(i*100)),0.f,-5000.f,0.f,.25f,.5f,.4f));
-			m_VecVertices.push_back(VertexPosCol((float)(5000-(i*100)),0.f,5000.f,0.f,.25f,.5f,.4f));
+			m_VecVertices.push_back(VertexPosCol((float)(50-i),0.f,-50.f,0.f,.25f,.5f,.4f));
+			m_VecVertices.push_back(VertexPosCol((float)(50-i),0.f,50.f,0.f,.25f,.5f,.4f));
 		}
 		else
 		{
-			m_VecVertices.push_back(VertexPosCol(-5000.f,0.f,(float)(5000-(i*100)),0.f,.1f,.2f,.4f));
-			m_VecVertices.push_back(VertexPosCol(5000.f,0.f,(float)(5000-(i*100)),0.f,.1f,.2f,.4f));
+			m_VecVertices.push_back(VertexPosCol(-50.f,0.f,(float)(50-i),0.f,.1f,.2f,.4f));
+			m_VecVertices.push_back(VertexPosCol(50.f,0.f,(float)(50-i),0.f,.1f,.2f,.4f));
 
-			m_VecVertices.push_back(VertexPosCol((float)(5000-(i*100)),0.f,-5000.f,0.f,.1f,.2f,.4f));
-			m_VecVertices.push_back(VertexPosCol((float)(5000-(i*100)),0.f,5000.f,0.f,.1f,.2f,.4f));
+			m_VecVertices.push_back(VertexPosCol((float)(50-i),0.f,-50.f,0.f,.1f,.2f,.4f));
+			m_VecVertices.push_back(VertexPosCol((float)(50-i),0.f,50.f,0.f,.1f,.2f,.4f));
 		}
 	}
 

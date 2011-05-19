@@ -25,10 +25,10 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	{
 		NxBodyDesc bodyDesc;
 		bodyDesc.mass = shape.GetShape()->mass;
-		bodyDesc.angularDamping = 0.5f;
-        bodyDesc.linearDamping = 0.2f;
+		//bodyDesc.angularDamping = 0.5f;
+        //bodyDesc.linearDamping = 0.2f;
         bodyDesc.flags |= NX_BF_FILTER_SLEEP_VEL;
-        bodyDesc.sleepEnergyThreshold = 5000.0f;
+        //bodyDesc.sleepEnergyThreshold = 50.0f;
 		//bodyDesc.sleepLinearVelocity = 0.001f;
 		//bodyDesc.sleepAngularVelocity = 0.001f;
 		actorDesc.body = &bodyDesc;		

@@ -19,7 +19,8 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_bEditor(true),
 				m_pTestFluid(0),
 				m_pEmitter(0),
-                m_pFluidPostProcessor(0)
+                m_pFluidPostProcessor(0),
+				m_pFluidsCharacter(0)
 {
 
 }
@@ -31,6 +32,7 @@ Level::~Level()
 	delete m_pTestFluid;
 	delete m_pCharacter;
     delete m_pFluidPostProcessor;
+	delete m_pFluidsCharacter;
 	
 	Clear();
 }
@@ -99,8 +101,8 @@ void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTra
     pTrackingCamera->SetFollowAngle(20);
 
 	// forcefield
-	NxForceFieldLinearKernelDesc linearKernelDesc;
-    linearKernelDesc.constant = NxVec3(1000,500,500);
+	/*NxForceFieldLinearKernelDesc linearKernelDesc;
+    linearKernelDesc.constant = NxVec3(-1000,-500,500);
     
     NxForceFieldLinearKernel* pLinearKernel;
     pLinearKernel = pPhysXEngine->GetScene()->createForceFieldLinearKernel(linearKernelDesc);
@@ -116,12 +118,15 @@ void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTra
 	NxBoxForceFieldShapeDesc b;
 	b.dimensions = NxVec3(500, 700, 500);
 	b.pose.t = NxVec3(0, 350, 0);
-	s = pForceField->getIncludeShapeGroup().createShape(b);
+	s = pForceField->getIncludeShapeGroup().createShape(b);*/
 
     m_pFluidPostProcessor = new PostProcessor(m_pDXDevice, 
                                             static_cast<int>(BX2D->GetWindowSize().width), 
                                             static_cast<int>(BX2D->GetWindowSize().height));
     m_pFluidPostProcessor->SetEffect(Content->LoadEffect<FluidPostEffect>(_T("../Content/Effects/fluidPostEffect.fx")));
+
+	m_pFluidsCharacter = new FluidsCharacter();
+	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, 1000);
 }
 
 void Level::Tick(const float dTime)
@@ -131,6 +136,8 @@ void Level::Tick(const float dTime)
 		obj->Tick(dTime);	
 	});
 	m_pCharacter->Tick(dTime);
+
+	m_pFluidsCharacter->Tick(dTime);
 }
 
 void Level::AddLevelObject(ILevelObject* pLevelObject)
@@ -233,7 +240,8 @@ void Level::DrawForward(const RenderContext* pRenderContext)
 	if (m_pTestFluid)
     {
         m_pFluidPostProcessor->Begin();
-		m_pTestFluid->Draw(pRenderContext);
+		//m_pTestFluid->Draw(pRenderContext);
+		m_pFluidsCharacter->Draw(pRenderContext);
         m_pFluidPostProcessor->End(pRenderContext->GetDeferredRenderer());
         //m_pFluidRenderer->End();
     }

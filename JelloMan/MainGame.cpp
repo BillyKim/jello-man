@@ -90,12 +90,12 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	// CAMERA
 	m_pEditorCamera = new FlyCamera(static_cast<int>(BX2D->GetWindowSize().width),
 									static_cast<int>(BX2D->GetWindowSize().height));
-    m_pEditorCamera->LookAt(Vector3(-500, 300, -500), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,10000.0f);
+    m_pEditorCamera->LookAt(Vector3(-50, 30, -50), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,1000.0f);
 
 	m_pTrackingCamera = new FollowCamera(static_cast<int>(BX2D->GetWindowSize().width),
         static_cast<int>(BX2D->GetWindowSize().height), m_pPhysXEngine);
-	m_pTrackingCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,10.0f,10000.0f);
+	m_pTrackingCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,10.0f,1000.0f);
 
 	++m_Orbs;
 	m_LoadingText = _T("render engines");
@@ -391,39 +391,39 @@ void MainGame::CheckControls()
 
 	if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{
-		int r = rand() % 3;
-        if (r == 0)
-        {
-		    // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
-			SimpleObject* pLevelObject = new SimpleObject();
+		//int r = rand() % 3;
+  //      if (r == 0)
+  //      {
+		//    // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
+		//	SimpleObject* pLevelObject = new SimpleObject();
 
-			pLevelObject->SetModelPath(_T("../Content/Models/sphere50.binobj"));
+		//	pLevelObject->SetModelPath(_T("../Content/Models/sphere50.binobj"));
 	
-            pLevelObject->SetPhysXModel(new PhysXSphere(50.0f, 1000));
+  //          pLevelObject->SetPhysXModel(new PhysXSphere(50.0f, 1000));
 
-			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
-			//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
-			//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-			//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
+		//	pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
+		//	//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
+		//	//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+		//	//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
-			pLevelObject->SetRigid(true);
+		//	pLevelObject->SetRigid(true);
 
-			pLevelObject->Init(m_pPhysXEngine);
+		//	pLevelObject->Init(m_pPhysXEngine);
 
-			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
+		//	pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
 
-			m_pLevel->AddLevelObject(pLevelObject);
+		//	m_pLevel->AddLevelObject(pLevelObject);
 
-			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
-        }
-        else if (r == 1)
-        {
+		//	pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
+  //      }
+  //      else if (r == 1)
+  //      {
             // LOAD NEW LEVELOBJECT - WITH NORMAL MAP
 			SimpleObject* pLevelObject = new SimpleObject();
 
-			pLevelObject->SetModelPath(_T("../Content/Models/box50.binobj"));
+			pLevelObject->SetModelPath(_T("../Content/Models/box1.binobj"));
 	
-            pLevelObject->SetPhysXModel(new PhysXBox(Vector3(50, 50, 50), 1000));
+            pLevelObject->SetPhysXModel(new PhysXBox(Vector3(.5f, .5f, .5f), 100));
 
 			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
 			//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
@@ -438,29 +438,29 @@ void MainGame::CheckControls()
 
 			m_pLevel->AddLevelObject(pLevelObject);
 
-			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000000);
-        }
-		else
-		{
-			SimpleObject* pLevelObject = new SimpleObject();
+			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000);
+  //      }
+		//else
+		//{
+		//	SimpleObject* pLevelObject = new SimpleObject();
 
-			pLevelObject->SetModelPath(_T("../Content/Models/teapot.binobj"));
-			pLevelObject->SetPhysXModel(_T("../Content/Models/teapot.nxconvex"));
+		//	pLevelObject->SetModelPath(_T("../Content/Models/teapot.binobj"));
+		//	pLevelObject->SetPhysXModel(_T("../Content/Models/teapot.nxconvex"));
 
-			//pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
-			//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-			//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
+		//	//pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
+		//	//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
+		//	//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
-			pLevelObject->SetRigid(true);
+		//	pLevelObject->SetRigid(true);
 
-			pLevelObject->Init(m_pPhysXEngine);
+		//	pLevelObject->Init(m_pPhysXEngine);
 
-			pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
+		//	pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
 
-			m_pLevel->AddLevelObject(pLevelObject);
+		//	m_pLevel->AddLevelObject(pLevelObject);
 
-			pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 800000);
-		}
+		//	pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 800000);
+		//}
 	}
  //   if (CONTROLS->IsKeyPressed(VK_CONTROL))
 	//{
