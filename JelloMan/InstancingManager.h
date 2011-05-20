@@ -3,6 +3,7 @@
 #include "InstancedModelManager.h"
 #include "ILevelObject.h"
 #include "IInstancible.h"
+#include "RenderContext.h"
 
 namespace Instancing{
 
@@ -14,8 +15,12 @@ public:
 
 	void AddLevelObject(IInstancible* obj);
 
+    void Draw(RenderContext* pRenderContext);
+
 private:
 	AssetContainer<InstancedModelManager>* m_pAssetContainer;
+
+    vector<InstancedModelManager*> m_vecModelManagers;
 
 	ID3D10Device* m_pDxDevice;
 };

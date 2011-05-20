@@ -102,7 +102,7 @@ public:
 		};
 
 		UINT offset[2] = {0, 0};
-		UINT vertexStride[2] = { effect->GetVertexStride(), sizeof(Matrix) };
+        UINT vertexStride[2] = { effect->GetVertexStride(), sizeof(Matrix) };
         m_pDevice->IASetVertexBuffers(0, 2, buffers, vertexStride, offset);
    	
 	    // Set index buffer
@@ -124,7 +124,12 @@ public:
 	void DrawInstanced(Effect* effect, const ID3D10Buffer* pMtxWorldbuffer, int count)
 	{
 		SetIAInstanced(effect, pMtxWorldbuffer);
-		m_pDevice->DrawIndexedInstanced(m_VecVertices.size(), count, 0, 0, 0);
+
+        for(UINT p = 0; p < effect->GetNumPasses(); ++p)
+        {
+            effect->GetCurrentTechnique()->GetPassByIndex(p)->Apply(0);
+		    m_pDevice->DrawIndexedInstanced(m_VecIndices.size(), count, 0, 0, 0);
+        }
 	}
 
 private:

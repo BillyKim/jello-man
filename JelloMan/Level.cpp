@@ -34,6 +34,7 @@ Level::~Level()
 	delete m_pCharacter;
     delete m_pFluidPostProcessor;
 	delete m_pFluidsCharacter;
+    delete m_pInstancingManager;
 	
 	Clear();
 }
@@ -129,6 +130,8 @@ void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTra
                                             static_cast<int>(BX2D->GetWindowSize().width), 
                                             static_cast<int>(BX2D->GetWindowSize().height));
     m_pFluidPostProcessor->SetEffect(Content->LoadEffect<FluidPostEffect>(_T("../Content/Effects/fluidPostEffect.fx")));
+
+    m_pInstancingManager = new Instancing::InstancingManager(m_pDXDevice);
 }
 
 void Level::Tick(const float dTime)
@@ -239,6 +242,7 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 		obj->Draw(pRenderContext);
 	});
 
+    m_pInstancingManager->Draw(pRenderContext);
 	//m_pCharacter->Draw(pRenderContext);
 }
 

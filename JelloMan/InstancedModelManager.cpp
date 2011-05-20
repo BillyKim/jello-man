@@ -5,7 +5,7 @@ namespace Instancing{
 
 InstancedModelManager::InstancedModelManager(ID3D10Device* pDxDevice): m_pDxDevice(pDxDevice), m_pModel(0), m_pBuffer(0), m_PrevCapacity(0)
 {
-	m_pEffect = Content->LoadEffect<DeferredPreEffectNormalsInstanced>(_T("../Content/effect/predeferredNormalInstanced.fx"));	
+	m_pEffect = Content->LoadEffect<DeferredPreEffectNormalsInstanced>(_T("../Content/Effects/predeferredNormalInstanced.fx"));	
 }
 
 
@@ -39,7 +39,7 @@ void InstancedModelManager::UpdateBuffer()
 		HR(m_pBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &pData));
 
         //To GPU
-		memcpy(pData, static_cast<const void*>(m_CPUBuffer.data()), sizeof(Matrix) * m_CPUBuffer.size());
+        memcpy(pData, static_cast<const void*>(m_CPUBuffer.data()), sizeof(Matrix) * m_CPUBuffer.size());
 
 		m_pBuffer->Unmap();
     }

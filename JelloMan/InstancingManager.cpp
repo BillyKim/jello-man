@@ -33,10 +33,20 @@ void InstancingManager::AddLevelObject(IInstancible* obj)
 		man->SetNormal(obj->GetNormal());
 		man->SetModel(obj->GetModel());
 		m_pAssetContainer->AddAsset(id, man);
+        m_vecModelManagers.push_back(man);
 	}
 
 	ASSERT(man != 0, "Instancemanager == 0!");
 	man->AddInstance(obj->GetMtxWorldPointer());
+}
+
+
+void InstancingManager::Draw(RenderContext* pRenderContext)
+{
+    for_each(m_vecModelManagers.cbegin(), m_vecModelManagers.cend(), [&](InstancedModelManager* obj)
+    {
+        obj->Draw(pRenderContext);
+    });
 }
 
 } //end namespace
