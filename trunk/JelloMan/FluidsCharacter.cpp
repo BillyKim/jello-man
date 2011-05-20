@@ -19,14 +19,18 @@ FluidsCharacter::~FluidsCharacter()
 }
 
 /* GENERAL */
-void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, unsigned int maxParticles, Graphics::Camera::FollowCamera* pCamera)
+void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pCamera, unsigned int maxParticles, Vector3 startPos)
 {
+	ASSERT(pDXDevice != 0, "DXDevice error when creating fluidscharacter!");
+	ASSERT(pPhysXEngine->GetScene() != 0, "PhysXScene error when creating fluidscharacter!");
+	ASSERT(pCamera != 0, "FollowCamera error when creating fluidscharacter!");
+
 	m_pCamera = pCamera;
 
 	PhysXSphere* pSphere = new PhysXSphere(0.2f, 100);
 	InitActor(pPhysXEngine, *pSphere, true);
 
-	SetPosition(Vector3(0,50,0));
+	SetPosition(startPos);
 
 	Actor::m_pActor->setGroup(1);
 

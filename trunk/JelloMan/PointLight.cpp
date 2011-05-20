@@ -87,7 +87,7 @@ void PointLight::Draw(const RenderContext* rc)
 	
 	Vector3 length = rc->GetCamera()->GetPosition() - Vector3(pos);
 	float l = length.Length();
-	l *= 0.001f;
+	l *= 0.05f;
 
 	D3DXVECTOR3 pos2D;
 	D3DXVec3Project(&pos2D, &pos, &viewP, &matProj, &matView, &matIdent);
@@ -111,8 +111,8 @@ void PointLight::Draw(const RenderContext* rc)
 			BX2D->FillEllipse(pos2D.x, pos2D.y, size / l, size / l);
 			BX2D->SetColor(30,30,30);
 			BX2D->DrawEllipse(pos2D.x, pos2D.y, size / l, size / l, 2.0f / l);
-			BX2D->SetColor(255,0,255);
-			BX2D->DrawEllipse(pos2D.x, pos2D.y, (size * 4) / l, (size * 4) / l, 4.0f);
+			BX2D->SetColor(static_cast<int>(m_Desc.color.R * 255), static_cast<int>(m_Desc.color.G * 255), static_cast<int>(m_Desc.color.B * 255));
+			BX2D->DrawEllipse(pos2D.x, pos2D.y, (size * 2) / l, (size * 2) / l, 4.0f / l);
 		}
 		else
 		{

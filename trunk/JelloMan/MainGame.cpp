@@ -90,7 +90,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	// CAMERA
 	m_pEditorCamera = new FlyCamera(static_cast<int>(BX2D->GetWindowSize().width),
 									static_cast<int>(BX2D->GetWindowSize().height));
-    m_pEditorCamera->LookAt(Vector3(-50, 30, -50), Vector3(0, 0, 0), Vector3(0, 1, 0));
+    m_pEditorCamera->LookAt(Vector3(-10, 6, -10), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	m_pEditorCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,1000.0f);
 
 	m_pTrackingCamera = new FollowCamera(static_cast<int>(BX2D->GetWindowSize().width),

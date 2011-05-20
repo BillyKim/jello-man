@@ -280,15 +280,15 @@ void VisualLightDebugger::ShowLightInfo()
 
 		if (m_pAttenuationAddButton->Down())
 		{
-			attenuationEnd += 100;
+			attenuationEnd += 1;
 		}
 			
 		if (m_pAttenuationSubtractButton->Down())
 		{
-			attenuationEnd -= 100;
+			attenuationEnd -= 1;
 		}
 
-		if (attenuationEnd < 100)
+		if (attenuationEnd < 1)
 		{
 			attenuationEnd = 0;
 		}
