@@ -96,8 +96,12 @@ void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTra
 
 	m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
 	m_pCharacter->Init(m_pPhysXEngine);
-    pTrackingCamera->SetFollowObject(m_pCharacter);
-    pTrackingCamera->SetFollowDistance(800);
+
+	m_pFluidsCharacter = new FluidsCharacter();
+	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, 1000, pTrackingCamera);
+
+	pTrackingCamera->SetFollowObject(m_pFluidsCharacter);
+    pTrackingCamera->SetFollowDistance(20);
     pTrackingCamera->SetFollowAngle(20);
 
 	// forcefield
@@ -124,9 +128,6 @@ void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTra
                                             static_cast<int>(BX2D->GetWindowSize().width), 
                                             static_cast<int>(BX2D->GetWindowSize().height));
     m_pFluidPostProcessor->SetEffect(Content->LoadEffect<FluidPostEffect>(_T("../Content/Effects/fluidPostEffect.fx")));
-
-	m_pFluidsCharacter = new FluidsCharacter();
-	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, 1000);
 }
 
 void Level::Tick(const float dTime)
@@ -234,7 +235,7 @@ void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreSh
 	m_pCharacter->DrawShadow(pRenderContext, pPreShadowEffect);
 }
 
-void Level::DrawForward(const RenderContext* pRenderContext)
+void Level::DrawForward(RenderContext* pRenderContext)
 {
 
 	if (m_pTestFluid)

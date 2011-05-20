@@ -35,7 +35,7 @@ public:
 	void Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTrackingCamera);
 	void Tick(const float dTime);
 	void DrawDeferred(RenderContext* pRenderContext);
-	void DrawForward(const RenderContext* pRenderContext);
+	void DrawForward(RenderContext* pRenderContext);
     void DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect);
 
 	void AddLevelObject(ILevelObject* pLevelObject);
