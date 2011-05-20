@@ -94,11 +94,11 @@ void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTra
 
 	m_pEmitter = m_pTestFluid->GetNxFluid()->createEmitter(emitterDesc);
 
-	m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
-	m_pCharacter->Init(m_pPhysXEngine);
+	/*m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
+	m_pCharacter->Init(m_pPhysXEngine);*/
 
 	m_pFluidsCharacter = new FluidsCharacter();
-	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, 1000, pTrackingCamera);
+	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(0,5,0));
 
 	pTrackingCamera->SetFollowObject(m_pFluidsCharacter);
     pTrackingCamera->SetFollowDistance(20);
@@ -136,7 +136,8 @@ void Level::Tick(const float dTime)
 	{
 		obj->Tick(dTime);	
 	});
-	m_pCharacter->Tick(dTime);
+
+	//m_pCharacter->Tick(dTime);
 
 	m_pFluidsCharacter->Tick(dTime);
 }
@@ -223,7 +224,8 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 	{
 		(*it)->Draw(pRenderContext);
 	}
-	m_pCharacter->Draw(pRenderContext);
+
+	//m_pCharacter->Draw(pRenderContext);
 }
 
 void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
@@ -232,12 +234,12 @@ void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreSh
 	{
         lobj->DrawShadow(pRenderContext, pPreShadowEffect);
 	});
-	m_pCharacter->DrawShadow(pRenderContext, pPreShadowEffect);
+
+	//m_pCharacter->DrawShadow(pRenderContext, pPreShadowEffect);
 }
 
 void Level::DrawForward(RenderContext* pRenderContext)
 {
-
 	if (m_pTestFluid)
     {
         m_pFluidPostProcessor->Begin();
@@ -249,10 +251,6 @@ void Level::DrawForward(RenderContext* pRenderContext)
 
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
-	/*tstringstream stream;
-	stream << m_pEmitter->getNbParticlesEmitted();
-
-	BX2D->DrawString(stream.str(), 300,200);*/
 
 	// DRAW LIGHTS
 	if (m_bEditor)

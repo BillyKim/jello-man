@@ -715,7 +715,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 
 			PointLightDesc pDesc;
 
-			pDesc.position = (pRenderContext->GetCamera()->GetPosition() + look * 200);
+			pDesc.position = (pRenderContext->GetCamera()->GetPosition() + look * 10);
 
 			BYTE r = 180;
 			BYTE g = 180;
@@ -725,7 +725,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 			pDesc.color = Color(r, g, b, a);
 			pDesc.multiplier = 1.0f;
 			pDesc.attenuationStart = 0;
-			pDesc.attenuationEnd = 200;
+			pDesc.attenuationEnd = 5;
             
 			PointLight* pl = new PointLight(pDesc);
 			pl->InitEditor();
@@ -744,11 +744,11 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 			look.Normalize();
 
 			SpotLight* sp2 = new SpotLight();
-				sp2->SetPosition(pRenderContext->GetCamera()->GetPosition() + look * 200);
+				sp2->SetPosition(pRenderContext->GetCamera()->GetPosition() + look * 10);
 				sp2->SetColor(Color(0.9f, 0.9f, 0.9f, 1.0f));
 				sp2->SetMulitplier(2.0f);
-				sp2->SetAttenuationStart(1000);
-				sp2->SetAttenuationEnd(2000);
+				sp2->SetAttenuationStart(1);
+				sp2->SetAttenuationEnd(5);
 				sp2->SetOpeningsAngle(ToRadians(90));
 				sp2->Rotate(Vector3::Forward, PiOver2);
 				sp2->SetShadowMap(m_pDXDevice, ShadowMapType1024x1024);
