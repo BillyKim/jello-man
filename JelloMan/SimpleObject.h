@@ -7,11 +7,12 @@
 #include "Model.h"
 #include "DeferredPreEffectNormals.h"
 #include "PhysXShape.h"
+#include "IInstancible.h"
 
-class SimpleObject : public Actor, public ILevelObject, public ISerializable
+class SimpleObject : public Actor, public ILevelObject, public ISerializable, public Instancing::IInstancible, public IDrawable
 {
 public:
-    SimpleObject(void);
+    SimpleObject(bool useForInstancing = false);
     virtual ~SimpleObject(void);
 
     #pragma region ILevelObject
@@ -48,6 +49,19 @@ public:
     virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::SimpleObject; };
     #pragma endregion
 
+	#pragma region IInstancible
+	virtual bool IsUsedForInstancing() const { return m_bIsUsedForInstancing; }
+	virtual tstring GetUniqueInstancingID() const;
+
+	virtual Model<VertexPosNormTanTex>* GetModel() const { return m_pModel; }
+	virtual Texture2D* GetDiffuse() const { return m_pTexDiffuse; }
+	virtual Texture2D* GetSpec() const { return m_pTexSpec; }
+	virtual Texture2D* GetGloss() const { return m_pTexGloss; }
+	virtual Texture2D* GetNormal() const { return m_pTexNormal; }
+
+	virtual const Matrix* GetMtxWorldPointer() const { return &m_mtxWorldMatrix; }
+	#pragma endregion
+
     void SetDiffusePath(tstring path) { m_strDiffusePath = path; }
     void SetSpecPath(tstring path) { m_strSpecPath = path; }
     void SetGlossPath(tstring path) { m_strGlossPath = path; }
@@ -73,6 +87,8 @@ private:
 
     bool m_bIsSelected;
     bool m_bIsRigid;
+
+	bool m_bIsUsedForInstancing;
 
     //Disable default copy constructor and assignment operator
     SimpleObject(const SimpleObject& copy);

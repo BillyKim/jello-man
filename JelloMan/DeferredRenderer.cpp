@@ -305,6 +305,11 @@ void DeferredRenderer::End(const RenderContext* pRenderContext)
 	m_pEffect->SetNormalSpecMap(0);
 	m_pEffect->SetPosGlossMap(0);
     m_pEffect->SetShadowMap(0);
+	m_pEffect->SetTechnique("tech_SpotLightShadows");
+	m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertargets
+	m_pEffect->SetTechnique("tech_SpotLightNoShadows");
+	m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertargets
+	m_pEffect->SetTechnique("tech_UNLIT");
 	m_pEffect->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertargets
 }
 

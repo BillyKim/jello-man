@@ -30,12 +30,20 @@ public:
 
     void Draw(Effect* e) const
     {
-        vector<ModelMesh<T>*>::const_iterator it = m_Meshes.cbegin();
-	    for(; it != m_Meshes.cend(); ++it)
-        {
-            (*it)->Draw(e);
-        }
+        for_each(m_Meshes.cbegin(), m_Meshes.cend(), [&](ModelMesh<T>* mesh)
+		{
+            mesh->Draw(e);
+		});
+        
     }
+
+	void DrawInstanced(Effect* effect, const ID3D10Buffer* pMtxWorldbuffer, int count)
+	{
+		for_each(m_Meshes.cbegin(), m_Meshes.cend(), [&](ModelMesh<T>* mesh)
+		{
+			mesh->DrawInstanced(effect, pMtxWorldbuffer, count);
+		});
+	}
 
 private:
     ID3D10Device* m_pDevice;

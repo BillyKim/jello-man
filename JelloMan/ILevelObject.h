@@ -4,7 +4,7 @@
 #include "IEditorObject.h"
 #include "PhysX.h"
 
-class ILevelObject : public IUpdatable, public IDrawable, public IEditorObject
+class ILevelObject : public IUpdatable, public IEditorObject
 {
 public:
     virtual ~ILevelObject() {}
@@ -24,8 +24,4 @@ public:
 
     //IUpdateable
     virtual void Tick(float dTime) = 0;
-
-    //IDrawable
-    virtual void Draw(RenderContext* pRenderContext) = 0;
-    virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e) = 0;
 };

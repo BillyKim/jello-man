@@ -21,6 +21,7 @@
 
 #include "FollowCamera.h"
 
+#include "InstancingManager.h"
 
 
 class Level
@@ -72,6 +73,10 @@ private:
 	const RenderContext* m_pRenderContext;
 
 	vector<ILevelObject*> m_pLevelObjects;
+
+	vector<IDrawable*> m_pDrawableObjects;
+
+	Instancing::InstancingManager* m_pInstancingManager;
 
 	BaseGrid* m_pBaseGrid;
 
