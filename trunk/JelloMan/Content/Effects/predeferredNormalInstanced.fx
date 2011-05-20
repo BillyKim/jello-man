@@ -29,7 +29,7 @@ BlendState blend
 
 SamplerState mapSampler
 {
-	Filter = MIN_MAG_MIP_LINEAR;
+	Filter = MIN_MAG_MIP_POINT;
 	AddressU = WRAP;
 	AddressV = WRAP;
 	AddressW = WRAP;
@@ -40,12 +40,8 @@ struct VertexShaderInput
     float3 position : POSITION0;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
-	float2 texCoord: TEXCOORD0;
-	
-	float4 fWorld1 : WORLD0;
-	float4 fWorld2 : WORLD1;
-	float4 fWorld3 : WORLD2;
-	float4 fWorld4 : WORLD3;
+	float2 texCoord: TEXCOORD0;	
+	row_major float4x4 mtxWorld : WORLD;
 };
 
 struct VertexShaderOutput
@@ -61,11 +57,7 @@ VertexShaderOutput  VS(VertexShaderInput input)
 {
     VertexShaderOutput output;
 
-	float4x4 mtxWorld = float4x4(
-		input.fWorld1,
-		input.fWorld2,
-		input.fWorld3,
-		input.fWorld4);
+	float4x4 mtxWorld = input.mtxWorld;
 
 	Matrix mtxWVP = mul(mtxWorld, mtxVP);
 
