@@ -423,10 +423,10 @@ void MainGame::CheckControls()
 
 			pLevelObject->SetModelPath(_T("../Content/Models/box1.binobj"));
 	
-            pLevelObject->SetPhysXModel(new PhysXBox(Vector3(.5f, .5f, .5f), 100));
+            pLevelObject->SetPhysXModel(new PhysXBox(Vector3(1.0f, 1.0f, 1.0f), 100));
 
-			pLevelObject->SetDiffusePath(_T("../Content/Textures/weapon_diffuse.png"));
-			//pLevelObject->SetNormalPath(_T("../Content/Textures/weapon_normal.png"));
+			pLevelObject->SetDiffusePath(_T("../Content/Textures/test.png"));
+			pLevelObject->SetNormalPath(_T("../Content/Textures/testnormal.png"));
 			//pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
 			//pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
