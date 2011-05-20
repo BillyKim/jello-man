@@ -2,7 +2,7 @@
 #include "ContentManager.h"
 #include "PhysXMesh.h"
 
-SimpleObject::SimpleObject(void): Actor(),
+SimpleObject::SimpleObject(bool useForInstancing): Actor(),
     m_bIsSelected(false), 
     m_strDiffusePath(_T("")),
     m_strSpecPath(_T("")),
@@ -13,7 +13,8 @@ SimpleObject::SimpleObject(void): Actor(),
     m_pPhysXShape(0),
     m_pTexDiffuse(0), m_pTexSpec(0), m_pTexGloss(0), m_pTexNormal(0),
     m_pModel(0), m_pEffect(0),
-    m_bIsRigid(false)
+    m_bIsRigid(false),
+	m_bIsUsedForInstancing(useForInstancing)
 
 {
 }
@@ -59,6 +60,11 @@ void SimpleObject::Init(PhysX* pPhysX)
     
     m_pPhysXShape->GetShape()->userData = dynamic_cast<ILevelObject*>(this);
     InitActor(pPhysX, *m_pPhysXShape, m_bIsRigid);
+}
+tstring SimpleObject::GetUniqueInstancingID() const
+{
+	tstring id = m_strDiffusePath + m_strSpecPath + m_strGlossPath + m_strNormalPath + m_strModelPath;
+	return id;
 }
 #pragma endregion
 

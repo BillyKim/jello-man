@@ -127,6 +127,9 @@
     <Filter Include="Engine Files\Graphics\Camera">
       <UniqueIdentifier>{6824b517-6403-46de-a02d-1efd70fea06e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Instancing">
+      <UniqueIdentifier>{16626585-4a92-4a6c-907e-d6a813d936cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -447,6 +450,18 @@
     <ClInclude Include="CameraBase.h">
       <Filter>Engine Files\Graphics\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredPreEffectNormalsInstanced.h">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancedModelManager.h">
+      <Filter>Engine Files\Instancing</Filter>
+    </ClInclude>
+    <ClInclude Include="IInstancible.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancingManager.h">
+      <Filter>Engine Files\Instancing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -734,6 +749,15 @@
     <ClCompile Include="CameraBase.cpp">
       <Filter>Engine Files\Graphics\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="DeferredPreEffectNormalsInstanced.cpp">
+      <Filter>Engine Files\Graphics\Effect\deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedModelManager.cpp">
+      <Filter>Engine Files\Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancingManager.cpp">
+      <Filter>Engine Files\Instancing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
@@ -767,6 +791,12 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="Content\Effects\blur.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\predeferredNormalInstanced.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\normal.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

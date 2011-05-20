@@ -34,14 +34,14 @@ private:
 };
 
 template <typename T>
-void CreateInputLayout(ID3D10Device* pDXDevice, Effect* pEffect, ID3D10InputLayout** ppInputLayout, UINT& vertexStride)
+void CreateInputLayout(ID3D10Device* pDXDevice, Effect* pEffect, ID3D10InputLayout** ppInputLayout, UINT& vertexStride, bool useForInstancing = false)
 {    
     SafeRelease(*ppInputLayout);
 
     // Define the input layout
     vector<D3D10_INPUT_ELEMENT_DESC> veclayout;
     UINT numElements;
-    GetInputElementDesc<T>(veclayout, numElements);
+    GetInputElementDesc<T>(veclayout, numElements, useForInstancing);
 
     D3D10_PASS_DESC passDesc;
     pEffect->GetCurrentTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);

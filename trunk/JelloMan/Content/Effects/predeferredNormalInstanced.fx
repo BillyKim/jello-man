@@ -2,8 +2,7 @@
 
 cbuffer cbPerObject
 {
-	matrix mtxWorld : World;
-	matrix mtxWVP : WorldViewProjection;
+	matrix mtxVP : ViewProjection;
 	bool selected : Selected;
 };
 
@@ -30,7 +29,7 @@ BlendState blend
 
 SamplerState mapSampler
 {
-	Filter = MIN_MAG_MIP_POINT;
+	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = WRAP;
 	AddressV = WRAP;
 	AddressW = WRAP;
@@ -42,6 +41,11 @@ struct VertexShaderInput
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float2 texCoord: TEXCOORD0;
+	
+	float4 fWorld1 : WORLD0;
+	float4 fWorld2 : WORLD1;
+	float4 fWorld3 : WORLD2;
+	float4 fWorld4 : WORLD3;
 };
 
 struct VertexShaderOutput
@@ -56,6 +60,14 @@ struct VertexShaderOutput
 VertexShaderOutput  VS(VertexShaderInput input) 
 {
     VertexShaderOutput output;
+
+	float4x4 mtxWorld = float4x4(
+		input.fWorld1,
+		input.fWorld2,
+		input.fWorld3,
+		input.fWorld4);
+
+	Matrix mtxWVP = mul(mtxWorld, mtxVP);
 
     output.position = mul(float4(input.position, 1.0f), mtxWVP);
 	output.worldPos = mul(float4(input.position, 1.0f), mtxWorld).xyz;
@@ -89,7 +101,6 @@ PixelShaderOutput  PS(VertexShaderOutput input)
     output.colorGlow = saturate(output.colorGlow);
 
 	output.normalSpec = float4(normal, specMap.Sample(mapSampler, input.texCoord).r);
-	//output.normalSpec.xyz = input.normal;
 	output.positionGloss = float4(input.worldPos, glossMap.Sample(mapSampler, input.texCoord).r);
 
 	return output;

@@ -141,6 +141,8 @@ struct VertexPNTSoftbody //48
     Vector3 barycentricCoords;
 };
 
+void AddInstancingData(vector<D3D10_INPUT_ELEMENT_DESC>& desc);
+
 void GetInputElementDesc(D3D10_INPUT_ELEMENT_DESC& desc, 
   const LPCSTR&              semanticName,
   UINT                       semanticIndex,
@@ -151,14 +153,13 @@ void GetInputElementDesc(D3D10_INPUT_ELEMENT_DESC& desc,
   UINT                       instanceDataStepRate);
 
 template <typename T>
-void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
+void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements, bool usedForInstancing = false)
 {
 #pragma warning(disable:4127)
     if (sizeof(T) == sizeof(VertexPos))
     {
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPosCol))
     {
@@ -166,7 +167,6 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPosNormCol))
     {
@@ -176,7 +176,6 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[2], "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPosNormTex))
     {
@@ -186,7 +185,6 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[2], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        elements = desc.size();
     }
 	else if (sizeof(T) == sizeof(VertexPosNormTanTex))
     {
@@ -198,7 +196,6 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         GetInputElementDesc(desc[1], "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
 		GetInputElementDesc(desc[2], "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[3], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 36, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPosTex))
     {
@@ -206,7 +203,6 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         desc.push_back(D3D10_INPUT_ELEMENT_DESC());
         GetInputElementDesc(desc[0], "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[1], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        elements = desc.size();
     }
     else if (sizeof(T) == sizeof(VertexPNTSoftbody))
     {
@@ -217,11 +213,14 @@ void GetInputElementDesc(vector<D3D10_INPUT_ELEMENT_DESC>& desc, UINT& elements)
         GetInputElementDesc(desc[2], "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[3], "TETRA", 0, DXGI_FORMAT_R32_UINT, 0, 32, D3D10_INPUT_PER_VERTEX_DATA, 0);
         GetInputElementDesc(desc[4], "BC", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D10_INPUT_PER_VERTEX_DATA, 0);
-        elements = desc.size();
     }
     else
 	{
         ASSERT(false, "");
 	}
 #pragma warning(default:4127)
+
+	if (usedForInstancing)
+		AddInstancingData(desc);
+    elements = desc.size();
 }

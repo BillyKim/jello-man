@@ -7,6 +7,7 @@
 #include "Particle.h"
 #include "ParticleFactory.h"
 #include "SimpleObject.h"
+#include "IInstancible.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -145,6 +146,19 @@ void Level::Tick(const float dTime)
 void Level::AddLevelObject(ILevelObject* pLevelObject)
 {
 	m_pLevelObjects.push_back(pLevelObject);
+
+	using namespace Instancing;
+	IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+	if (instObj != 0 && instObj->IsUsedForInstancing() == true)
+	{
+		m_pInstancingManager->AddLevelObject(instObj);
+	}
+	else
+	{
+		IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
+		if (drawObj != 0) //we allow objects that don't need to be drawn
+			m_pDrawableObjects.push_back(drawObj);
+	}
 }
 
 // SERIALISATION
@@ -220,19 +234,19 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
-	for (vector<ILevelObject*>::iterator it = m_pLevelObjects.begin(); it != m_pLevelObjects.end(); ++it)
+	for_each(m_pDrawableObjects.cbegin(), m_pDrawableObjects.cend(), [&](IDrawable* obj)
 	{
-		(*it)->Draw(pRenderContext);
-	}
+		obj->Draw(pRenderContext);
+	});
 
 	//m_pCharacter->Draw(pRenderContext);
 }
 
 void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
 {
-    for_each(m_pLevelObjects.cbegin(), m_pLevelObjects.cend(), [&](ILevelObject* lobj)
+    for_each(m_pDrawableObjects.cbegin(), m_pDrawableObjects.cend(), [&](IDrawable* obj)
 	{
-        lobj->DrawShadow(pRenderContext, pPreShadowEffect);
+        obj->DrawShadow(pRenderContext, pPreShadowEffect);
 	});
 
 	//m_pCharacter->DrawShadow(pRenderContext, pPreShadowEffect);

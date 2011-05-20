@@ -88,6 +88,29 @@ public:
         // Set primitive topology
         m_pDevice->IASetPrimitiveTopology(m_TopologyType);
     }
+	void SetIAInstanced(Effect* effect, const ID3D10Buffer* pMtxWorldBuffer) const
+    {
+        ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && effect != 0, "");
+
+	    m_pDevice->IASetInputLayout(effect->GetInputLayout());
+
+        // Set vertex buffer(s)
+		ID3D10Buffer* buffers[2] = 
+		{
+			m_pVertexBuffer,
+			const_cast<ID3D10Buffer*>(pMtxWorldBuffer)
+		};
+
+		UINT offset[2] = {0, 0};
+		UINT vertexStride[2] = { effect->GetVertexStride(), sizeof(Matrix) };
+        m_pDevice->IASetVertexBuffers(0, 2, buffers, vertexStride, offset);
+   	
+	    // Set index buffer
+	    m_pDevice->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+        // Set primitive topology
+        m_pDevice->IASetPrimitiveTopology(m_TopologyType);
+    }
     void Draw(Effect* effect) const
     {
         SetIA(effect);       
@@ -98,6 +121,11 @@ public:
 			m_pDevice->DrawIndexed(m_VecIndices.size(), 0, 0); 
         }
     }
+	void DrawInstanced(Effect* effect, const ID3D10Buffer* pMtxWorldbuffer, int count)
+	{
+		SetIAInstanced(effect, pMtxWorldbuffer);
+		m_pDevice->DrawIndexedInstanced(m_VecVertices.size(), count, 0, 0, 0);
+	}
 
 private:
     ID3D10Device* m_pDevice;
