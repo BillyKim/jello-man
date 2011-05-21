@@ -88,4 +88,7 @@ private:
     PostProcessor* m_pPostProcessor;
     EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
     PreShadowEffect* m_pPreShadowEffect;
+
+	// PHYSX - THREADING
+	boost::thread m_PhysXThread;
 };

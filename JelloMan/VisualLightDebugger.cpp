@@ -430,7 +430,7 @@ void VisualLightDebugger::ShowLightInfo()
 	else
 		HideTextBoxes();
 
-	tstringstream streamL;
+	/*tstringstream streamL;
 
 	streamL << _T("lights: ") << GetNrLightsSelected() << _T(" / ") << GetTotalLightsInScene();
 
@@ -441,7 +441,7 @@ void VisualLightDebugger::ShowLightInfo()
 	m_pLightInfoFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_BOTTOM);
 
 	BX2D->DrawString(	streamL.str(),
-						RectF(0,0, BX2D->GetWindowSize().width - 5, BX2D->GetWindowSize().height - 4));
+						RectF(0,0, BX2D->GetWindowSize().width - 5, BX2D->GetWindowSize().height - 4));*/
 
 	BX2D->SetColor(255, 255, 255);
 	BX2D->SetFont(m_pLightInfoFont2);

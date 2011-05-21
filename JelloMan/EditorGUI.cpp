@@ -669,6 +669,30 @@ void EditorGUI::Draw()
 	{
 		m_pColorPicker->PreviousColorSet(false);
 	}
+
+	// SCENE INFO
+	tstringstream streamInfo;
+
+	int objectsSelected(0);
+
+	for_each(m_pLevel->GetLevelObjects().cbegin(), m_pLevel->GetLevelObjects().cend(), [&](ILevelObject* obj)
+    {
+		if (obj->IsSelected())
+			++objectsSelected;
+    });
+
+	streamInfo << _T("lights: ") << m_pLightDebugger->GetNrLightsSelected() << _T(" / ") << m_pLightDebugger->GetTotalLightsInScene();
+	streamInfo << _T("     ");
+	streamInfo << _T("objects: ") << objectsSelected << _T(" / ") << m_pLevel->GetLevelObjects().size();
+
+	BX2D->SetColor(255, 255, 255, 0.5f);
+	BX2D->SetFont(m_pInfoFont);
+
+	m_pInfoFont->SetHorizontalAlignment(TEXT_ALIGNMENT_RIGHT);
+	m_pInfoFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_BOTTOM);
+
+	BX2D->DrawString(	streamInfo.str(),
+						RectF(0,0, BX2D->GetWindowSize().width - 5, BX2D->GetWindowSize().height - 4));
 }
 void EditorGUI::Tick(const RenderContext* pRenderContext)
 {

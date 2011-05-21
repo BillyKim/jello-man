@@ -71,6 +71,41 @@ tstring SimpleObject::GetUniqueInstancingID() const
 #pragma region IUpdateable
 void SimpleObject::Tick(float dTime)
 {
+	/* BLOX 2D IMPLEMENTATION */
+
+	/*
+	if (m_pWorld->GetTicksSinceLastUpdate() == 0)
+	{
+		// POS
+		m_Pos = m_NewPos;
+		m_PreviousPos = m_NewPos;
+
+		Point2D newPos;
+		newPos.x = m_pBody->GetPosition().x * m_WorldScale - m_Size.width / 2;
+		newPos.y = m_pBody->GetPosition().y * m_WorldScale - m_Size.height / 2;
+
+		m_NewPos = newPos;
+
+		// ANGLE
+		m_Angle = m_NewAngle;
+		m_PreviousAngle = m_Angle;
+
+		m_NewAngle = static_cast<float>((m_pBody->GetAngle() / (M_PI * 2.0f)) * 360.0f);
+	}
+	else 
+	{
+		float x = ((m_PreviousPos.x - m_NewPos.x) / m_pWorld->GetTicksPerPhysicsUpdate()) * m_pWorld->GetTicksSinceLastUpdate();
+		float y = ((m_PreviousPos.y - m_NewPos.y) / m_pWorld->GetTicksPerPhysicsUpdate()) * m_pWorld->GetTicksSinceLastUpdate();
+
+		m_Pos.x = m_PreviousPos.x - x;
+		m_Pos.y = m_PreviousPos.y - y;
+
+		float a = ((m_PreviousAngle - m_NewAngle) / m_pWorld->GetTicksPerPhysicsUpdate()) * m_pWorld->GetTicksSinceLastUpdate();
+
+		m_Angle = m_PreviousAngle - a;
+	}
+	*/
+
     Actor::Tick(dTime);
 }
 #pragma endregion

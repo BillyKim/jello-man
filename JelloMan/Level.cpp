@@ -46,61 +46,61 @@ void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTra
 	
 	m_pBaseGrid->Init();
 
-	// TEST FLUID
-	int MAX_PARTICLES = 10000;
+	//// TEST FLUID
+	//int MAX_PARTICLES = 10000;
 
-	// setup fluid descriptor
-	NxFluidDesc fluidDesc;
-    fluidDesc.maxParticles                  = MAX_PARTICLES;
-    fluidDesc.kernelRadiusMultiplier		= 2.0f;
-    fluidDesc.restParticlesPerMeter			= 1.0f;
-	fluidDesc.motionLimitMultiplier			= 2.0f;
-	fluidDesc.packetSizeMultiplier			= 8;
-    fluidDesc.collisionDistanceMultiplier   = 0.5f;
-    fluidDesc.stiffness						= 5.0f;
-    fluidDesc.viscosity						= 5.0f;
-	fluidDesc.restDensity					= 5.0f;
-    fluidDesc.damping						= 0.0f;
-    fluidDesc.restitutionForStaticShapes	= 0.1f;
-	fluidDesc.dynamicFrictionForStaticShapes= 0.8f;
-	fluidDesc.simulationMethod				= NX_F_SPH;
-	fluidDesc.flags &= ~NX_FF_HARDWARE;
+	//// setup fluid descriptor
+	//NxFluidDesc fluidDesc;
+ //   fluidDesc.maxParticles                  = MAX_PARTICLES;
+ //   fluidDesc.kernelRadiusMultiplier		= 2.0f;
+ //   fluidDesc.restParticlesPerMeter			= 1.0f;
+	//fluidDesc.motionLimitMultiplier			= 2.0f;
+	//fluidDesc.packetSizeMultiplier			= 8;
+ //   fluidDesc.collisionDistanceMultiplier   = 0.5f;
+ //   fluidDesc.stiffness						= 5.0f;
+ //   fluidDesc.viscosity						= 5.0f;
+	//fluidDesc.restDensity					= 5.0f;
+ //   fluidDesc.damping						= 0.0f;
+ //   fluidDesc.restitutionForStaticShapes	= 0.1f;
+	//fluidDesc.dynamicFrictionForStaticShapes= 0.8f;
+	//fluidDesc.simulationMethod				= NX_F_SPH;
+	//fluidDesc.flags &= ~NX_FF_HARDWARE;
 
-	// create an attached emitter
-	NxFluidEmitterDesc emitterDesc;
+	//// create an attached emitter
+	//NxFluidEmitterDesc emitterDesc;
 
-	emitterDesc.maxParticles = 0; // using fluid max particles
+	//emitterDesc.maxParticles = 0; // using fluid max particles
 
-	emitterDesc.dimensionX = 30.f;
-	emitterDesc.dimensionY = 30.f;
+	//emitterDesc.dimensionX = 30.f;
+	//emitterDesc.dimensionY = 30.f;
 
-	emitterDesc.type = NX_FE_CONSTANT_FLOW_RATE;
+	//emitterDesc.type = NX_FE_CONSTANT_FLOW_RATE;
 
-	emitterDesc.rate = 300.0f;
+	//emitterDesc.rate = 300.0f;
 
-	emitterDesc.fluidVelocityMagnitude = 100.0f;
+	//emitterDesc.fluidVelocityMagnitude = 100.0f;
 
-	emitterDesc.shape = NX_FE_RECTANGULAR;
-	emitterDesc.particleLifetime = 10.0f; // in seconds
+	//emitterDesc.shape = NX_FE_RECTANGULAR;
+	//emitterDesc.particleLifetime = 10.0f; // in seconds
 
-	////attach to actor
-	//emitterDesc.flags |= NX_FEF_ADD_BODY_VELOCITY;
-	//emitterDesc.repulsionCoefficient = 300.0f;
+	//////attach to actor
+	////emitterDesc.flags |= NX_FEF_ADD_BODY_VELOCITY;
+	////emitterDesc.repulsionCoefficient = 300.0f;
 
-	emitterDesc.relPose.M.id();
-	//emitterDesc.relPose.M.rotX(NxHalfPiF32);
-	emitterDesc.relPose.t = NxVec3(100.0f,200.0f,0);
-	
-	m_pTestFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f,0.0f,1.0f,1.0f), 3.0f, m_pDXDevice);
-	ASSERT(m_pTestFluid, "fluid creation failed");
+	//emitterDesc.relPose.M.id();
+	////emitterDesc.relPose.M.rotX(NxHalfPiF32);
+	//emitterDesc.relPose.t = NxVec3(100.0f,200.0f,0);
+	//
+	//m_pTestFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f,0.0f,1.0f,1.0f), 3.0f, m_pDXDevice);
+	//ASSERT(m_pTestFluid, "fluid creation failed");
 
-	m_pEmitter = m_pTestFluid->GetNxFluid()->createEmitter(emitterDesc);
+	//m_pEmitter = m_pTestFluid->GetNxFluid()->createEmitter(emitterDesc);
 
 	/*m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
 	m_pCharacter->Init(m_pPhysXEngine);*/
 
 	m_pFluidsCharacter = new FluidsCharacter();
-	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(0,5,0));
+	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(0,5,-10));
 
 	pTrackingCamera->SetFollowObject(m_pFluidsCharacter);
     pTrackingCamera->SetFollowDistance(20);
@@ -258,7 +258,7 @@ void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreSh
 
 void Level::DrawForward(RenderContext* pRenderContext)
 {
-	if (m_pTestFluid)
+	if (m_pFluidsCharacter)
     {
         m_pFluidPostProcessor->Begin();
 		//m_pTestFluid->Draw(pRenderContext);
