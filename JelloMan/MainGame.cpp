@@ -126,48 +126,6 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
     m_pLightController = new LightController();
 	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController, m_pDeferredRenderer);
 
-   /* SpotLight* sp1 = new SpotLight();
-        sp1->SetPosition(Vector3(0.0f,600.0f,0.0f));
-        sp1->SetColor(Color(0.9f, 0.002f, 0.002f, 1.0f));
-        sp1->SetMulitplier(2.0f);
-        sp1->SetAttenuationStart(1000);
-        sp1->SetAttenuationEnd(2000);
-        sp1->SetOpeningsAngle(ToRadians(135));
-        sp1->Rotate(Vector3::Forward, Pi / 4.0f * 3.0f);
-        sp1->SetShadowMap(pDXDevice, ShadowMapType1024x1024);
-        sp1->SetBehaviour(new LightBehaviourRotator(Vector3::Up, 2.5f));
-        m_pLightController->AddLight(sp1);
-
-	SpotLight* sp2 = new SpotLight();
-        sp2->SetPosition(Vector3(800.0f,600.0f,0.0f));
-        sp2->SetColor(Color(0.9f, 0.9f, 0.8f, 1.0f));
-        sp2->SetMulitplier(2.0f);
-        sp2->SetAttenuationStart(1000);
-        sp2->SetAttenuationEnd(2000);
-        sp2->SetOpeningsAngle(ToRadians(90));
-        sp2->Rotate(Vector3::Forward, PiOver2);
-        sp2->SetShadowMap(pDXDevice, ShadowMapType1024x1024);
-        m_pLightController->AddLight(sp2);
-
-	SpotLight* sp3 = new SpotLight();
-        sp3->SetPosition(Vector3(-800.0f,600.0f,0.0f));
-        sp3->SetColor(Color(0.9f, 0.9f, 0.8f, 1.0f));
-        sp3->SetMulitplier(2.0f);
-        sp3->SetAttenuationStart(1000);
-        sp3->SetAttenuationEnd(2000);
-        sp3->SetOpeningsAngle(ToRadians(90));
-        sp3->Rotate(Vector3::Forward, PiOver2);
-        sp3->SetShadowMap(pDXDevice, ShadowMapType1024x1024);
-        sp3->SetBehaviour(new LightBehaviourBroken(BrokenLightType_LightBulb));
-        m_pLightController->AddLight(sp3);
-
-	PointLightDesc pl;
-	    pl.position = Vector3(0.0f,500.0f,0.0f);
-	    pl.color = Color(0.7f,0.7f,0.8f, 1.0f);
-	    pl.attenuationEnd = 5000;
-	    pl.multiplier = 0.5f;
-	    m_pLightController->AddLight(new PointLight(pl));*/
-
 	Image* test = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
 	Image* test2 = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
 
@@ -181,8 +139,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pLevel = new Level(pDXDevice);
 	m_pLevel->Initialize(m_pPhysXEngine, m_pTrackingCamera);
 
-    
-	m_LoadingText = _T("blokjes (10x10x10 = 1000): PhysX test");
+	m_LoadingText = _T("Instanced PhysX Test");
     for (int x = 0; x < 10; ++x)
             for (int y = 0; y < 10; ++y)
                 for (int z = 0; z < 10; ++z)
@@ -210,9 +167,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 		            //pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000);
                 }
 
-
-	++m_Orbs;
-	m_LoadingText = _T("audio");
+	//m_LoadingText = _T("audio");
 
 	// AUDIO
 	//tstring projectLocation = tstring(_T("./Audio/Win/JelloMan"));
@@ -248,19 +203,14 @@ void MainGame::UpdateScene(const float dTime)
 {
 	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_GAME)
 		CheckControls();
-  
-    if (CONTROLS->IsKeyPressed('K'))
-        m_pLevel->Serialize("../test.level");
-    else if (CONTROLS->IsKeyPressed('L'))
-        m_pLevel->Deserialize("../test.level");
 
-	if (!m_pAudioEngine)
-	{
-		// AUDIO
-		tstring projectLocation = tstring(_T("../Audio/Win/JelloMan"));
-		m_pAudioEngine = new AudioEngine(projectLocation);
-		m_pAudioEngine->Initialize();
-	}
+	//if (!m_pAudioEngine)
+	//{
+	//	// AUDIO
+	//	tstring projectLocation = tstring(_T("../Audio/Win/JelloMan"));
+	//	m_pAudioEngine = new AudioEngine(projectLocation);
+	//	m_pAudioEngine->Initialize();
+	//}
 
 	// dtime
 	m_dTtime = dTime;
@@ -298,8 +248,8 @@ void MainGame::UpdateScene(const float dTime)
 	{
 		// PHYSX - THREADING
 
-		m_PhysXThread.join();
-		m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this, dTime);
+		m_PhysXThread.join(); // if thread was not finished, wait for it
+		m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this, dTime); // start new thread
 
 		m_pLevel->Tick(dTime);
 
