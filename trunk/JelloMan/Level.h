@@ -84,9 +84,6 @@ private:
 	bool m_bTickCharacter;
 	bool m_bEditor;
 
-	Fluid* m_pTestFluid;
-	NxFluidEmitter* m_pEmitter;
-
     PostProcessor* m_pFluidPostProcessor;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
