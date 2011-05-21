@@ -254,7 +254,10 @@ void Blox2DEngine::ShowFPS(float dTime, bool showGraph, float delayInterval)
 	outs << L"DTime: " << m_DTimeS << L" ms\n";
 
 	m_pFPSFont->SetVerticalAlignment(PARAGRAPH_ALIGNMENT_BOTTOM);
+	m_pFPSFont->SetHorizontalAlignment(TEXT_ALIGNMENT_LEFT);
+
 	SetFont(m_pFPSFont);
+
 	DrawString(outs.str(),RectF(GetWindowSize().width-110,0,GetWindowSize().width,95));
 
 	if (showGraph && m_GameTime > 1)

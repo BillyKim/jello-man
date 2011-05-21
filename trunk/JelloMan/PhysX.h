@@ -7,6 +7,10 @@
 #include <vector>
 #include "D3DUtil.h"
 
+#pragma warning(disable:4005)
+#include "boost\thread\thread.hpp"
+#pragma warning(default:4005)
+
 class MyOutputStream : public NxUserOutputStream
 {
     void reportError (NxErrorCode code, const char *message, const char* /*file*/, int /*line*/);               
@@ -31,6 +35,8 @@ public:
 
 	virtual void onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag status);
 
+	boost::mutex& GetPhysXLock() { return m_PhysXLock; }
+
 private:
 
 	NxPhysicsSDK *m_pPhysicsSDK;
@@ -38,6 +44,8 @@ private:
     MyOutputStream* m_pUserOutputStream;
 
 	NxControllerManager* m_pControllerManager;
+
+	boost::mutex m_PhysXLock;
 	
 private:
 

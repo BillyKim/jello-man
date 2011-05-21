@@ -34,6 +34,8 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
 	Actor::m_pActor->setGroup(1);
 
+	m_pPhysXEngine = pPhysXEngine;
+
 	// FLUID
 	int MAX_PARTICLES = (int)maxParticles;
 
@@ -127,9 +129,19 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
 void FluidsCharacter::Tick(float dTime)
 {
+	m_pPhysXEngine->GetPhysXLock().lock();
 	Actor::Tick(dTime);
 
+	//bool wait = true;
+	//while (wait)
+	//{
+	//	if (m_pPhysXEngine->GetPhysXLock().try_lock())
+	//		break;
+	//}
+	
+	
 	m_pEmitter->setGlobalPose(Actor::m_pActor->getGlobalPose());
+	m_pPhysXEngine->GetPhysXLock().unlock();
 	
 	Vector3 look = m_pCamera->GetLook();
 	Vector3 right = m_pCamera->GetRight();
@@ -178,7 +190,7 @@ void FluidsCharacter::Draw(RenderContext* pRenderContext)
 {
 	m_pFluid->Draw(pRenderContext);
 
-	BX2D->SetColor(255,0,255);
+	/*BX2D->SetColor(255,0,255);
 
 	D3D10_VIEWPORT viewPort;
 	viewPort.TopLeftX = 0;
@@ -198,7 +210,7 @@ void FluidsCharacter::Draw(RenderContext* pRenderContext)
 	D3DXVec3Project(&pos2D, &pos3D, &viewPort, &projection, &view, 0);
 
 	BX2D->SetColor(255,0,255);
-	BX2D->FillEllipse(pos2D.x, pos2D.y, 5, 5);
+	BX2D->FillEllipse(pos2D.x, pos2D.y, 5, 5);*/
 
 
 	// DEBUG

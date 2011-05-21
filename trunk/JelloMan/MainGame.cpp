@@ -95,7 +95,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
 	m_pTrackingCamera = new FollowCamera(static_cast<int>(BX2D->GetWindowSize().width),
         static_cast<int>(BX2D->GetWindowSize().height), m_pPhysXEngine);
-	m_pTrackingCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,10.0f,1000.0f);
+	m_pTrackingCamera->SetLens(BX2D->GetWindowSize().width/BX2D->GetWindowSize().height,PiOver4,0.1f,1000.0f);
 
 	++m_Orbs;
 	m_LoadingText = _T("render engines");
@@ -182,10 +182,10 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pLevel->Initialize(m_pPhysXEngine, m_pTrackingCamera);
 
     
-	m_LoadingText = _T("blokjes (20x20x20 = 8000): instancing test");
-    for (int x = 0; x < 20; ++x)
-            for (int y = 0; y < 20; ++y)
-                for (int z = 0; z < 20; ++z)
+	m_LoadingText = _T("blokjes (10x10x10 = 1000): PhysX test");
+    for (int x = 0; x < 10; ++x)
+            for (int y = 0; y < 10; ++y)
+                for (int z = 0; z < 10; ++z)
                 {
 		            SimpleObject* pLevelObject = new SimpleObject(true);
 
@@ -198,7 +198,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 		            //pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
 		            //pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
-		            pLevelObject->SetRigid(false);
+		            pLevelObject->SetRigid(true);
 
 		            pLevelObject->Init(m_pPhysXEngine);
 
@@ -296,7 +296,14 @@ void MainGame::UpdateScene(const float dTime)
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
 	{
-		UpdatePhysics(dTime);
+		// PHYSX - THREADING
+
+		m_PhysXThread.join();
+		m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this, dTime);
+
+		m_pLevel->Tick(dTime);
+
+		//-----------------------------------
 
 		m_pLevel->EditorMode(false);
 	}
@@ -419,8 +426,10 @@ void MainGame::CheckControls()
 			break;
 	}
 
-	if (CONTROLS->IsKeyPressed(VK_SPACE))
+	if (CONTROLS->IsKeyDown(VK_SPACE))
 	{
+		m_pPhysXEngine->GetPhysXLock().lock();
+
         SimpleObject* pLevelObject = new SimpleObject(true);
 
 		pLevelObject->SetModelPath(_T("../Content/Models/box1.binobj"));
@@ -440,7 +449,9 @@ void MainGame::CheckControls()
 
 		m_pLevel->AddLevelObject(pLevelObject);
 
-		pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000);
+		pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 200000);
+
+		m_pPhysXEngine->GetPhysXLock().unlock();
 	}
 }
 
@@ -524,7 +535,12 @@ void MainGame::LoadScreen()
 
 void MainGame::UpdatePhysics(const float dTime)
 {
-	m_pPhysXEngine->FetchResults();
-	m_pLevel->Tick(dTime);
-	m_pPhysXEngine->Simulate(1/60.0f);
+	m_pPhysXEngine->GetPhysXLock().lock();
+
+	{
+		m_pPhysXEngine->Simulate(dTime);
+		m_pPhysXEngine->FetchResults();
+	}
+
+	m_pPhysXEngine->GetPhysXLock().unlock();
 }
