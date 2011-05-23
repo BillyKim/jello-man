@@ -1,6 +1,3 @@
 #pragma once
 #include "D3DUtil.h"
-
-namespace exceptions
-{
-}
+#include "FileNotFoundException.h"

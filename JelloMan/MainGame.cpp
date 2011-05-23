@@ -13,8 +13,12 @@
 #include "PhysXBox.h"
 #include "PhysXSphere.h"
 #include "SimpleObject.h"
+#include "IniReader.h"
+#include "FileNotFoundException.h"
+#include "IniWriter.h"
 
 using namespace Graphics::Camera;
+using namespace IO;
 
 MainGame::MainGame()	:	m_dTtime(0),
 							m_pLevel(0),
@@ -65,13 +69,58 @@ MainGame::~MainGame()
 
 void MainGame::Initialize(GameConfig& refGameConfig)
 {
-	// TEST - gameconfig word nog file!
+    IniReader reader;
+    try { reader.Open("config.ini"); }
+    catch (exceptions::FileNotFoundException e) { cout << "config.ini not found, loading defaults\n"; }
+    
+    int width = -1, 
+        height = -1;
+    tstring keylayout = _T("");
+    if (reader.IsOpen())
+    {
+        try 
+        {
+            width = reader.GetInt(_T("GFX"), _T("width"));
+            height = reader.GetInt(_T("GFX"), _T("height"));
+        }
+        catch (RootNotFoundException e) { cout << "warning: reading config.ini, root [GFX] not found, width/height set to default\n"; }
+        catch (NodeNotFoundException e) {  cout << "warning: reading config.ini, node 'width' or 'height' not found, width/height set to default\n"; }
+        catch (ParseFailException e) { cout << "warning: reading config.ini, error while parsing 'width' or 'height', using defaults\n"; }
+        try 
+        {
+            keylayout = reader.GetString(_T("IO"), _T("layout"));
+        }
+        catch (RootNotFoundException e) { cout << "warning: reading config.ini, root [IO] not found, keylayout set to AZERTY\n"; }
+        catch (NodeNotFoundException e) {  cout << "warning: reading config.ini, node 'keylayout' not found, keylayout set to AZERTY\n"; }
+    }
+    if (width == -1 || height == -1)
+    {
+        width = 1280;
+        height = 720;
+    }
+    if (keylayout != _T("AZERTY") && keylayout != _T("QWERTY"))
+    {
+        keylayout = _T("AZERTY");
+    }
+
 	refGameConfig.SetTitle(_T("Happy Engine"));
-	refGameConfig.SetWindowWidth(1440);
-	refGameConfig.SetWindowHeight(900);
+	refGameConfig.SetWindowWidth(width);
+	refGameConfig.SetWindowHeight(height);
 	refGameConfig.SetBlox2DAntiAliasing(true);
-	refGameConfig.SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT_AZERTY);
+
+    if (keylayout == _T("AZERTY"))
+	    refGameConfig.SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT_AZERTY);
+    else
+        refGameConfig.SetKeyboardLayout(GameConfig::KEYBOARD_LAYOUT_QWERTY);
+
 	refGameConfig.UsePhysX(true);
+
+    IniWriter writer;
+    writer.Open("config.ini");
+    writer.WriteInt(_T("GFX"), _T("width"), width);
+    writer.WriteInt(_T("GFX"), _T("height"), height);
+    writer.WriteString(_T("IO"), _T("layout"), keylayout);
+    writer.Close();
 }
 
 void MainGame::LoadResources(ID3D10Device* pDXDevice)
@@ -160,7 +209,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 		            pLevelObject->Init(m_pPhysXEngine);
 
 		            //pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
-                    pLevelObject->Translate(Vector3(x*2, y*2, z*2));
+                    pLevelObject->Translate(Vector3(x*2, y, z*2));
 
 		            m_pLevel->AddLevelObject(pLevelObject);
 
