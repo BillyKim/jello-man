@@ -23,9 +23,6 @@
     <Filter Include="Engine Files\Graphics\Light">
       <UniqueIdentifier>{7e7f15c7-c33d-479b-8a00-9efef0989047}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Input">
-      <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
@@ -130,6 +127,9 @@
     <Filter Include="Engine Files\Instancing">
       <UniqueIdentifier>{16626585-4a92-4a6c-907e-d6a813d936cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\IO">
+      <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -184,7 +184,7 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Controls.h">
-      <Filter>Engine Files\Input</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Engine Files\Core</Filter>
@@ -259,7 +259,7 @@
       <Filter>Engine Files\Graphics\Effect\post</Filter>
     </ClInclude>
     <ClInclude Include="CookingStream.h">
-      <Filter>Engine Files\Input</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClInclude>
     <ClInclude Include="RenderContext.h">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -462,6 +462,12 @@
     <ClInclude Include="InstancingManager.h">
       <Filter>Engine Files\Instancing</Filter>
     </ClInclude>
+    <ClInclude Include="IniReader.h">
+      <Filter>Engine Files\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="IniWriter.h">
+      <Filter>Engine Files\IO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -510,7 +516,7 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Controls.cpp">
-      <Filter>Engine Files\Input</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Engine Files\Core</Filter>
@@ -585,7 +591,7 @@
       <Filter>Engine Files\Graphics\Effect\post</Filter>
     </ClCompile>
     <ClCompile Include="CookingStream.cpp">
-      <Filter>Engine Files\Input</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="RenderContext.cpp">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -757,6 +763,12 @@
     </ClCompile>
     <ClCompile Include="InstancingManager.cpp">
       <Filter>Engine Files\Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="IniReader.cpp">
+      <Filter>Engine Files\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="IniWriter.cpp">
+      <Filter>Engine Files\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

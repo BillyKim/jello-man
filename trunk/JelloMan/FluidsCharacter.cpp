@@ -27,8 +27,8 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
 	m_pCamera = pCamera;
 
-	PhysXSphere* pSphere = new PhysXSphere(0.2f, 100);
-	InitActor(pPhysXEngine, *pSphere, true);
+	PhysXSphere sphere(0.2f, 100);
+	InitActor(pPhysXEngine, sphere, true);
 
 	SetPosition(startPos);
 
