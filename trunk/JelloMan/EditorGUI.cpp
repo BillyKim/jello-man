@@ -41,7 +41,9 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice, Level* pLevel
 		m_pPostFXButton(0),
 		m_pScaleButton(0),
 		m_bScaleable(false),
-		m_pScaleGizmo(0)
+		m_pScaleGizmo(0),
+		m_pSnapper(0),
+		m_pSnappingButton(0)
 {
 
 }
@@ -63,6 +65,7 @@ EditorGUI::~EditorGUI()
 	delete m_pLoadLevelButton;
 	delete m_pPostFXButton;
 	delete m_pScaleButton;
+	delete m_pSnappingButton;
 
 	delete m_pLightDebugger;
 	delete m_pColorPicker;
@@ -72,6 +75,7 @@ EditorGUI::~EditorGUI()
 	delete m_pObjectSelecter;
 	delete m_pLevelLoader;
 	delete m_pScaleGizmo;
+	delete m_pSnapper;
 }
 
 // GENERAL
@@ -132,7 +136,7 @@ void EditorGUI::Initialize()
 	m_pEditorModeButton->SetDownState(m_pEditorModeButtonBitmaps[1]);
 
 	// POINTLIGHT BUTTON
-	m_pPointlightButton = new Button(296,7,36,36);
+	m_pPointlightButton = new Button(352,7,36,36);
 
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_normal.png")));
 	m_pPointlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_hover.png")));
@@ -142,7 +146,7 @@ void EditorGUI::Initialize()
 	m_pPointlightButton->SetDownState(m_pPointlightButtonBitmaps[1]);
 
 	// SPOTLIGHT BUTTON
-	m_pSpotlightButton = new Button(332,7,36,36);
+	m_pSpotlightButton = new Button(388,7,36,36);
 
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_normal.png")));
 	m_pSpotlightButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_hover.png")));
@@ -210,6 +214,21 @@ void EditorGUI::Initialize()
 
 	m_pScaleButton->SetState(Button::STATE_DEACTIVATED);
 
+	// SNAPPING BUTTON
+	m_pSnappingButton = new Button(296,7,36,36,true);
+
+	m_pSnappingButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/snapping_normal.png")));
+	m_pSnappingButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/snapping_hover.png")));
+
+	m_pSnappingButton->SetNormalState(m_pSnappingButtonBitmaps[1]);
+	m_pSnappingButton->SetHoverState(m_pSnappingButtonBitmaps[1]);
+	m_pSnappingButton->SetDownState(m_pSnappingButtonBitmaps[1]);
+	m_pSnappingButton->SetDeactivatedState(m_pSnappingButtonBitmaps[0]);
+	m_pSnappingButton->SetDeactivatedStateHover(m_pSnappingButtonBitmaps[0]);
+	m_pSnappingButton->SetDeactivatedStateDown(m_pSnappingButtonBitmaps[0]);
+
+	m_pSnappingButton->SetState(Button::STATE_DEACTIVATED);
+
 	// PLAY MODE BUTTON
 	m_pPlayModeButton = new Button(20,79,36,36);
 	
@@ -221,7 +240,7 @@ void EditorGUI::Initialize()
 	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
 
 	// LOAD MODEL BUTTON
-	m_pLoadModelButton = new Button(388,7,36,36, true);
+	m_pLoadModelButton = new Button(424,7,36,36, true);
 
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_normal.png")));
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_hover.png")));
@@ -239,7 +258,7 @@ void EditorGUI::Initialize()
 	m_pLoadModelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// LOAD LEVEL BUTTON
-	m_pLoadLevelButton = new Button(424,7,36,36, true);
+	m_pLoadLevelButton = new Button(480,7,36,36, true);
 
 	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_normal.png")));
 	m_pLoadLevelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_hover.png")));
@@ -257,7 +276,7 @@ void EditorGUI::Initialize()
 	m_pLoadLevelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// SHOW GRID BUTTON
-	m_pShowGridButton = new Button(484,7,36,36,true);
+	m_pShowGridButton = new Button(524,7,36,36,true);
 
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_normal.png")));
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_hover.png")));
@@ -309,6 +328,8 @@ void EditorGUI::Initialize()
 
 	// SCALE GIZMO
 	m_pScaleGizmo = new ScaleGizmo();
+
+	m_pSnapper = new Snapper(m_pMoveGizmo, m_pRotateGizmo);
 
 	m_pModelLoader = new LoadModelFromFile();
 	m_pLevelLoader = new LoadLevelFromFile(m_pLevel);
@@ -373,7 +394,10 @@ void EditorGUI::Draw()
 		BX2D->SetColor(70, 70, 70);
 		BX2D->FillRect(0, 50, 200, BX2D->GetWindowSize().height - 71);
 
-		m_pLightDebugger->ShowLightInfo();
+		if (!m_pSnappingButton->IsActive())
+			m_pLightDebugger->ShowLightInfo();
+		else
+			m_pLightDebugger->HideTextBoxes();
 
 		if (m_pLoadModelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0)
 			m_pModelLoader->Show();
@@ -495,6 +519,11 @@ void EditorGUI::Draw()
 		{
 			m_bEditorModeDown = true;
 		}
+
+		if (m_pSnappingButton->IsActive())
+			m_pSnapper->Draw();
+		else
+			m_pSnapper->HideTextBoxes();
 	}
 	else if (m_Mode == MODE_PLAY)
 	{
@@ -560,7 +589,7 @@ void EditorGUI::Draw()
 		BX2D->DrawString(_T("Add a spotlight to the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
-	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
+	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1 && !m_pSnappingButton->IsActive())
 		m_pColorPickerButton->Show();
 
 	if (m_pColorPickerButton->Hover() || m_pColorPickerButton->Down())
@@ -625,10 +654,17 @@ void EditorGUI::Draw()
 		BX2D->DrawString(_T("Scale objects and lights present in the scene."), 20, BX2D->GetWindowSize().height - 16);
 	}
 
+	m_pSnappingButton->Show();
+	if (m_pSnappingButton->Hover() || m_pSnappingButton->Down())
+	{
+		BX2D->SetColor(255,255,255,0.5f);
+		BX2D->SetFont(m_pInfoFont);
+		BX2D->DrawString(_T("Change the snapping options for the gizmo's."), 20, BX2D->GetWindowSize().height - 16);
+	}
+
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != MODE_PLAY)
 		BX2D->DrawImage(m_pCameraBitmap, BX2D->GetWindowSize().width - 70, 90, true, 0.8f);
-	
 
 	BX2D->SetAntiAliasing(true);
 
@@ -710,11 +746,15 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	m_pLoadLevelButton->Tick();
 	m_pPostFXButton->Tick();
 	m_pScaleButton->Tick();
+	m_pSnappingButton->Tick();
 
 	if (m_pLoadLevelButton->Clicked())
 		m_pLoadModelButton->Deactivate();
 	if (m_pLoadModelButton->Clicked())
 		m_pLoadLevelButton->Deactivate();
+
+	if (m_pSnappingButton->IsActive())
+		m_pSnapper->Tick();
 
 	if (m_Mode == MODE_EDITOR && m_pLightDebugger->GetNrLightsSelected() == 1)
 		m_pColorPickerButton->Tick();

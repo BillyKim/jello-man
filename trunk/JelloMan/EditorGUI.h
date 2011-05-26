@@ -15,6 +15,7 @@
 #include "Level.h"
 #include "LoadLevelFromFile.h"
 #include "ScaleGizmo.h"
+#include "Snapper.h"
 
 class EditorGUI
 {
@@ -101,6 +102,8 @@ private:
 	vector<Image*> m_pPostFXButtonBitmaps;
 	Button* m_pScaleButton;
 	vector<Image*> m_pScaleButtonBitmaps;
+	Button* m_pSnappingButton;
+	vector<Image*> m_pSnappingButtonBitmaps;
 
 	Image* m_pCameraBitmap;
 
@@ -123,6 +126,7 @@ private:
 	MoveGizmo* m_pMoveGizmo;
 	RotateGizmo* m_pRotateGizmo;
 	ScaleGizmo* m_pScaleGizmo;
+	Snapper* m_pSnapper;
 
 	MODE m_Mode;
 
