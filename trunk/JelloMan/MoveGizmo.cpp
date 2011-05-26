@@ -362,7 +362,7 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 					}
 
 					if (m_bSnap)
-						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000;
+						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
                 
 					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
@@ -392,7 +392,7 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 					}
 
 					if (m_bSnap)
-						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000;
+						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
 
 					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
@@ -422,7 +422,7 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 					}
 
 					if (m_bSnap)
-						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000;
+						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
 
 					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
