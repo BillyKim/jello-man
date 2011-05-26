@@ -5,7 +5,7 @@
 #pragma warning(default: 4512)
 
 #pragma comment(lib, "PhysXLoader.lib")
-//#pragma comment(lib, "NxCharacter.lib")
+#pragma comment(lib, "NxCharacter.lib")
 
 #pragma region MyOutputStream
 void MyOutputStream::reportError(NxErrorCode code, const char *message, const char*, int)
@@ -29,18 +29,19 @@ PhysX::PhysX()
 	:	m_pPhysicsSDK(0),
 		m_pScene(0),
 		m_pControllerManager(0),
-		m_pUserOutputStream(0)
+		m_pUserOutputStream(0),
+        m_pDefaultAllocator(0)
 {
-
 }
 
 PhysX::~PhysX(void)
 {
-	//NxReleaseControllerManager(m_pControllerManager);
+	NxReleaseControllerManager(m_pControllerManager);
 	if(m_pScene)m_pPhysicsSDK->releaseScene(*m_pScene);
 	if(m_pPhysicsSDK)m_pPhysicsSDK->release();
 
     delete m_pUserOutputStream;
+    delete m_pDefaultAllocator;
 }
 
 bool PhysX::Init(void)
@@ -50,11 +51,7 @@ bool PhysX::Init(void)
 
 	ASSERT(m_pPhysicsSDK != 0, "Error creating PhysicsSDK");
 
-	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect ("localhost", 5425);
-	//m_pPhysicsSDK->setParameter(NX_SKIN_WIDTH, 0.1f);
-    //m_pPhysicsSDK->setParameter(NX_DEFAULT_SLEEP_ENERGY, 50000.0f);
-   /* m_pPhysicsSDK->setParameter(NX_DYN_FRICT_SCALING, 100.0f);
-    m_pPhysicsSDK->setParameter(NX_STA_FRICT_SCALING, 100.0f);*/
+	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect("localhost");
 
 	NxSceneDesc sceneDesc;
 	sceneDesc.gravity.set(0, -9.81f, 0);
@@ -63,11 +60,14 @@ bool PhysX::Init(void)
 
 	ASSERT(m_pScene != 0, "Error creating physics scene");
 
+    #pragma region default material
 	NxMaterial* defaultMaterial = m_pScene->getMaterialFromIndex(0);
 	defaultMaterial->setRestitution(0.3f);
 	defaultMaterial->setStaticFriction(.6f);
 	defaultMaterial->setDynamicFriction(.5f);
+    #pragma endregion
 
+    #pragma region groundplane
 	NxPlaneShapeDesc planeDesc;
 	planeDesc.d = 0;
 
@@ -75,14 +75,17 @@ bool PhysX::Init(void)
 	actorDesc.shapes.pushBack(&planeDesc);
 
 	m_pScene->createActor(actorDesc);
+    #pragma endregion
 
 	NxReal myTimestep = 1/60.0f;
 	m_pScene->setTiming(myTimestep, 8, NX_TIMESTEP_FIXED);
 	
 	m_pScene->setUserTriggerReport(this);
 
-	//m_pControllerManager = NxCreateControllerManager(m_pAllocator);
-	
+    m_pDefaultAllocator = new NxUserAllocatorDefault();
+    m_pControllerManager = NxCreateControllerManager(m_pDefaultAllocator);
+    
+
 	return true;
 }
 
@@ -94,31 +97,10 @@ void PhysX::Simulate(float dt)
 
 void PhysX::FetchResults(void)
 {
+    m_pControllerManager->updateControllers();
 	m_pScene->flushStream();
-
 	m_pScene->fetchResults(NX_ALL_FINISHED, true);
 }
-
-//NxController* PhysX::CreateController(Character* player)
-//{
-//	NxCapsuleControllerDesc desc;
-//	//desc.radius = player->GetRadius();
-//	//desc.height = player->GetHeight();
-//	//D3DXVECTOR3 pos = player->GetPosition();
-//	//desc.position = NxExtendedVec3( pos.x, pos.y, pos.z);
-//	desc.climbingMode = CLIMB_EASY ;
-//	desc.upDirection = NX_Y;
-//
-//	NxController* c = m_pControllerManager->createController(m_pScene, desc);
-//
-//	c->setCollision(true);
-//	c->getActor()->setGroup(1);
-//	c->getActor()->userData=player;
-//	c->getActor()->setName("character");
-//
-//	m_Controllers.push_back(c);
-//	return c;
-//}
 
 NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
 {

@@ -4,6 +4,11 @@
 struct Vector2
 {
 public:
+	//---Public Datamembers--->
+	float X;
+    float Y;
+	//<------------------------
+
 	//Constructors
 	Vector2();
 	Vector2(float x, float y);
@@ -53,11 +58,6 @@ public:
 	bool operator==(const Vector2& v) const;
 	bool operator!=(const Vector2& v) const;
 	//<-----------------------------------------
-
-	//---Public Datamembers--->
-	float X;
-    float Y;
-	//<------------------------
 };
 
 

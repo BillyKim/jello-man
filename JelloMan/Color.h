@@ -5,6 +5,13 @@
 struct Color
 {
 public:
+	//---Public Datamembers--->
+	float R;
+    float G;
+    float B;
+    float A;
+	//<------------------------
+
 	//Constructors
 	Color();
 	Color(float r, float g, float b, float a = 1.0f);
@@ -40,12 +47,5 @@ public:
 	bool operator!=(const Color& v) const;
 
 	//<-----------------------------------------
-
-	//---Public Datamembers--->
-	float R;
-    float G;
-    float B;
-    float A;
-	//<------------------------
 };
 

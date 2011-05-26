@@ -4,17 +4,26 @@
 #include "Matrix.h"
 #include "PhysX.h"
 
+struct NxExtendedVec3;
+
 struct Vector4;
 
 struct Vector3
 {
 public:
+	//---Public Datamembers--->
+	float X;
+    float Y;
+    float Z;
+	//<------------------------
+
 	//Constructors
 	Vector3();
 	Vector3(float x, float y, float z);
 	Vector3(const Vector2& v2, float z);
-	explicit Vector3(const D3DXVECTOR3& v3);
-	explicit Vector3(const NxVec3& v3);
+	Vector3(const D3DXVECTOR3& v3);
+	Vector3(const NxVec3& v3);
+    Vector3(const NxExtendedVec3& v3);
 
     //Static const
     static const Vector3 Up;
@@ -71,6 +80,7 @@ public:
 
 	//cast
 	operator NxVec3() const;
+    operator NxExtendedVec3() const;
 	operator D3DXVECTOR3() const;
 
 	//<-----------------------------------------
@@ -86,11 +96,6 @@ public:
 
     //<--------------------------------------------------
 
-	//---Public Datamembers--->
-	float X;
-    float Y;
-    float Z;
-	//<------------------------
 };
 
 Vector3 Min(const Vector3& a, const Vector3& b);

@@ -130,6 +130,9 @@
     <Filter Include="Engine Files\IO">
       <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\PhysX\Character">
+      <UniqueIdentifier>{e102e386-8c06-4cdc-afd6-1db9a2fd33bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -263,9 +266,6 @@
     </ClInclude>
     <ClInclude Include="RenderContext.h">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
-    </ClInclude>
-    <ClInclude Include="Character.h">
-      <Filter>Game Files</Filter>
     </ClInclude>
     <ClInclude Include="Softbody.h">
       <Filter>Engine Files\PhysX</Filter>
@@ -426,9 +426,6 @@
     <ClInclude Include="MoveGizmo.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
-    <ClInclude Include="FluidsCharacter.h">
-      <Filter>Engine Files\PhysX\Fluids</Filter>
-    </ClInclude>
     <ClInclude Include="FluidEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClInclude>
@@ -470,6 +467,13 @@
     </ClInclude>
     <ClInclude Include="Snapper.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
+    </ClInclude>
+
+    <ClInclude Include="PhysXCharacter.h">
+      <Filter>Engine Files\PhysX\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="FluidsCharacter.h">
+      <Filter>Game Files\LevelObjects\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -598,9 +602,6 @@
     </ClCompile>
     <ClCompile Include="RenderContext.cpp">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
-    </ClCompile>
-    <ClCompile Include="Character.cpp">
-      <Filter>Game Files</Filter>
     </ClCompile>
     <ClCompile Include="Softbody.cpp">
       <Filter>Engine Files\PhysX</Filter>
@@ -734,9 +735,6 @@
     <ClCompile Include="MoveGizmo.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
-    <ClCompile Include="FluidsCharacter.cpp">
-      <Filter>Engine Files\PhysX\Fluids</Filter>
-    </ClCompile>
     <ClCompile Include="FluidEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
@@ -773,9 +771,18 @@
     <ClCompile Include="IniWriter.cpp">
       <Filter>Engine Files\IO</Filter>
     </ClCompile>
+
+    <ClCompile Include="PhysXCharacter.cpp">
+      <Filter>Engine Files\PhysX\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="FluidsCharacter.cpp">
+      <Filter>Game Files\LevelObjects\Character</Filter>
+    </ClCompile>
+
     <ClCompile Include="Snapper.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
+
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
