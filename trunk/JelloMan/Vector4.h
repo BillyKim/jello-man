@@ -5,6 +5,13 @@
 struct Vector4
 {
 public:
+	//---Public Datamembers--->
+	float X;
+    float Y;
+    float Z;
+    float W;
+	//<------------------------
+
 	//Constructors
 	Vector4();
 	Vector4(float x, float y, float z, float w);
@@ -45,11 +52,5 @@ public:
 
 	//<-----------------------------------------
 
-	//---Public Datamembers--->
-	float X;
-    float Y;
-    float Z;
-    float W;
-	//<------------------------
 };
 

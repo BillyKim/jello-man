@@ -9,6 +9,11 @@
     #include <NxPhysics.h>
     #pragma warning(disable: 4100)
     #include "ControllerManager.h"
+
+    #define _CrtCheckMemory() {}   //we dont check memory in NxUserAlloc for compatibility reasons
+    #include <NxUserAllocatorDefault.h>
+    #undef _CrtCheckMemory
+
     #pragma warning(default: 4100)
 
     #undef _malloca
@@ -21,7 +26,10 @@
     //Tell crtdbg to give me information such as line number and source file
     #define _CRTDBG_MAP_ALLOC
     #include <crtdbg.h>
+
 #endif
+
+
 
 #include <stdlib.h>
 

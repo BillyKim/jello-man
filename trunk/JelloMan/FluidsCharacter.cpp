@@ -4,8 +4,8 @@
 FluidsCharacter::FluidsCharacter()	:	m_pPhysXEngine(0),
 										m_pFluid(0),
 										m_pEmitter(0),
-										m_Pos(Vector3(1000,500,0)),
-										m_pCamera(0)
+										m_pCamera(0),
+                                        m_IsTouchingGround(true)
 {
 }
 
@@ -28,12 +28,10 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	m_pCamera = pCamera;
 
 	PhysXSphere sphere(0.2f, 100);
-	InitActor(pPhysXEngine, sphere, true);
+    InitCharacter(pPhysXEngine, PhysXCharactertype_Capsule);
 
 	SetPosition(startPos);
-
-	Actor::m_pActor->setGroup(1);
-
+    
 	m_pPhysXEngine = pPhysXEngine;
 
 	// FLUID
@@ -129,8 +127,31 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
 void FluidsCharacter::Tick(float dTime)
 {
-	m_pPhysXEngine->GetPhysXLock().lock();
-	Actor::Tick(dTime);
+    Vector3 move = Vector3(0, 0, 0);
+    if (CONTROLS->IsKeyDown(VK_UP))
+        move += Vector3::Forward * dTime * 10;
+    else if (CONTROLS->IsKeyDown(VK_DOWN))
+        move += Vector3::Forward * dTime * -10;
+    if (CONTROLS->IsKeyDown(VK_RIGHT))
+        move += Vector3::Right * dTime * 10;
+    else if (CONTROLS->IsKeyDown(VK_RIGHT))
+        move += Vector3::Right * dTime * -10;
+
+    NxVec3 grav;
+    m_pPhysXEngine->GetScene()->getGravity(grav);
+    move += grav * dTime;
+
+
+    PhysXCharacterCollisionType coll = Move(move);
+
+    m_IsTouchingGround = coll & PhysXCharacterCollisionType_Down || coll & PhysXCharacterCollisionType_Up;
+
+    if (m_IsTouchingGround && CONTROLS->IsKeyPressed(VK_SPACE))
+	{
+        m_pPhysXEngine->GetScene()->setGravity(-grav);
+	}
+
+
 
 	//bool wait = true;
 	//while (wait)
@@ -140,57 +161,17 @@ void FluidsCharacter::Tick(float dTime)
 	//}
 	
 	
-	m_pEmitter->setGlobalPose(Actor::m_pActor->getGlobalPose());
+	m_pPhysXEngine->GetPhysXLock().lock();
+    m_pEmitter->setGlobalPosition(GetPosition());
 	m_pPhysXEngine->GetPhysXLock().unlock();
-	
-	Vector3 look = m_pCamera->GetLook();
-	Vector3 right = m_pCamera->GetRight();
 
-	look.Normalize();
-	right.Normalize();
-
-	look *= 3000;
-	right *= 3000;
-
-	if (Actor::m_pActor->getLinearVelocity().magnitude() < 15)
-	{
-		if (CONTROLS->IsKeyDown(VK_UP))
-		{
-			Actor::m_pActor->addForce(Vector3(look.X,0,look.Z));
-		}
-		if (CONTROLS->IsKeyDown(VK_DOWN))
-		{
-			Actor::m_pActor->addForce(Vector3(-look.X,0,-look.Z));
-		}
-		if (CONTROLS->IsKeyDown(VK_LEFT))
-		{
-			Actor::m_pActor->addForce(Vector3(-right.X,0,-right.Z));
-		}
-		if (CONTROLS->IsKeyDown(VK_RIGHT))
-		{
-			Actor::m_pActor->addForce(Vector3(right.X,0,right.Z));
-		}
-	}
-
-	/*NxVec3 grav;
-    m_pPhysXEngine->GetScene()->getGravity(grav);
-    NxRay ray(GetPosition(), Vector3::Up * ((grav.y < 0)? -1 : 1));
-    bool isTouchingGround = m_pPhysX->GetScene()->raycastAnyShape(ray, NxShapesType::NX_STATIC_SHAPES, 1, 0.5f);
-
-	if (isTouchingGround)
-	{*/
-		if (CONTROLS->IsKeyPressed(VK_SPACE))
-		{
-			Actor::m_pActor->addForce(NxVec3(10,40000,0));
-		}
-	//}
 }
 
 void FluidsCharacter::Draw(RenderContext* pRenderContext)
 {
 	m_pFluid->Draw(pRenderContext);
 
-	/*BX2D->SetColor(255,0,255);
+	BX2D->SetColor(255,0,255);
 
 	D3D10_VIEWPORT viewPort;
 	viewPort.TopLeftX = 0;
@@ -200,7 +181,7 @@ void FluidsCharacter::Draw(RenderContext* pRenderContext)
 	viewPort.Width = BX2D->GetWindowSize().width;
 	viewPort.Height = BX2D->GetWindowSize().height;
 
-	D3DXVECTOR3 pos3D(Actor::m_pActor->getGlobalPosition().x, Actor::m_pActor->getGlobalPosition().y, Actor::m_pActor->getGlobalPosition().z);
+	D3DXVECTOR3 pos3D(GetPosition());
 	
 	D3DXVECTOR3 pos2D;
 	D3DXMATRIX projection(pRenderContext->GetCamera()->GetProjection());
@@ -210,7 +191,7 @@ void FluidsCharacter::Draw(RenderContext* pRenderContext)
 	D3DXVec3Project(&pos2D, &pos3D, &viewPort, &projection, &view, 0);
 
 	BX2D->SetColor(255,0,255);
-	BX2D->FillEllipse(pos2D.x, pos2D.y, 5, 5);*/
+	BX2D->FillEllipse(pos2D.x, pos2D.y, 5, 5);
 
 
 	// DEBUG

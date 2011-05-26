@@ -93,7 +93,6 @@
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="CameraBase.h" />
-    <ClInclude Include="Character.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="IniReader.h" />
@@ -161,6 +160,7 @@
     <ClInclude Include="PhongEffect.h" />
     <ClInclude Include="PhysX.h" />
     <ClInclude Include="PhysXBox.h" />
+    <ClInclude Include="PhysXCharacter.h" />
     <ClInclude Include="PhysXMesh.h" />
     <ClInclude Include="PhysXShape.h" />
     <ClInclude Include="PhysXSphere.h" />
@@ -206,7 +206,6 @@
     <ClCompile Include="Blox2DEngine.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CameraBase.cpp" />
-    <ClCompile Include="Character.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="IniReader.cpp" />
@@ -265,6 +264,7 @@
     <ClCompile Include="PhongEffect.cpp" />
     <ClCompile Include="PhysX.cpp" />
     <ClCompile Include="PhysXBox.cpp" />
+    <ClCompile Include="PhysXCharacter.cpp" />
     <ClCompile Include="PhysXMesh.cpp" />
     <ClCompile Include="PhysXShape.cpp" />
     <ClCompile Include="PhysXSphere.cpp" />

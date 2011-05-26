@@ -6,6 +6,9 @@ struct Vector3;
 
 struct Matrix
 {
+private:
+    D3DXMATRIX m_Matrix;
+
 public:
 	Matrix(void);
     Matrix( float _11, float _12, float _13, float _14,
@@ -69,8 +72,5 @@ public:
 
     bool operator== (const Matrix& mat) const;
     bool operator!= (const Matrix& mat) const;
-
-private:
-    D3DXMATRIX m_Matrix;
 };
 

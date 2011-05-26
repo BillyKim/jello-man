@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include "MathHelper.h"
 #include "Vector4.h"
+#include <NxExtended.h>
 
 
 //-------------------Constructors-&-Destructor-------------------->
@@ -18,6 +19,9 @@ Vector3::Vector3(const D3DXVECTOR3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
 {
 }
 Vector3::Vector3(const NxVec3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
+{
+}
+Vector3::Vector3(const NxExtendedVec3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
 {
 }
 
@@ -186,6 +190,10 @@ bool Vector3::operator!=(const Vector3& v) const
 Vector3::operator NxVec3() const
 {
 	return NxVec3(X, Y, Z);
+}
+Vector3::operator NxExtendedVec3() const
+{
+	return NxExtendedVec3(X, Y, Z);
 }
 Vector3::operator D3DXVECTOR3() const
 {

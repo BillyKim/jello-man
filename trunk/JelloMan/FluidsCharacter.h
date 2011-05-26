@@ -6,14 +6,14 @@
 #include "Vector3.h"
 #include "PhysX.h"
 #include "RenderContext.h"
-#include "Actor.h"
+#include "PhysXCharacter.h"
 #include "PhysXSphere.h"
 #include "Blox2D.h"
 #include "ILevelObject.h"
 #include "ISerializable.h"
 #include "FollowCamera.h"
 
-class FluidsCharacter : public Actor, public ILevelObject, public ISerializable
+class FluidsCharacter : public PhysXCharacter, public ILevelObject, public ISerializable
 {
 public:
 
@@ -41,13 +41,13 @@ public:
     virtual bool IsSelected() const { return m_bIsSelected; }
 
 	/* ITransformable */
-    virtual void Rotate(const Vector3& axis, float angle) { Actor::Rotate(axis, angle); }
+    virtual void Rotate(const Vector3& axis, float angle) { }
 
-    virtual void Translate(const Vector3& add) { Actor::Translate(add); }
-    virtual void SetPosition(const Vector3& pos) { Actor::SetPosition(pos); }
-    virtual Vector3 GetPosition() const { return Actor::GetPosition(); }
+    virtual void Translate(const Vector3& add) { PhysXCharacter::Move(add); }
+    virtual void SetPosition(const Vector3& pos) { PhysXCharacter::SetPosition(pos); }
+    virtual Vector3 GetPosition() const { return PhysXCharacter::GetPosition(); }
 
-	virtual void Scale(const Vector3& scale) { Actor::Scale(scale); }
+	virtual void Scale(const Vector3& scale) { }
 
 private:
 
@@ -56,13 +56,12 @@ private:
 	PhysX* m_pPhysXEngine;
 
 	Fluid* m_pFluid;
-
 	NxFluidEmitter* m_pEmitter;
-
-	Vector3 m_Pos;
 
 	bool m_bIsSelected;
 
 	Graphics::Camera::FollowCamera* m_pCamera;
+
+    bool m_IsTouchingGround;
 };
 

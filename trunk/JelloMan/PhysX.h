@@ -1,11 +1,13 @@
 #pragma once
 
 #include "NxPhysics.h"
-#pragma warning(disable: 4100)
-#include "ControllerManager.h"
-#pragma warning(default: 4100)
+//#pragma warning(disable: 4100)
+#include <NxControllerManager.h>
+//#pragma warning(default: 4100)
 #include <vector>
 #include "D3DUtil.h"
+
+#include <NxUserAllocatorDefault.h>
 
 #pragma warning(disable:4005)
 #include "boost\thread\thread.hpp"
@@ -28,8 +30,10 @@ public:
 	bool Init();
 	void Simulate(float dt);
 	void FetchResults();
-	NxScene *GetScene() const {return m_pScene;}
-	NxPhysicsSDK* GetSDK() const {return m_pPhysicsSDK;}
+
+	NxScene *GetScene() const { return m_pScene; }
+	NxPhysicsSDK* GetSDK() const { return m_pPhysicsSDK; }
+    NxControllerManager* GetControllerManager() { return m_pControllerManager; }
 
 	NxShape *GetClosestShape(NxRay& ray,float distance);
 
@@ -48,6 +52,8 @@ private:
 	boost::mutex m_PhysXLock;
 	
 private:
+
+    NxUserAllocatorDefault* m_pDefaultAllocator;
 
 	PhysX(const PhysX& t);
 	PhysX& operator=(const PhysX& t);
