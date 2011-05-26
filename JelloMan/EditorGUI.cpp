@@ -370,6 +370,7 @@ void EditorGUI::Draw()
 		m_pLightDebugger->DeselectAllLights();
 		m_pLightDebugger->HideTextBoxes();
         m_pObjectSelecter->DeselectAll();
+		m_pSnapper->HideTextBoxes();
 	}
 
 	// BACKGROUND
