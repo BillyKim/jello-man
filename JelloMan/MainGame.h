@@ -50,7 +50,7 @@ public:
 
 private:
 
-	void UpdatePhysics(const float dTime);
+	void UpdatePhysics();
 
 	// DATAMEMBERS
 	float m_dTtime;
@@ -91,4 +91,7 @@ private:
 
 	// PHYSX - THREADING
 	boost::thread m_PhysXThread;
+	boost::mutex m_DTimeLock;
+
+	bool m_bRunning;
 };

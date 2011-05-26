@@ -468,6 +468,9 @@
     <ClInclude Include="IniWriter.h">
       <Filter>Engine Files\IO</Filter>
     </ClInclude>
+    <ClInclude Include="Snapper.h">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -769,6 +772,9 @@
     </ClCompile>
     <ClCompile Include="IniWriter.cpp">
       <Filter>Engine Files\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Snapper.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

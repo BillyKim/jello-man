@@ -5,7 +5,10 @@ RotateGizmo::RotateGizmo()	:	m_pRenderContext(0),
 								m_pAxisFont(0),
                                 m_bLockX(false),
                                 m_bLockY(false),
-                                m_bLockZ(false)
+                                m_bLockZ(false),
+								m_bSnap(false),
+								m_SnapSize(1.0f),
+								m_Move(0)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 
@@ -249,6 +252,14 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				{
 					obj->Rotate(Vector3::Right, move);
 				});*/
+
+				/*if (m_bSnap)
+				{
+					m_Move += move;
+
+					m_Move = ((int)(1000 * m_Move) - ((int)(1000 * m_Move) % (int)(1000 * m_SnapSize))) / 1000;
+				}*/
+
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
 					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Right, move);
@@ -263,6 +274,14 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				{
 					obj->Rotate(Vector3::Up, move);
 				});*/
+
+				//if (m_bSnap)
+				//{
+				//	m_Move += move;
+
+				//	m_Move = ((int)(1000 * m_Move) - ((int)(1000 * m_Move) % (int)(1000 * m_SnapSize))) / 1000;
+				//}
+
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
 					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Up, move);
@@ -277,6 +296,14 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				{
 					obj->Rotate(Vector3::Forward, move);
 				});*/
+
+				/*if (m_bSnap)
+				{
+					m_Move += move;
+
+					m_Move = ((int)(1000 * m_Move) - ((int)(1000 * m_Move) % (int)(1000 * m_SnapSize))) / 1000;
+				}*/
+
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
 					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Forward, move);

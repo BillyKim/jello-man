@@ -175,6 +175,7 @@
     <ClInclude Include="ScaleGizmo.h" />
     <ClInclude Include="Serializer.h" />
     <ClInclude Include="SerializeTypes.h" />
+    <ClInclude Include="Snapper.h" />
     <ClInclude Include="Softbody.h" />
     <ClInclude Include="SoftbodyCharacter.h" />
     <ClInclude Include="SoftbodyMesh.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="RotateGizmo.cpp" />
     <ClCompile Include="ScaleGizmo.cpp" />
     <ClCompile Include="Serializer.cpp" />
+    <ClCompile Include="Snapper.cpp" />
     <ClCompile Include="Softbody.cpp" />
     <ClCompile Include="SoftbodyCharacter.cpp" />
     <ClCompile Include="SoftbodyMesh.cpp" />

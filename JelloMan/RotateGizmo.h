@@ -22,6 +22,13 @@ public:
     // DRAW
     void Draw();
 
+	// SETTERS
+	void UseSnapping(bool bSnap)
+	{ m_bSnap = bSnap; }
+
+	void SetSnapSize(float snapSize)
+	{ m_SnapSize = snapSize; }
+
 private:
     static const int END_ELLIPSE_RADIUS = 5;
     static const int AXIS_LENGTH = 100;
@@ -40,6 +47,10 @@ private:
 	bool m_bLockX;
 	bool m_bLockY;
 	bool m_bLockZ;
+	bool m_bSnap;
+
+	float m_SnapSize;
+	float m_Move;
 
     D3D10_VIEWPORT m_ViewPort;
 

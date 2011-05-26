@@ -7,7 +7,10 @@ MoveGizmo::MoveGizmo()	:	m_pRenderContext(0),
                                 m_bLockX(false),
                                 m_bLockY(false),
                                 m_bLockZ(false),
-                                m_vAnchor(Vector3::Zero)
+                                m_vAnchor(Vector3::Zero),
+								m_bSnap(false),
+								m_SnapSize(0.1f),
+								m_bSnapToGrid(false)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 
@@ -343,6 +346,23 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 					if (setAnchor)
 						m_vAnchor.X = (mousePos3D - posLineX).X;
 					float diff = (mousePos3D - posLineX).X - m_vAnchor.X;
+
+					if (m_bSnapToGrid && m_bSnap)
+					{
+						for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+						{
+							int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().X * 1000) % (int)(m_SnapSize * 1000));
+
+							if (diffToGrid != 0)
+							{
+								pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * (-diffToGrid / 1000.0f));
+								diff = 0;
+							}
+						}
+					}
+
+					if (m_bSnap)
+						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000;
                 
 					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
@@ -357,6 +377,23 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 						m_vAnchor.Y = (mousePos3D - posLineY).Y;
 					float diff = (mousePos3D - posLineY).Y - m_vAnchor.Y;
 
+					if (m_bSnapToGrid && m_bSnap)
+					{
+						for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+						{
+							int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Y * 1000) % (int)(m_SnapSize * 1000));
+
+							if (diffToGrid != 0)
+							{
+								pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * (-diffToGrid / 1000.0f));
+								diff = 0;
+							}
+						}
+					}
+
+					if (m_bSnap)
+						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000;
+
 					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
 						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
@@ -369,6 +406,23 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 					if (setAnchor)
 						m_vAnchor.Z = (mousePos3D - posLineZ).Z;
 					float diff = (mousePos3D - posLineZ).Z - m_vAnchor.Z;
+
+					if (m_bSnapToGrid && m_bSnap)
+					{
+						for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+						{
+							int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Z * 1000) % (int)(m_SnapSize * 1000));
+
+							if (diffToGrid != 0)
+							{
+								pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * (diffToGrid / 1000.0f));
+								diff = 0;
+							}
+						}
+					}
+
+					if (m_bSnap)
+						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000;
 
 					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{

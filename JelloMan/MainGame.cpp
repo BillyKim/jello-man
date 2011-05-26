@@ -43,13 +43,18 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pLoadingResourcesFont(0),
 							m_LoadingText(_T("")),
 							m_AlphaHappyFace(0),
-							m_pHappyEngineFont(0)
+							m_pHappyEngineFont(0),
+							m_bRunning(true)
 {
 
 }
 
 MainGame::~MainGame()
 {
+	m_bRunning = false;
+	cout << "waiting for physx thread to end...";
+	m_PhysXThread.join(); // wait for thread to stop before closing program
+
 	delete m_pEditorCamera;
     delete m_pLightController;
 	delete m_pAudioEngine;
@@ -245,6 +250,8 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
     cout << "-----------------\n";
 	#endif
 
+	m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this); // start new thread
+
 	m_bResourcesLoaded = true;
 }
 
@@ -262,7 +269,9 @@ void MainGame::UpdateScene(const float dTime)
 	//}
 
 	// dtime
+	m_DTimeLock.lock();
 	m_dTtime = dTime;
+	m_DTimeLock.unlock();
 
     m_pLightController->Tick(dTime);
 
@@ -297,8 +306,9 @@ void MainGame::UpdateScene(const float dTime)
 	{
 		// PHYSX - THREADING
 
-		m_PhysXThread.join(); // if thread was not finished, wait for it
-		m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this, dTime); // start new thread
+		
+		//m_PhysXThread.join(); // if thread was not finished, wait for it
+		//m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this, dTime); // start new thread
 
 		m_pLevel->Tick(dTime);
 
@@ -532,14 +542,30 @@ void MainGame::LoadScreen()
 	}
 }
 
-void MainGame::UpdatePhysics(const float dTime)
+void MainGame::UpdatePhysics()
 {
-	m_pPhysXEngine->GetPhysXLock().lock();
-
+	while (m_bRunning)
 	{
-		m_pPhysXEngine->Simulate(dTime);
-		m_pPhysXEngine->FetchResults();
-	}
+		if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
+		{
+			float dTime(0);
 
-	m_pPhysXEngine->GetPhysXLock().unlock();
+			m_DTimeLock.lock();
+			{
+				dTime = m_dTtime;
+			}
+			m_DTimeLock.unlock();
+
+			m_pPhysXEngine->GetPhysXLock().lock();
+			{
+				m_pPhysXEngine->Simulate(dTime);
+				m_pPhysXEngine->FetchResults();
+			}
+			m_pPhysXEngine->GetPhysXLock().unlock();
+
+			Sleep(10);
+		}
+		else
+			Sleep(20);
+	}
 }
