@@ -136,12 +136,15 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	ASSERT(pDXDevice != 0, "DXDevice error while loading resources");
     
 	// PHYSX
+	m_LoadingText = _T("PhysX");
+
 	m_pPhysXEngine = new PhysX();
 	m_pPhysXEngine->Init();
 
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);
 
+	++m_Orbs;
 	m_LoadingText = _T("camera");
 
 	// CAMERA
@@ -176,8 +179,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	
     PreShadowEffect* pPreShadowEffect = Content->LoadEffect<PreShadowEffect>(_T("../Content/Effects/preShadowmapShader.fx"));
     PreShadowEffectInstanced* pPreShadowEffectInstanced = Content->LoadEffect<PreShadowEffectInstanced>(_T("../Content/Effects/preShadowmapInstancedShader.fx"));
-
-	++m_Orbs;
+	
 	m_LoadingText = _T("lightcontroller");
 
     // LIGHTCONTROLLER
@@ -185,11 +187,8 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController, m_pDeferredRenderer, 
         pPreShadowEffect, pPreShadowEffectInstanced);
 
-	Image* test = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
-	Image* test2 = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
-
-	++m_Orbs;
-	m_LoadingText = _T("PhysX");
+	Image* preload1 = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
+	Image* preload2 = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
 
 	++m_Orbs;
 	m_LoadingText = _T("level");
@@ -205,6 +204,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
     m_pLevel->Initialize(m_pPhysXEngine, m_pEditorGUI, m_pTrackingCamera);	
 	m_pEditorGUI->Initialize();
 
+	++m_Orbs;
 	m_LoadingText = _T("Instanced PhysX Test");
     for (int x = -20; x < 20; ++x)
             for (int y = 0; y < 1; ++y)
