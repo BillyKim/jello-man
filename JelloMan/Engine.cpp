@@ -1,9 +1,4 @@
-//=======================================================================================
-// d3dApp.cpp by Frank Luna (C) 2008 All Rights Reserved.
-// Adapted for DAE GP1 by Bart Uyttenhove
-//=======================================================================================
 #include "Engine.h"
-
 #include "MainGame.h"
 #include "ContentManager.h"
 #include "GameConfig.h"
@@ -70,7 +65,8 @@ Engine::~Engine()
 	SafeDelete(m_pContentManager);
 	SafeDelete(m_pPhysXEngine);
 
-	if( m_pDXDevice )m_pDXDevice->ClearState();
+	if(m_pDXDevice != 0)
+        m_pDXDevice->ClearState();
 
 	SafeRelease(m_pRenderTargetView);
 	SafeRelease(m_pDepthStencilView);

@@ -4,7 +4,7 @@
     <ShowAllFiles>false</ShowAllFiles>
     <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)bin\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$bin</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)bin\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

@@ -55,9 +55,16 @@ MainGame::MainGame()	:	m_dTtime(0),
 MainGame::~MainGame()
 {
 	m_bRunning = false;
-	cout << "waiting for physx thread to end...";
+    #if _DEBUG
+	cout << "waiting for physx thread to end... \n";
+    #endif
 	m_PhysXThread.join(); // wait for thread to stop before closing program
+    #if _DEBUG
+	cout << "physx thread stoped\n";
+    #endif
 
+	delete m_pLevel;
+	delete m_pEditorGUI;
 	delete m_pEditorCamera;
     delete m_pLightController;
 	delete m_pAudioEngine;
@@ -66,8 +73,6 @@ MainGame::~MainGame()
 	delete m_pDeferredRenderer;
 	delete m_pForwardRenderer;
 	delete m_pPostProcessor;
-	delete m_pLevel;
-	delete m_pEditorGUI;
 	delete m_pRenderContext;
 
     delete Content;

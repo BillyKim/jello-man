@@ -14,18 +14,14 @@ void main()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*prevInstance*/,
 				   PSTR /*cmdLine*/, int /*showCmd*/)
 {
-    //_CrtSetBreakAlloc(4960);
-
 	//notify user if heap is corrupt
-	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL,0);
+	#if defined _DEBUG
+	HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
+    #endif
 
-	// Enable run-time memory leak check for debug builds.
-	/*#if defined(DEBUG) | defined(_DEBUG)
-		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	#endif*/
-
-//***********************
-//get command line params
+    #pragma region junk
+    //***********************
+    //get command line params
 	//LPCWSTR
 	int numArgs=0;
 	WCHAR **sArgList =  CommandLineToArgvW(GetCommandLineW(), &numArgs);
@@ -46,8 +42,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*prevInstance*/,
 	}
 
 	LocalFree(sArgList);//free memory
-//end of parameters experiment
-//****************************
+    //end of parameters experiment
+    //****************************
+    #pragma endregion
 
 	//create game singleton object
 	Engine* pEngine = new Engine(hInstance);
@@ -70,10 +67,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*prevInstance*/,
 	delete pGame;
 	delete pEngine;
 
-    string temp;
-    cin >> temp;
-
+    cout << "\n\n";
+    cout << "   Happy Engine wishes you a happy day!   \n";
+    cout << "--------------\\Press any key/-------------\n";
+    cin.get();
+    
+	#if defined _DEBUG
     _CrtDumpMemoryLeaks();
+    #endif
 
 	return ret;
 
