@@ -27,8 +27,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
 	m_pCamera = pCamera;
 
-	PhysXSphere sphere(0.2f, 100);
-    InitCharacter(pPhysXEngine, PhysXCharactertype_Capsule);
+    InitCharacterAsBox(pPhysXEngine, Vector3(0.5f, 0.5f, 0.5f));
 
 	SetPosition(startPos);
     
@@ -81,7 +80,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	emitterDesc.relPose.M.rotX(NxHalfPiF32);
 	emitterDesc.relPose.t = NxVec3(0.0f,50.0f,0);
 	
-	m_pFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f,0.0f,1.0f,1.0f), 0.0003f, pDXDevice);
+	m_pFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f, 0.0f, 1.0f, 1.0f), 0.0003f, pDXDevice);
 	ASSERT(m_pFluid, "fluid creation failed");
 
 	m_pEmitter = m_pFluid->GetNxFluid()->createEmitter(emitterDesc);
@@ -134,7 +133,7 @@ void FluidsCharacter::Tick(float dTime)
         move += Vector3::Forward * dTime * -10;
     if (CONTROLS->IsKeyDown(VK_RIGHT))
         move += Vector3::Right * dTime * 10;
-    if (CONTROLS->IsKeyDown(VK_RIGHT))
+    if (CONTROLS->IsKeyDown(VK_LEFT))
         move += Vector3::Right * dTime * -10;
 
     NxVec3 grav;

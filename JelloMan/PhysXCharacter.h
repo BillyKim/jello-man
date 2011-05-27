@@ -4,11 +4,6 @@
 #include <NxBoxController.h>
 #include "Vector3.h"
 
-enum PhysXCharactertype
-{
-    PhysXCharactertype_Box, PhysXCharactertype_Capsule
-};
-
 enum PhysXCharacterCollisionType
 {
     PhysXCharacterCollisionType_Side = 1 << 0,
@@ -22,15 +17,16 @@ public:
     PhysXCharacter(void);
     virtual ~PhysXCharacter(void);
 
-    void InitCharacter(PhysX* pPhysX, PhysXCharactertype type);
+    void InitCharacterAsBox(PhysX* pPhysX, const Vector3& dim);
+    void InitCharacterAsCapsule(PhysX* pPhysX, float radius, float height);
     
     PhysXCharacterCollisionType Move(const Vector3& speed);
     void SetPosition(const Vector3& pos);
 
     Vector3 GetPosition() const;
 
-    virtual NxControllerAction OnShapeHit(const NxControllerShapeHit&) { return NX_ACTION_NONE; }
-    virtual NxControllerAction OnControllerHit(const NxControllersHit&) { return NX_ACTION_NONE; }
+    virtual NxControllerAction OnShapeHit(const NxControllerShapeHit&) { return NX_ACTION_PUSH; }
+    virtual NxControllerAction OnControllerHit(const NxControllersHit&) { return NX_ACTION_PUSH; }
 
 private:
     virtual NxControllerAction onShapeHit(const NxControllerShapeHit& hit);

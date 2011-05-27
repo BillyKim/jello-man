@@ -10,47 +10,44 @@ PhysXCharacter::~PhysXCharacter(void)
     m_pPhysX->GetControllerManager()->releaseController(*m_pController);
 }
 
-void PhysXCharacter::InitCharacter(PhysX* pPhysX, PhysXCharactertype type)
+void PhysXCharacter::InitCharacterAsBox(PhysX* pPhysX, const Vector3& dim)
 {
     m_pPhysX = pPhysX;
-    
-    if (type ==  PhysXCharactertype_Box)
-    {
-        NxBoxControllerDesc bdesc;
 
-        bdesc.extents = NxVec3(1, 1, 1);
+    NxBoxControllerDesc bdesc;
 
-        bdesc.callback = dynamic_cast<NxUserControllerHitReport*>(this);
-        bdesc.interactionFlag = NXIF_INTERACTION_INCLUDE;
-        bdesc.position = NxExtendedVec3(0, 0, 0);
-        bdesc.skinWidth = 0.1f;
-        bdesc.slopeLimit = 0.707f;
-        bdesc.stepOffset = 0.5f;
-        bdesc.upDirection = NX_Y;
+    bdesc.extents = dim;
 
-        m_pController = pPhysX->GetControllerManager()->createController(pPhysX->GetScene(), bdesc);
-    }
-    else
-    {
-        NxCapsuleControllerDesc cdesc;
+    bdesc.callback = dynamic_cast<NxUserControllerHitReport*>(this);
+    bdesc.interactionFlag = NXIF_INTERACTION_INCLUDE;
+    bdesc.position = NxExtendedVec3(0, 0, 0);
+    bdesc.skinWidth = 0.1f;
+    bdesc.slopeLimit = 0.707f;
+    bdesc.stepOffset = 0.5f;
+    bdesc.upDirection = NX_Y;
 
-        cdesc.climbingMode = CLIMB_CONSTRAINED;
-        cdesc.height = 1.0f;
-        cdesc.radius = 1.0f;
+    m_pController = pPhysX->GetControllerManager()->createController(pPhysX->GetScene(), bdesc);
+}
+void PhysXCharacter::InitCharacterAsCapsule(PhysX* pPhysX, float radius, float height)
+{
+    m_pPhysX = pPhysX;
 
-        cdesc.callback = dynamic_cast<NxUserControllerHitReport*>(this);
-        cdesc.interactionFlag = NXIF_INTERACTION_INCLUDE;
-        cdesc.position = NxExtendedVec3(0, 0, 0);
-        cdesc.skinWidth = 0.1f;
-        cdesc.slopeLimit = 0.707f;
-        cdesc.stepOffset = 0.5f;
-        cdesc.upDirection = NX_Y;
+    NxCapsuleControllerDesc cdesc;
 
-        m_pController = pPhysX->GetControllerManager()->createController(pPhysX->GetScene(), cdesc);
-        m_pController->setCollision(true);
-        m_pController->setInteraction(NxCCTInteractionFlag::NXIF_INTERACTION_INCLUDE);
-    }
+    cdesc.climbingMode = CLIMB_CONSTRAINED;
+    cdesc.height = height;
+    cdesc.radius = radius;
 
+    cdesc.callback = dynamic_cast<NxUserControllerHitReport*>(this);
+    cdesc.interactionFlag = NXIF_INTERACTION_INCLUDE;
+    cdesc.position = NxExtendedVec3(0, 0, 0);
+    cdesc.skinWidth = 0.1f;
+    cdesc.slopeLimit = 0.707f;
+    cdesc.stepOffset = 0.5f;
+    cdesc.upDirection = NX_Y;
+
+    m_pController = pPhysX->GetControllerManager()->createController(pPhysX->GetScene(), cdesc);
+    m_pController->setCollision(true);
 }
 NxControllerAction PhysXCharacter::onControllerHit(const NxControllersHit& hit)
 {
@@ -65,7 +62,7 @@ NxControllerAction PhysXCharacter::onShapeHit(const NxControllerShapeHit& hit)
 PhysXCharacterCollisionType PhysXCharacter::Move(const Vector3& speed)
 {
     NxU32 flags;
-    m_pController->move(speed, 0, 0.001f, flags);
+    m_pController->move(speed, 0xffffffffffffffff, 0.001f, flags);
 
     return ((PhysXCharacterCollisionType)flags);
 }

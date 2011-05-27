@@ -62,7 +62,7 @@ void ObjectSelecter::CheckControls(const RenderContext* pRenderContext)
 
 void ObjectSelecter::DeselectAll()
 {
-    for_each(m_SelectedObjects.begin(), m_SelectedObjects.end(), [](IEditorObject* obj)
+    for_each(m_SelectedObjects.cbegin(), m_SelectedObjects.cend(), [](IEditorObject* obj)
 	{
 		obj->Selected(false);
 	});
