@@ -22,7 +22,10 @@ public:
 	virtual ~FluidsCharacter();
 
 	/* GENERAL */
-	void Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pCamera, unsigned int maxParticles, Vector3 startPos);
+	void Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, 
+              Graphics::Camera::FollowCamera* pCamera, 
+              unsigned int maxParticles, 
+              Vector3 startPos);
 	
 	/* IUpdateable */
 	virtual void Tick(float dTime);
