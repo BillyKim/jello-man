@@ -46,7 +46,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_AlphaHappyFace(0),
 							m_pHappyEngineFont(0),
 							m_bRunning(true),
-							m_bTicked(false)
+							m_bTicked(false),
+							m_PhysXDTime(0)
 {
 
 }
@@ -195,13 +196,13 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
-	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice, m_pLevel);
-    m_pLevel->Initialize(m_pPhysXEngine, m_pEditorGUI, m_pTrackingCamera);
-
-    ++m_Orbs;
-	m_LoadingText = _T("editor GUI");
 
 	// GUI
+	++m_Orbs;
+	m_LoadingText = _T("editor GUI");
+	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice, m_pLevel);
+
+    m_pLevel->Initialize(m_pPhysXEngine, m_pEditorGUI, m_pTrackingCamera);	
 	m_pEditorGUI->Initialize();
 
 	m_LoadingText = _T("Instanced PhysX Test");
@@ -273,8 +274,10 @@ void MainGame::UpdateScene(const float dTime)
 	//}
 
 	// dtime
-	m_DTimeLock.lock();
 	m_dTtime = dTime;
+
+	m_DTimeLock.lock();
+	m_PhysXDTime += dTime;
 	m_DTimeLock.unlock();
 
     m_pLightController->Tick(dTime);
@@ -559,7 +562,8 @@ void MainGame::UpdatePhysics()
 
 			m_DTimeLock.lock(); // get dtime from last tick
 			{
-				dTime = m_dTtime;
+				dTime = m_PhysXDTime;
+				m_PhysXDTime = 0;
 			}
 			m_DTimeLock.unlock();
 
