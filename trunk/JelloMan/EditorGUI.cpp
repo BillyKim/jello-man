@@ -240,7 +240,7 @@ void EditorGUI::Initialize()
 	m_pPlayModeButton->SetDownState(m_pPlayModeButtonBitmaps[1]);
 
 	// LOAD MODEL BUTTON
-	m_pLoadModelButton = new Button(424,7,36,36, true);
+	m_pLoadModelButton = new Button(444,7,36,36, true);
 
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_normal.png")));
 	m_pLoadModelButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_hover.png")));
@@ -276,7 +276,7 @@ void EditorGUI::Initialize()
 	m_pLoadLevelButton->SetState(Button::STATE_DEACTIVATED);
 
 	// SHOW GRID BUTTON
-	m_pShowGridButton = new Button(524,7,36,36,true);
+	m_pShowGridButton = new Button(544,7,36,36,true);
 
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_normal.png")));
 	m_pShowGridButtonBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_hover.png")));

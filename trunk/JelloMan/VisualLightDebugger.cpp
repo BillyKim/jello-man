@@ -455,11 +455,17 @@ int VisualLightDebugger::GetNrLightsSelected()
 
 	if (m_pRenderContext)
 	{
-		for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)	
+		/*for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)	
 		{
 			if (m_pRenderContext->GetLightController()->GetLights()[i]->IsSelected())
 				++b;
-		}
+		}*/
+
+		for_each(m_pRenderContext->GetLightController()->GetLights().cbegin(), m_pRenderContext->GetLightController()->GetLights().cend(), [&](Light* pLight)
+		{
+			if (pLight->IsSelected())
+				++b;
+		});
 	}
 
 	return b;

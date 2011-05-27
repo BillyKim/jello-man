@@ -94,4 +94,6 @@ private:
 
 	bool m_bRunning;
 	bool m_bTicked;
+
+	float m_PhysXDTime;
 };

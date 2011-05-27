@@ -59,6 +59,7 @@ Snapper::~Snapper()
 
 	delete m_pUseLinearSnappingButton;
 	delete m_pUseAngularSnappingButton;
+	delete m_pGridSnappingButton;
 }
 
 /* GENERAL */
