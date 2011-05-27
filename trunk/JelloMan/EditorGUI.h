@@ -34,8 +34,8 @@ public:
 
 	// GENERAL
 	void Initialize();
-	void Draw();
-	void Tick(const RenderContext* pRenderContext);
+	void Draw(const RenderContext* pRenderContext);
+	void Tick();
     void Clear();
 
 	// GETTERS
@@ -62,11 +62,6 @@ public:
 
 	MODE GetMode() const
 	{ return m_Mode; }
-
-	ILevelObject* GetNewLevelObject();
-
-	bool NewModelLoaded() const
-	{ return m_bNewModelLoaded; }
 
 private:
 

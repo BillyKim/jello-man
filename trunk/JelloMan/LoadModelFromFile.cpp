@@ -3,18 +3,18 @@
 #include "SimpleObject.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-LoadModelFromFile::LoadModelFromFile()	:	m_bIsLoaded(false),
-											m_bLevelObjectExtracted(false),
-											m_pLevelObject(0),
-											m_pbtnUseNormalMap(0),
-											m_pbtnLoadModel(0),
-											m_ModelPath(_T("")),
-											m_PhysXModelPath(_T("")),
-											m_NormalPath(_T("")),
-											m_DiffusePath(_T("")),
-											m_SpecPath(_T("")),
-											m_GlossPath(_T("")),
-											m_WorkingDirectory(_T(""))
+LoadModelFromFile::LoadModelFromFile(Level* pLevel, PhysX* pPhysXEngine)	:	m_pbtnUseNormalMap(0),
+																				m_pbtnLoadModel(0),
+																				m_ModelPath(_T("")),
+																				m_PhysXModelPath(_T("")),
+																				m_NormalPath(_T("")),
+																				m_DiffusePath(_T("")),
+																				m_SpecPath(_T("")),
+																				m_GlossPath(_T("")),
+																				m_WorkingDirectory(_T("")),
+																				m_pLevel(pLevel),
+																				m_pRenderContext(0),
+																				m_pPhysXEngine(pPhysXEngine)
 {
 	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_normal.png")));
 	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_hover.png")));
@@ -51,6 +51,10 @@ LoadModelFromFile::~LoadModelFromFile()
 	delete m_pbtnUseNormalMap;
     delete m_pbtnLoadModel;
 
+	m_pLevel = 0;
+	m_pRenderContext = 0;
+	m_pPhysXEngine = 0;
+
 	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 		delete (*it);
 
@@ -59,8 +63,10 @@ LoadModelFromFile::~LoadModelFromFile()
 }
 
 // GENERAL
-void LoadModelFromFile::Tick()
+void LoadModelFromFile::Tick(const RenderContext* pRenderContext)
 {
+	m_pRenderContext = pRenderContext;
+
 	if (m_TextBoxes.size() == 0)
 	{
 		for (int i = 0; i < 6; ++i)
@@ -153,7 +159,6 @@ void LoadModelFromFile::Tick()
             }
 
             SimpleObject* pObj = new SimpleObject();
-			m_pLevelObject = pObj;
 
 			pObj->SetNormalPath(m_NormalPath);
 
@@ -166,7 +171,14 @@ void LoadModelFromFile::Tick()
 
 			pObj->SetRigid(rigid);
 
-			m_bIsLoaded = true;
+			Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
+			vLook.Normalize();
+
+			pObj->Init(m_pPhysXEngine);
+
+			pObj->Translate(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
+
+			m_pLevel->AddLevelObject(pObj);
 		}
 	}
 
@@ -275,12 +287,6 @@ tstring LoadModelFromFile::GetPath(const tstring& title, LPWSTR filter)
 void LoadModelFromFile::Clear()
 {
 	m_GlossPath = m_SpecPath = m_DiffusePath = m_NormalPath = m_PhysXModelPath = m_ModelPath = _T("");
-
-	m_pLevelObject = 0;
-
-	m_bIsLoaded = false;
-
-	m_bLevelObjectExtracted = false;
 
 	for (int i = 0; i < 6; ++i)
 	{

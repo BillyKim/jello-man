@@ -293,19 +293,6 @@ void MainGame::UpdateScene(const float dTime)
         m_pTrackingCamera->Tick(dTime);
     }
 
-	if (m_pEditorGUI->NewModelLoaded())
-	{
-		ILevelObject* newLvlObj = m_pEditorGUI->GetNewLevelObject();
-		newLvlObj->Init(m_pPhysXEngine);
-
-		Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
-		vLook.Normalize();
-
-		newLvlObj->Translate(m_pRenderContext->GetCamera()->GetPosition() + vLook * 100);
-
-		m_pLevel->AddLevelObject(newLvlObj);
-	}
-
 	//m_pAudioEngine->DoWork();
 	//m_pTestSound->Tick();
 
@@ -362,7 +349,7 @@ void MainGame::UpdateScene(const float dTime)
 	else
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);
 
-	m_pEditorGUI->Tick(m_pRenderContext);
+	m_pEditorGUI->Tick();
 }
 
 void MainGame::DrawScene()
@@ -421,7 +408,7 @@ void MainGame::DrawScene()
 		
 	// --------------------------------------
 
-	m_pEditorGUI->Draw();
+	m_pEditorGUI->Draw(m_pRenderContext);
 
 	BX2D->SetColor(255,255,255);
 	BX2D->ShowFPS(m_dTtime,true,0.5f);

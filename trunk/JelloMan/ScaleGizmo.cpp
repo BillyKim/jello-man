@@ -21,8 +21,10 @@ ScaleGizmo::~ScaleGizmo()
 {
 }
 
-void ScaleGizmo::Draw()
+void ScaleGizmo::Draw(const RenderContext* pRenderContext)
 {
+	m_pRenderContext = pRenderContext;
+
     if (m_vCenterPos != Vector3::Infinity)
         DrawGizmo(m_vCenterPos);
 }
@@ -121,7 +123,7 @@ void ScaleGizmo::DrawGizmo(const Vector3& pos)
 }
 
 // GENERAL
-void ScaleGizmo::Tick(const RenderContext* pRenderContext, ObjectSelecter* pObjectSelecter)
+void ScaleGizmo::Tick(ObjectSelecter* pObjectSelecter)
 {
     m_vCenterPos = pObjectSelecter->GetCenterPos();
     if (m_vCenterPos != Vector3::Infinity)
@@ -129,8 +131,6 @@ void ScaleGizmo::Tick(const RenderContext* pRenderContext, ObjectSelecter* pObje
         // VIEWPORT
 	    m_ViewPort.Width = (UINT)BX2D->GetWindowSize().width;
 	    m_ViewPort.Height = (UINT)BX2D->GetWindowSize().height;
-
-	    m_pRenderContext = pRenderContext;
 
         if (CONTROLS->LeftMBUp() == true)
 	        m_bLockX = m_bLockY = m_bLockZ = false;
