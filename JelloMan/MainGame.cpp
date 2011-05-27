@@ -44,7 +44,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_LoadingText(_T("")),
 							m_AlphaHappyFace(0),
 							m_pHappyEngineFont(0),
-							m_bRunning(true)
+							m_bRunning(true),
+							m_bTicked(false)
 {
 
 }
@@ -312,6 +313,10 @@ void MainGame::UpdateScene(const float dTime)
 
 		m_pLevel->Tick(dTime);
 
+		m_TickLock.lock();
+		m_bTicked = true;
+		m_TickLock.unlock();
+
 		//-----------------------------------
 
 		m_pLevel->EditorMode(false);
@@ -546,26 +551,30 @@ void MainGame::UpdatePhysics()
 {
 	while (m_bRunning)
 	{
-		if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
+		if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR && m_bTicked)
 		{
+			m_TickLock.lock(); // reset tick
+			{
+				m_bTicked = false;
+			}
+			m_TickLock.unlock();
+
 			float dTime(0);
 
-			m_DTimeLock.lock();
+			m_DTimeLock.lock(); // get dtime from last tick
 			{
 				dTime = m_dTtime;
 			}
 			m_DTimeLock.unlock();
 
-			m_pPhysXEngine->GetPhysXLock().lock();
+			m_pPhysXEngine->GetPhysXLock().lock(); // simulate
 			{
 				m_pPhysXEngine->Simulate(dTime);
 				m_pPhysXEngine->FetchResults();
 			}
 			m_pPhysXEngine->GetPhysXLock().unlock();
-
-			Sleep(10);
 		}
 		else
-			Sleep(20);
+			Sleep(1);
 	}
 }

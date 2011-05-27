@@ -141,8 +141,9 @@ void FluidsCharacter::Tick(float dTime)
     m_pPhysXEngine->GetScene()->getGravity(grav);
     move += grav * dTime;
 
-
+	m_pPhysXEngine->GetPhysXLock().lock();
     PhysXCharacterCollisionType coll = Move(move);
+	m_pPhysXEngine->GetPhysXLock().unlock();
 
     m_IsTouchingGround = coll & PhysXCharacterCollisionType_Down || coll & PhysXCharacterCollisionType_Up;
 
