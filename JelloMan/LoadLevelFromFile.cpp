@@ -55,6 +55,8 @@ LoadLevelFromFile::~LoadLevelFromFile()
 	delete m_pLoadButton;
     delete m_pSaveButton;
 
+	m_pLevel = 0;
+
 	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 		delete (*it);
 
@@ -93,7 +95,7 @@ void LoadLevelFromFile::Tick()
 	}
 	if (m_Buttons[1]->Clicked())
 	{
-		m_SaveLevelPath = GetPath(_T("Save Level"), L"Level Files\0*.level\0\0");
+		m_SaveLevelPath = GetPath(_T("Save Level"), L"Level Files\0*.level\0\0", true);
 		
 		m_TextBoxes[1]->SetText(m_SaveLevelPath);
 
@@ -165,7 +167,7 @@ void LoadLevelFromFile::HideTextBoxes()
 	}
 }
 
-tstring LoadLevelFromFile::GetPath(tstring title, LPWSTR filter)
+tstring LoadLevelFromFile::GetPath(tstring title, LPWSTR filter, bool bSave)
 {
 	wchar_t filePath[256];
 
@@ -190,7 +192,10 @@ tstring LoadLevelFromFile::GetPath(tstring title, LPWSTR filter)
 	opf.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT;
 	opf.lStructSize = sizeof(OPENFILENAMEW);
 
-	GetOpenFileName(&opf);
+	if (!bSave)
+		GetOpenFileName(&opf);
+	else
+		GetSaveFileName(&opf);
 
 	return opf.lpstrFile;
 }

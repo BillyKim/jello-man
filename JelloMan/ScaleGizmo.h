@@ -17,10 +17,10 @@ public:
 
 	// GENERAL
 	void Show(ITransformable* pLevelObject, int id);
-    void Tick(const RenderContext* pRenderContext, ObjectSelecter* pObjectSelecter);
+    void Tick(ObjectSelecter* pObjectSelecter);
 
     // DRAW
-    void Draw();
+    void Draw(const RenderContext* pRenderContext);
 
 private:
     static const int END_ELLIPSE_RADIUS = 5;

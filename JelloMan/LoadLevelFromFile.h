@@ -20,7 +20,7 @@ public:
 
 private:
 
-	tstring GetPath(tstring title, LPWSTR filter);
+	tstring GetPath(tstring title, LPWSTR filter, bool bSave = false);
 
 	// DATAMEMBERS
 	tstring m_LoadLevelPath;

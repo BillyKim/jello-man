@@ -2,34 +2,24 @@
 
 #include "ILevelObject.h"
 #include "Blox2D.h"
+#include "Level.h"
+#include "RenderContext.h"
+#include "PhysX.h"
 
 class LoadModelFromFile
 {
 public:
 
 	// CONSTRUCTOR - DESTRUCTOR
-	LoadModelFromFile();
+	LoadModelFromFile(Level* pLevel, PhysX* pPhysXEngine);
 	virtual ~LoadModelFromFile();
 
 	// GENERAL
-	void Tick();
+	void Tick(const RenderContext* pRenderContext);
 	void Show();
 	void Clear();
 
 	void HideTextBoxes();
-
-	// GETTERS
-	ILevelObject* GetLevelObject()
-	{ 
-	    m_bLevelObjectExtracted = true;
-	    return m_pLevelObject;
-	}
-
-	bool IsLoaded() const
-	{ return m_bIsLoaded; }
-
-	bool LevelObjectExtracted() const
-	{ return m_bLevelObjectExtracted; }
 
 private:
 
@@ -37,17 +27,12 @@ private:
 	tstring StripPath(const tstring& path);
 
 	// DATAMEMBERS
-	bool m_bIsLoaded;
-	bool m_bLevelObjectExtracted;
-
 	tstring m_ModelPath;
 	tstring m_PhysXModelPath;
 	tstring m_NormalPath;
 	tstring m_DiffusePath;
 	tstring m_SpecPath;
 	tstring m_GlossPath;
-
-	ILevelObject* m_pLevelObject;
 
 	vector<TextBox*> m_TextBoxes;
 	vector<Button*> m_Buttons;
@@ -62,5 +47,11 @@ private:
 	tstring m_WorkingDirectory;
 
 	TextFormat* m_pFont;
+
+	Level* m_pLevel;
+
+	const RenderContext* m_pRenderContext;
+
+	PhysX* m_pPhysXEngine;
 };
 

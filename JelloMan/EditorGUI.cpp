@@ -331,14 +331,16 @@ void EditorGUI::Initialize()
 
 	m_pSnapper = new Snapper(m_pMoveGizmo, m_pRotateGizmo);
 
-	m_pModelLoader = new LoadModelFromFile();
+	m_pModelLoader = new LoadModelFromFile(m_pLevel, m_pPhysXEngine);
 	m_pLevelLoader = new LoadLevelFromFile(m_pLevel);
 
 	// FONT
 	m_pInfoFont = Content->LoadTextFormat(_T("Verdana"),10,false,false);
 }
-void EditorGUI::Draw()
+void EditorGUI::Draw(const RenderContext* pRenderContext)
 {
+	m_pRenderContext = pRenderContext;
+
 	BX2D->SetAntiAliasing(false);
 
 	if (m_Mode == MODE_EDITOR)
@@ -357,11 +359,11 @@ void EditorGUI::Draw()
 		// MOVE GIZMO
        
         if (m_bMoveable)
-            m_pMoveGizmo->Draw();
+            m_pMoveGizmo->Draw(m_pRenderContext);
         else if (m_bRotateable)
-            m_pRotateGizmo->Draw();
+            m_pRotateGizmo->Draw(m_pRenderContext);
 		else if (m_bScaleable)
-			m_pScaleGizmo->Draw();
+			m_pScaleGizmo->Draw(m_pRenderContext);
 
 		BX2D->SetAntiAliasing(false);
 	}
@@ -731,8 +733,11 @@ void EditorGUI::Draw()
 	BX2D->DrawString(	streamInfo.str(),
 						RectF(0,0, BX2D->GetWindowSize().width - 5, BX2D->GetWindowSize().height - 4));
 }
-void EditorGUI::Tick(const RenderContext* pRenderContext)
+void EditorGUI::Tick()
 {
+	if (!m_pRenderContext)
+		return;
+
 	// BUTTONS
 	m_pLightButton->Tick();
 	m_pMoveButton->Tick();
@@ -763,7 +768,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	if (!m_pColorPickerButton->IsActive() && m_Mode == MODE_EDITOR)
 		m_pObjectSelecter->Tick(m_pRenderContext);
 
-	m_pLightDebugger->Tick(pRenderContext);
+	m_pLightDebugger->Tick(m_pRenderContext);
 
 	if (m_Mode == MODE_EDITOR)
 	{
@@ -775,12 +780,12 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 
 		if (m_pPointlightButton->Clicked())
 		{
-			Vector3 look = pRenderContext->GetCamera()->GetLook();
+			Vector3 look = m_pRenderContext->GetCamera()->GetLook();
 			look.Normalize();
 
 			PointLightDesc pDesc;
 
-			pDesc.position = (pRenderContext->GetCamera()->GetPosition() + look * 10);
+			pDesc.position = (m_pRenderContext->GetCamera()->GetPosition() + look * 10);
 
 			BYTE r = 180;
 			BYTE g = 180;
@@ -794,7 +799,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
             
 			PointLight* pl = new PointLight(pDesc);
 			pl->InitEditor();
-			pRenderContext->GetLightController()->AddLight(pl);
+			m_pRenderContext->GetLightController()->AddLight(pl);
 
 			m_pLightDebugger->DeselectAllLights();
 			m_pMoveButton->Deactivate();
@@ -805,11 +810,11 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 
 		if (m_pSpotlightButton->Clicked())
 		{
-			Vector3 look = pRenderContext->GetCamera()->GetLook();
+			Vector3 look = m_pRenderContext->GetCamera()->GetLook();
 			look.Normalize();
 
 			SpotLight* sp2 = new SpotLight();
-				sp2->SetPosition(pRenderContext->GetCamera()->GetPosition() + look * 10);
+				sp2->SetPosition(m_pRenderContext->GetCamera()->GetPosition() + look * 10);
 				sp2->SetColor(Color(0.9f, 0.9f, 0.9f, 1.0f));
 				sp2->SetMulitplier(2.0f);
 				sp2->SetAttenuationStart(1);
@@ -818,7 +823,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 				sp2->Rotate(Vector3::Forward, PiOver2);
 				sp2->SetShadowMap(m_pDXDevice, ShadowMapType1024x1024);
 			
-			pRenderContext->GetLightController()->AddLight(sp2);
+			m_pRenderContext->GetLightController()->AddLight(sp2);
 
 			m_pLightDebugger->DeselectAllLights();
 			m_pMoveButton->Deactivate();
@@ -829,7 +834,7 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	}
 
 	if (m_pLoadModelButton->IsActive())
-		m_pModelLoader->Tick();
+		m_pModelLoader->Tick(m_pRenderContext);
 	else
 		m_pModelLoader->HideTextBoxes();
 
@@ -837,25 +842,12 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 		m_pLevelLoader->Tick();
 	else
 		m_pLevelLoader->HideTextBoxes();
-	
-	if (m_pModelLoader->LevelObjectExtracted())
-	{
-		m_pModelLoader->Clear();
-
-		m_pLoadModelButton->Deactivate();
-	}
-
-	if (m_pModelLoader->IsLoaded())
-		m_bNewModelLoaded = true;
 
 	// CAMERA
 	if (CONTROLS->RightMBDown())
 		m_bUsingCamera = true;
 	else
 		m_bUsingCamera = false;
-
-	// RENDERCONTEXT
-	m_pRenderContext = pRenderContext;
 
 	if (m_pMoveButton->IsActive())
 	{
@@ -901,21 +893,14 @@ void EditorGUI::Tick(const RenderContext* pRenderContext)
 	}
 
     if (m_bMoveable)
-        m_pMoveGizmo->Tick(pRenderContext, m_pObjectSelecter);
+        m_pMoveGizmo->Tick(m_pObjectSelecter);
     else if (m_bRotateable)
-        m_pRotateGizmo->Tick(pRenderContext, m_pObjectSelecter);
+        m_pRotateGizmo->Tick(m_pObjectSelecter);
 	else if (m_bScaleable)
-		m_pScaleGizmo->Tick(pRenderContext, m_pObjectSelecter);
+		m_pScaleGizmo->Tick(m_pObjectSelecter);
 }
 
 // GETTERS
-ILevelObject* EditorGUI::GetNewLevelObject()
-{
-	m_bNewModelLoaded = false;
-
-	return m_pModelLoader->GetLevelObject();
-}
-
 void EditorGUI::Clear()
 {
     m_pObjectSelecter->DeselectAll();
