@@ -125,6 +125,9 @@ void ScaleGizmo::DrawGizmo(const Vector3& pos)
 // GENERAL
 void ScaleGizmo::Tick(ObjectSelecter* pObjectSelecter)
 {
+	if (!m_pRenderContext)
+		return;
+
     m_vCenterPos = pObjectSelecter->GetCenterPos();
     if (m_vCenterPos != Vector3::Infinity)
     {
