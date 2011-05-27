@@ -915,3 +915,8 @@ ILevelObject* EditorGUI::GetNewLevelObject()
 
 	return m_pModelLoader->GetLevelObject();
 }
+
+void EditorGUI::Clear()
+{
+    m_pObjectSelecter->DeselectAll();
+}

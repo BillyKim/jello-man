@@ -36,6 +36,7 @@ public:
 	void Initialize();
 	void Draw();
 	void Tick(const RenderContext* pRenderContext);
+    void Clear();
 
 	// GETTERS
 	Button* GetLightButton() const

@@ -38,7 +38,7 @@ public:
 
     #pragma region IDrawable
     virtual void Draw(RenderContext* pRenderContext);
-    virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e);
+    virtual void DrawShadow(RenderContext* pRenderContext);
     #pragma endregion
     #pragma endregion
 

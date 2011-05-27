@@ -44,11 +44,11 @@ void TestSoftbody::Draw(RenderContext* pRenderContext)
 
     m_pSoftbodyMesh->Draw(m_pEffect);
 }
-void TestSoftbody::DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e)
+void TestSoftbody::DrawShadow(RenderContext* pRenderContext)
 {
-    e->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
+    pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 	
 	SetVertices();
 
-    m_pSoftbodyMesh->Draw(e);
+    m_pSoftbodyMesh->Draw(pRenderContext->GetPreShadowEffect());
 }

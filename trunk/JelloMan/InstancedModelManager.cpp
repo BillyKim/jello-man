@@ -73,5 +73,21 @@ void InstancedModelManager::Draw(RenderContext* pRendercontext)
 
 	m_pModel->DrawInstanced(m_pEffect, m_pBuffer, m_mtxInstances.size());
 }
+void InstancedModelManager::DrawShadow(RenderContext* pRenderContext)
+{
+    pRenderContext->GetPreShadowEffectInstanced()->SetViewProjection(pRenderContext->GetCamera()->GetViewProjection());
+
+	//update buffer
+
+    //Use old buffer
+
+	/*for (int i = 0; i < m_mtxInstances.size(); ++i)
+	{
+		m_CPUBuffer[i] = *m_mtxInstances[i];
+	}
+	UpdateBuffer();*/
+
+	m_pModel->DrawInstanced(pRenderContext->GetPreShadowEffectInstanced(), m_pBuffer, m_mtxInstances.size());
+}
 
 } //end namespace

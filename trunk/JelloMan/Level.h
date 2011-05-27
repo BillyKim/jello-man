@@ -23,6 +23,7 @@
 
 #include "InstancingManager.h"
 
+class EditorGUI;
 
 class Level
 {
@@ -33,11 +34,11 @@ public:
 	virtual ~Level();
 
 	// GENERAL
-	void Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTrackingCamera);
+	void Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::FollowCamera* pTrackingCamera);
 	void Tick(const float dTime);
 	void DrawDeferred(RenderContext* pRenderContext);
 	void DrawForward(RenderContext* pRenderContext);
-    void DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect);
+    void DrawShadowMap(RenderContext* pRenderContext);
 
 	void AddLevelObject(ILevelObject* pLevelObject);
 
@@ -85,6 +86,8 @@ private:
 	bool m_bEditor;
 
     PostProcessor* m_pFluidPostProcessor;
+
+    EditorGUI* m_pGUI;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);

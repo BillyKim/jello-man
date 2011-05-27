@@ -17,7 +17,6 @@
 #include "EdgeDetectionPostEffect.h"
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
-#include "PreShadowEffect.h"
 
 #pragma warning(disable:4005)
 #include "boost\thread\thread.hpp"
@@ -87,7 +86,6 @@ private:
     ForwardRenderer* m_pForwardRenderer;
     PostProcessor* m_pPostProcessor;
     EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
-    PreShadowEffect* m_pPreShadowEffect;
 
 	// PHYSX - THREADING
 	boost::thread m_PhysXThread;

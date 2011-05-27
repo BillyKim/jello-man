@@ -114,10 +114,10 @@ void Actor::Scale(const Vector3& scale)
 }
 void Actor::Serialize(Serializer* pSerializer)  const
 {
-    Vector3 av((m_pActor->getAngularVelocity()));
+    Vector3 av(m_pActor->isDynamic()?m_pActor->getAngularVelocity():Vector3::Zero);
     pSerializer->GetStream()->storeVector3(av);
 
-    Vector3 lv((m_pActor->getLinearVelocity()));
+    Vector3 lv(m_pActor->isDynamic()?m_pActor->getLinearVelocity():Vector3::Zero);
     pSerializer->GetStream()->storeVector3(lv);
 
     pSerializer->GetStream()->storeMatrix(m_mtxWorldMatrix);
@@ -125,10 +125,13 @@ void Actor::Serialize(Serializer* pSerializer)  const
 void Actor::Deserialize(Serializer* pSerializer)
 {
     NxVec3 av(static_cast<NxVec3>(pSerializer->GetStream()->readVector3()));
-    m_pActor->setAngularVelocity(av);
-    
     NxVec3 lv(static_cast<NxVec3>(pSerializer->GetStream()->readVector3()));
-    m_pActor->setLinearVelocity(lv);
+
+    if (m_pActor->isDynamic())
+    {
+        m_pActor->setAngularVelocity(av);
+        m_pActor->setLinearVelocity(lv);
+    }
 
     m_mtxWorldMatrix = pSerializer->GetStream()->readMatrix();
     NxMat34 mat(static_cast<NxMat34>(m_mtxWorldMatrix));

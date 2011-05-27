@@ -30,7 +30,7 @@ public:
 
     //IDrawable
     virtual void Draw(RenderContext* pRenderContext);
-    virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e);
+    virtual void DrawShadow(RenderContext* pRenderContext);
 
 private:
     DeferredPreEffect* m_pEffect;

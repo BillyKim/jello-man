@@ -169,6 +169,7 @@
     <ClInclude Include="PostProcessEffect.h" />
     <ClInclude Include="PostProcessor.h" />
     <ClInclude Include="PreShadowEffect.h" />
+    <ClInclude Include="PreShadowEffectInstanced.h" />
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RevoluteJoint.h" />
     <ClInclude Include="RotateGizmo.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="PostProcessEffect.cpp" />
     <ClCompile Include="PostProcessor.cpp" />
     <ClCompile Include="PreShadowEffect.cpp" />
+    <ClCompile Include="PreShadowEffectInstanced.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="RevoluteJoint.cpp" />
     <ClCompile Include="RotateGizmo.cpp" />
@@ -315,6 +317,7 @@
     <None Include="Content\Effects\predeferredNormal.fx" />
     <None Include="Content\Effects\predeferredNormalInstanced.fx" />
     <None Include="Content\Effects\normal.fx" />
+    <None Include="Content\Effects\preShadowmapInstancedShader.fx" />
     <None Include="Content\Effects\preShadowmapShader.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

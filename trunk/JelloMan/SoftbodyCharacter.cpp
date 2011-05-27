@@ -88,11 +88,11 @@ void SoftbodyCharacter::Draw(RenderContext* pRenderContext)
 
     m_pSoftbodyMesh->Draw(m_pEffect);
 }
-void SoftbodyCharacter::DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e)
+void SoftbodyCharacter::DrawShadow(RenderContext* pRenderContext)
 {
-    e->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
+    pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 	
 	SetVertices();
 
-    m_pSoftbodyMesh->Draw(e);
+    m_pSoftbodyMesh->Draw(pRenderContext->GetPreShadowEffect());
 }

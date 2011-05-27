@@ -85,9 +85,6 @@
     <Filter Include="Engine Files\Graphics\GUI\Lights">
       <UniqueIdentifier>{00da9002-d10f-4c00-85e4-80efc7b8d072}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Graphics\GUI\Models">
-      <UniqueIdentifier>{ec27c9a8-64ed-431f-b0dc-237edf804e8d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game Files\interfaces">
       <UniqueIdentifier>{046d174a-bcb7-4f4b-8ae2-efe8bafdb5ff}</UniqueIdentifier>
     </Filter>
@@ -132,6 +129,9 @@
     </Filter>
     <Filter Include="Engine Files\PhysX\Character">
       <UniqueIdentifier>{e102e386-8c06-4cdc-afd6-1db9a2fd33bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Graphics\GUI\Loaders">
+      <UniqueIdentifier>{ec27c9a8-64ed-431f-b0dc-237edf804e8d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -319,7 +319,7 @@
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClInclude>
     <ClInclude Include="LoadModelFromFile.h">
-      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+      <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="VisualLightDebugger.h">
       <Filter>Engine Files\Graphics\GUI\Lights</Filter>
@@ -412,7 +412,7 @@
       <Filter>Game Files\LevelObjects</Filter>
     </ClInclude>
     <ClInclude Include="LoadLevelFromFile.h">
-      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+      <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="SoftbodyCharacter.h">
       <Filter>Game Files\LevelObjects\Character</Filter>
@@ -468,12 +468,14 @@
     <ClInclude Include="Snapper.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
-
     <ClInclude Include="PhysXCharacter.h">
       <Filter>Engine Files\PhysX\Character</Filter>
     </ClInclude>
     <ClInclude Include="FluidsCharacter.h">
       <Filter>Game Files\LevelObjects\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="PreShadowEffectInstanced.h">
+      <Filter>Engine Files\Graphics\Effect\pre</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -658,7 +660,7 @@
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClCompile>
     <ClCompile Include="LoadModelFromFile.cpp">
-      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+      <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="BaseGrid.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
@@ -721,7 +723,7 @@
       <Filter>Game Files\LevelObjects</Filter>
     </ClCompile>
     <ClCompile Include="LoadLevelFromFile.cpp">
-      <Filter>Engine Files\Graphics\GUI\Models</Filter>
+      <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="SoftbodyCharacter.cpp">
       <Filter>Game Files\LevelObjects\Character</Filter>
@@ -771,18 +773,18 @@
     <ClCompile Include="IniWriter.cpp">
       <Filter>Engine Files\IO</Filter>
     </ClCompile>
-
     <ClCompile Include="PhysXCharacter.cpp">
       <Filter>Engine Files\PhysX\Character</Filter>
     </ClCompile>
     <ClCompile Include="FluidsCharacter.cpp">
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
-
     <ClCompile Include="Snapper.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
-
+    <ClCompile Include="PreShadowEffectInstanced.cpp">
+      <Filter>Engine Files\Graphics\Effect\pre</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
@@ -822,6 +824,9 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="Content\Effects\normal.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\preShadowmapInstancedShader.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>
