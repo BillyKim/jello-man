@@ -214,7 +214,7 @@ float SpotShadowCheck(float3 position)
 	for (int tx = -1.3f; tx <= 1.3; tx += 1.3f)
 		[unroll]
 		for (int ty = -1.3f; ty <= 1.3f; ty += 1.3f)
-			shadow += shadowMap.SampleCmpLevelZero(shadowSampler, coord.xy + float2(t0 * tx, t0 * ty), coord.z - 0.00005f);
+			shadow += shadowMap.SampleCmpLevelZero(shadowSampler, coord.xy + float2(t0 * tx, t0 * ty), coord.z - 0.0001f);
 	
 	shadow /= 9.0f;
 

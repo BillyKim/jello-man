@@ -21,7 +21,7 @@ SpotLight::SpotLight():
 {
     SetBehaviour(new LightBehaviourNormal());
 
-    m_Desc.attenuationStart = 0;
+    m_Desc.attenuationStart = 0.01f;
     m_Desc.attenuationEnd = 500;
     m_Desc.color = Color(1.0f, 1.0f, 1.0f);
     m_Desc.direction = Vector3(1, 0, 0);
@@ -296,7 +296,7 @@ void SpotLight::UpdateShadowCameraView()
 void SpotLight::UpdateShadowCameraProjection()
 {
     if (m_pShadowCamera != 0)
-        m_pShadowCamera->SetLens(1.0f, m_OpeningsAngle, 1.0f, m_Desc.attenuationEnd);
+        m_pShadowCamera->SetLens(1.0f, m_OpeningsAngle, 0.01f, m_Desc.attenuationEnd);
 }
 
 D3D10_RECT SpotLight::CalcScissorRect(Graphics::Camera::CameraBase* camera, UINT backbufferWidth, UINT backbufferHeight) const
@@ -343,6 +343,8 @@ float SpotLight::GetMulitplier() const
 
 void SpotLight::SetAttenuationStart(float start)
 {
+    if (start <= 0)
+        start = 0.01f;
     m_Desc.attenuationStart = start;
     UpdateShadowCameraProjection();
 }    
@@ -409,6 +411,8 @@ void SpotLight::Deserialize(Serializer* pSerializer)
 {
     m_Desc.attenuationEnd = pSerializer->GetStream()->readFloat();
     m_Desc.attenuationStart = pSerializer->GetStream()->readFloat();
+    if (m_Desc.attenuationStart <= 0.0f)
+        m_Desc.attenuationStart = 0.01f;
     m_Desc.color = pSerializer->GetStream()->readColor();
     m_Desc.multiplier = pSerializer->GetStream()->readFloat();
     m_Desc.position = pSerializer->GetStream()->readVector3();

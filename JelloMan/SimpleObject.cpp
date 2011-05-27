@@ -122,10 +122,10 @@ void SimpleObject::Draw(RenderContext* pRenderContext)
     m_pEffect->Selected(m_bIsSelected);
     m_pModel->Draw(m_pEffect);
 }
-void SimpleObject::DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e)
+void SimpleObject::DrawShadow(RenderContext* pRenderContext)
 {
-    e->SetWorldViewProjection(m_mtxWorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
-    m_pModel->Draw(e);
+    pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(m_mtxWorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
+    m_pModel->Draw(pRenderContext->GetPreShadowEffect());
 }
 #pragma endregion
 #pragma endregion

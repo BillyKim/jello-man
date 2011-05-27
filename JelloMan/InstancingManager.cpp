@@ -48,5 +48,20 @@ void InstancingManager::Draw(RenderContext* pRenderContext)
         obj->Draw(pRenderContext);
     });
 }
+void InstancingManager::DrawShadow(RenderContext* pRenderContext)
+{
+    for_each(m_vecModelManagers.cbegin(), m_vecModelManagers.cend(), [&](InstancedModelManager* obj)
+    {
+        obj->DrawShadow(pRenderContext);
+    });
+}
+
+
+void InstancingManager::Clear()
+{
+    m_vecModelManagers.clear();
+    m_pAssetContainer->RemoveAllAssets();
+}
+
 
 } //end namespace

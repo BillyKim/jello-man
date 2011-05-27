@@ -47,6 +47,8 @@ void PhysXCharacter::InitCharacter(PhysX* pPhysX, PhysXCharactertype type)
         cdesc.upDirection = NX_Y;
 
         m_pController = pPhysX->GetControllerManager()->createController(pPhysX->GetScene(), cdesc);
+        m_pController->setCollision(true);
+        m_pController->setInteraction(NxCCTInteractionFlag::NXIF_INTERACTION_INCLUDE);
     }
 
 }

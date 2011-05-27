@@ -8,6 +8,7 @@
 #include "ParticleFactory.h"
 #include "SimpleObject.h"
 #include "IInstancible.h"
+#include "EditorGUI.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -19,7 +20,8 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_pCharacter(0),
 				m_bEditor(true),
                 m_pFluidPostProcessor(0),
-				m_pFluidsCharacter(0)
+				m_pFluidsCharacter(0),
+                m_pGUI(0)
 {
 
 }
@@ -27,21 +29,22 @@ Level::Level(ID3D10Device* pDXDevice)	:
 
 Level::~Level()
 {
+	Clear();
 	delete m_pBaseGrid;
 	delete m_pCharacter;
     delete m_pFluidPostProcessor;
 	delete m_pFluidsCharacter;
     delete m_pInstancingManager;
-	
-	Clear();
 }
 
 // GENERAL
-void Level::Initialize(PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pTrackingCamera)
+void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::FollowCamera* pTrackingCamera)
 {
 	m_pPhysXEngine = pPhysXEngine;
 	
 	m_pBaseGrid->Init();
+
+    m_pGUI = pGUI;
 
 	/*m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
 	m_pCharacter->Init(m_pPhysXEngine);*/
@@ -90,7 +93,7 @@ void Level::Tick(const float dTime)
 
 	//m_pCharacter->Tick(dTime);
 
-	if (m_bTickCharacter)
+	//if (m_bTickCharacter)
 		m_pFluidsCharacter->Tick(dTime);
 }
 
@@ -119,7 +122,7 @@ ISerializable* GetObject(DWORD id)
     {
         case SerializeTypes::SpotLight: return new SpotLight();
         case SerializeTypes::PointLight: return new PointLight();
-        case SerializeTypes::SimpleObject: return new SimpleObject();
+        case SerializeTypes::SimpleObject: return new SimpleObject(true);
         default: PANIC("File corrupt!"); return 0;
     }
 }
@@ -157,7 +160,7 @@ void Level::Deserialize(const string& path)
         ILevelObject* lvlObj = dynamic_cast<ILevelObject*>(obj);
         if (lvlObj != 0)
         {
-            m_pLevelObjects.push_back(lvlObj);
+            AddLevelObject(lvlObj);
         }
         else
         {
@@ -172,12 +175,15 @@ void Level::Deserialize(const string& path)
 }
 void Level::Clear()
 {   
+    m_pGUI->Clear();
     m_pRenderContext->GetLightController()->Clear();
     for_each(m_pLevelObjects.cbegin(), m_pLevelObjects.cend(), [](ILevelObject* obj)
     {
 		delete obj;
     });
     m_pLevelObjects.clear();
+    m_pDrawableObjects.clear();
+    m_pInstancingManager->Clear();
 }
 
 // DRAW
@@ -195,14 +201,14 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 	//m_pCharacter->Draw(pRenderContext);
 }
 
-void Level::DrawShadowMap(RenderContext* pRenderContext, PreShadowEffect* pPreShadowEffect)
+void Level::DrawShadowMap(RenderContext* pRenderContext)
 {
     for_each(m_pDrawableObjects.cbegin(), m_pDrawableObjects.cend(), [&](IDrawable* obj)
 	{
-        obj->DrawShadow(pRenderContext, pPreShadowEffect);
+        obj->DrawShadow(pRenderContext);
 	});
 
-	//m_pCharacter->DrawShadow(pRenderContext, pPreShadowEffect);
+    m_pInstancingManager->DrawShadow(pRenderContext);
 }
 
 void Level::DrawForward(RenderContext* pRenderContext)

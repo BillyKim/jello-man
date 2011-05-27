@@ -6,6 +6,7 @@
 #include <vector>
 #include "RenderContext.h"
 #include "DeferredPreEffectNormalsInstanced.h" 
+#include "PreShadowEffectInstanced.h"
 
 namespace Instancing{
 
@@ -20,6 +21,7 @@ public:
 	void AddInstance(const Matrix* mtxWorld);
 
 	void Draw(RenderContext* pRendercontext);
+    void DrawShadow(RenderContext* pRenderContext);
 
 	void SetDiffuse(Texture2D* tex) { m_pTexDiffuse = tex; }
     void SetSpec(Texture2D* tex) { m_pTexSpec = tex; }

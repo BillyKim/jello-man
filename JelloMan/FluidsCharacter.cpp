@@ -130,11 +130,11 @@ void FluidsCharacter::Tick(float dTime)
     Vector3 move = Vector3(0, 0, 0);
     if (CONTROLS->IsKeyDown(VK_UP))
         move += Vector3::Forward * dTime * 10;
-    else if (CONTROLS->IsKeyDown(VK_DOWN))
+    if (CONTROLS->IsKeyDown(VK_DOWN))
         move += Vector3::Forward * dTime * -10;
     if (CONTROLS->IsKeyDown(VK_RIGHT))
         move += Vector3::Right * dTime * 10;
-    else if (CONTROLS->IsKeyDown(VK_RIGHT))
+    if (CONTROLS->IsKeyDown(VK_RIGHT))
         move += Vector3::Right * dTime * -10;
 
     NxVec3 grav;

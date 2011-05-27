@@ -9,5 +9,5 @@ public:
     virtual ~IDrawable() {}
 
     virtual void Draw(RenderContext* pRenderContext) = 0;
-    virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e) = 0;
+    virtual void DrawShadow(RenderContext* pRenderContext) = 0;
 };

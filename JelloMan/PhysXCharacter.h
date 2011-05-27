@@ -29,8 +29,8 @@ public:
 
     Vector3 GetPosition() const;
 
-    virtual NxControllerAction OnShapeHit(const NxControllerShapeHit&) { return NX_ACTION_PUSH; }
-    virtual NxControllerAction OnControllerHit(const NxControllersHit&) { return NX_ACTION_PUSH; }
+    virtual NxControllerAction OnShapeHit(const NxControllerShapeHit&) { return NX_ACTION_NONE; }
+    virtual NxControllerAction OnControllerHit(const NxControllersHit&) { return NX_ACTION_NONE; }
 
 private:
     virtual NxControllerAction onShapeHit(const NxControllerShapeHit& hit);

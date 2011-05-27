@@ -16,6 +16,8 @@
 #include "IniReader.h"
 #include "FileNotFoundException.h"
 #include "IniWriter.h"
+#include "PreShadowEffect.h"
+#include "PreShadowEffectInstanced.h"
 
 using namespace Graphics::Camera;
 using namespace IO;
@@ -37,7 +39,6 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pPostProcessor(0),
 							m_pEdgeDetectionEffect(0),
 							m_pRenderContext(0),
-                            m_pPreShadowEffect(0),
 							m_pDefaultFont(0),
 							m_pHappyFaceFont(0),
 							m_pLoadingResourcesFont(0),
@@ -60,12 +61,12 @@ MainGame::~MainGame()
     delete m_pLightController;
 	delete m_pAudioEngine;
 	delete m_pTestSound;
-	delete m_pEditorGUI;
 	delete m_pTrackingCamera;
 	delete m_pDeferredRenderer;
 	delete m_pForwardRenderer;
 	delete m_pPostProcessor;
 	delete m_pLevel;
+	delete m_pEditorGUI;
 	delete m_pRenderContext;
 
     delete Content;
@@ -172,14 +173,16 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 								static_cast<int>(BX2D->GetWindowSize().height));
 	m_pDeferredRenderer->SetClearColor(Vector4(0.1f, 0.1f, 0.9f, 1.0f));
 	
-    m_pPreShadowEffect = Content->LoadEffect<PreShadowEffect>(_T("../Content/Effects/preShadowmapShader.fx"));
+    PreShadowEffect* pPreShadowEffect = Content->LoadEffect<PreShadowEffect>(_T("../Content/Effects/preShadowmapShader.fx"));
+    PreShadowEffectInstanced* pPreShadowEffectInstanced = Content->LoadEffect<PreShadowEffectInstanced>(_T("../Content/Effects/preShadowmapInstancedShader.fx"));
 
 	++m_Orbs;
 	m_LoadingText = _T("lightcontroller");
 
     // LIGHTCONTROLLER
     m_pLightController = new LightController();
-	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController, m_pDeferredRenderer);
+	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController, m_pDeferredRenderer, 
+        pPreShadowEffect, pPreShadowEffectInstanced);
 
 	Image* test = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
 	Image* test2 = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
@@ -192,12 +195,19 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
 	// LEVEL
 	m_pLevel = new Level(pDXDevice);
-	m_pLevel->Initialize(m_pPhysXEngine, m_pTrackingCamera);
+	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice, m_pLevel);
+    m_pLevel->Initialize(m_pPhysXEngine, m_pEditorGUI, m_pTrackingCamera);
+
+    ++m_Orbs;
+	m_LoadingText = _T("editor GUI");
+
+	// GUI
+	m_pEditorGUI->Initialize();
 
 	m_LoadingText = _T("Instanced PhysX Test");
-    for (int x = 0; x < 10; ++x)
-            for (int y = 0; y < 10; ++y)
-                for (int z = 0; z < 10; ++z)
+    for (int x = -20; x < 20; ++x)
+            for (int y = 0; y < 1; ++y)
+                for (int z = -20; z < 20; ++z)
                 {
 		            SimpleObject* pLevelObject = new SimpleObject(true);
 
@@ -210,12 +220,12 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 		            //pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
 		            //pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
 
-		            pLevelObject->SetRigid(true);
+		            pLevelObject->SetRigid(false);
 
 		            pLevelObject->Init(m_pPhysXEngine);
 
 		            //pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
-                    pLevelObject->Translate(Vector3(x*2, y, z*2));
+                    pLevelObject->Translate(Vector3(x, y, z));
 
 		            m_pLevel->AddLevelObject(pLevelObject);
 
@@ -233,13 +243,6 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pTestSound->PreLoad();
 	m_pTestSound->SetLoopCount(1);
 	m_pTestSound->SetVolume(90);*/
-
-	++m_Orbs;
-	m_LoadingText = _T("editor GUI");
-
-	// GUI
-	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice, m_pLevel);
-	m_pEditorGUI->Initialize();
 
 	#if defined DEBUG || _DEBUG
 	cout << "---------------------------\n";
@@ -312,17 +315,16 @@ void MainGame::UpdateScene(const float dTime)
 		//m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this, dTime); // start new thread
 
 		m_pLevel->Tick(dTime);
-
-		m_TickLock.lock();
-		m_bTicked = true;
-		m_TickLock.unlock();
-
 		//-----------------------------------
 
 		m_pLevel->EditorMode(false);
 	}
 	else
 		m_pLevel->EditorMode(true);
+
+    m_TickLock.lock();
+	m_bTicked = true;
+	m_TickLock.unlock();
 
 	if (m_pEditorGUI->GetShowGridButton()->IsActive())
 		m_pLevel->ShowGrid(true);
@@ -357,13 +359,7 @@ void MainGame::UpdateScene(const float dTime)
 	else
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);
 
-    if (m_pEditorGUI->GetMode() == EditorGUI::MODE_EDITOR) //needed for raycast to work when object is moved
-        m_pPhysXEngine->FetchResults();
-
 	m_pEditorGUI->Tick(m_pRenderContext);
-
-    if (m_pEditorGUI->GetMode() == EditorGUI::MODE_EDITOR)
-        m_pPhysXEngine->Simulate(0.0f);
 }
 
 void MainGame::DrawScene()
@@ -382,7 +378,7 @@ void MainGame::DrawScene()
 
             l->GetShadowMap()->BeginDraw();
 
-            m_pLevel->DrawShadowMap(m_pRenderContext, m_pPreShadowEffect); 
+            m_pLevel->DrawShadowMap(m_pRenderContext); 
 
             l->GetShadowMap()->EndDraw();
         }
@@ -551,7 +547,7 @@ void MainGame::UpdatePhysics()
 {
 	while (m_bRunning)
 	{
-		if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR && m_bTicked)
+		if (m_bTicked)
 		{
 			m_TickLock.lock(); // reset tick
 			{
@@ -569,7 +565,10 @@ void MainGame::UpdatePhysics()
 
 			m_pPhysXEngine->GetPhysXLock().lock(); // simulate
 			{
-				m_pPhysXEngine->Simulate(dTime);
+                if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
+				    m_pPhysXEngine->Simulate(dTime);
+                else
+				    m_pPhysXEngine->Simulate(0.0f);
 				m_pPhysXEngine->FetchResults();
 			}
 			m_pPhysXEngine->GetPhysXLock().unlock();

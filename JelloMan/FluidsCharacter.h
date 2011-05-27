@@ -29,7 +29,7 @@ public:
 
 	/* IDrawable */
 	virtual void Draw(RenderContext* pRenderContext);
-	virtual void DrawShadow(RenderContext* pRenderContext, PreShadowEffect* e) {}
+	virtual void DrawShadow(RenderContext* pRenderContext) {}
 
 	virtual void Serialize(Serializer* pSerializer)  const {}
 	virtual void Deserialize(Serializer* pSerializer) {}
