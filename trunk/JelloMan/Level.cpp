@@ -50,7 +50,7 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
 	m_pCharacter->Init(m_pPhysXEngine);*/
     
 	m_pFluidsCharacter = new FluidsCharacter();
-	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(0,5,-10));
+	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(0, 5, -10));
 
 	pTrackingCamera->SetFollowObject(m_pFluidsCharacter);
     pTrackingCamera->SetFollowDistance(20);

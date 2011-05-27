@@ -10,7 +10,9 @@
 #pragma region MyOutputStream
 void MyOutputStream::reportError(NxErrorCode code, const char *message, const char*, int)
 {
-  cout << "--Physx: " << code << ": " << message << "\n";
+    #if _DEBUG
+    cout << "--Physx: " << code << ": " << message << "\n";
+    #endif
 }              
 NxAssertResponse MyOutputStream::reportAssertViolation (const char *message, const char*, int)
 {
@@ -21,7 +23,9 @@ NxAssertResponse MyOutputStream::reportAssertViolation (const char *message, con
 }               
 void MyOutputStream::print (const char *message)
 {
-    cout << "SDK says: %s\n" << message << "\n";
+    #if _DEBUG
+    cout << "PhysX SDK says: \n" << message << "\n";
+    #endif
 }
 #pragma endregion
 
@@ -51,7 +55,9 @@ bool PhysX::Init(void)
 
 	ASSERT(m_pPhysicsSDK != 0, "Error creating PhysicsSDK");
 
+    #if _DEBUG
 	m_pPhysicsSDK->getFoundationSDK().getRemoteDebugger()->connect("localhost");
+    #endif
 
 	NxSceneDesc sceneDesc;
 	sceneDesc.gravity.set(0, -9.81f, 0);
@@ -84,7 +90,6 @@ bool PhysX::Init(void)
 
     m_pDefaultAllocator = new NxUserAllocatorDefault();
     m_pControllerManager = NxCreateControllerManager(m_pDefaultAllocator);
-    
 
 	return true;
 }
@@ -105,12 +110,13 @@ void PhysX::FetchResults(void)
 NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
 {
 	NxRaycastHit hit;
-	NxShape* result = m_pScene->raycastClosestShape(ray,NX_STATIC_SHAPES,hit,1,distance);
+	NxShape* result = m_pScene->raycastClosestShape(ray, NX_STATIC_SHAPES, hit, 1, distance);
 	return result;
 }
 
 void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag status)
 {
+    PANIC("Not Implemented");
 	NxActor& triggerActor = triggerShape.getActor();
 	NxActor& otherActor = otherShape.getActor();
 	if (triggerActor.userData == NULL || otherActor.userData == NULL)

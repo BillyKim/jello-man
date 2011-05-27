@@ -19,11 +19,11 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	m_pPhysX = pPhysX;
 	
 	//Make Actor
+	NxBodyDesc bodyDesc;
 	NxActorDesc actorDesc;
 	
 	if(moveable == true)
 	{
-		NxBodyDesc bodyDesc;
 		bodyDesc.mass = shape.GetShape()->mass;
 		//bodyDesc.angularDamping = 0.5f;
         //bodyDesc.linearDamping = 0.2f;
@@ -124,6 +124,8 @@ void Actor::Serialize(Serializer* pSerializer)  const
 }
 void Actor::Deserialize(Serializer* pSerializer)
 {
+    ASSERT(m_pActor != 0, "");
+
     NxVec3 av(static_cast<NxVec3>(pSerializer->GetStream()->readVector3()));
     NxVec3 lv(static_cast<NxVec3>(pSerializer->GetStream()->readVector3()));
 
