@@ -133,6 +133,9 @@
     <Filter Include="Engine Files\Graphics\GUI\Loaders">
       <UniqueIdentifier>{ec27c9a8-64ed-431f-b0dc-237edf804e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Content\effect\fluids">
+      <UniqueIdentifier>{757cc495-53a5-436a-a2d2-0b1014422a10}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -811,12 +814,6 @@
     <None Include="Content\Effects\preShadowmapShader.fx">
       <Filter>Content\effect</Filter>
     </None>
-    <None Include="Content\Effects\fluidEffect.fx">
-      <Filter>Content\effect</Filter>
-    </None>
-    <None Include="Content\Effects\fluidPostEffect.fx">
-      <Filter>Content\effect</Filter>
-    </None>
     <None Include="Content\Effects\blur.fx">
       <Filter>Content\effect</Filter>
     </None>
@@ -828,6 +825,12 @@
     </None>
     <None Include="Content\Effects\preShadowmapInstancedShader.fx">
       <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\fluidPostEffect.fx">
+      <Filter>Content\effect\fluids</Filter>
+    </None>
+    <None Include="Content\Effects\fluidPreEffect.fx">
+      <Filter>Content\effect\fluids</Filter>
     </None>
   </ItemGroup>
 </Project>

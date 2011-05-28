@@ -44,6 +44,7 @@ public:
     ID3D10ShaderResourceView* GetColorGlowMap() const;
     ID3D10ShaderResourceView* GetNormalSpecMap() const;
     ID3D10ShaderResourceView* GetPositionGlossMap() const;
+    ID3D10ShaderResourceView* GetDepthMap() const;
 
 private:
 

@@ -3,6 +3,7 @@
 #include "D3DUtil.h"
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
+#include "FluidRenderer.h"
 #include "TestSoftbody.h"
 #include "Blox2D.h"
 #include "RenderContext.h"
@@ -17,7 +18,6 @@
 #include "SoftbodyCharacter.h"
 #include "FluidsCharacter.h"
 
-#include "FluidPostEffect.h"
 
 #include "FollowCamera.h"
 
@@ -85,7 +85,7 @@ private:
 	bool m_bTickCharacter;
 	bool m_bEditor;
 
-    PostProcessor* m_pFluidPostProcessor;
+    FluidRenderer* m_pFluidRenderer;
 
     EditorGUI* m_pGUI;
 
