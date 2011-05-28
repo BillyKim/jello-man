@@ -19,9 +19,9 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_bTickCharacter(false),
 				m_pCharacter(0),
 				m_bEditor(true),
-                m_pFluidPostProcessor(0),
 				m_pFluidsCharacter(0),
-                m_pGUI(0)
+                m_pGUI(0),
+                m_pFluidRenderer(0)
 {
 
 }
@@ -32,7 +32,7 @@ Level::~Level()
 	Clear();
 	delete m_pBaseGrid;
 	delete m_pCharacter;
-    delete m_pFluidPostProcessor;
+    delete m_pFluidRenderer;
 	delete m_pFluidsCharacter;
     delete m_pInstancingManager;
 }
@@ -76,10 +76,9 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
 	b.pose.t = NxVec3(0, 350, 0);
 	s = pForceField->getIncludeShapeGroup().createShape(b);*/
 
-    m_pFluidPostProcessor = new PostProcessor(m_pDXDevice, 
+    m_pFluidRenderer = new FluidRenderer(m_pDXDevice, 
                                             static_cast<int>(BX2D->GetWindowSize().width), 
                                             static_cast<int>(BX2D->GetWindowSize().height));
-    m_pFluidPostProcessor->SetEffect(Content->LoadEffect<FluidPostEffect>(_T("../Content/Effects/fluidPostEffect.fx")));
 
     m_pInstancingManager = new Instancing::InstancingManager(m_pDXDevice);
 }
@@ -215,12 +214,11 @@ void Level::DrawForward(RenderContext* pRenderContext)
 {
 	if (m_pFluidsCharacter)
     {
-        m_pFluidPostProcessor->Begin();
+        m_pFluidRenderer->Begin();
 
 		m_pFluidsCharacter->Draw(pRenderContext);
 
-        m_pFluidPostProcessor->End(pRenderContext->GetDeferredRenderer());
-        //m_pFluidRenderer->End();
+        m_pFluidRenderer->End(pRenderContext);
     }
 
 	if (m_bShowGrid)

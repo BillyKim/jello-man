@@ -329,3 +329,7 @@ ID3D10ShaderResourceView* DeferredRenderer::GetPositionGlossMap() const
 {
     return m_pSRV[DeferredRenderMap_Position];
 }
+ID3D10ShaderResourceView* DeferredRenderer::GetDepthMap() const
+{
+    return m_pSRV[DeferredRenderMap_Depth];
+}

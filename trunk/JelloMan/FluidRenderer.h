@@ -3,8 +3,9 @@
 #include "Texture2D.h"
 #include "ModelMesh.h"
 #include "vertex.h"
-#include "PostProcessEffect.h"
 #include "DeferredRenderer.h"
+#include "FluidEffect.h"
+#include "FluidPostEffect.h"
 
 class FluidRenderer
 {
@@ -12,12 +13,12 @@ public:
     FluidRenderer(ID3D10Device* pDXDevice, int backBufferWidth, int backBufferHeight);
     ~FluidRenderer(void);
 
-    void SetEffect(PostProcessEffect* pEffect);
+    FluidEffect* GetEffect() const { return m_pPreEffect; }
 
     void OnResized(int backBufferWidth, int backBufferHeight);
 
     void Begin();
-    void End();
+    void End(const RenderContext* pRenderContext);
 
 private:
     void Init();
@@ -26,7 +27,8 @@ private:
 
     Texture2D* m_pBuffer;
     int m_Width, m_Height;
-    PostProcessEffect* m_pEffect;
+    FluidEffect* m_pPreEffect;
+    FluidPostEffect* m_pPostEffect;
 
     ModelMesh<VertexPosTex>* m_pScreenMesh;
 

@@ -309,7 +309,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\blur.fx" />
-    <None Include="Content\Effects\fluidEffect.fx" />
+    <None Include="Content\Effects\fluidPreEffect.fx" />
     <None Include="Content\Effects\fluidPostEffect.fx" />
     <None Include="Content\Effects\lights.fx" />
     <None Include="Content\Effects\phong.fx" />

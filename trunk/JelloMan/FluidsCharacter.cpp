@@ -34,19 +34,20 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	m_pPhysXEngine = pPhysXEngine;
 
 	// FLUID
-	int MAX_PARTICLES = (int)maxParticles;
+	//int MAX_PARTICLES = (int)maxParticles;
+    int MAX_PARTICLES = 10000;
 
 	// setup fluid descriptor
 	NxFluidDesc fluidDesc;
     fluidDesc.maxParticles                  = MAX_PARTICLES;
-    fluidDesc.kernelRadiusMultiplier		= 1.0f;
+    fluidDesc.kernelRadiusMultiplier		= 2.3f;
     fluidDesc.restParticlesPerMeter			= 10.0f;
 	fluidDesc.motionLimitMultiplier			= 1.0f;
 	fluidDesc.packetSizeMultiplier			= 8;
-    fluidDesc.collisionDistanceMultiplier   = 0.1f;
-    fluidDesc.stiffness						= 50.0f;
-    fluidDesc.viscosity						= 40.0f;
-	fluidDesc.restDensity					= 10.0f;
+    fluidDesc.collisionDistanceMultiplier   = 1.0f;
+    fluidDesc.stiffness						= 25.0f;
+    fluidDesc.viscosity						= 50.0f;
+	fluidDesc.restDensity					= 250.0f;
     fluidDesc.damping						= 0.2f;
     fluidDesc.restitutionForStaticShapes	= 0.1f;
 	fluidDesc.dynamicFrictionForStaticShapes= 0.1f;
@@ -70,7 +71,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	emitterDesc.fluidVelocityMagnitude = .1f;
 
 	emitterDesc.shape = NX_FE_RECTANGULAR;
-	emitterDesc.particleLifetime = 1.0f; // in seconds
+	emitterDesc.particleLifetime = 5.0f; // in seconds
 
 	////attach to actor
 	//emitterDesc.flags |= NX_FEF_ADD_BODY_VELOCITY;
@@ -80,7 +81,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	emitterDesc.relPose.M.rotX(NxHalfPiF32);
 	emitterDesc.relPose.t = NxVec3(0.0f,50.0f,0);
 	
-	m_pFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f, 0.0f, 1.0f, 1.0f), 0.0003f, pDXDevice);
+	m_pFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f, 0.0f, 1.0f, 1.0f), 0.1f, pDXDevice);
 	ASSERT(m_pFluid, "fluid creation failed");
 
 	m_pEmitter = m_pFluid->GetNxFluid()->createEmitter(emitterDesc);

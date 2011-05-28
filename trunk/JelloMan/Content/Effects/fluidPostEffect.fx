@@ -3,6 +3,7 @@
 cbuffer cbPerObject
 {
 	matrix mtxWVP : WorldViewProjection;
+    float3 vCamDir;
 };
 
 cbuffer cbRarely
@@ -11,7 +12,8 @@ cbuffer cbRarely
 };
 
 Texture2D texBackbuffer;
-Texture2D texDepth;
+Texture2D texDepthBackbuffer;
+Texture2D texDepthFluids;
 
 SamplerState mapSampler
 {
@@ -61,11 +63,23 @@ VertexShaderOutput VS(VertexShaderInput input)
 
 float3 PS(VertexShaderOutput input) : SV_TARGET
 {	
-    float depth = texBackbuffer.Sample(mapSampler, input.texCoord).a;
-    float4 b = boxblur(texBackbuffer, input.texCoord, t0, depth);
-    clip((b.r + b.g + b.b < 2.0f)? -1:1);
-    clip(texDepth.Sample(mapSampler, input.texCoord).r < depth? -1 : 1);
-    return float3(0.2f, 0.2f, 1.0f);
+    //Depth test
+    float depth_dest = texDepthBackbuffer.Sample(mapSampler, input.texCoord).r;
+    //float depth_src = gaussblur(texDepthFluids, input.texCoord, t0);
+    float depth_src = texDepthFluids.Sample(mapSampler, input.texCoord).r;
+
+    clip(depth_dest - depth_src);
+
+    //float3 normal = gaussblur(texBackbuffer, input.texCoord, t0);
+    float3 normal = texBackbuffer.Sample(mapSampler, input.texCoord).xyz;
+    normal = normalize(normal * 2.0f - 1.0f);
+    
+    float diff = dot(vCamDir, normal) * 0.5f + 0.5f;
+
+    //return diff * float3(0.2f, 0.1f, 1.0f);
+    return (normal + 1) / 2.0f;
+
+    //return col;
 };
 
 technique10 tech1
