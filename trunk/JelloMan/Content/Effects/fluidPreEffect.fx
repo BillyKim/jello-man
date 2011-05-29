@@ -13,9 +13,9 @@ BlendState blend
 {
 	BlendEnable[0] = FALSE;
 	SrcBlend = ONE;
-	DestBlend = ZERO;
+	DestBlend = ONE;
 	BlendOp = ADD;
-	SrcBlendAlpha = ONE;
+	SrcBlendAlpha = ZERO;
 	DestBlendAlpha = ZERO;
 };
 

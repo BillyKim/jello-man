@@ -60,7 +60,7 @@ private:
 
 	MainGame* m_pGame;
  
-	ID3D10Device*    m_pDXDevice;
+	ID3D10Device1*    m_pDXDevice;
 	IDXGISwapChain*  m_pSwapChain;
 	ID3D10Texture2D* m_pDepthStencilBuffer;
 	ID3D10RenderTargetView* m_pRenderTargetView;
