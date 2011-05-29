@@ -200,7 +200,9 @@ void Engine::OnRender()
 	}*/
 
 	// displaying backbuffer - vsync on
-	m_pSwapChain->Present(1, 0);
+	//m_pSwapChain->Present(1, 0);
+	// displaying backbuffer - vsync off
+    m_pSwapChain->Present(0, 0);
 }
 
 LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
@@ -449,44 +451,91 @@ HRESULT Engine::CreateDeviceIndependentResources()
 HRESULT Engine::CreateDeviceResources()
 {
 	HRESULT hr = S_OK;
-    RECT rcClient;
-    ID3D10Device1 *pDevice = NULL;
-    IDXGIDevice *pDXGIDevice = NULL;
-    IDXGIAdapter *pAdapter = NULL;
-    IDXGIFactory *pDXGIFactory = NULL;
-    IDXGISurface *pSurface = NULL;
-
-    ASSERT(m_hMainWnd != 0, "");
-
-    GetClientRect(m_hMainWnd, &rcClient);
-
-    UINT nWidth = abs(rcClient.right - rcClient.left);
-    UINT nHeight = abs(rcClient.bottom - rcClient.top);
-
     // If we don't have a device, need to create one now and all
     // accompanying D3D resources.
     if (!m_pDXDevice)
     {
+        RECT rcClient;
+        ID3D10Device1 *pDevice = NULL;
+        IDXGIDevice *pDXGIDevice = NULL;
+        IDXGIFactory *pDXGIFactory = NULL;
+        IDXGISurface *pSurface = NULL;
+        IDXGIAdapter *pSelectedAdapter = NULL;
+
+        ASSERT(m_hMainWnd != 0, "");
+
+        GetClientRect(m_hMainWnd, &rcClient);
+
+        UINT nWidth = abs(rcClient.right - rcClient.left);
+        UINT nHeight = abs(rcClient.bottom - rcClient.top);
+
+        cout << "Start creating device!\n";
+
         UINT nDeviceFlags = D3D10_CREATE_DEVICE_BGRA_SUPPORT;
-#if defined DEBUG || _DEBUG
+        #if _DEBUG
         nDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
-#endif
+        #endif
+
+        IDXGIAdapter *pAdapter = NULL;
+        D3D10_DRIVER_TYPE driverType = D3D10_DRIVER_TYPE_HARDWARE;
+        
+        cout << "Creating Factory!\n";
+        HRESULT hRes(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pDXGIFactory));
+        cout << "Done creating Factory!\n";
+        ASSERT(SUCCEEDED(hRes), "Failed to create factory");
+
+        UINT nAdapter = 0;
+        while (pDXGIFactory->EnumAdapters(nAdapter, &pAdapter) != DXGI_ERROR_NOT_FOUND)
+        {
+            if (pAdapter != 0)
+            {
+                DXGI_ADAPTER_DESC adaptDesc;
+                if (SUCCEEDED(pAdapter->GetDesc(&adaptDesc)))
+                {
+                    cout << "EnumAdapters " << adaptDesc.DeviceId << "\n";
+                    const bool isPerfHUD = wcscmp(adaptDesc.Description, L"NVIDIA PerfHUD") == 0;
+                    // Select the first adapter in normal circumstances or the PerfHUD one if it exists.
+                    if(nAdapter == 0 || isPerfHUD)
+                    {
+                        if (pSelectedAdapter != 0)    
+                            SafeRelease(pSelectedAdapter);
+                        pSelectedAdapter = pAdapter;
+                    }
+                    else
+                        SafeRelease(pAdapter);
+                    if(isPerfHUD)
+                    {
+                        driverType = D3D10_DRIVER_TYPE_REFERENCE;
+                        //nDeviceFlags |= D3D10_CREATE_DEVICE_SWITCH_TO_REF;
+                        #if _DEBUG
+                        cout << "NVIDIA PerfHUD found!\n";
+                        #endif
+                    }
+                }
+            }
+            ++nAdapter;
+        }
+        cout << "Got adapter!\n";
         // Create device
         hr = CreateD3DDevice(
-            NULL,
-            D3D10_DRIVER_TYPE_HARDWARE,
+            pSelectedAdapter,
+            driverType,
             nDeviceFlags,
-			&pDevice
+            &pDevice
             );
+        cout << "CreatedD3DDevice!\n";
 
 		if (FAILED(hr))
         {
             hr = CreateD3DDevice(
-                NULL,
-                D3D10_DRIVER_TYPE_WARP,
-                nDeviceFlags,
-                &pDevice
-                );
+            NULL,
+            D3D10_DRIVER_TYPE_WARP, 
+            nDeviceFlags,
+            &pDevice
+            );
+            #if _DEBUG
+            cout << "Failed to create hardware device, making D3D10_DRIVER_TYPE_WARP\n";
+            #endif
         }
 
         if (SUCCEEDED(hr))
@@ -497,14 +546,14 @@ HRESULT Engine::CreateDeviceResources()
         {
             hr = pDevice->QueryInterface(&pDXGIDevice);
         }
-        if (SUCCEEDED(hr))
+        /*if (SUCCEEDED(hr))
         {
             hr = pDXGIDevice->GetAdapter(&pAdapter);
         }
         if (SUCCEEDED(hr))
         {
             hr = pAdapter->GetParent(IID_PPV_ARGS(&pDXGIFactory));
-        }
+        }*/
         if (SUCCEEDED(hr))
         {
             DXGI_SWAP_CHAIN_DESC swapDesc;
@@ -512,7 +561,7 @@ HRESULT Engine::CreateDeviceResources()
 
             swapDesc.BufferDesc.Width = nWidth;
             swapDesc.BufferDesc.Height = nHeight;
-            swapDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+            swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
             swapDesc.BufferDesc.RefreshRate.Numerator = 0;
             swapDesc.BufferDesc.RefreshRate.Denominator = 0;
 	        swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -549,13 +598,13 @@ HRESULT Engine::CreateDeviceResources()
 			else
 				m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_ALIASED);
         }
+        SafeRelease(pDevice);
+        SafeRelease(pSelectedAdapter);
+        SafeRelease(pDXGIDevice);
+        SafeRelease(pDXGIFactory);
+        SafeRelease(pSurface);
     }
 
-    SafeRelease(pDevice);
-    SafeRelease(pDXGIDevice);
-    SafeRelease(pAdapter);
-    SafeRelease(pDXGIFactory);
-    SafeRelease(pSurface);
 
     return hr;
 }
@@ -567,7 +616,7 @@ HRESULT Engine::RecreateSizedResources()
 	UINT nWidth = m_ClientWidth;
 	UINT nHeight = m_ClientHeight;
     HRESULT hr = S_OK;
-    IDXGISurface *pBackBuffer = NULL;
+    IDXGISurface1 *pBackBuffer = NULL;
     ID3D10Resource *pBackBufferResource = NULL;
     ID3D10RenderTargetView *viewList[1] = {NULL};
 
@@ -577,26 +626,27 @@ HRESULT Engine::RecreateSizedResources()
     m_pDXDevice->OMSetRenderTargets(1, viewList, NULL);
 
     // Resize render target buffers
-    hr = m_pSwapChain->ResizeBuffers(1, nWidth, nHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0);
+    hr = m_pSwapChain->ResizeBuffers(1, nWidth, nHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 
     if (SUCCEEDED(hr))
     {
         D3D10_TEXTURE2D_DESC texDesc;
-        texDesc.ArraySize = 1;
-        texDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
-        texDesc.CPUAccessFlags = 0;
-        texDesc.Format = DXGI_FORMAT_D16_UNORM;
-        texDesc.Height = nHeight;
         texDesc.Width = nWidth;
+        texDesc.Height = nHeight;
+        texDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+        texDesc.ArraySize = 1;
         texDesc.MipLevels = 1;
-        texDesc.MiscFlags = 0;
         texDesc.SampleDesc.Count = 1;
         texDesc.SampleDesc.Quality = 0;
         texDesc.Usage = D3D10_USAGE_DEFAULT;
+        texDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+        texDesc.CPUAccessFlags = 0;
+        texDesc.MiscFlags = 0;
 
 		SafeRelease(m_pDepthStencilBuffer);
 		hr = m_pDXDevice->CreateTexture2D(&texDesc, NULL, &m_pDepthStencilBuffer);
     }
+
 
     if (SUCCEEDED(hr))
     {
@@ -609,7 +659,7 @@ HRESULT Engine::RecreateSizedResources()
     if (SUCCEEDED(hr))
     {
         D3D10_RENDER_TARGET_VIEW_DESC renderDesc;
-        renderDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        renderDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         renderDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2D;
         renderDesc.Texture2D.MipSlice = 0;
 
@@ -619,7 +669,7 @@ HRESULT Engine::RecreateSizedResources()
     if (SUCCEEDED(hr))
     {
         D3D10_DEPTH_STENCIL_VIEW_DESC depthViewDesc;
-        depthViewDesc.Format = DXGI_FORMAT_D16_UNORM;
+        depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
         depthViewDesc.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D;
         depthViewDesc.Texture2D.MipSlice = 0;
 
@@ -657,7 +707,7 @@ HRESULT Engine::RecreateSizedResources()
 
         D2D1_RENDER_TARGET_PROPERTIES props =
             D2D1::RenderTargetProperties(
-                D2D1_RENDER_TARGET_TYPE_DEFAULT,
+                D2D1_RENDER_TARGET_TYPE_HARDWARE,
                 D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
                 dpiX,
                 dpiY
@@ -670,6 +720,7 @@ HRESULT Engine::RecreateSizedResources()
             &props,
             &m_pBackBufferRT
             );
+        ASSERT(SUCCEEDED(hr), "");
 
 		// anti-aliasing for direct2D
 		if (m_pGameConfig->Blox2DAntiAliasing())
@@ -700,10 +751,11 @@ HRESULT Engine::CreateD3DDevice(
 
     static const D3D10_FEATURE_LEVEL1 levelAttempts[] =
     {
+        D3D10_FEATURE_LEVEL_10_1,
         D3D10_FEATURE_LEVEL_10_0,
         D3D10_FEATURE_LEVEL_9_3,
         D3D10_FEATURE_LEVEL_9_2,
-        D3D10_FEATURE_LEVEL_9_1,
+        D3D10_FEATURE_LEVEL_9_1
     };
 
     for (UINT level = 0; level < ARRAYSIZE(levelAttempts); level++)
@@ -714,17 +766,22 @@ HRESULT Engine::CreateD3DDevice(
             driverType,
             NULL,
             flags,
-            D3D10_FEATURE_LEVEL_10_0,
+            levelAttempts[level],
             D3D10_1_SDK_VERSION,
             &pDevice
             );
 
         if (SUCCEEDED(hr))
         {
+            cout << "D3D10CreateDevice1 success";
             // transfer reference
             *ppDevice = pDevice;
             pDevice = NULL;
 			break;
+        }
+        else
+        {
+            cout << "D3D10CreateDevice1 failed";
         }
 
     }

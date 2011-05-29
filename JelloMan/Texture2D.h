@@ -6,7 +6,7 @@ class Texture2D
 {
 public:
 	Texture2D(ID3D10ShaderResourceView* pTex);
-    Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap = true, bool mips = true, DXGI_FORMAT colorFormat = DXGI_FORMAT_B8G8R8A8_UNORM);
+    Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap = true, bool mips = true, DXGI_FORMAT colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	virtual ~Texture2D(void);
 
