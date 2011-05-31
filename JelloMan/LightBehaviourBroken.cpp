@@ -16,6 +16,12 @@ LightBehaviourBroken::~LightBehaviourBroken(void)
 {
 }
 
+LightBehaviour* LightBehaviourBroken::Copy() const
+{
+    LightBehaviourBroken* b = new LightBehaviourBroken(m_Type);
+    return b;
+}
+
 void LightBehaviourBroken::Init(Light* light)
 {
     m_pLight = light;

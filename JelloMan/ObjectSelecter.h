@@ -8,12 +8,14 @@
 #include "PhysX.h"
 #include "Actor.h"
 
+class Level;
+
 class ObjectSelecter
 {
 public:
 
 	// CONSTRUCTOR - DESTRUCTOR
-	ObjectSelecter(PhysX* pPhysXEngine);
+	ObjectSelecter(Level* pLevel, PhysX* pPhysXEngine);
 	virtual ~ObjectSelecter();
 
 	// GENERAL
@@ -22,6 +24,9 @@ public:
 	void DeselectAll();
     void AbortControls();
     void CalcCenterPos();
+
+    void CopySelected();
+    void DeleteSelected();
 
 	// GETTERS
     vector<IEditorObject*> GetSelectedObjects() { return m_SelectedObjects; }
@@ -41,6 +46,8 @@ private:
 	const PhysX* m_pPhysXEngine;
 
     Vector3 m_vCenterPos;
+
+    Level* m_pLevel;
 
     vector<IEditorObject*> m_SelectedObjects;
 };

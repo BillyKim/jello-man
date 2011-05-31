@@ -14,5 +14,7 @@ public:
     static ISerializable* GetShape(DWORD type);
 
 	virtual void Scale(const Vector3& scale) = 0;
+
+    virtual PhysXShape* Copy() = 0;
 };
 

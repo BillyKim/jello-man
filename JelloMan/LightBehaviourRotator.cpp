@@ -11,6 +11,12 @@ LightBehaviourRotator::~LightBehaviourRotator(void)
     //nothing to destroy
 }
 
+LightBehaviour* LightBehaviourRotator::Copy() const
+{
+    LightBehaviourRotator* b = new LightBehaviourRotator(m_Axis, m_Speed);
+    return b;
+}
+
 void LightBehaviourRotator::Init(Light* light)
 {
     m_pLight = light;

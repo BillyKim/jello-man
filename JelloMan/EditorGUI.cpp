@@ -34,7 +34,7 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice, Level* pLevel
 		m_pShowGridButton(0),
 		m_pPhysXEngine(pPhysXEngine),
 		m_pDXDevice(pDXDevice),
-        m_pObjectSelecter(new ObjectSelecter(pPhysXEngine)),
+        m_pObjectSelecter(new ObjectSelecter(pLevel, pPhysXEngine)),
 		m_pLoadLevelButton(0),
 		m_pLevel(pLevel),
 		m_pLevelLoader(0),

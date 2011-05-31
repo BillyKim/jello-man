@@ -9,6 +9,8 @@ class LightBehaviour : public ISerializable
 public:
     virtual ~LightBehaviour(void) {}
 
+    virtual LightBehaviour* Copy() const = 0;
+
     virtual void Init(Light* light) = 0;
     
 	virtual void Tick(float dTime) = 0;

@@ -47,6 +47,16 @@ PointLight::~PointLight()
     delete m_pLightBehaviour;
 	delete m_pHitRegion;
 }
+IEditorObject* PointLight::Copy() const
+{
+    PointLight* p = new PointLight();
+    p->m_Desc = m_Desc;
+    p->m_StartDesc = m_StartDesc;
+    p->m_IsEnabled = m_IsEnabled;
+    p->SetBehaviour(m_pLightBehaviour->Copy());
+
+    return p;
+}
 
 void PointLight::InitGame()
 {

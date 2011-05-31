@@ -10,7 +10,8 @@ MoveGizmo::MoveGizmo()	:	m_pRenderContext(0),
                                 m_vAnchor(Vector3::Zero),
 								m_bSnap(false),
 								m_SnapSize(0.1f),
-								m_bSnapToGrid(false)
+								m_bSnapToGrid(false),
+                                m_bCanCopy(true)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 
@@ -337,11 +338,18 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
             }
 		//}
         //<---------------
-		    
+		
+        if (m_bCanCopy == false && m_bLockX == false && m_bLockY == false && m_bLockZ == false == true)
+            m_bCanCopy = true;
         if (m_bLockX || m_bLockY || m_bLockZ)
         {
 			if (CONTROLS->LeftMBDown())
 			{
+                if (CONTROLS->IsKeyDown(VK_LSHIFT) && m_bCanCopy == true)
+                {
+                    m_bCanCopy = false;
+                    pObjectSelecter->CopySelected();
+                }
 				if (m_bLockX == true)
 				{
 					Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.Z);
@@ -366,11 +374,13 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 					if (m_bSnap)
 						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
-                
-					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-					{
-						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
-					}
+                    if (diff != 0)
+                    {
+					    for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					    {
+						    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
+					    }
+                    }
 				}
 				if (m_bLockY == true)
 				{

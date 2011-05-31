@@ -11,6 +11,8 @@ public:
     SoftbodyCharacter(const Vector3& pos, Graphics::Camera::FollowCamera* pCamera);
     virtual ~SoftbodyCharacter(void);
 
+    virtual IEditorObject* Copy() const { return 0; } //non copyable
+
     //ITransformable
     virtual void Rotate(const Vector3& axis, float angle) { Softbody::Rotate(axis, angle); }
 

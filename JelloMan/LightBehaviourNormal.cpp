@@ -12,6 +12,10 @@ LightBehaviourNormal::~LightBehaviourNormal(void)
     //nothing to destroy
 }
 
+LightBehaviour* LightBehaviourNormal::Copy() const
+{
+    return new LightBehaviourNormal();
+}
 
 //Serialize
 void LightBehaviourNormal::Serialize(Serializer*) const

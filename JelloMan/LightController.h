@@ -16,6 +16,7 @@ public:
     void Tick(float dTime);
 
     void AddLight(Light* light);
+    void DeleteLight(Light* light);
 
     const vector<Light*>& GetLights() const;
 

@@ -16,6 +16,8 @@ public:
 	virtual void Serialize(Serializer* pSerializer) const;
 	virtual void Deserialize(Serializer* pSerializer);
     virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::PhysXShapeBox; };
+    
+    virtual PhysXShape* Copy();
 
 private:
     NxBoxShapeDesc* m_pBoxShapeDesc;

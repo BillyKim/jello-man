@@ -55,6 +55,11 @@ void InstancedModelManager::AddInstance(const Matrix* mtxWorld)
 	m_mtxInstances.push_back(mtxWorld);
 	m_CPUBuffer.push_back(*mtxWorld);
 }
+void InstancedModelManager::RemoveInstance(const Matrix* mtxWorld)
+{
+    m_mtxInstances.erase(remove(m_mtxInstances.begin(), m_mtxInstances.end(), mtxWorld));
+    m_CPUBuffer.pop_back(); //make one smaller
+}
 
 void InstancedModelManager::Draw(RenderContext* pRendercontext)
 {

@@ -1,11 +1,13 @@
 #include "ObjectSelecter.h"
 #include <algorithm>
 #include "Light.h"
+#include "Level.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-ObjectSelecter::ObjectSelecter(PhysX* pPhysXEngine)	:	m_bClick(false),
+ObjectSelecter::ObjectSelecter(Level* pLevel, PhysX* pPhysXEngine)	:	m_bClick(false),
 														m_pPhysXEngine(pPhysXEngine),
-                                                        m_vCenterPos(Vector3::Zero)
+                                                        m_vCenterPos(Vector3::Zero),
+                                                        m_pLevel(pLevel)
 {
 	m_ViewPort.TopLeftX = 0;
 	m_ViewPort.TopLeftY = 0;
@@ -29,6 +31,9 @@ void ObjectSelecter::Tick(const RenderContext* pRenderContext)
 
 void ObjectSelecter::CheckControls(const RenderContext* pRenderContext)
 {
+    if (CONTROLS->IsKeyPressed(VK_DELETE))
+        DeleteSelected();
+
 	if (CONTROLS->LeftMBDown())
 		m_bClick = true;
 
@@ -36,7 +41,7 @@ void ObjectSelecter::CheckControls(const RenderContext* pRenderContext)
 	{
 		if (m_bClick)
 		{
-			if (CONTROLS->GetMousePos().x > 200 && CONTROLS->GetMousePos().y > 50)
+			if (CONTROLS->GetMousePos().x > 200 && CONTROLS->GetMousePos().y > 50) //if not clicked in gui
             {
                 if (CONTROLS->IsKeyDown(VK_CONTROL) == false)
                     DeselectAll();
@@ -145,19 +150,27 @@ bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext)
 	if (shape && shape->getGlobalPosition() != NxVec3(0,0,0))
 	{
         ASSERT(shape->userData != 0, "Shape hasn't been set a userdata");
-        ILevelObject* obj = reinterpret_cast<ILevelObject*>(shape->userData);
+        void* temp = shape->userData;
+        ILevelObject* obj = reinterpret_cast<ILevelObject*>(temp);
+        bool cont = true;
+        try { const char* c = typeid(*obj).name(); }
+        catch (...) { cont = false; }
 
-        if (obj->IsSelected())
+        if (cont == true)
         {
-            m_SelectedObjects.erase(remove(m_SelectedObjects.begin(), m_SelectedObjects.end(), obj));
-            obj->Selected(false);
+            if (obj->IsSelected())
+            {
+                m_SelectedObjects.erase(remove(m_SelectedObjects.begin(), m_SelectedObjects.end(), obj));
+                obj->Selected(false);
+            }
+            else
+            {
+		        m_SelectedObjects.push_back(dynamic_cast<IEditorObject*>(obj));
+                obj->Selected(true);
+            }
+            return true;
         }
-        else
-        {
-		    m_SelectedObjects.push_back(dynamic_cast<IEditorObject*>(obj));
-            obj->Selected(true);
-        }
-        return true;
+        
 	}
     return false;
 }
@@ -179,4 +192,54 @@ void ObjectSelecter::CalcCenterPos()
     }
     else
         m_vCenterPos = Vector3::Infinity;
+}
+
+void ObjectSelecter::CopySelected()
+{  
+    vector<IEditorObject*> newSelectedObjects;
+
+    for_each(m_SelectedObjects.cbegin(), m_SelectedObjects.cend(), [&](IEditorObject* obj)
+    {
+        obj->Selected(false);
+        IEditorObject* newObj = obj->Copy();
+        if (newObj != 0)
+        {
+            Light* tempLight = dynamic_cast<Light*>(newObj);
+            if (tempLight != 0)
+            {
+                m_pLevel->AddLight(tempLight);
+            }
+            else
+            {
+                ILevelObject* tempLvlObj = dynamic_cast<ILevelObject*>(newObj);
+
+                
+                ASSERT(tempLvlObj != 0, "what are you?");
+                m_pLevel->AddLevelObject(tempLvlObj);
+            }
+
+            newSelectedObjects.push_back(newObj);
+            newObj->Selected(true);
+        }
+    });
+
+    m_SelectedObjects = newSelectedObjects;
+    CalcCenterPos();
+}
+void ObjectSelecter::DeleteSelected()
+{
+    for_each(m_SelectedObjects.cbegin(), m_SelectedObjects.cend(), [&](IEditorObject* obj)
+    {
+        ILevelObject* lvlObj = dynamic_cast<ILevelObject*>(obj);
+        if (lvlObj != 0)
+            m_pLevel->RemoveLevelObject(lvlObj);
+        else
+        {
+            Light* lObj = dynamic_cast<Light*>(obj);
+            ASSERT(lObj != 0, "What are you?");
+            m_pLevel->RemoveLight(lObj);
+        }
+    });
+    m_SelectedObjects.clear();
+    m_vCenterPos = Vector3::Infinity;
 }

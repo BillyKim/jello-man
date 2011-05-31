@@ -8,6 +8,8 @@ public:
     virtual ~LightBehaviourNormal(void);
     
     virtual void Init(Light*) {};
+    
+    virtual LightBehaviour* Copy() const;
 
     virtual void Tick(float) {}
 

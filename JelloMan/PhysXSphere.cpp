@@ -17,6 +17,15 @@ PhysXSphere::~PhysXSphere(void)
     delete m_pSphereDesc;
 }
 
+PhysXShape* PhysXSphere::Copy()
+{
+    PhysXSphere* s = new PhysXSphere();
+    s->m_pSphereDesc = new NxSphereShapeDesc();
+    s->m_pSphereDesc->radius = m_pSphereDesc->radius;
+    s->m_pSphereDesc->mass = m_pSphereDesc->mass;
+
+    return s;
+}
 
 void PhysXSphere::Scale(const Vector3& scale)
 {

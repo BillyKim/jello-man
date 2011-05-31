@@ -42,7 +42,9 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
 	actorDesc.globalPose = static_cast<NxMat34>(m_mtxWorldMatrix);
     actorDesc.group = 0;
 
+    m_pPhysX->GetPhysXLock().lock();
 	m_pActor = m_pPhysX->GetScene()->createActor(actorDesc);
+    m_pPhysX->GetPhysXLock().unlock();
 
     ASSERT(m_pActor != 0, "");
 }
@@ -64,7 +66,9 @@ void Actor::Translate(const Vector3& pos)
 void Actor::SetPosition(const Vector3& pos)
 {
 	ASSERT(m_pActor != 0, "");
+    m_pPhysX->GetPhysXLock().lock();
     m_pActor->setGlobalPosition(pos);
+    m_pPhysX->GetPhysXLock().unlock();
     m_mtxWorldMatrix = m_pActor->getGlobalPose();
 }
 Vector3 Actor::GetPosition() const
