@@ -7,7 +7,11 @@ FluidsCharacter::FluidsCharacter(Level* pLevel)	:	m_pPhysXEngine(0),
 										            m_pEmitter(0),
 										            m_pCamera(0),
                                                     m_IsTouchingGround(true),
-                                                    m_pLevel(pLevel)
+                                                    m_pLevel(pLevel),
+                                                    m_GravityType(GravityType_Down),
+                                                    m_CanSwitchGravity(true),
+                                                    m_MoveDir(Vector3::Forward),
+                                                    m_RightDir(Vector3::Right)
 {
 }
 
@@ -28,8 +32,10 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	ASSERT(pCamera != 0, "FollowCamera error when creating fluidscharacter!");
 
 	m_pCamera = pCamera;
+    m_pCamera->SetSmoothFlags(Graphics::Camera::FollowCamera::SmoothFlag_Direction | Graphics::Camera::FollowCamera::SmoothFlag_Up);
+    m_pCamera->SetFollowDistance(8);
 
-    InitCharacterAsBox(pPhysXEngine, Vector3(0.10f, 0.10f, 0.10f));
+    InitCharacterAsBox(pPhysXEngine, Vector3(0.1f, 0.1f, 0.1f));
 
 	SetPosition(startPos);
     
@@ -48,8 +54,8 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	fluidDesc.packetSizeMultiplier			= 8;
     fluidDesc.collisionDistanceMultiplier   = 1.0f;
     fluidDesc.stiffness						= 25.0f;
-    fluidDesc.viscosity						= 50.0f;
-	fluidDesc.restDensity					= 250.0f;
+    fluidDesc.viscosity						= 25.0f;
+	fluidDesc.restDensity					= 100.0f;
     fluidDesc.damping						= 0.2f;
     fluidDesc.restitutionForStaticShapes	= 0.1f;
 	fluidDesc.dynamicFrictionForStaticShapes= 0.1f;
@@ -87,7 +93,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	ASSERT(m_pFluid, "fluid creation failed");
 
 	m_pEmitter = m_pFluid->GetNxFluid()->createEmitter(emitterDesc);
-
+    #pragma region junk
 	//// FORCEFIELD
 	//NxForceFieldLinearKernelDesc linearKernelDesc;
  //   linearKernelDesc.constant = NxVec3(-5000,0,0);
@@ -125,23 +131,72 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	//b.dimensions = NxVec3(20, 20, 20);
 	//b.pose.t = NxVec3(0, 0, 0);
 	//s = m_pForceField->getIncludeShapeGroup().createShape(b);
+    #pragma endregion
 }
 
 void FluidsCharacter::Tick(float dTime)
 {
     Vector3 move = Vector3(0, 0, 0);
-    if (CONTROLS->IsKeyDown(VK_UP))
-        move += Vector3::Forward * dTime * 10;
-    if (CONTROLS->IsKeyDown(VK_DOWN))
-        move += Vector3::Forward * dTime * -10;
-    if (CONTROLS->IsKeyDown(VK_RIGHT))
-        move += Vector3::Right * dTime * 10;
-    if (CONTROLS->IsKeyDown(VK_LEFT))
-        move += Vector3::Right * dTime * -10;
 
     NxVec3 grav;
     m_pPhysXEngine->GetScene()->getGravity(grav);
     m_Speed += grav * dTime;
+    
+    if (CONTROLS->IsKeyDown(VK_UP))
+        move += m_MoveDir * dTime * -10;
+    if (CONTROLS->IsKeyDown(VK_DOWN))
+        move += m_MoveDir * dTime * 10;
+    if (CONTROLS->IsKeyDown(VK_RIGHT))
+        move += m_RightDir * dTime * 10;
+    if (CONTROLS->IsKeyDown(VK_LEFT))
+        move += m_RightDir * dTime * -10;
+
+    if (m_IsTouchingGround == false)
+    {
+        move /= 5.0f;
+    }
+    else
+	{
+        m_Speed = Vector3::Zero;
+        if (CONTROLS->IsKeyDown(VK_CONTROL) == false)
+        {
+            m_CanSwitchGravity = true;
+        }
+        else if  (m_CanSwitchGravity == true)
+        {
+            if (CONTROLS->IsKeyDown(VK_RIGHT))
+            {
+                switch (m_GravityType)
+                {
+                    case GravityType_Down: m_GravityType = GravityType_Right; grav = Vector3::Right * grav.magnitude();  break;
+                    case GravityType_Up: m_GravityType = GravityType_Left; grav = -Vector3::Right * grav.magnitude(); break;
+                    case GravityType_Left: m_GravityType = GravityType_Down; grav = -Vector3::Up * grav.magnitude(); break;
+                    case GravityType_Right: m_GravityType = GravityType_Up; grav = Vector3::Up * grav.magnitude(); break;
+                    default: ASSERT(false, "Should never get here!"); break;
+                }
+            }
+            else if (CONTROLS->IsKeyDown(VK_LEFT))
+            {
+                switch (m_GravityType)
+                {
+                    case GravityType_Up: m_GravityType = GravityType_Right; grav = Vector3::Right * grav.magnitude(); break;
+                    case GravityType_Down: m_GravityType = GravityType_Left; grav = -Vector3::Right * grav.magnitude(); break;
+                    case GravityType_Right: m_GravityType = GravityType_Down; grav = -Vector3::Up * grav.magnitude(); break;
+                    case GravityType_Left: m_GravityType = GravityType_Up; grav = Vector3::Up * grav.magnitude(); break;
+                    default: ASSERT(false, "Should never get here!"); break;
+                }
+            }
+            if (CONTROLS->IsKeyDown(VK_LEFT) || CONTROLS->IsKeyDown(VK_RIGHT)) 
+            {
+	            m_pPhysXEngine->GetPhysXLock().lock();
+                m_pPhysXEngine->GetScene()->setGravity(grav);
+	            m_pPhysXEngine->GetPhysXLock().unlock();
+                m_pLevel->WakeUpAll();
+                m_RightDir = Vector3::Normalize(m_MoveDir).Cross(Vector3::Normalize(-grav));
+                m_CanSwitchGravity = false;
+            }
+        }
+	}
 
     move += m_Speed * dTime;
 
@@ -149,24 +204,14 @@ void FluidsCharacter::Tick(float dTime)
     PhysXCharacterCollisionType coll = Move(move);
 	m_pPhysXEngine->GetPhysXLock().unlock();
 
-    m_IsTouchingGround = coll & PhysXCharacterCollisionType_Down || coll & PhysXCharacterCollisionType_Up;
+    if (m_GravityType == GravityType_Down || m_GravityType == GravityType_Up)
+        m_IsTouchingGround = coll & PhysXCharacterCollisionType_Down || coll & PhysXCharacterCollisionType_Up;
+    else
+        m_IsTouchingGround = coll & PhysXCharacterCollisionType_Side;
 
-    if (m_IsTouchingGround && CONTROLS->IsKeyPressed(VK_CONTROL))
-	{
-        m_pPhysXEngine->GetScene()->setGravity(-grav);
-        m_pLevel->WakeUpAll();
-        m_Speed = Vector3::Zero;
-	}
-
-
-
-	//bool wait = true;
-	//while (wait)
-	//{
-	//	if (m_pPhysXEngine->GetPhysXLock().try_lock())
-	//		break;
-	//}
-	
+    m_pCamera->SetFollowPosition(GetPosition());
+    m_pCamera->SetFollowUp(-Vector3::Normalize(grav));
+    m_pCamera->SetFollowDirection(Vector3::Normalize(Vector3::Normalize(-m_MoveDir) + Vector3::Normalize(grav) / 2.0f));
 	
 	m_pPhysXEngine->GetPhysXLock().lock();
     m_pEmitter->setGlobalPosition(GetPosition());
@@ -178,7 +223,7 @@ void FluidsCharacter::Draw(RenderContext* pRenderContext)
 {
 	m_pFluid->Draw(pRenderContext);
 
-	BX2D->SetColor(255,0,255);
+	/*BX2D->SetColor(255,0,255);
 
 	D3D10_VIEWPORT viewPort;
 	viewPort.TopLeftX = 0;
@@ -198,7 +243,7 @@ void FluidsCharacter::Draw(RenderContext* pRenderContext)
 	D3DXVec3Project(&pos2D, &pos3D, &viewPort, &projection, &view, 0);
 
 	BX2D->SetColor(255,0,255);
-	BX2D->FillEllipse(pos2D.x, pos2D.y, 5, 5);
+	BX2D->FillEllipse(pos2D.x, pos2D.y, 5, 5);*/
 
 
 	// DEBUG

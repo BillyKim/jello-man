@@ -10,29 +10,38 @@ namespace Camera{
 class FollowCamera : public CameraBase
 {
 public:
+    enum SmoothFlag : BYTE
+    {
+        SmoothFlag_Distance = 1 << 1,
+        SmoothFlag_Up = 1 << 2,
+        SmoothFlag_Direction = 1 << 3
+    };
+
+public:
     FollowCamera(int windowWidth, int windowHeight, const PhysX* pPhysX);
     virtual ~FollowCamera(void);
 
-    void SetFollowObject(const ILevelObject* obj) { m_pFollowObject = obj; }
-    void SetFollowDistance(float dist) { m_FollowDist = dist; }
-    void SetFollowAngle(float degrees) { m_FollowAngle = ToRadians(degrees); }
+    void SetFollowPosition(const Vector3& pos);
+    void SetFollowDistance(float dist);
+    void SetFollowUp(const Vector3& up);
+    void SetFollowDirection(const Vector3& direction);
+
+    void SetSmoothFlags(BYTE flags);
 
 	virtual void Tick(const float dTime);
 
 private:
+    BYTE m_SmoothFlags;
 
-    const ILevelObject* m_pFollowObject;
-    float m_FollowDist;
-    float m_FollowAngle;
+    Vector3 m_Up, m_Direction, m_Position;
+    float m_Distance;
 
     const PhysX* m_pPhysX;
 
     const static int SMOOTH = 30;
     std::deque<Vector3> m_DirectionQueue;
-    
-    float m_UpRotation;
-    Vector3 m_PrevPosition;
-
+    std::deque<Vector3> m_UpQueue;
+    std::deque<float> m_DistQueue;
 
     // DISABLE DEFAULT COPY & ASSIGNMENT
     FollowCamera(const FollowCamera& t);

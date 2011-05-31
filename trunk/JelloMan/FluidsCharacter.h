@@ -17,6 +17,11 @@ class Level;
 
 class FluidsCharacter : public PhysXCharacter, public ILevelObject, public ISerializable
 {
+    enum GravityType
+    {
+        GravityType_Left, GravityType_Right, GravityType_Up, GravityType_Down
+    };
+
 public:
 
 	/* CONSTRUCTOR - DESTRUCTOR */
@@ -63,6 +68,10 @@ private:
     Level* m_pLevel;
 
     Vector3 m_Speed;
+    Vector3 m_MoveDir;
+    Vector3 m_RightDir;
+    GravityType m_GravityType;
+    bool m_CanSwitchGravity;
 
 	Fluid* m_pFluid;
 	NxFluidEmitter* m_pEmitter;
