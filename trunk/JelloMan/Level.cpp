@@ -49,7 +49,7 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
 	/*m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
 	m_pCharacter->Init(m_pPhysXEngine);*/
     
-	m_pFluidsCharacter = new FluidsCharacter();
+	m_pFluidsCharacter = new FluidsCharacter(this);
 	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(-18, 3, 0));
 
 	pTrackingCamera->SetFollowObject(m_pFluidsCharacter);
@@ -81,6 +81,15 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
                                             static_cast<int>(BX2D->GetWindowSize().height));
 
     m_pInstancingManager = new Instancing::InstancingManager(m_pDXDevice);
+}
+void Level::WakeUpAll()
+{
+    for_each(m_pLevelObjects.begin(), m_pLevelObjects.end(), [&](ILevelObject* obj)
+	{
+        Actor* ac = dynamic_cast<Actor*>(obj);
+        if (ac != 0)
+            ac->WakeUp();
+	});
 }
 
 void Level::Tick(const float dTime)

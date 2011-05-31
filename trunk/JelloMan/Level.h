@@ -45,6 +45,8 @@ public:
     void AddLight(Light* pLight);
     void RemoveLight(Light* pLight);
 
+    void WakeUpAll();
+
     // SERIALISATION
     void Serialize(const string& path);
     void Deserialize(const string& path);

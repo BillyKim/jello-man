@@ -1,11 +1,13 @@
 #include "FluidsCharacter.h"
+#include "Level.h"
 
 /* CONSTRUCTOR - DESTRUCTOR */
-FluidsCharacter::FluidsCharacter()	:	m_pPhysXEngine(0),
-										m_pFluid(0),
-										m_pEmitter(0),
-										m_pCamera(0),
-                                        m_IsTouchingGround(true)
+FluidsCharacter::FluidsCharacter(Level* pLevel)	:	m_pPhysXEngine(0),
+										            m_pFluid(0),
+										            m_pEmitter(0),
+										            m_pCamera(0),
+                                                    m_IsTouchingGround(true),
+                                                    m_pLevel(pLevel)
 {
 }
 
@@ -27,7 +29,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
 	m_pCamera = pCamera;
 
-    InitCharacterAsBox(pPhysXEngine, Vector3(0.5f, 0.5f, 0.5f));
+    InitCharacterAsBox(pPhysXEngine, Vector3(0.10f, 0.10f, 0.10f));
 
 	SetPosition(startPos);
     
@@ -139,7 +141,9 @@ void FluidsCharacter::Tick(float dTime)
 
     NxVec3 grav;
     m_pPhysXEngine->GetScene()->getGravity(grav);
-    move += grav * dTime;
+    m_Speed += grav * dTime;
+
+    move += m_Speed * dTime;
 
 	m_pPhysXEngine->GetPhysXLock().lock();
     PhysXCharacterCollisionType coll = Move(move);
@@ -150,6 +154,8 @@ void FluidsCharacter::Tick(float dTime)
     if (m_IsTouchingGround && CONTROLS->IsKeyPressed(VK_CONTROL))
 	{
         m_pPhysXEngine->GetScene()->setGravity(-grav);
+        m_pLevel->WakeUpAll();
+        m_Speed = Vector3::Zero;
 	}
 
 
