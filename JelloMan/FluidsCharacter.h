@@ -13,12 +13,14 @@
 #include "ISerializable.h"
 #include "FollowCamera.h"
 
+class Level;
+
 class FluidsCharacter : public PhysXCharacter, public ILevelObject, public ISerializable
 {
 public:
 
 	/* CONSTRUCTOR - DESTRUCTOR */
-	FluidsCharacter();
+	FluidsCharacter(Level* pLevel);
 	virtual ~FluidsCharacter();
 
 	/* GENERAL */
@@ -55,10 +57,12 @@ public:
 	virtual void Scale(const Vector3& scale) { }
 
 private:
-
 	/* DATAMEMBERS */
 
 	PhysX* m_pPhysXEngine;
+    Level* m_pLevel;
+
+    Vector3 m_Speed;
 
 	Fluid* m_pFluid;
 	NxFluidEmitter* m_pEmitter;

@@ -54,6 +54,13 @@ void Actor::Tick(float dTime)
     m_mtxWorldMatrix = m_pActor->getGlobalPose();
 }
 
+void Actor::WakeUp()
+{
+    if (m_pActor->isDynamic())
+    {
+        m_pActor->wakeUp();
+    }
+}
 void Actor::AddForce(const Vector3& pos)
 {
 	NxVec3 v = static_cast<NxVec3>(pos);

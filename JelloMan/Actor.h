@@ -24,6 +24,8 @@ public:
     virtual void Rotate(const Vector3& axis, float angle);
 	virtual void Scale(const Vector3& scale);
 
+    void WakeUp();
+
 	// GETTERS
 	NxActor* GetActor() const
 	{ return m_pActor; }
