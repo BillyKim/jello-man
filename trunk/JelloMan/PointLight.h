@@ -33,6 +33,7 @@ public:
 
 	virtual void Selected(bool selected);
 	virtual bool IsSelected() const;
+    virtual IEditorObject* Copy() const;
 
 	virtual bool HasShadowMap() const { return false; } //no shadowmaps for a pointlight
     virtual void SetShadowMap(ID3D10Device*, ShadowMapType) { cout << "Warning: trying to set shadowmap on a spotlight"; };

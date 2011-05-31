@@ -37,6 +37,11 @@ void LightController::AddLight(Light* light)
 {
     m_Lights.push_back(light);
 }
+void LightController::DeleteLight(Light* pLight)
+{
+    m_Lights.erase(remove(m_Lights.begin(), m_Lights.end(), pLight));
+    delete pLight;
+}
 
 const vector<Light*>& LightController::GetLights() const
 {

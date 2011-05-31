@@ -68,6 +68,35 @@ tstring SimpleObject::GetUniqueInstancingID() const
 }
 #pragma endregion
 
+
+IEditorObject* SimpleObject::Copy() const
+{
+    SimpleObject* obj = new SimpleObject(true);
+    obj->SetDiffusePath(m_strDiffusePath);
+    obj->SetSpecPath(m_strSpecPath);
+    obj->SetGlossPath(m_strGlossPath);
+    obj->SetNormalPath(m_strNormalPath);
+
+    obj->SetModelPath(m_strModelPath);
+    obj->SetPhysXModel(m_pPhysXShape->Copy());
+
+    obj->SetRigid(m_bIsRigid);
+
+    obj->Init(m_pPhysX);
+
+    if (m_pActor->isDynamic())
+    {
+        obj->m_pActor->setAngularVelocity(m_pActor->getAngularVelocity());
+        obj->m_pActor->setLinearVelocity(m_pActor->getLinearVelocity());
+    }
+    
+    m_pPhysX->GetPhysXLock().lock();
+    obj->m_pActor->setGlobalPose(m_pActor->getGlobalPose());
+    m_pPhysX->GetPhysXLock().unlock();
+
+    return obj;
+}
+
 #pragma region IUpdateable
 void SimpleObject::Tick(float dTime)
 {

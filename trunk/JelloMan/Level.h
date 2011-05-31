@@ -41,6 +41,9 @@ public:
     void DrawShadowMap(RenderContext* pRenderContext);
 
 	void AddLevelObject(ILevelObject* pLevelObject);
+    void RemoveLevelObject(ILevelObject* pLevelObject);
+    void AddLight(Light* pLight);
+    void RemoveLight(Light* pLight);
 
     // SERIALISATION
     void Serialize(const string& path);

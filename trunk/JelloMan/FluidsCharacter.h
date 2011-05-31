@@ -26,6 +26,8 @@ public:
               Graphics::Camera::FollowCamera* pCamera, 
               unsigned int maxParticles, 
               Vector3 startPos);
+
+    virtual IEditorObject* Copy() const { return 0; } //non copyable
 	
 	/* IUpdateable */
 	virtual void Tick(float dTime);

@@ -1,6 +1,8 @@
 #pragma once
 #include "ITransformable.h"
 
+class Level;
+
 class IEditorObject : public ITransformable
 {
 public:
@@ -16,4 +18,6 @@ public:
     
     virtual void Selected(bool selected) = 0;
     virtual bool IsSelected() const = 0;
+
+    virtual IEditorObject* Copy() const = 0;
 };

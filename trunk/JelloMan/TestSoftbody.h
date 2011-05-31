@@ -10,6 +10,8 @@ public:
     TestSoftbody(const Vector3& pos);
     virtual ~TestSoftbody(void);
 
+    virtual IEditorObject* Copy() const { return 0; } //non copyable
+
     //ITransformable
     virtual void Rotate(const Vector3& axis, float angle) { Softbody::Rotate(axis, angle); }
 

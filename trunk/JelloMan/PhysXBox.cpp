@@ -17,6 +17,16 @@ PhysXBox::~PhysXBox(void)
     delete m_pBoxShapeDesc;
 }
 
+PhysXShape* PhysXBox::Copy()
+{
+    PhysXBox* b = new PhysXBox();
+    b->m_pBoxShapeDesc = new NxBoxShapeDesc();
+    b->m_pBoxShapeDesc->dimensions = m_pBoxShapeDesc->dimensions;
+    b->m_pBoxShapeDesc->mass = m_pBoxShapeDesc->mass;
+
+    return b;
+}
+
 
 void PhysXBox::Serialize(Serializer* pSerializer) const
 {

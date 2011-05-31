@@ -16,7 +16,7 @@ Fluid::Fluid(NxScene* pScene, NxFluidDesc &desc, const Color& particleColor,  fl
 {
 	m_MaxParticles = desc.maxParticles;
 	m_pParticleBuffer = new Particle[m_MaxParticles];
-	desc.userData = this;
+	desc.userData = 0;//this;
 
 	// setup particle write data.
 	NxParticleData particleData;

@@ -16,7 +16,7 @@ InstancingManager::~InstancingManager(void)
 }
 
 
-void InstancingManager::AddLevelObject(IInstancible* obj)
+void InstancingManager::AddObject(IInstancible* obj)
 {
 	InstancedModelManager* man = 0;
 	tstring id = obj->GetUniqueInstancingID();
@@ -38,6 +38,19 @@ void InstancingManager::AddLevelObject(IInstancible* obj)
 
 	ASSERT(man != 0, "Instancemanager == 0!");
 	man->AddInstance(obj->GetMtxWorldPointer());
+}
+void InstancingManager::DeleteObject(IInstancible* obj)
+{
+	tstring id = obj->GetUniqueInstancingID();
+
+    if (m_pAssetContainer->IsAssetPresent(id) == true)
+    {
+        InstancedModelManager* man = 0;
+	    man = m_pAssetContainer->GetAsset(id);
+        man->RemoveInstance(obj->GetMtxWorldPointer());
+    }
+    else        
+	    PANIC("Trying to remove object used for instancing, but no such instancing is present");
 }
 
 

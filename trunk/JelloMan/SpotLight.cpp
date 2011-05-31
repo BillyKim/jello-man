@@ -73,6 +73,21 @@ SpotLight::~SpotLight()
 	delete m_pHitRegion;
 }
 
+IEditorObject* SpotLight::Copy() const
+{
+    SpotLight* s = new SpotLight();
+    s->m_Desc = m_Desc;
+    s->m_StartDesc = m_StartDesc;
+    s->m_IsEnabled = m_IsEnabled;
+    s->SetBehaviour(m_pLightBehaviour->Copy());
+    s->SetShadowMap(Content->GetDxDevice(), m_ShadowMapType);
+    s->m_OpeningsAngle = m_OpeningsAngle;
+    s->m_Rotation = m_Rotation;
+    s->m_vUp = m_vUp;
+
+    return s;
+}
+
 void SpotLight::InitGame()
 {
     m_StartDesc = m_Desc;

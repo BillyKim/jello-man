@@ -19,6 +19,7 @@ public:
 	void SetModel(Model<VertexPosNormTanTex>* pModel);
 
 	void AddInstance(const Matrix* mtxWorld);
+    void RemoveInstance(const Matrix* mtxWorld);
 
 	void Draw(RenderContext* pRendercontext);
     void DrawShadow(RenderContext* pRenderContext);

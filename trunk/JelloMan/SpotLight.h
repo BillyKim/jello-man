@@ -33,6 +33,7 @@ public:
 
 	virtual void Selected(bool selected);
 	virtual bool IsSelected() const;
+    virtual IEditorObject* Copy() const;
 
 	virtual bool HasShadowMap() const;
     virtual void SetShadowMap(ID3D10Device* pDXDevice, ShadowMapType type);

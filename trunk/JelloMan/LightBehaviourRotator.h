@@ -8,6 +8,8 @@ public:
     virtual ~LightBehaviourRotator(void);
     
     virtual void Init(Light* light);
+    
+    virtual LightBehaviour* Copy() const;
 
     virtual void Tick(float dTime);
     

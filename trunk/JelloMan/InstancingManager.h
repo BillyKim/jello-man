@@ -15,7 +15,8 @@ public:
 	virtual ~InstancingManager(void);
 
     void Clear();
-	void AddLevelObject(IInstancible* obj);
+	void AddObject(IInstancible* obj);
+	void DeleteObject(IInstancible* obj);
 
     void Draw(RenderContext* pRenderContext);
     void DrawShadow(RenderContext* pRenderContext);

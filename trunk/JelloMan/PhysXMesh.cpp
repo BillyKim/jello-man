@@ -17,6 +17,12 @@ PhysXMesh::~PhysXMesh(void)
     delete m_pShapeDesc;
 }
 
+PhysXShape* PhysXMesh::Copy()
+{
+    PhysXMesh* m = new PhysXMesh(m_pPhysX, m_Path, m_pShapeDesc->mass);
+    return m;
+}
+
 void PhysXMesh::Init(const string& path, float mass)
 {
     m_Path = path;

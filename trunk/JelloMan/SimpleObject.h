@@ -20,6 +20,7 @@ public:
     virtual void Init(PhysX* pPhysX);
     virtual void Selected(bool selected) { m_bIsSelected = selected; }
     virtual bool IsSelected() const { return m_bIsSelected; }
+    virtual IEditorObject* Copy() const;
     #pragma endregion
 
     #pragma region ITransformable

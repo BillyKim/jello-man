@@ -56,6 +56,7 @@ private:
 	bool m_bLockZ;
 	bool m_bSnap;
 	bool m_bSnapToGrid;
+    bool m_bCanCopy;
 
 	float m_SnapSize;
 

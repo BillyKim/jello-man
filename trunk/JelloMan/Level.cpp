@@ -104,7 +104,7 @@ void Level::AddLevelObject(ILevelObject* pLevelObject)
 	IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
 	if (instObj != 0 && instObj->IsUsedForInstancing() == true)
 	{
-		m_pInstancingManager->AddLevelObject(instObj);
+		m_pInstancingManager->AddObject(instObj);
 	}
 	else
 	{
@@ -112,6 +112,33 @@ void Level::AddLevelObject(ILevelObject* pLevelObject)
 		if (drawObj != 0) //we allow objects that don't need to be drawn
 			m_pDrawableObjects.push_back(drawObj);
 	}
+}
+void Level::RemoveLevelObject(ILevelObject* pLevelObject)
+{
+    using namespace Instancing;
+    IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+    if (instObj != 0)
+    {
+        m_pInstancingManager->DeleteObject(instObj);
+    }
+    else
+    {
+        IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
+        ASSERT(drawObj != 0, "What are you?");
+        m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), drawObj));
+    }
+
+    m_pLevelObjects.erase(remove(m_pLevelObjects.begin(), m_pLevelObjects.end(), pLevelObject));
+    delete pLevelObject;
+}
+
+void Level::AddLight(Light* pLight)
+{
+    m_pRenderContext->GetLightController()->AddLight(pLight);
+}
+void Level::RemoveLight(Light* pLight)
+{
+    m_pRenderContext->GetLightController()->DeleteLight(pLight);
 }
 
 // SERIALISATION
