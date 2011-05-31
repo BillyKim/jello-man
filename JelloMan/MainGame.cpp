@@ -46,8 +46,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_AlphaHappyFace(0),
 							m_pHappyEngineFont(0),
 							m_bRunning(true),
-							m_bTicked(false),
-							m_PhysXDTime(0)
+							m_PhysXDTime(0),
+							m_PhysXTimeBase(0)
 {
 
 }
@@ -281,12 +281,6 @@ void MainGame::UpdateScene(const float dTime)
 	// dtime
 	m_dTtime = dTime;
 
-	m_DTimeLock.lock();
-
-		m_PhysXDTime += dTime;
-
-	m_DTimeLock.unlock();
-
     m_pLightController->Tick(dTime);
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_PLAY)
@@ -305,25 +299,12 @@ void MainGame::UpdateScene(const float dTime)
 
 	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
 	{
-		// PHYSX - THREADING
-
-		
-		//m_PhysXThread.join(); // if thread was not finished, wait for it
-		//m_PhysXThread = boost::thread(&MainGame::UpdatePhysics, this, dTime); // start new thread
-
 		m_pLevel->Tick(dTime);
-		//-----------------------------------
 
 		m_pLevel->EditorMode(false);
 	}
 	else
 		m_pLevel->EditorMode(true);
-
-    m_TickLock.lock();
-
-		m_bTicked = true;
-
-	m_TickLock.unlock();
 
 	if (m_pEditorGUI->GetShowGridButton()->IsActive())
 		m_pLevel->ShowGrid(true);
@@ -503,7 +484,7 @@ void MainGame::LoadScreen()
 	BX2D->DrawStringCentered(stream.str(), 0, 300);
 
 	BX2D->SetFont(m_pHappyEngineFont);
-	BX2D->DrawStringCentered(_T("HAPPY ENGINE"), 0, 150);
+	BX2D->DrawStringCentered(_T("HAPPY ENGINE wishes a happy birthday to BAS!"), 0, 150);
 
 	D2D1_MATRIX_3X2_F rot;
 	D2D1MakeRotateMatrix(90,Point2F(BX2D->GetWindowSize().width/2,
@@ -534,28 +515,34 @@ void MainGame::LoadScreen()
 
 void MainGame::UpdatePhysics()
 {
+	m_PhysXTimer.Reset();
+
 	while (m_bRunning)
 	{
-		m_TickLock.lock(); // reset tick
+		bool bTick(false);
 
-			bool bTick(m_bTicked);
-			m_bTicked = false;
+		m_PhysXTimer.Tick();
 
-		m_TickLock.unlock();
+		m_PhysXDTime = m_PhysXTimer.GetDeltaTime();
+
+		if (m_PhysXDTime < (1 / 60.0f))
+		{
+			m_PhysXDTime = 1 / 60.0f;
+		}
+
+		if ((m_PhysXTimer.GetGameTime() - m_PhysXTimeBase) >= (1/60.0f)) // only simulate if time passed > 1 / 60
+		{
+			m_PhysXTimeBase = m_PhysXTimer.GetGameTime();
+
+			bTick = true;	
+		}
 
 		if (bTick)
 		{
-			m_DTimeLock.lock(); // get dtime from last tick
-
-				float dTime(m_PhysXDTime);
-				m_PhysXDTime = 0;
-
-			m_DTimeLock.unlock();
-
 			m_pPhysXEngine->GetPhysXLock().lock(); // simulate
 		
                 if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
-				    m_pPhysXEngine->Simulate(dTime);
+				    m_pPhysXEngine->Simulate(m_PhysXDTime);
                 else
 				    m_pPhysXEngine->Simulate(0.0f);
 				m_pPhysXEngine->FetchResults();
