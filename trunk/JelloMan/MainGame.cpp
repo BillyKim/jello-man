@@ -460,6 +460,7 @@ void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
 		m_pDeferredRenderer->OnResized(	static_cast<int>(BX2D->GetWindowSize().width),
 										static_cast<int>(BX2D->GetWindowSize().height));
 
+
 		/*m_pTrackingCamera->OnResize(	static_cast<int>(BX2D->GetWindowSize().width),
 										static_cast<int>(BX2D->GetWindowSize().height));
 

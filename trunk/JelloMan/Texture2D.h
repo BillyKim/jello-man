@@ -10,8 +10,8 @@ public:
 
 	virtual ~Texture2D(void);
 
-    ID3D10ShaderResourceView* GetColorMap() { return m_pColorMapSRV; }
-    ID3D10ShaderResourceView* GetDepthMap() { return m_pDepthMapSRV; }
+    ID3D10ShaderResourceView* GetColorMap() const { return m_pColorMapSRV; }
+    ID3D10ShaderResourceView* GetDepthMap() const { return m_pDepthMapSRV; }
 
     void BeginDraw();
     void EndDraw();

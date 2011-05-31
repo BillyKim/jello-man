@@ -31,7 +31,7 @@ RasterizerState rState
 
 BlendState blend
 {
-	BlendEnable[0] = FALSE;
+	BlendEnable[0] = TRUE;
 	SrcBlend = ONE;
 	DestBlend = ONE;
 	BlendOp = ADD;
