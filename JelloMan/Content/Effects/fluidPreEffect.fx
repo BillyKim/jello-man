@@ -1,6 +1,17 @@
-cbuffer cbPerObject
+cbuffer cbPerFrame
 {
 	matrix mtxWVP : WorldViewProjection;
+    float3 camPos;
+};
+
+Texture2D texRainbow;
+
+SamplerState mapSampler
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = CLAMP;
+	AddressV = CLAMP;
+	AddressW = CLAMP;
 };
 
 RasterizerState rState
@@ -11,9 +22,9 @@ RasterizerState rState
 
 BlendState blend
 {
-	BlendEnable[0] = FALSE;
-	SrcBlend = ONE;
-	DestBlend = ONE;
+	BlendEnable[0] = TRUE;
+	SrcBlend = SRC_ALPHA;
+	DestBlend = INV_SRC_ALPHA;
 	BlendOp = ADD;
 	SrcBlendAlpha = ZERO;
 	DestBlendAlpha = ZERO;
@@ -42,6 +53,7 @@ struct GS_OUT
 {
     float4 pos : SV_POSITION;
     float2 texCoord: TEXCOORD0;
+    float3 worldCenter: TEXCOORD1;
 };
 
 [maxvertexcount(4)]
@@ -66,13 +78,13 @@ void GS(point VertexShaderOutput input[1], inout TriangleStream<GS_OUT> triStrea
     {
         gOut.pos = mul(float4(input[0].position, 1.0f), mtxWVP) + v[i];
         gOut.texCoord = t[i];
+        gOut.worldCenter = input[0].position;
         triStream.Append(gOut);
     }
 }
 struct PSOut
 {
-    float4 normalMap: SV_TARGET0;
-    //float4 depthMap: SV_TARGET1;
+    float4 colorMap: SV_TARGET0;
 };
 PSOut PS(GS_OUT input)
 {	
@@ -86,15 +98,13 @@ PSOut PS(GS_OUT input)
     float r2 = dot(normal.xy, normal.xy);
     if (r2 > 1.0) discard;
 
-    normal.z = 1.0f;
-
+    normal.z = cross(float3(normal.x, 0, 0), float3(0, normal.y, 0));
     normal = normalize(normal);
 
-    // calculate depth
-    //float4 pixelPos = float4(vCamPos + normal * sphereRadius, 1.0);
-    //float4 clipSpacePos = mul(pixelPos, mtxWVP);
-    //out.depthMap = clipSpacePos.z / clipSpacePos.w;
-    psOut.normalMap = float4((normal + 1) / 2.0f, 1.0f);
+    float3 vCamDir = normalize(camPos - input.worldCenter);
+    float2 tex = (float2(dot(vCamDir, normal), 0.0f) + 1) / 2;
+
+    psOut.colorMap = float4(texRainbow.Sample(mapSampler, tex).rgb, r2 * r2);
 
     return psOut;
 }

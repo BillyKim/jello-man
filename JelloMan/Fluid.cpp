@@ -12,7 +12,8 @@ Fluid::Fluid(NxScene* pScene, NxFluidDesc &desc, const Color& particleColor,  fl
 	m_pDevice(pDevice),
 	m_pVertexBuffer(0),
 	m_pEffect(0),
-	m_mtxWorld(Matrix::Identity)
+	m_mtxWorld(Matrix::Identity),
+    m_pTexRainbow(Content->LoadTexture2D(_T("../Content/Textures/bubbles/tex_rainbow.png")))
 {
 	m_MaxParticles = desc.maxParticles;
 	m_pParticleBuffer = new Particle[m_MaxParticles];
@@ -42,6 +43,7 @@ Fluid::Fluid(NxScene* pScene, NxFluidDesc &desc, const Color& particleColor,  fl
 
 	// render
 	m_pEffect = Content->LoadEffect<FluidEffect>(_T("../Content/Effects/fluidPreEffect.fx"));
+    m_pEffect->SetRainbowTex(m_pTexRainbow);
 }
 
 Fluid::~Fluid()
@@ -62,6 +64,7 @@ void Fluid::Draw(const RenderContext* pRenderContext)
 	m_mtxWorld = Matrix::CreateTranslation(Vector3(0,0,0));
 
 	m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
+    m_pEffect->SetCamPos(pRenderContext->GetCamera()->GetPosition());
 
 	m_pDevice->IASetInputLayout(m_pEffect->GetInputLayout());
 

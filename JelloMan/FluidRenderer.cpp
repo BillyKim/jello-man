@@ -10,7 +10,6 @@ FluidRenderer::FluidRenderer(ID3D10Device* pDXDevice, int backBufferWidth, int b
         m_Width(backBufferWidth),
         m_Height(backBufferHeight),
         m_pDXDevice(pDXDevice),
-        m_pPreEffect(0),
         m_pPostEffect(0)
 {
     Init();
@@ -50,7 +49,6 @@ void FluidRenderer::Init()
 	m_pScreenMesh->SetVertices(vertices);
     m_pScreenMesh->SetIndices(indices);
 
-    m_pPreEffect = Content->LoadEffect<FluidEffect>(_T("../Content/Effects/fluidPreEffect.fx"));
     m_pPostEffect = Content->LoadEffect<FluidPostEffect>(_T("../Content/Effects/fluidPostEffect.fx"));
     m_pPostEffect->SetBackbufferSize(m_Width, m_Height);
 }

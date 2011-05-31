@@ -13,8 +13,6 @@ public:
     FluidRenderer(ID3D10Device* pDXDevice, int backBufferWidth, int backBufferHeight);
     ~FluidRenderer(void);
 
-    FluidEffect* GetEffect() const { return m_pPreEffect; }
-
     void OnResized(int backBufferWidth, int backBufferHeight);
 
     void Begin();
@@ -27,7 +25,6 @@ private:
 
     Texture2D* m_pBuffer;
     int m_Width, m_Height;
-    FluidEffect* m_pPreEffect;
     FluidPostEffect* m_pPostEffect;
 
     ModelMesh<VertexPosTex>* m_pScreenMesh;

@@ -429,9 +429,6 @@
     <ClInclude Include="MoveGizmo.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
-    <ClInclude Include="FluidEffect.h">
-      <Filter>Engine Files\Graphics\Effect</Filter>
-    </ClInclude>
     <ClInclude Include="SoftbodyMesh.h">
       <Filter>Engine Files\Graphics\Model</Filter>
     </ClInclude>
@@ -478,6 +475,9 @@
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClInclude>
     <ClInclude Include="PreShadowEffectInstanced.h">
+      <Filter>Engine Files\Graphics\Effect\pre</Filter>
+    </ClInclude>
+    <ClInclude Include="FluidEffect.h">
       <Filter>Engine Files\Graphics\Effect\pre</Filter>
     </ClInclude>
   </ItemGroup>
@@ -740,9 +740,6 @@
     <ClCompile Include="MoveGizmo.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
-    <ClCompile Include="FluidEffect.cpp">
-      <Filter>Engine Files\Graphics\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="SoftbodyMesh.cpp">
       <Filter>Engine Files\Graphics\Model</Filter>
     </ClCompile>
@@ -786,6 +783,9 @@
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClCompile>
     <ClCompile Include="PreShadowEffectInstanced.cpp">
+      <Filter>Engine Files\Graphics\Effect\pre</Filter>
+    </ClCompile>
+    <ClCompile Include="FluidEffect.cpp">
       <Filter>Engine Files\Graphics\Effect\pre</Filter>
     </ClCompile>
   </ItemGroup>

@@ -55,6 +55,7 @@ private:
 	vector<VertexPos> m_VecVertices;
 
     FluidEffect* m_pEffect;
+    Texture2D* m_pTexRainbow;
 
 	Matrix m_mtxWorld;
 };
