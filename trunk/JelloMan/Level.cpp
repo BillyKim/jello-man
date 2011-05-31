@@ -50,7 +50,7 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
 	m_pCharacter->Init(m_pPhysXEngine);*/
     
 	m_pFluidsCharacter = new FluidsCharacter();
-	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(0, 5, -10));
+	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(-18, 3, 0));
 
 	pTrackingCamera->SetFollowObject(m_pFluidsCharacter);
     pTrackingCamera->SetFollowDistance(20);
@@ -250,6 +250,44 @@ void Level::DrawForward(RenderContext* pRenderContext)
 
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
+
+	for_each(m_pLevelObjects.cbegin(), m_pLevelObjects.cend(), [&](ILevelObject* pObj)
+	{
+		SimpleObject* pSObj = dynamic_cast<SimpleObject*>(pObj);
+
+		if (pSObj && pSObj->IsSelected() && pSObj->IsUsedForInstancing())
+		{
+			Matrix matProj = pRenderContext->GetCamera()->GetProjection();
+			Matrix matView = pRenderContext->GetCamera()->GetView();
+			Matrix matWorld = Matrix::Identity;
+
+			D3D10_VIEWPORT viewPort;
+			viewPort.MinDepth = 0.0f;
+			viewPort.MaxDepth = 1.0f;
+			viewPort.TopLeftX = 0;
+			viewPort.TopLeftY = 0;
+			viewPort.Height = BX2D->GetWindowSize().height;
+			viewPort.Width = BX2D->GetWindowSize().width;
+
+			Vector3 vLook = pRenderContext->GetCamera()->GetLook();
+			Vector3 length = pRenderContext->GetCamera()->GetPosition() - pSObj->GetPosition();
+			float l = length.Length() / 100;
+
+			Vector3 pos2D(Vector3::Project(pSObj->GetPosition(), &viewPort, matProj, matView, matWorld));
+
+			if (vLook.Dot(length) < 0 &&
+				pos2D.X < BX2D->GetWindowSize().width &&
+				pos2D.X > 0 &&
+				pos2D.Y < BX2D->GetWindowSize().height &&
+				pos2D.Y > 0)
+			{
+				BX2D->SetColor(255, 255, 0, 0.5f);
+				BX2D->FillEllipse(pos2D.X, pos2D.Y, 4 / l, 4 / l);
+			}
+
+			//pSObj->
+		}
+	});
 
 	// DRAW LIGHTS
 	if (m_bEditor)
