@@ -52,10 +52,6 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
 	m_pFluidsCharacter = new FluidsCharacter(this);
 	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(-18, 3, 0));
 
-	pTrackingCamera->SetFollowObject(m_pFluidsCharacter);
-    pTrackingCamera->SetFollowDistance(20);
-    pTrackingCamera->SetFollowAngle(20);
-
 	// forcefield
 	/*NxForceFieldLinearKernelDesc linearKernelDesc;
     linearKernelDesc.constant = NxVec3(-1000,-500,500);

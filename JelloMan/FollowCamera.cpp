@@ -5,9 +5,12 @@ namespace Camera{
 
 FollowCamera::FollowCamera(int windowWidth, int windowHeight, const PhysX* pPhysX) : 
         CameraBase(windowWidth, windowHeight), m_pPhysX(pPhysX),
-            m_FollowDist(8), m_FollowAngle(PiOver4), m_pFollowObject(0), m_PrevPosition(0, 0, 0),
-            m_UpRotation(0.0f)
+            m_Direction(Vector3::Forward), m_Up(Vector3::Up) , m_Distance(8),
+            m_SmoothFlags(SmoothFlag_Direction | SmoothFlag_Distance | SmoothFlag_Up)
 {
+    m_DistQueue.resize(SMOOTH);
+    m_UpQueue.resize(SMOOTH);
+    m_DirectionQueue.resize(SMOOTH);
 }
 
 
@@ -15,64 +18,78 @@ FollowCamera::~FollowCamera(void)
 {
 }
 
+void FollowCamera::SetFollowPosition(const Vector3& pos)
+{
+    m_Position = pos;
+}
+void FollowCamera::SetFollowDistance(float dist)
+{
+    m_Distance = dist;
+    if (m_SmoothFlags & SmoothFlag_Distance == true)
+    {
+        if (m_DistQueue.size() >= SMOOTH)
+            m_DistQueue.pop_front();
+        m_DistQueue.push_back(dist);
+    }
+}
+void FollowCamera::SetFollowUp(const Vector3& up)
+{
+    m_Up = up;
+    if (m_SmoothFlags & SmoothFlag_Up)
+    {
+        if (m_UpQueue.size() >= SMOOTH)
+            m_UpQueue.pop_front();
+        m_UpQueue.push_back(up);
+    }
+}
+void FollowCamera::SetFollowDirection(const Vector3& direction)
+{
+    m_Direction = direction;
+    if (m_SmoothFlags & SmoothFlag_Direction)
+    {
+        if (m_DirectionQueue.size() >= SMOOTH)
+            m_DirectionQueue.pop_front();
+        m_DirectionQueue.push_back(direction);
+    }
+}
+void FollowCamera::SetSmoothFlags(BYTE flags)
+{
+    m_SmoothFlags = flags;
+}
+
 void FollowCamera::Tick(const float dTime)
 {
-    NxVec3 grav; 
-    m_pPhysX->GetScene()->getGravity(grav);
-    Vector3 up;
-    if (grav.y > 0)
+    if (m_SmoothFlags & SmoothFlag_Direction)
     {
-        if (m_UpRotation < Pi)
-            m_UpRotation += dTime*4;        
-        if (m_UpRotation > Pi)
-            m_UpRotation = Pi;
+        m_Direction = Vector3::Zero;
+        for_each(m_DirectionQueue.cbegin(), m_DirectionQueue.cend(), [&](const Vector3& dir)
+        {
+            m_Direction += dir;
+        });
+        m_Direction /= m_DirectionQueue.size();
+        m_Direction.Normalize();
     }
-    else
+    if (m_SmoothFlags & SmoothFlag_Distance)
     {
-        if (m_UpRotation >= Pi)
-            m_UpRotation -= TwoPi;        
-        if (m_UpRotation < 0.0f)
-            m_UpRotation += dTime*4;
-        if (m_UpRotation > 0.0f)
-            m_UpRotation = 0.0f;
+        m_Distance = 0.0f;
+        for_each(m_DistQueue.cbegin(), m_DistQueue.cend(), [&](float dist)
+        {
+            m_Distance += dist;
+        });
+        m_Distance /= m_DistQueue.size();
     }
-    Vector3 tmpFwd = m_LookWorld;
-    tmpFwd.Y = 0;
-    tmpFwd.Normalize();
-    up = Vector3::Transform(Vector3::Up, Matrix::CreateRotation(tmpFwd, m_UpRotation)).XYZ();
-
-    Vector3 pos = m_pFollowObject->GetPosition();
-    Vector3 direction = pos - m_PrevPosition;
-    m_PrevPosition = pos;
-    direction.Normalize();
-    float dot = up.Dot(direction);
-    direction -= up * dot;
-    direction.Normalize();
-
-    Vector3 rot = up.Cross(direction);
-    Matrix mtxRot = Matrix::CreateRotation(rot, -m_FollowAngle);
-    direction = Vector3::Transform(direction, mtxRot).XYZ();
-    direction.X *= -1;
-    direction.Z *= -1;
-
-    if (m_DirectionQueue.size() == SMOOTH)
-        m_DirectionQueue.pop_back();
-    m_DirectionQueue.push_front(direction);
-
-    direction = Vector3::Zero;
-
-    for_each(m_DirectionQueue.cbegin(), m_DirectionQueue.cend(), [&](const Vector3& dir)
+    if (m_SmoothFlags & SmoothFlag_Up)
     {
-        direction += dir;
-    });
-    direction /= m_DirectionQueue.size();
+        m_Up = Vector3::Zero;    
+        for_each(m_UpQueue.cbegin(), m_UpQueue.cend(), [&](const Vector3& up)
+        {
+            m_Up += up;
+        });
+        m_Up /= m_UpQueue.size();
+        m_Up.Normalize();
+    }
 
-
-    pos += direction * m_FollowDist;
-
-
-    LookAt(pos, m_pFollowObject->GetPosition(), up);
-
+    LookAt(m_Position - m_Direction * m_Distance, m_Position, m_Up);
 }
 
 }} //end namespace
