@@ -147,7 +147,7 @@ void FluidsCharacter::Tick(float dTime)
 
     m_IsTouchingGround = coll & PhysXCharacterCollisionType_Down || coll & PhysXCharacterCollisionType_Up;
 
-    if (m_IsTouchingGround && CONTROLS->IsKeyPressed(VK_SPACE))
+    if (m_IsTouchingGround && CONTROLS->IsKeyPressed(VK_CONTROL))
 	{
         m_pPhysXEngine->GetScene()->setGravity(-grav);
 	}

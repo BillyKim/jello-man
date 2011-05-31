@@ -228,6 +228,8 @@ void ObjectSelecter::CopySelected()
 }
 void ObjectSelecter::DeleteSelected()
 {
+	//m_pPhysXEngine->GetPhysXLock().lock();
+
     for_each(m_SelectedObjects.cbegin(), m_SelectedObjects.cend(), [&](IEditorObject* obj)
     {
         ILevelObject* lvlObj = dynamic_cast<ILevelObject*>(obj);
@@ -242,4 +244,6 @@ void ObjectSelecter::DeleteSelected()
     });
     m_SelectedObjects.clear();
     m_vCenterPos = Vector3::Infinity;
+
+	//m_pPhysXEngine->GetPhysXLock().unlock();
 }

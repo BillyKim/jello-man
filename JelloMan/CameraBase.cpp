@@ -4,7 +4,7 @@ namespace Graphics{
 namespace Camera{
 
 // CONSTRUCTOR - DESTRUCTOR
-CameraBase::CameraBase(int windowWidth, int windowHeight) :	m_Speed(2.0f),
+CameraBase::CameraBase(int windowWidth, int windowHeight) :	m_Speed(4.0f),
 																		m_FastForward(4.0f),
 																		m_MouseSensitivity(100),
 																		m_FOV(PiOver4),
