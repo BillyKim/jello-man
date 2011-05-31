@@ -90,10 +90,11 @@ private:
 	// PHYSX - THREADING
 	boost::thread m_PhysXThread;
 	boost::mutex m_DTimeLock;
-	boost::mutex m_TickLock;
 
 	bool m_bRunning;
-	bool m_bTicked;
+
+	GameTimer m_PhysXTimer;
 
 	float m_PhysXDTime;
+	float m_PhysXTimeBase;
 };
