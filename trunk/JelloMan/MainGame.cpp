@@ -282,7 +282,9 @@ void MainGame::UpdateScene(const float dTime)
 	m_dTtime = dTime;
 
 	m_DTimeLock.lock();
-	m_PhysXDTime += dTime;
+
+		m_PhysXDTime += dTime;
+
 	m_DTimeLock.unlock();
 
     m_pLightController->Tick(dTime);
@@ -318,7 +320,9 @@ void MainGame::UpdateScene(const float dTime)
 		m_pLevel->EditorMode(true);
 
     m_TickLock.lock();
-	m_bTicked = true;
+
+		m_bTicked = true;
+
 	m_TickLock.unlock();
 
 	if (m_pEditorGUI->GetShowGridButton()->IsActive())
@@ -424,17 +428,8 @@ void MainGame::DrawScene()
 
 void MainGame::CheckControls()
 {
-	bool bWaitForScene = true;
-	while (bWaitForScene)
-	{
-		if (m_pPhysXEngine->GetScene()->isWritable())
-			break;
-	}
-
 	if (CONTROLS->IsKeyDown(VK_SPACE))
 	{
-		m_pPhysXEngine->GetPhysXLock().lock();
-
         SimpleObject* pLevelObject = new SimpleObject(true);
 
 		pLevelObject->SetModelPath(_T("../Content/Models/box1.binobj"));
@@ -455,8 +450,6 @@ void MainGame::CheckControls()
 		m_pLevel->AddLevelObject(pLevelObject);
 
 		pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 200000);
-
-		m_pPhysXEngine->GetPhysXLock().unlock();
 	}
 }
 
@@ -542,31 +535,30 @@ void MainGame::UpdatePhysics()
 {
 	while (m_bRunning)
 	{
-		if (m_bTicked)
+		m_TickLock.lock(); // reset tick
+
+			bool bTick(m_bTicked);
+			m_bTicked = false;
+
+		m_TickLock.unlock();
+
+		if (bTick)
 		{
-			m_TickLock.lock(); // reset tick
-			{
-				m_bTicked = false;
-			}
-			m_TickLock.unlock();
-
-			float dTime(0);
-
 			m_DTimeLock.lock(); // get dtime from last tick
-			{
-				dTime = m_PhysXDTime;
+
+				float dTime(m_PhysXDTime);
 				m_PhysXDTime = 0;
-			}
+
 			m_DTimeLock.unlock();
 
 			m_pPhysXEngine->GetPhysXLock().lock(); // simulate
-			{
+		
                 if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
 				    m_pPhysXEngine->Simulate(dTime);
                 else
 				    m_pPhysXEngine->Simulate(0.0f);
 				m_pPhysXEngine->FetchResults();
-			}
+			
 			m_pPhysXEngine->GetPhysXLock().unlock();
 		}
 		else

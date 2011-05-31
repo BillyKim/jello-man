@@ -188,7 +188,7 @@ void LoadModelFromFile::Tick(const RenderContext* pRenderContext)
 
 		m_TextBoxes[0]->LoseFocus();
 	}
-
+	
 	if (m_TextBoxes[1]->Entered())
 	{
 		m_PhysXModelPath = m_TextBoxes[1]->GetText();

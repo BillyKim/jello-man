@@ -7,7 +7,6 @@ FlyCamera::FlyCamera(int windowWidth, int windowHeight) : CameraBase(windowWidth
 {
 }
 
-
 FlyCamera::~FlyCamera(void)
 {
 }
@@ -57,14 +56,14 @@ void FlyCamera::Tick(const float dTime)
 		m_PosWorld += dir * finalSpeed * dTime;
 	}
 
-	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 500.0f);
+	float angle = static_cast<float>((CONTROLS->GetMouseWheelPos() / 120) / 200.0f);
 
 	if (angle != 0)
 	{
-		m_Speed += angle*500;
+		m_Speed += angle*200;
 
-		if (m_Speed < 10)
-			m_Speed = 10;
+		if (m_Speed < 2)
+			m_Speed = 2;
 	}
 
 	if (CONTROLS->RightMBDown())
