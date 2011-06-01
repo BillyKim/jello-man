@@ -351,8 +351,6 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 			m_pLightDebugger->MovingLights(false);
 
 		m_pLightDebugger->Tick(m_pRenderContext);
-		
-		m_pLightDebugger->Draw();
 
 		BX2D->SetAntiAliasing(true);
 
