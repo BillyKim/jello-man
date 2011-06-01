@@ -369,7 +369,6 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 	}
 	else
 	{
-		m_pLightDebugger->DeselectAllLights();
 		m_pLightDebugger->HideTextBoxes();
         m_pObjectSelecter->DeselectAll();
 		m_pSnapper->HideTextBoxes();
@@ -398,7 +397,7 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 		BX2D->FillRect(0, 50, 200, BX2D->GetWindowSize().height - 71);
 
 		if (!m_pSnappingButton->IsActive())
-			m_pLightDebugger->ShowLightInfo();
+			m_pLightDebugger->Draw();
 		else
 			m_pLightDebugger->HideTextBoxes();
 
@@ -801,7 +800,6 @@ void EditorGUI::Tick()
 			pl->InitEditor();
 			m_pRenderContext->GetLightController()->AddLight(pl);
 
-			m_pLightDebugger->DeselectAllLights();
 			m_pMoveButton->Deactivate();
 			m_pRotateButton->Deactivate();
 
@@ -825,7 +823,6 @@ void EditorGUI::Tick()
 			
 			m_pRenderContext->GetLightController()->AddLight(sp2);
 
-			m_pLightDebugger->DeselectAllLights();
 			m_pMoveButton->Deactivate();
 			m_pRotateButton->Deactivate();
 
