@@ -141,6 +141,7 @@
     <ClInclude Include="ITransformable.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelObjectInfo.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightBehaviour.h" />
     <ClInclude Include="LightBehaviourBroken.h" />
@@ -247,6 +248,7 @@
     <ClCompile Include="InstancedModelManager.cpp" />
     <ClCompile Include="InstancingManager.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelObjectInfo.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightBehaviour.cpp" />
     <ClCompile Include="LightBehaviourBroken.cpp" />

@@ -153,7 +153,11 @@ void Snapper::Tick()
 			m_pMoveGizmo->SetSnapSize(f);
 		}
 		else
+		{
+			m_LinearSnapSize = 0.002;
+			m_pMoveGizmo->SetSnapSize(0.002);
 			m_bTextBoxesSet = false;
+		}
 
 		m_pLinearSnapTextBox->LoseFocus();
 	}
