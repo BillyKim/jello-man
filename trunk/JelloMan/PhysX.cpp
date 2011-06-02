@@ -11,7 +11,8 @@
 void MyOutputStream::reportError(NxErrorCode code, const char *message, const char*, int)
 {
     #if _DEBUG
-    cout << "--Physx: " << code << ": " << message << "\n";
+    if (code != 206) //disable warning 206: static actor moved
+        cout << "--Physx: " << code << ": " << message << "\n";
     #endif
 }              
 NxAssertResponse MyOutputStream::reportAssertViolation (const char *message, const char*, int)
@@ -114,7 +115,7 @@ NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
 	return result;
 }
 
-void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag status)
+void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag /*status*/)
 {
     PANIC("Not Implemented");
 	NxActor& triggerActor = triggerShape.getActor();

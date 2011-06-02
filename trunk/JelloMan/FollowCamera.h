@@ -10,12 +10,14 @@ namespace Camera{
 class FollowCamera : public CameraBase
 {
 public:
+    #pragma warning(disable:4480) //we only use 8bits for the flags, so we define the type of this enum as unsigned char
     enum SmoothFlag : BYTE
     {
         SmoothFlag_Distance = 1 << 1,
         SmoothFlag_Up = 1 << 2,
         SmoothFlag_Direction = 1 << 3
     };
+    #pragma warning(default:4480)
 
 public:
     FollowCamera(int windowWidth, int windowHeight, const PhysX* pPhysX);

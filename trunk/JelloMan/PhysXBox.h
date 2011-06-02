@@ -11,7 +11,7 @@ public:
 
     virtual NxShapeDesc* GetShape() const { return m_pBoxShapeDesc; }
 	
-	virtual void Scale(const Vector3& scale) {};
+	virtual void Scale(const Vector3& /*scale*/) {};
 
 	virtual void Serialize(Serializer* pSerializer) const;
 	virtual void Deserialize(Serializer* pSerializer);

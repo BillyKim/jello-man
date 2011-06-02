@@ -25,7 +25,7 @@ void FollowCamera::SetFollowPosition(const Vector3& pos)
 void FollowCamera::SetFollowDistance(float dist)
 {
     m_Distance = dist;
-    if (m_SmoothFlags & SmoothFlag_Distance == true)
+    if (m_SmoothFlags & SmoothFlag_Distance)
     {
         if (m_DistQueue.size() >= SMOOTH)
             m_DistQueue.pop_front();
@@ -57,7 +57,7 @@ void FollowCamera::SetSmoothFlags(BYTE flags)
     m_SmoothFlags = flags;
 }
 
-void FollowCamera::Tick(const float dTime)
+void FollowCamera::Tick(const float /*dTime*/)
 {
     if (m_SmoothFlags & SmoothFlag_Direction)
     {
@@ -66,7 +66,7 @@ void FollowCamera::Tick(const float dTime)
         {
             m_Direction += dir;
         });
-        m_Direction /= m_DirectionQueue.size();
+        m_Direction /= static_cast<float>(m_DirectionQueue.size());
         m_Direction.Normalize();
     }
     if (m_SmoothFlags & SmoothFlag_Distance)
@@ -85,7 +85,7 @@ void FollowCamera::Tick(const float dTime)
         {
             m_Up += up;
         });
-        m_Up /= m_UpQueue.size();
+        m_Up /= static_cast<float>(m_UpQueue.size());
         m_Up.Normalize();
     }
 

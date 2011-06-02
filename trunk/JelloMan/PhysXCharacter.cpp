@@ -62,7 +62,7 @@ NxControllerAction PhysXCharacter::onShapeHit(const NxControllerShapeHit& hit)
 PhysXCharacterCollisionType PhysXCharacter::Move(const Vector3& speed)
 {
     NxU32 flags;
-    m_pController->move(speed, 0xffffffffffffffff, 0.001f, flags);
+    m_pController->move(speed, 0xffffffff, 0.001f, flags);
 
     return ((PhysXCharacterCollisionType)flags);
 }

@@ -153,7 +153,7 @@ bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext)
         void* temp = shape->userData;
         ILevelObject* obj = reinterpret_cast<ILevelObject*>(temp);
         bool cont = true;
-        try { const char* c = typeid(*obj).name(); }
+        try { const char* c = typeid(*obj).name(); c; } //only used to throw an error when cast fails -- 'c;' is used to diable warning C4189
         catch (...) { cont = false; }
 
         if (cont == true)

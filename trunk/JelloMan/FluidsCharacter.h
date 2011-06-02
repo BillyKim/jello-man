@@ -41,25 +41,25 @@ public:
 
 	/* IDrawable */
 	virtual void Draw(RenderContext* pRenderContext);
-	virtual void DrawShadow(RenderContext* pRenderContext) {}
+	virtual void DrawShadow(RenderContext* /*pRenderContext*/) {}
 
-	virtual void Serialize(Serializer* pSerializer)  const {}
-	virtual void Deserialize(Serializer* pSerializer) {}
+	virtual void Serialize(Serializer* /*pSerializer*/)  const {}
+	virtual void Deserialize(Serializer* /*pSerializer*/) {}
 	virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::SimpleObject; }
 
 	/* ILevelObject */
-	virtual void Init(PhysX* pPhysX) {}
+	virtual void Init(PhysX* /*pPhysX*/) {}
 	virtual void Selected(bool selected) { m_bIsSelected = selected; }
     virtual bool IsSelected() const { return m_bIsSelected; }
 
 	/* ITransformable */
-    virtual void Rotate(const Vector3& axis, float angle) { }
+    virtual void Rotate(const Vector3& /*axis*/, float /*angle*/) { }
 
     virtual void Translate(const Vector3& add) { PhysXCharacter::Move(add); }
     virtual void SetPosition(const Vector3& pos) { PhysXCharacter::SetPosition(pos); }
     virtual Vector3 GetPosition() const { return PhysXCharacter::GetPosition(); }
 
-	virtual void Scale(const Vector3& scale) { }
+	virtual void Scale(const Vector3& /*scale*/) { }
 
 private:
 	/* DATAMEMBERS */

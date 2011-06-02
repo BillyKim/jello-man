@@ -25,7 +25,7 @@ FluidsCharacter::~FluidsCharacter()
 }
 
 /* GENERAL */
-void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pCamera, unsigned int maxParticles, Vector3 startPos)
+void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphics::Camera::FollowCamera* pCamera, unsigned int /*maxParticles*/, Vector3 startPos)
 {
 	ASSERT(pDXDevice != 0, "DXDevice error when creating fluidscharacter!");
 	ASSERT(pPhysXEngine->GetScene() != 0, "PhysXScene error when creating fluidscharacter!");
@@ -90,7 +90,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 	emitterDesc.relPose.t = NxVec3(0.0f,50.0f,0);
 	
 	m_pFluid = new Fluid(pPhysXEngine->GetScene(), fluidDesc, Color(1.0f, 0.0f, 1.0f, 1.0f), 0.1f, pDXDevice);
-	ASSERT(m_pFluid, "fluid creation failed");
+	ASSERT(m_pFluid != 0, "fluid creation failed");
 
 	m_pEmitter = m_pFluid->GetNxFluid()->createEmitter(emitterDesc);
     #pragma region junk

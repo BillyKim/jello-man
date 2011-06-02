@@ -104,7 +104,7 @@ HitRegion::~HitRegion()
 }
 
 // default copy constructor
-HitRegion::HitRegion(const HitRegion& second)
+HitRegion::HitRegion(const HitRegion& /*second*/)
 {
 	/*if (second.m_Type == TYPE_RECTANGLE)
 	{
@@ -138,7 +138,7 @@ HitRegion::HitRegion(const HitRegion& second)
 }
 
 // dafault assignment operator
-HitRegion& HitRegion::operator=(const HitRegion& second)
+HitRegion& HitRegion::operator=(const HitRegion& /*second*/)
 {
 	/*if (second.m_Type == TYPE_RECTANGLE)
 	{
@@ -173,7 +173,7 @@ HitRegion& HitRegion::operator=(const HitRegion& second)
 }
 
 // getters
-bool HitRegion::HitTest(HitRegion* hitRect, bool draw)
+bool HitRegion::HitTest(HitRegion* hitRect, bool /*draw*/)
 {
 	/*if (m_Type == TYPE_RECTANGLE)
 	{
@@ -471,7 +471,8 @@ D2D1_POINT_2F HitRegion::CollisionTest(HitRegion* hitRect)
 		return point;
 	}
 
-	return Point2F(-999999,-999999);
+    //unreachable code
+	//return Point2F(-999999,-999999);
 }
 
 D2D1_RECT_F HitRegion::GetDimension()
@@ -587,7 +588,7 @@ void HitRegion::Draw(bool fill)
 	}
 }
 
-HRESULT HitRegion::GeometryFromPixels(IWICBitmapLock *lockPtr, ID2D1Geometry**GeometryPtrPtr, int r, int g, int b)
+HRESULT HitRegion::GeometryFromPixels(IWICBitmapLock *lockPtr, ID2D1Geometry** /*GeometryPtrPtr*/, int r, int g, int b)
 {
 	HRESULT hr;
 
