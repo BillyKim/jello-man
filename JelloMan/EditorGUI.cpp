@@ -349,6 +349,8 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 
 	if (m_Mode == MODE_EDITOR)
 	{
+		DrawSelectedObjects();
+
 		if (m_bMoveable)
 			m_pLightDebugger->MovingLights(true);
 		else
@@ -411,7 +413,7 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 			m_pObjectInfo->HideTextBoxes();
 		}
 
-		if (m_pLoadModelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0)
+		if (m_pLoadModelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0 && m_pObjectInfo->GetNrObjectsSelected() == 0)
 			m_pModelLoader->Show();
 		else
 		{
@@ -419,7 +421,7 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 			m_pLoadModelButton->Deactivate();
 		}
 
-		if (m_pLoadLevelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0)
+		if (m_pLoadLevelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0 && m_pObjectInfo->GetNrObjectsSelected() == 0)
 			m_pLevelLoader->Show();
 		else
 		{
@@ -905,6 +907,111 @@ void EditorGUI::Tick()
         m_pRotateGizmo->Tick(m_pObjectSelecter);
 	else if (m_bScaleable)
 		m_pScaleGizmo->Tick(m_pObjectSelecter);
+}
+
+void EditorGUI::DrawSelectedObjects()
+{
+	for_each(m_pLevel->GetLevelObjects().cbegin(), m_pLevel->GetLevelObjects().cend(), [&](ILevelObject* pObj)
+	{
+		SimpleObject* pSObj = dynamic_cast<SimpleObject*>(pObj);
+
+		if (pSObj && pSObj->IsSelected() && pSObj->IsUsedForInstancing())
+		{
+			Matrix matProj = m_pRenderContext->GetCamera()->GetProjection();
+			Matrix matView = m_pRenderContext->GetCamera()->GetView();
+			Matrix matWorld = Matrix::Identity;
+
+			D3D10_VIEWPORT viewPort;
+			viewPort.MinDepth = 0.0f;
+			viewPort.MaxDepth = 1.0f;
+			viewPort.TopLeftX = 0;
+			viewPort.TopLeftY = 0;
+			viewPort.Height = BX2D->GetWindowSize().height;
+			viewPort.Width = BX2D->GetWindowSize().width;
+
+			Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
+			Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - pSObj->GetPosition();
+			float l = length.Length() / 100;
+
+			//Vector3 pos2D(Vector3::Project(pSObj->GetPosition(), &viewPort, matProj, matView, matWorld));
+
+			if (vLook.Dot(length) < 0)
+			{
+				/*BX2D->SetColor(255, 255, 0, 0.5f);
+				BX2D->FillEllipse(pos2D.X, pos2D.Y, 4 / l, 4 / l);*/
+
+				NxBounds3 bounds;
+				pSObj->GetActor()->getShapes()[0]->getWorldBounds(bounds);
+
+				NxVec3 mid;
+				bounds.getCenter(mid);
+				NxVec3 dim;
+				bounds.getDimensions(dim);
+
+				Vector3 cube[8];
+
+				cube[0] = Vector3(mid.x + (dim.x/2), mid.y + (dim.y/2), mid.z + (dim.z/2));
+				cube[1] = Vector3(mid.x - (dim.x/2), mid.y + (dim.y/2), mid.z + (dim.z/2));
+				cube[2] = Vector3(mid.x + (dim.x/2), mid.y - (dim.y/2), mid.z + (dim.z/2));
+				cube[3] = Vector3(mid.x - (dim.x/2), mid.y - (dim.y/2), mid.z + (dim.z/2));
+				cube[4] = Vector3(mid.x + (dim.x/2), mid.y + (dim.y/2), mid.z - (dim.z/2));
+				cube[5] = Vector3(mid.x - (dim.x/2), mid.y + (dim.y/2), mid.z - (dim.z/2));
+				cube[6] = Vector3(mid.x + (dim.x/2), mid.y - (dim.y/2), mid.z - (dim.z/2));
+				cube[7] = Vector3(mid.x - (dim.x/2), mid.y - (dim.y/2), mid.z - (dim.z/2));
+
+				Vector3 cube2D[8];
+
+				for (int i = 0; i < 8; ++i)
+				{
+					cube2D[i] = Vector3::Project(cube[i], &viewPort, matProj, matView, matWorld);
+				}
+
+				Point2D pol1[4];
+				pol1[0] = Point2F(cube2D[0].X, cube2D[0].Y);
+				pol1[1] = Point2F(cube2D[1].X, cube2D[1].Y);
+				pol1[2] = Point2F(cube2D[3].X, cube2D[3].Y);
+				pol1[3] = Point2F(cube2D[2].X, cube2D[2].Y);
+
+				Point2D pol2[4];
+				pol2[0] = Point2F(cube2D[4].X, cube2D[4].Y);
+				pol2[1] = Point2F(cube2D[5].X, cube2D[5].Y);
+				pol2[2] = Point2F(cube2D[7].X, cube2D[7].Y);
+				pol2[3] = Point2F(cube2D[6].X, cube2D[6].Y);
+
+				Point2D pol3[4];
+				pol3[0] = Point2F(cube2D[0].X, cube2D[0].Y);
+				pol3[1] = Point2F(cube2D[2].X, cube2D[2].Y);
+				pol3[2] = Point2F(cube2D[6].X, cube2D[6].Y);
+				pol3[3] = Point2F(cube2D[4].X, cube2D[4].Y);
+
+				Point2D pol4[4];
+				pol4[0] = Point2F(cube2D[1].X, cube2D[1].Y);
+				pol4[1] = Point2F(cube2D[3].X, cube2D[3].Y);
+				pol4[2] = Point2F(cube2D[7].X, cube2D[7].Y);
+				pol4[3] = Point2F(cube2D[5].X, cube2D[5].Y);
+
+				Point2D pol5[4];
+				pol5[0] = Point2F(cube2D[0].X, cube2D[0].Y);
+				pol5[1] = Point2F(cube2D[1].X, cube2D[1].Y);
+				pol5[2] = Point2F(cube2D[5].X, cube2D[5].Y);
+				pol5[3] = Point2F(cube2D[4].X, cube2D[4].Y);
+
+				Point2D pol6[4];
+				pol6[0] = Point2F(cube2D[2].X, cube2D[2].Y);
+				pol6[1] = Point2F(cube2D[3].X, cube2D[3].Y);
+				pol6[2] = Point2F(cube2D[7].X, cube2D[7].Y);
+				pol6[3] = Point2F(cube2D[6].X, cube2D[6].Y);
+
+				BX2D->SetColor(255, 255, 0, 0.4f);
+				BX2D->FillPolygon(pol1, 4);
+				BX2D->FillPolygon(pol2, 4);
+				BX2D->FillPolygon(pol3, 4);
+				BX2D->FillPolygon(pol4, 4);
+				BX2D->FillPolygon(pol5, 4);
+				BX2D->FillPolygon(pol6, 4);
+			}
+		}
+	});
 }
 
 // GETTERS
