@@ -618,7 +618,7 @@ HRESULT HitRegion::GeometryFromPixels(IWICBitmapLock *lockPtr, ID2D1Geometry** /
 
 		WICPixelFormatGUID pixelFormat;
 		hr = lockPtr->GetPixelFormat(&pixelFormat);
-		UINT bytesPerPixel;
+		UINT bytesPerPixel(0);
 		if(pixelFormat == GUID_WICPixelFormat32bppPBGRA)bytesPerPixel=4;
 		UINT originalWidth, originalHeight;
 		hr = lockPtr->GetSize(&originalWidth, &originalHeight);
