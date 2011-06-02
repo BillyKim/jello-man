@@ -17,6 +17,7 @@
 #include "ScaleGizmo.h"
 #include "Snapper.h"
 #include "LevelObjectInfo.h"
+#include "SimpleObject.h"
 
 class EditorGUI
 {
@@ -65,6 +66,8 @@ public:
 	{ return m_Mode; }
 
 private:
+
+	void DrawSelectedObjects();
 
 	// DATAMEMBERS
 
