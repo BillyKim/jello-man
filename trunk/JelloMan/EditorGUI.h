@@ -16,6 +16,7 @@
 #include "LoadLevelFromFile.h"
 #include "ScaleGizmo.h"
 #include "Snapper.h"
+#include "LevelObjectInfo.h"
 
 class EditorGUI
 {
@@ -123,6 +124,7 @@ private:
 	RotateGizmo* m_pRotateGizmo;
 	ScaleGizmo* m_pScaleGizmo;
 	Snapper* m_pSnapper;
+	LevelObjectInfo* m_pObjectInfo;
 
 	MODE m_Mode;
 

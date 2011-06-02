@@ -43,7 +43,8 @@ EditorGUI::EditorGUI(PhysX* pPhysXEngine, ID3D10Device* pDXDevice, Level* pLevel
 		m_bScaleable(false),
 		m_pScaleGizmo(0),
 		m_pSnapper(0),
-		m_pSnappingButton(0)
+		m_pSnappingButton(0),
+		m_pObjectInfo(0)
 {
 
 }
@@ -76,6 +77,7 @@ EditorGUI::~EditorGUI()
 	delete m_pLevelLoader;
 	delete m_pScaleGizmo;
 	delete m_pSnapper;
+	delete m_pObjectInfo;
 }
 
 // GENERAL
@@ -317,6 +319,8 @@ void EditorGUI::Initialize()
 	// LIGHT DEBUGGER
 	m_pLightDebugger = new VisualLightDebugger();
 
+	m_pObjectInfo = new LevelObjectInfo(m_pLevel);
+
 	// COLOR PICKER
 	m_pColorPicker = new ColorPicker();
 
@@ -351,6 +355,7 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 			m_pLightDebugger->MovingLights(false);
 
 		m_pLightDebugger->Tick(m_pRenderContext);
+		m_pObjectInfo->Tick();
 
 		BX2D->SetAntiAliasing(true);
 
@@ -368,6 +373,7 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 	else
 	{
 		m_pLightDebugger->HideTextBoxes();
+		m_pObjectInfo->HideTextBoxes();
         m_pObjectSelecter->DeselectAll();
 		m_pSnapper->HideTextBoxes();
 	}
@@ -395,9 +401,15 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 		BX2D->FillRect(0, 50, 200, BX2D->GetWindowSize().height - 71);
 
 		if (!m_pSnappingButton->IsActive())
+		{
 			m_pLightDebugger->Draw();
+			m_pObjectInfo->Draw(m_pRenderContext);
+		}
 		else
+		{
 			m_pLightDebugger->HideTextBoxes();
+			m_pObjectInfo->HideTextBoxes();
+		}
 
 		if (m_pLoadModelButton->IsActive() && m_pLightDebugger->GetNrLightsSelected() == 0)
 			m_pModelLoader->Show();

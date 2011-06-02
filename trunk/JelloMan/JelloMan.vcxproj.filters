@@ -136,6 +136,9 @@
     <Filter Include="Content\effect\fluids">
       <UniqueIdentifier>{757cc495-53a5-436a-a2d2-0b1014422a10}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Graphics\GUI\LevelObjects">
+      <UniqueIdentifier>{44b5b616-eb11-48d3-9f18-a50d94b9cac4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -480,6 +483,9 @@
     <ClInclude Include="FluidEffect.h">
       <Filter>Engine Files\Graphics\Effect\pre</Filter>
     </ClInclude>
+    <ClInclude Include="LevelObjectInfo.h">
+      <Filter>Engine Files\Graphics\GUI\LevelObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -787,6 +793,9 @@
     </ClCompile>
     <ClCompile Include="FluidEffect.cpp">
       <Filter>Engine Files\Graphics\Effect\pre</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelObjectInfo.cpp">
+      <Filter>Engine Files\Graphics\GUI\LevelObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
