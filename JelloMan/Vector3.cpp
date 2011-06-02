@@ -21,7 +21,7 @@ Vector3::Vector3(const D3DXVECTOR3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
 Vector3::Vector3(const NxVec3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
 {
 }
-Vector3::Vector3(const NxExtendedVec3& v3) : X(v3.x), Y(v3.y), Z(v3.z)
+Vector3::Vector3(const NxExtendedVec3& v3) : X(static_cast<float>(v3.x)), Y(static_cast<float>(v3.y)), Z(static_cast<float>(v3.z))
 {
 }
 

@@ -105,7 +105,7 @@ void Softbody::TransformPositions()
         newVert.push_back(VertexPosNormTanTex(position, Vector3(), Vector3(), vert[i].tex));
     }
 
-    m_CenterPoint /= size;
+    m_CenterPoint /= static_cast<float>(size);
     m_Dimension = maxP - minP;
     ASSERT(m_Dimension.X >= 0 && m_Dimension.Y >= 0 && m_Dimension.Z >= 0, "Softbody dimension == 0");
     m_Radius = m_Dimension.Length() / 2.0f;

@@ -1,7 +1,9 @@
 #pragma once
 #include "PhysX.h"
+#pragma warning(disable:4512)
 #include <NxCapsuleController.h>
 #include <NxBoxController.h>
+#pragma warning(default:4512)
 #include "Vector3.h"
 
 enum PhysXCharacterCollisionType

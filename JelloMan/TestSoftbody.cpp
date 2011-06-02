@@ -27,7 +27,7 @@ void TestSoftbody::Selected(bool selected)
     m_bIsSelected = selected;
 }
 
-void TestSoftbody::Tick(const float dTime)
+void TestSoftbody::Tick(const float /*dTime*/)
 {
     TransformPositions();
 }

@@ -154,8 +154,8 @@ void Snapper::Tick()
 		}
 		else
 		{
-			m_LinearSnapSize = 0.002;
-			m_pMoveGizmo->SetSnapSize(0.002);
+			m_LinearSnapSize = 0.002f;
+			m_pMoveGizmo->SetSnapSize(0.002f);
 			m_bTextBoxesSet = false;
 		}
 

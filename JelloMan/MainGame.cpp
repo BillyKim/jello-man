@@ -96,15 +96,15 @@ void MainGame::Initialize(GameConfig& refGameConfig)
             width = reader.GetInt(_T("GFX"), _T("width"));
             height = reader.GetInt(_T("GFX"), _T("height"));
         }
-        catch (RootNotFoundException e) { cout << "warning: reading config.ini, root [GFX] not found, width/height set to default\n"; }
-        catch (NodeNotFoundException e) {  cout << "warning: reading config.ini, node 'width' or 'height' not found, width/height set to default\n"; }
-        catch (ParseFailException e) { cout << "warning: reading config.ini, error while parsing 'width' or 'height', using defaults\n"; }
+        catch (RootNotFoundException) { cout << "warning: reading config.ini, root [GFX] not found, width/height set to default\n"; }
+        catch (NodeNotFoundException) {  cout << "warning: reading config.ini, node 'width' or 'height' not found, width/height set to default\n"; }
+        catch (ParseFailException) { cout << "warning: reading config.ini, error while parsing 'width' or 'height', using defaults\n"; }
         try 
         {
             keylayout = reader.GetString(_T("IO"), _T("layout"));
         }
-        catch (RootNotFoundException e) { cout << "warning: reading config.ini, root [IO] not found, keylayout set to AZERTY\n"; }
-        catch (NodeNotFoundException e) {  cout << "warning: reading config.ini, node 'keylayout' not found, keylayout set to AZERTY\n"; }
+        catch (RootNotFoundException) { cout << "warning: reading config.ini, root [IO] not found, keylayout set to AZERTY\n"; }
+        catch (NodeNotFoundException) {  cout << "warning: reading config.ini, node 'keylayout' not found, keylayout set to AZERTY\n"; }
     }
     if (width == -1 || height == -1)
     {
@@ -192,8 +192,8 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pRenderContext = new RenderContext(m_pEditorCamera, m_pLightController, m_pDeferredRenderer, 
         pPreShadowEffect, pPreShadowEffectInstanced);
 
-	Image* preload1 = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
-	Image* preload2 = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
+	Image* preload1 = Content->LoadImage(_T("../Content/Images/Editor/plight.png")); preload1; //disables warning C4189
+	Image* preload2 = Content->LoadImage(_T("../Content/Images/Editor/slight.png")); preload2;
 
 	++m_Orbs;
 	m_LoadingText = _T("level");
@@ -210,34 +210,6 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pEditorGUI->Initialize();
 
 	++m_Orbs;
-	m_LoadingText = _T("Instanced PhysX Test");
-    for (int x = -20; x < 20; ++x)
-            for (int y = 0; y < 1; ++y)
-                for (int z = -20; z < 20; ++z)
-                {
-		            SimpleObject* pLevelObject = new SimpleObject(true);
-
-		            pLevelObject->SetModelPath(_T("../Content/Models/box1.binobj"));
-	
-                    pLevelObject->SetPhysXModel(new PhysXBox(Vector3(1.0f, 1.0f, 1.0f), 100));
-
-		            pLevelObject->SetDiffusePath(_T("../Content/Textures/test.png"));
-		            pLevelObject->SetNormalPath(_T("../Content/Textures/testnormal.png"));
-		            //pLevelObject->SetSpecPath(_T("../Content/Textures/weapon_spec.png"));
-		            //pLevelObject->SetGlossPath(_T("../Content/Textures/weapon_gloss.png"));
-
-		            pLevelObject->SetRigid(false);
-
-		            pLevelObject->Init(m_pPhysXEngine);
-
-		            //pLevelObject->Translate(m_pRenderContext->GetCamera()->GetPosition());
-                    pLevelObject->Translate(Vector3(x, y, z));
-
-		            m_pLevel->AddLevelObject(pLevelObject);
-
-		            //pLevelObject->AddForce(m_pRenderContext->GetCamera()->GetLook() * 80000);
-                }
-
 	//m_LoadingText = _T("audio");
 
 	// AUDIO
@@ -434,7 +406,7 @@ void MainGame::CheckControls()
 	}
 }
 
-void MainGame::OnResize(ID3D10RenderTargetView* pRTView)
+void MainGame::OnResize(ID3D10RenderTargetView* /*pRTView*/)
 {
 	if (m_bResourcesLoaded)
 	{

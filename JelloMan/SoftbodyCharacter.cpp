@@ -40,8 +40,8 @@ void SoftbodyCharacter::Tick(const float dTime)
 
     NxVec3 grav;
     m_pPhysX->GetScene()->getGravity(grav);
-    NxRay ray(GetPosition(), Vector3::Up * ((grav.y < 0)? -1 : 1));
-    bool isTouchingGround = m_pPhysX->GetScene()->raycastAnyShape(ray, NxShapesType::NX_STATIC_SHAPES, 1, GetRadius()*2);
+    NxRay ray(GetPosition(), Vector3::Up * ((grav.y < 0)? -1.0f : 1.0f));
+    bool isTouchingGround = m_pPhysX->GetScene()->raycastAnyShape(ray, NX_STATIC_SHAPES, 1, GetRadius()*2);
 
     if (isTouchingGround)
     {

@@ -49,7 +49,7 @@ void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
     ASSERT(m_pActor != 0, "");
 }
 
-void Actor::Tick(float dTime)
+void Actor::Tick(float /*dTime*/)
 {
     m_mtxWorldMatrix = m_pActor->getGlobalPose();
 }
@@ -95,7 +95,7 @@ void Actor::Rotate(const Vector3& axis, float angle)
 	m_pActor->setGlobalPose(mat);
 	
 }
-void Actor::Scale(const Vector3& scale)
+void Actor::Scale(const Vector3& /*scale*/)
 {
 	/*ASSERT(m_pActor != 0, "");
 

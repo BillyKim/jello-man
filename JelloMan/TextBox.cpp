@@ -185,7 +185,7 @@ LRESULT TextBox::EditProcStatic(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 LRESULT TextBox::EditProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	bool result = true;
+	//bool result = true;
 
 	switch (msg)
 	{		

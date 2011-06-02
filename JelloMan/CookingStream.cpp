@@ -211,14 +211,14 @@ NxStream& UserStream::storeColor(const Color& c)
 }
 NxStream& UserStream::storeString(const string& str)
 {
-    storeWord(str.size());
+    storeWord(static_cast<WORD>(str.size()));
     if (str.size() > 0)
         storeBuffer(str.c_str(), str.size() * sizeof(char));
     return *this;
 }
 NxStream& UserStream::storeTString(const tstring& str)
 {
-    storeWord(str.size());
+    storeWord(static_cast<WORD>(str.size()));
     if (str.size() > 0)
         storeBuffer(str.c_str(), str.size() * sizeof(tchar));
     return *this;

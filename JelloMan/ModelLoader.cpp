@@ -321,6 +321,7 @@ void ModelLoader::FlushMesh()
     m_IndexData.clear();
 }
 
+//Deprecated does not work properly
 void ModelLoader::CalculateTangents(VertexPosNormTanTex& vpntx1, VertexPosNormTanTex& vpntx2, VertexPosNormTanTex& vpntx3)
 {
 	Vector3& v1 = vpntx1.position;
@@ -328,8 +329,8 @@ void ModelLoader::CalculateTangents(VertexPosNormTanTex& vpntx1, VertexPosNormTa
 	Vector3& v3 = vpntx2.position;
 
 	Vector3& n1 = vpntx1.normal;
-	Vector3& n2 = vpntx2.normal;
-	Vector3& n3 = vpntx3.normal;
+	//Vector3& n2 = vpntx2.normal;
+	//Vector3& n3 = vpntx3.normal;
 
 	Vector2& tx1 = vpntx1.tex;
 	Vector2& tx2 = vpntx2.tex;

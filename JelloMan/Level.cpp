@@ -256,8 +256,6 @@ void Level::DrawForward(RenderContext* pRenderContext)
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
 
-	
-
 	// DRAW LIGHTS
 	if (m_bEditor)
 	{
@@ -267,7 +265,7 @@ void Level::DrawForward(RenderContext* pRenderContext)
 		{
 			m_pRenderContext->GetLightController()->GetLights()[i]->Draw(m_pRenderContext);
 		}
-
+        
 		BX2D->SetAntiAliasing(false);
 	}
 }

@@ -31,7 +31,7 @@ CameraBase::~CameraBase()
 }
 
 // GENERAL
-void CameraBase::Tick(const float dTime)
+void CameraBase::Tick(const float /*dTime*/)
 {
 
 }

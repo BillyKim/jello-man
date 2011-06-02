@@ -926,12 +926,12 @@ void EditorGUI::DrawSelectedObjects()
 			viewPort.MaxDepth = 1.0f;
 			viewPort.TopLeftX = 0;
 			viewPort.TopLeftY = 0;
-			viewPort.Height = BX2D->GetWindowSize().height;
-			viewPort.Width = BX2D->GetWindowSize().width;
+			viewPort.Height = static_cast<UINT>(BX2D->GetWindowSize().height);
+			viewPort.Width = static_cast<UINT>(BX2D->GetWindowSize().width);
 
 			Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
 			Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - pSObj->GetPosition();
-			float l = length.Length() / 100;
+			//float l = length.Length() / 100;
 
 			//Vector3 pos2D(Vector3::Project(pSObj->GetPosition(), &viewPort, matProj, matView, matWorld));
 

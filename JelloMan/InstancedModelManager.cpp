@@ -70,7 +70,7 @@ void InstancedModelManager::Draw(RenderContext* pRendercontext)
 	m_pEffect->SetViewProjection(pRendercontext->GetCamera()->GetViewProjection());
 
 	//update buffer
-	for (int i = 0; i < m_mtxInstances.size(); ++i)
+	for (UINT i = 0; i < m_mtxInstances.size(); ++i)
 	{
 		m_CPUBuffer[i] = *m_mtxInstances[i];
 	}

@@ -37,9 +37,9 @@ Fluid::Fluid(NxScene* pScene, NxFluidDesc &desc, const Color& particleColor,  fl
 	
 	desc.particlesWriteData = particleData;
 
-	ASSERT(pScene, "PhysX scene error when creating particles");
+	ASSERT(pScene != 0, "PhysX scene error when creating particles");
 	m_pFluid = pScene->createFluid(desc);
-	ASSERT(m_pFluid, "Fluid creation failed");
+	ASSERT(m_pFluid != 0, "Fluid creation failed");
 
 	// render
 	m_pEffect = Content->LoadEffect<FluidEffect>(_T("../Content/Effects/fluidPreEffect.fx"));
@@ -115,7 +115,7 @@ void Fluid::BuildVertexBuffer()
 {
 	m_VecVertices.clear();
 
-	for (int i = 0; i < m_MaxParticles; ++i)
+	for (UINT i = 0; i < m_MaxParticles; ++i)
 	{
 		m_VecVertices.push_back(VertexPos(	m_pParticleBuffer[i].position.X,
 												m_pParticleBuffer[i].position.Y,
