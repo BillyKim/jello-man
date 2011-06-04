@@ -7,6 +7,8 @@
 #pragma comment(lib, "PhysXLoader.lib")
 #pragma comment(lib, "NxCharacter.lib")
 
+#include "Trigger.h"
+
 #pragma region MyOutputStream
 void MyOutputStream::reportError(NxErrorCode code, const char *message, const char*, int)
 {
@@ -115,22 +117,29 @@ NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
 	return result;
 }
 
-void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag /*status*/)
+void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag status)
 {
-    PANIC("Not Implemented");
+    //PANIC("Not Implemented");
+
 	NxActor& triggerActor = triggerShape.getActor();
-	NxActor& otherActor = otherShape.getActor();
-	if (triggerActor.userData == NULL || otherActor.userData == NULL)
+
+	//NxActor& otherActor = otherShape.getActor();
+
+	if (triggerActor.userData == NULL) // || otherActor.userData == NULL)
 		return;
+
+	Trigger* pTrigger = (Trigger*)triggerActor.userData;
+
 	//Character* player = (Character*)otherActor.userData;
 	//LevelElement* object = (LevelElement*)triggerActor.userData;
 	
-	//if(status & NX_TRIGGER_ON_ENTER)
-	//{	
-	//	object->OnTriggerEnter(player);
-	//}
-	//else if(status & NX_TRIGGER_ON_LEAVE)
-	//{
-	//	object->OnTriggerExit(player);
-	//}
+	if(status & NX_TRIGGER_ON_ENTER)
+	{	
+		pTrigger->OnTrigger();
+		//object->OnTriggerEnter(player);
+	}
+	/*else if(status & NX_TRIGGER_ON_LEAVE)
+	{
+		object->OnTriggerExit(player);
+	}*/
 }

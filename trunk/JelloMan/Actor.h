@@ -37,8 +37,9 @@ protected:
 	PhysX* m_pPhysX;
 	NxActor* m_pActor;
 	Matrix m_mtxWorldMatrix;
+	bool m_bTrigger;
 
-	void InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable);
+	void InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable, bool bTrigger = false);
 	//protected constructor
 	Actor(void);
 };

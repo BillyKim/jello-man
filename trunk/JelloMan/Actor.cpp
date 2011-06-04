@@ -1,7 +1,7 @@
 #include "Actor.h"
 
 
-Actor::Actor(void): m_mtxWorldMatrix(Matrix::Identity), m_pActor(0), m_pPhysX(0)
+Actor::Actor(void): m_mtxWorldMatrix(Matrix::Identity), m_pActor(0), m_pPhysX(0),m_bTrigger(false)
 {
 }
 
@@ -12,30 +12,36 @@ Actor::~Actor(void)
 	    m_pPhysX->GetScene()->releaseActor(*m_pActor);
 }
 
-void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable)
+void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable, bool bTrigger)
 {
 	ASSERT(m_pActor == 0, ""); //would be weird if the actor is already intialized
 
+	m_bTrigger = bTrigger;
 	m_pPhysX = pPhysX;
 	
 	//Make Actor
 	NxBodyDesc bodyDesc;
 	NxActorDesc actorDesc;
 	
-	if(moveable == true)
+	if (bTrigger)
+		shape.GetShape()->shapeFlags |= NX_TRIGGER_ENABLE;
+	else
 	{
-		bodyDesc.mass = shape.GetShape()->mass;
-		//bodyDesc.angularDamping = 0.5f;
-        //bodyDesc.linearDamping = 0.2f;
-        bodyDesc.flags |= NX_BF_FILTER_SLEEP_VEL;
-        //bodyDesc.sleepEnergyThreshold = 50.0f;
-		//bodyDesc.sleepLinearVelocity = 0.001f;
-		//bodyDesc.sleepAngularVelocity = 0.001f;
-		actorDesc.body = &bodyDesc;		
-	}
-	else 
-	{
-		actorDesc.body = 0;
+		if(moveable == true)
+		{
+			bodyDesc.mass = shape.GetShape()->mass;
+			//bodyDesc.angularDamping = 0.5f;
+			//bodyDesc.linearDamping = 0.2f;
+			bodyDesc.flags |= NX_BF_FILTER_SLEEP_VEL;
+			//bodyDesc.sleepEnergyThreshold = 50.0f;
+			//bodyDesc.sleepLinearVelocity = 0.001f;
+			//bodyDesc.sleepAngularVelocity = 0.001f;
+			actorDesc.body = &bodyDesc;		
+		}
+		else 
+		{
+			actorDesc.body = 0;
+		}
 	}
 
 	actorDesc.shapes.push_back(shape.GetShape());
@@ -132,6 +138,8 @@ void Actor::Serialize(Serializer* pSerializer)  const
     pSerializer->GetStream()->storeVector3(lv);
 
     pSerializer->GetStream()->storeMatrix(m_mtxWorldMatrix);
+
+	pSerializer->GetStream()->storeByte(m_bTrigger);
 }
 void Actor::Deserialize(Serializer* pSerializer)
 {
@@ -149,4 +157,9 @@ void Actor::Deserialize(Serializer* pSerializer)
     m_mtxWorldMatrix = pSerializer->GetStream()->readMatrix();
     NxMat34 mat(static_cast<NxMat34>(m_mtxWorldMatrix));
     m_pActor->setGlobalPose(mat);
+
+	if (pSerializer->GetStream()->readByte() == true)
+	{
+		m_pActor->getShapes()[0]->setFlag(NX_TRIGGER_ENABLE, true);
+	}
 }
