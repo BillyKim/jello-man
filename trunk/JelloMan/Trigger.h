@@ -21,12 +21,12 @@ public:
 	virtual ~Trigger();
 
 	/* GENERAL */
-	virtual void Init(PhysX* pPhysX) {}
+	virtual void Init(PhysX* /*pPhysX*/) {}
 	virtual void Init(PhysX* pPhysX, const Vector3& dimensions);	
 
 	virtual void Tick(float dTime);
 	virtual void Draw(RenderContext* pRenderContext);
-	virtual void DrawShadow(RenderContext* pRenderContext) { }
+	virtual void DrawShadow(RenderContext* /*pRenderContext*/) { }
 
 	virtual void Rotate(const Vector3& axis, float angle) { Actor::Rotate(axis, angle); }
 	virtual void Translate(const Vector3& add) { Actor::Translate(add); }
@@ -50,7 +50,7 @@ public:
 	/* SERIALIZE */
 	virtual void Serialize(Serializer* pSerializer) const;
 	virtual void Deserialize(Serializer* pSerializer);
-	virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::SimpleObject; }
+    virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::PhysXTrigger; }
 
 	/* PHYSX INTERNAL */
 	void OnTrigger();

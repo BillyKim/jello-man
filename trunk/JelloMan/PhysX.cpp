@@ -117,7 +117,7 @@ NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
 	return result;
 }
 
-void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag status)
+void PhysX::onTrigger(NxShape& triggerShape, NxShape& /*otherShape*/, NxTriggerFlag status)
 {
     //PANIC("Not Implemented");
 

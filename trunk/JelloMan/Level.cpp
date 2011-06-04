@@ -163,6 +163,7 @@ ISerializable* GetObject(DWORD id)
         case SerializeTypes::SpotLight: return new SpotLight();
         case SerializeTypes::PointLight: return new PointLight();
         case SerializeTypes::SimpleObject: return new SimpleObject(true);
+        case SerializeTypes::PhysXTrigger: return new Trigger();
         default: PANIC("File corrupt!"); return 0;
     }
 }

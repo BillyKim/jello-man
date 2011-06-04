@@ -15,5 +15,7 @@ struct SerializeTypes
     const static DWORD PhysXShapeSphere = 501;
     const static DWORD PhysXShapeMesh = 502;
 
+    const static DWORD PhysXTrigger = 600;
+
     const static DWORD SimpleObject = 1000;
 };
