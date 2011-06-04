@@ -10,8 +10,9 @@ FluidsCharacter::FluidsCharacter(Level* pLevel)	:	m_pPhysXEngine(0),
                                                     m_pLevel(pLevel),
                                                     m_GravityType(GravityType_Down),
                                                     m_CanSwitchGravity(true),
-                                                    m_MoveDir(Vector3::Forward),
-                                                    m_RightDir(Vector3::Right)
+                                                    m_MoveDir(-Vector3::Right),
+                                                    m_MoveSpeed(0.0f),
+                                                    m_RightDir(0, 0 ,0)
 {
 }
 
@@ -37,9 +38,11 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
     InitCharacterAsBox(pPhysXEngine, Vector3(0.1f, 0.1f, 0.1f));
 
-	SetPosition(startPos);
-    
 	m_pPhysXEngine = pPhysXEngine;
+
+	SetPosition(startPos);
+    ChangeMoveDirection(m_MoveDir); // calc right
+    
 
 	// FLUID
 	//int MAX_PARTICLES = (int)maxParticles;
@@ -134,6 +137,18 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
     #pragma endregion
 }
 
+void FluidsCharacter::ChangeMoveDirection(const Vector3& dir) //must be normalized!
+{
+    m_MoveDir = dir;
+    NxVec3 grav;
+    m_pPhysXEngine->GetScene()->getGravity(grav);
+    m_RightDir = Vector3::Normalize(m_MoveDir).Cross(Vector3::Normalize(-grav));
+}
+void FluidsCharacter::ChangeMoveSpeed(float speed)
+{
+    m_MoveSpeed = speed;
+}
+
 void FluidsCharacter::Tick(float dTime)
 {
     Vector3 move = Vector3(0, 0, 0);
@@ -141,6 +156,7 @@ void FluidsCharacter::Tick(float dTime)
     NxVec3 grav;
     m_pPhysXEngine->GetScene()->getGravity(grav);
     m_Speed += grav * dTime;
+    m_Speed += m_MoveDir * m_MoveSpeed;
     
     if (CONTROLS->IsKeyDown(VK_UP))
         move += m_MoveDir * dTime * -10;
@@ -168,23 +184,25 @@ void FluidsCharacter::Tick(float dTime)
             {
                 switch (m_GravityType)
                 {
-                    case GravityType_Down: m_GravityType = GravityType_Right; grav = Vector3::Right * grav.magnitude();  break;
-                    case GravityType_Up: m_GravityType = GravityType_Left; grav = -Vector3::Right * grav.magnitude(); break;
-                    case GravityType_Left: m_GravityType = GravityType_Down; grav = -Vector3::Up * grav.magnitude(); break;
-                    case GravityType_Right: m_GravityType = GravityType_Up; grav = Vector3::Up * grav.magnitude(); break;
+                    case GravityType_Down: m_GravityType = GravityType_Right; break;
+                    case GravityType_Right: m_GravityType = GravityType_Up; break;
+                    case GravityType_Up: m_GravityType = GravityType_Left; break;
+                    case GravityType_Left: m_GravityType = GravityType_Down; break;
                     default: ASSERT(false, "Should never get here!"); break;
                 }
+                grav = m_RightDir * grav.magnitude(); 
             }
             else if (CONTROLS->IsKeyDown(VK_LEFT))
             {
                 switch (m_GravityType)
                 {
-                    case GravityType_Up: m_GravityType = GravityType_Right; grav = Vector3::Right * grav.magnitude(); break;
-                    case GravityType_Down: m_GravityType = GravityType_Left; grav = -Vector3::Right * grav.magnitude(); break;
-                    case GravityType_Right: m_GravityType = GravityType_Down; grav = -Vector3::Up * grav.magnitude(); break;
-                    case GravityType_Left: m_GravityType = GravityType_Up; grav = Vector3::Up * grav.magnitude(); break;
+                    case GravityType_Down: m_GravityType = GravityType_Left; break;
+                    case GravityType_Left: m_GravityType = GravityType_Up; break;
+                    case GravityType_Up: m_GravityType = GravityType_Right; break;
+                    case GravityType_Right: m_GravityType = GravityType_Down; break;
                     default: ASSERT(false, "Should never get here!"); break;
                 }
+                grav = m_RightDir * -grav.magnitude();
             }
             if (CONTROLS->IsKeyDown(VK_LEFT) || CONTROLS->IsKeyDown(VK_RIGHT)) 
             {

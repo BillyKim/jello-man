@@ -34,6 +34,9 @@ public:
               unsigned int maxParticles, 
               Vector3 startPos);
 
+    void ChangeMoveDirection(const Vector3& dir); //must be normalized!
+    void ChangeMoveSpeed(float speed);
+
     virtual IEditorObject* Copy() const { return 0; } //non copyable
 	
 	/* IUpdateable */
@@ -68,7 +71,10 @@ private:
     Level* m_pLevel;
 
     Vector3 m_Speed;
+
     Vector3 m_MoveDir;
+    float m_MoveSpeed;
+
     Vector3 m_RightDir;
     GravityType m_GravityType;
     bool m_CanSwitchGravity;
