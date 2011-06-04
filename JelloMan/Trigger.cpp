@@ -4,7 +4,6 @@
 Trigger::Trigger() :	Actor(),
 						m_bIsSelected(false),
 						m_TriggerName(_T("Trigger")),
-						m_pTriggerShape(0),
 						m_Dimensions(Vector3(0,0,0)),
 						m_bTriggered(false)
 {
@@ -12,7 +11,7 @@ Trigger::Trigger() :	Actor(),
 
 Trigger::~Trigger()
 {
-	delete m_pTriggerShape;
+    delete m_pTriggerShape;
 }
 
 /* GENERAL */
@@ -150,10 +149,9 @@ IEditorObject* Trigger::Copy() const
 
 	pTrigger->Init(m_pPhysX, m_Dimensions);
 
-	tstringstream stream;
-	stream << m_TriggerName << _T("_COPY");
+	tstring newName = m_TriggerName + _T("_COPY");
 
-	pTrigger->SetTriggerName(stream.str());
+	pTrigger->SetTriggerName(newName);
 
 	return pTrigger;
 }
@@ -161,7 +159,8 @@ IEditorObject* Trigger::Copy() const
 void Trigger::Serialize(Serializer* pSerializer) const
 {
 	pSerializer->GetStream()->storeTString(m_TriggerName);
-	pSerializer->Serialize(m_pTriggerShape);
+
+    pSerializer->GetStream()->storeVector3(m_Dimensions);
 
 	Actor::Serialize(pSerializer);
 }
@@ -169,9 +168,9 @@ void Trigger::Deserialize(Serializer* pSerializer)
 {
 	m_TriggerName = pSerializer->GetStream()->readTString();
 
-	m_pTriggerShape = dynamic_cast<PhysXShape*>(pSerializer->Deserialize(PhysXShape::GetShape));
+    Vector3 dim(pSerializer->GetStream()->readVector3());
 
-	Init(pSerializer->GetPhysX(), m_Dimensions);
+	Init(pSerializer->GetPhysX(), dim);
 
 	Actor::Deserialize(pSerializer);
 }

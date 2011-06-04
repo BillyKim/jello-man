@@ -139,7 +139,7 @@ void Actor::Serialize(Serializer* pSerializer)  const
 
     pSerializer->GetStream()->storeMatrix(m_mtxWorldMatrix);
 
-	pSerializer->GetStream()->storeByte(m_bTrigger);
+	pSerializer->GetStream()->storeByte(m_bTrigger?TRUE:FALSE);
 }
 void Actor::Deserialize(Serializer* pSerializer)
 {
@@ -158,7 +158,7 @@ void Actor::Deserialize(Serializer* pSerializer)
     NxMat34 mat(static_cast<NxMat34>(m_mtxWorldMatrix));
     m_pActor->setGlobalPose(mat);
 
-	if (pSerializer->GetStream()->readByte() == true)
+	if (pSerializer->GetStream()->readByte() == TRUE)
 	{
 		m_pActor->getShapes()[0]->setFlag(NX_TRIGGER_ENABLE, true);
 	}
