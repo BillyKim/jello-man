@@ -9,6 +9,7 @@
 #include "SimpleObject.h"
 #include "IInstancible.h"
 #include "EditorGUI.h"
+#include "Trigger.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -77,6 +78,14 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
                                             static_cast<int>(BX2D->GetWindowSize().height));
 
     m_pInstancingManager = new Instancing::InstancingManager(m_pDXDevice);
+
+	//test
+
+	Trigger* pTrigger = new Trigger();
+	pTrigger->Init(m_pPhysXEngine, Vector3(5,5,5));
+	pTrigger->Translate(Vector3(4,10,5));
+
+	AddLevelObject(pTrigger);
 }
 void Level::WakeUpAll()
 {
