@@ -83,9 +83,13 @@ ISerializable* Serializer::Deserialize(ISerializable* (*GetObject)(DWORD id))
     ISerializable* obj = GetObject(header);
 
     //deserialize
-    obj->Deserialize(this);
-
-    --m_NumSerialized;
+    if (obj != 0)
+    {
+        obj->Deserialize(this);
+        --m_NumSerialized;
+    }
+    else
+        m_NumSerialized = 0;
 
     return obj;
 }
