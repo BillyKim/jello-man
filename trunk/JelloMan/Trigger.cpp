@@ -1,11 +1,15 @@
 #include "Trigger.h"
+#include "SplineLoader.h"
+#include "ContentManager.h"
 
 /* CONSTRUCTOR - DESTRUCTOR */
 Trigger::Trigger() :	Actor(),
 						m_bIsSelected(false),
 						m_TriggerName(_T("Trigger")),
 						m_Dimensions(Vector3(0,0,0)),
-						m_bTriggered(false)
+						m_bTriggered(false),
+						m_pModel(0),
+						m_pEffect(0)
 {
 }
 
@@ -26,6 +30,9 @@ void Trigger::Init(PhysX* pPhysX, const Vector3& dimensions)
 	InitActor(pPhysX, *m_pTriggerShape, false, true);	
 
 	m_pActor->userData = this;
+
+	m_pModel = Content->LoadSpline(_T("../Content/Models/box_path.obj"));
+	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 
 void Trigger::Tick(float dTime)
@@ -37,7 +44,7 @@ void Trigger::Draw(RenderContext* pRenderContext)
 {
 	Matrix matProj = pRenderContext->GetCamera()->GetProjection();
 	Matrix matView = pRenderContext->GetCamera()->GetView();
-	Matrix matWorld = Matrix::Identity;
+	Matrix matWorld = Matrix(m_pActor->getShapes()[0]->getGlobalPose());
 
 	D3D10_VIEWPORT viewPort;
 	viewPort.MinDepth = 0.0f;
@@ -60,7 +67,7 @@ void Trigger::Draw(RenderContext* pRenderContext)
 
 		NxBounds3 bounds;
 		m_pActor->getShapes()[0]->getWorldBounds(bounds);
-		matWorld = Matrix(m_pActor->getShapes()[0]->getGlobalPose());
+		
 
 		NxVec3 mid;
 		//bounds.getCenter(mid);
@@ -141,6 +148,13 @@ void Trigger::Draw(RenderContext* pRenderContext)
 		BX2D->FillPolygon(pol5, 4);
 		BX2D->FillPolygon(pol6, 4);
 	}
+
+	Matrix scale = Matrix::CreateScale(Vector3(m_Dimensions.X / 100, m_Dimensions.Y / 100, m_Dimensions.Z / 100));
+
+	m_pEffect->SetWorld(scale * matWorld);
+	m_pEffect->SetWorldViewProjection(scale * matWorld * matView * matProj);
+	m_pEffect->SetColor(Color(1.0f,1.0f,1.0f,.2f));
+	m_pModel->Draw(m_pEffect);
 }
 
 IEditorObject* Trigger::Copy() const
@@ -152,6 +166,7 @@ IEditorObject* Trigger::Copy() const
 	tstring newName = m_TriggerName + _T("_COPY");
 
 	pTrigger->SetTriggerName(newName);
+	pTrigger->SetPosition(m_pActor->getGlobalPosition());
 
 	return pTrigger;
 }

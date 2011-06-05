@@ -38,7 +38,7 @@ public:
 	Texture2D* LoadTexture2D(DefaultTextureType type);
 
 	Model<VertexPosNormTanTex>* LoadModel(const tstring& assetName);
-	Model<VertexPosCol>* LoadSpline(const tstring& assetName, Color col);
+	Model<VertexPos>* LoadSpline(const tstring& assetName);
 
 	SoftbodyMesh* LoadSoftbodyMesh(const tstring& assetName);
 

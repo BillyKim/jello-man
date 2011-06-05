@@ -139,6 +139,9 @@
     <Filter Include="Engine Files\Graphics\GUI\LevelObjects">
       <UniqueIdentifier>{44b5b616-eb11-48d3-9f18-a50d94b9cac4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Graphics\GUI\Editor\Components">
+      <UniqueIdentifier>{846becc6-9db6-4df5-afdf-ce57e0365c06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -489,6 +492,12 @@
     <ClInclude Include="Trigger.h">
       <Filter>Engine Files\PhysX</Filter>
     </ClInclude>
+    <ClInclude Include="Toolbar.h">
+      <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Infopane.h">
+      <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -802,6 +811,12 @@
     </ClCompile>
     <ClCompile Include="Trigger.cpp">
       <Filter>Engine Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="Toolbar.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Infopane.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

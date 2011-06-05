@@ -341,11 +341,20 @@ void EditorGUI::Initialize()
 	// FONT
 	m_pInfoFont = Content->LoadTextFormat(_T("Verdana"),10,false,false);
 }
+
 void EditorGUI::Draw(const RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
 	BX2D->SetAntiAliasing(false);
+
+	/*if (m_Mode == MODE_EDITOR || m_Mode == MODE_GAME)
+	{
+	for_each(m_pLevel->GetTriggers().cbegin(), m_pLevel->GetTriggers().cend(),[&](pair<tstring, Trigger*> trigger)
+	{
+	trigger.second->Draw(const_cast<RenderContext*>(pRenderContext));
+	});
+	}*/
 
 	if (m_Mode == MODE_EDITOR)
 	{
@@ -744,6 +753,7 @@ void EditorGUI::Draw(const RenderContext* pRenderContext)
 	BX2D->DrawString(	streamInfo.str(),
 						RectF(0,0, BX2D->GetWindowSize().width - 5, BX2D->GetWindowSize().height - 4));
 }
+
 void EditorGUI::Tick()
 {
 	if (!m_pRenderContext)

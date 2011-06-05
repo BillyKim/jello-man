@@ -98,6 +98,7 @@
     <ClInclude Include="CameraBase.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
+    <ClInclude Include="Infopane.h" />
     <ClInclude Include="IniReader.h" />
     <ClInclude Include="ContentManager.h" />
     <ClInclude Include="Controls.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="TextFormatLoader.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Toolbar.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
@@ -214,6 +216,7 @@
     <ClCompile Include="CameraBase.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
+    <ClCompile Include="Infopane.cpp" />
     <ClCompile Include="IniReader.cpp" />
     <ClCompile Include="ContentManager.cpp" />
     <ClCompile Include="Controls.cpp" />
@@ -304,6 +307,7 @@
     <ClCompile Include="TextFormatLoader.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="Toolbar.cpp" />
     <ClCompile Include="Trigger.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />

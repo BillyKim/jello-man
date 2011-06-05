@@ -6,13 +6,14 @@
 #include "Effect.h"
 #include "PosColEffect.h"
 #include "RenderContext.h"
+#include "Model.h"
 
 class BaseGrid
 {
 public:
 
 	// CONSTRUCTOR - DESTRUCTOR
-	BaseGrid(ID3D10Device* device);
+	BaseGrid();
 	virtual ~BaseGrid();
 
 	// GENERAL
@@ -21,15 +22,9 @@ public:
 
 private:
 
-	void DefineInputLayout();
-	void BuildVertexBuffer();
-
 	// DATAMEMBERS
-	ID3D10Device* m_pDevice;
-
-	ID3D10Buffer* m_pVertexBuffer;
-
-	vector<VertexPosCol> m_VecVertices;
+	Model<VertexPos>* m_pBaseGrid;
+	Model<VertexPos>* m_pBaseGridCenter;
 
 	PosColEffect* m_pEffect;
 

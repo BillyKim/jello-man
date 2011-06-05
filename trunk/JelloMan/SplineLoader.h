@@ -19,26 +19,25 @@ public:
 	virtual ~SplineLoader(void);
     //<-----------------------------------
 	
-	Model<VertexPosCol>* Load(ID3D10Device *pDXDevice, const tstring& assetName, Color& col);
+	Model<VertexPos>* Load(ID3D10Device *pDXDevice, const tstring& assetName);
 
 private:
-    void ReadBinObj(const tstring& assetName, Color col);
-    void ReadASCIIObj(const tstring& assetName, Color col);
+    void ReadBinObj(const tstring& assetName);
+    void ReadASCIIObj(const tstring& assetName);
 
-	void AddVertex(const Vector3& v, Color& col);
+	void AddVertex(const Vector3& v);
     void AddMesh(const tstring& name);
-	//void AddIndexes(const float& index);
     void FlushMesh();
 
     vector<Vector3> m_VertexData;
 
-    vector<VertexPosCol> m_VPNTTData;
+    vector<VertexPos> m_VPNTTData;
 	vector<DWORD> m_IndexData;
 
-    Model<VertexPosCol>* m_pCurrentModel;
-    ModelMesh<VertexPosCol>* m_pCurrentMesh;
+    Model<VertexPos>* m_pCurrentModel;
+    ModelMesh<VertexPos>* m_pCurrentMesh;
 
-    AssetContainer<Model<VertexPosCol> >* m_pAssetContainer;
+    AssetContainer<Model<VertexPos> >* m_pAssetContainer;
 
     //private
 	SplineLoader(const SplineLoader& t);

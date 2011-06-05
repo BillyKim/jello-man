@@ -9,13 +9,12 @@
 #include "SimpleObject.h"
 #include "IInstancible.h"
 #include "EditorGUI.h"
-#include "Trigger.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
                 m_pDXDevice(pDXDevice),
 				m_pRenderContext(0),
-				m_pBaseGrid(new BaseGrid(pDXDevice)),
+				m_pBaseGrid(new BaseGrid()),
 				m_bShowGrid(false),
 				m_bTickCharacter(false),
 				m_pCharacter(0),
@@ -114,17 +113,30 @@ void Level::AddLevelObject(ILevelObject* pLevelObject)
 {
 	m_pLevelObjects.push_back(pLevelObject);
 
-	using namespace Instancing;
-	IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
-	if (instObj != 0 && instObj->IsUsedForInstancing() == true)
+	// triggers
+	Trigger* pTrigger = dynamic_cast<Trigger*>(pLevelObject);
+
+	if (pTrigger != 0)
 	{
-		m_pInstancingManager->AddObject(instObj);
+		tstring triggerName = pTrigger->GetTriggerName();
+		m_pTriggers[triggerName] = pTrigger;
 	}
 	else
 	{
-		IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
-		if (drawObj != 0) //we allow objects that don't need to be drawn
-			m_pDrawableObjects.push_back(drawObj);
+		// instancing
+		using namespace Instancing;
+		IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+
+		if (instObj != 0 && instObj->IsUsedForInstancing() == true)
+		{
+			m_pInstancingManager->AddObject(instObj);
+		}
+		else
+		{
+			IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
+			if (drawObj != 0) //we allow objects that don't need to be drawn
+				m_pDrawableObjects.push_back(drawObj);
+		}
 	}
 }
 void Level::RemoveLevelObject(ILevelObject* pLevelObject)
@@ -266,6 +278,11 @@ void Level::DrawForward(RenderContext* pRenderContext)
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
 
+	for_each(GetTriggers().cbegin(), GetTriggers().cend(),[&](pair<tstring, Trigger*> trigger)
+	{
+		trigger.second->Draw(const_cast<RenderContext*>(pRenderContext));
+	});
+
 	// DRAW LIGHTS
 	if (m_bEditor)
 	{
@@ -278,4 +295,11 @@ void Level::DrawForward(RenderContext* pRenderContext)
         
 		BX2D->SetAntiAliasing(false);
 	}
+}
+
+bool Level::Triggered(const tstring& triggerName)
+{
+	ASSERT(m_pTriggers.find(triggerName) != m_pTriggers.end(), "Trigger not present in the level!");
+
+	return m_pTriggers[triggerName]->Triggered();
 }

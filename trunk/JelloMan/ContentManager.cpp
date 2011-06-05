@@ -68,9 +68,9 @@ SoftbodyMesh* ContentManager::LoadSoftbodyMesh(const tstring& assetName)
     return m_pModelLoader->LoadSoftbodyMesh(m_pDevice, assetName);
 }
 
-Model<VertexPosCol>* ContentManager::LoadSpline(const tstring& assetName, Color col)
+Model<VertexPos>* ContentManager::LoadSpline(const tstring& assetName)
 {
-	return m_pSplineLoader->Load(m_pDevice, assetName, col);
+	return m_pSplineLoader->Load(m_pDevice, assetName);
 }
 
 Image* ContentManager::LoadImage(const tstring& fileNameRef, int newWidth, int newHeight)

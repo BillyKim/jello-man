@@ -32,9 +32,9 @@ SpotLight::SpotLight():
 
 	m_pSpotLightImage = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline2 = Content->LoadSpline(_T("../Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline3 = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/cone_path.obj"));
+	m_pAttenuationSpline2 = Content->LoadSpline(_T("../Content/Models/arrow_path.obj"));
+	m_pAttenuationSpline3 = Content->LoadSpline(_T("../Content/Models/orb_path.obj"));
 	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 SpotLight::SpotLight(const SpotLightDesc& desc):
@@ -60,9 +60,9 @@ SpotLight::SpotLight(const SpotLightDesc& desc):
 
 	m_pSpotLightImage = Content->LoadImage(_T("../Content/Images/Editor/slight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/cone_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline2 = Content->LoadSpline(_T("../Content/Models/arrow_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
-	m_pAttenuationSpline3 = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/cone_path.obj"));
+	m_pAttenuationSpline2 = Content->LoadSpline(_T("../Content/Models/arrow_path.obj"));
+	m_pAttenuationSpline3 = Content->LoadSpline(_T("../Content/Models/orb_path.obj"));
 	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 SpotLight::~SpotLight()
@@ -185,6 +185,7 @@ void SpotLight::Draw(const RenderContext* rc)
 
 		m_pEffect->SetWorld(matWorld);
 		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
+		m_pEffect->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
 		m_pAttenuationSpline->Draw(m_pEffect);
 
 		matWorld =
@@ -195,6 +196,7 @@ void SpotLight::Draw(const RenderContext* rc)
 
 		m_pEffect->SetWorld(matWorld);
 		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
+		m_pEffect->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
 		m_pAttenuationSpline3->Draw(m_pEffect);
 	}
 	else
@@ -209,6 +211,7 @@ void SpotLight::Draw(const RenderContext* rc)
 
 		m_pEffect->SetWorld(matWorld);
 		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
+		m_pEffect->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
 		m_pAttenuationSpline2->Draw(m_pEffect);
 	}
 }
