@@ -12,8 +12,7 @@ BaseGrid::BaseGrid()	:	m_pEffect(0),
 
 BaseGrid::~BaseGrid()
 {
-	delete m_pBaseGrid;
-	delete m_pBaseGridCenter;
+	
 }
 
 // GENERAL

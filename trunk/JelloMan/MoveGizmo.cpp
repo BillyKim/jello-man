@@ -380,13 +380,15 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			if (m_bSnap)
 				diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
 
-            if (diff != 0)
-            {
+			if (diff != 0)
+			{
+				m_vAnchor.X = mousePosX3D.X;
+
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
 					pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
 				}
-            }
+			}
 		}
 		else
 			m_vAnchor.X = mousePosX3D.X;
@@ -398,8 +400,6 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 		if (m_bLockY == true)
 		{
 			float diff = (mousePosY3D - m_vAnchor).Y;
-
-			m_vAnchor.Y = mousePosY3D.Y;
 
 			if (m_bSnapToGrid && m_bSnap)
 			{
@@ -418,9 +418,14 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			if (m_bSnap)
 				diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
 
-			for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+			if (diff != 0)
 			{
-				pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
+				m_vAnchor.Y = mousePosY3D.Y;
+
+				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				{
+					pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
+				}
 			}
 		}
 		else
@@ -434,8 +439,6 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 		if (m_bLockZ == true)
 		{
 			float diff = (mousePosZ3D - m_vAnchor).Z;
-
-			m_vAnchor.Z = mousePosZ3D.Z;
 
 			if (m_bSnapToGrid && m_bSnap)
 			{
@@ -454,9 +457,14 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			if (m_bSnap)
 				diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
 
-			for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+			if (diff != 0)
 			{
-				pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
+				m_vAnchor.Z = mousePosZ3D.Z;
+
+				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				{
+					pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
+				}
 			}
 		}
 		else
