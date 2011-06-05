@@ -151,7 +151,6 @@ void PointLight::Draw(const RenderContext* rc)
 			Matrix::CreateTranslation(
 			Vector3(m_Desc.position.X, m_Desc.position.Y, m_Desc.position.Z));
 
-		m_pEffect->SetWorld(matWorld);
 		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
 		m_pEffect->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
 		m_pAttenuationSpline->Draw(m_pEffect);

@@ -146,8 +146,7 @@ void Level::RemoveLevelObject(ILevelObject* pLevelObject)
 
 	if (pTrigger != 0)
 	{
-		auto it = m_pTriggers.find(pTrigger->GetTriggerName());
-		m_pTriggers.erase(it);
+        m_pTriggers.erase(pTrigger->GetTriggerName());
 	}
 	else
 	{
@@ -220,7 +219,7 @@ void Level::Deserialize(const string& path)
     {
         ISerializable* obj = s.Deserialize(GetObject);
         
-        //Test is lvlObj
+        //Test if lvlObj
         ILevelObject* lvlObj = dynamic_cast<ILevelObject*>(obj);
         if (lvlObj != 0)
         {
@@ -245,6 +244,7 @@ void Level::Clear()
     {
 		delete obj;
     });
+    m_pTriggers.clear();
     m_pLevelObjects.clear();
     m_pDrawableObjects.clear();
     m_pInstancingManager->Clear();
@@ -290,9 +290,9 @@ void Level::DrawForward(RenderContext* pRenderContext)
 		m_pBaseGrid->Draw(pRenderContext);
 
 	// DRAW TRIGGERS
-	for_each(GetTriggers().cbegin(), GetTriggers().cend(),[&](pair<tstring, Trigger*> trigger)
+	for_each(GetTriggers().cbegin(), GetTriggers().cend(), [&](pair<tstring, Trigger*> trigger)
 	{
-		trigger.second->Draw(const_cast<RenderContext*>(pRenderContext));
+		trigger.second->Draw(pRenderContext);
 	});
 
 	// DRAW LIGHTS

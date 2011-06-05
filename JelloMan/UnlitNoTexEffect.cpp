@@ -1,6 +1,6 @@
-#include "PosColEffect.h"
+#include "UnlitNoTexEffect.h"
 
-PosColEffect::PosColEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect): 
+UnlitNoTexEffect::UnlitNoTexEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect): 
 				Effect(pDXDevice, effect), 
                 m_pMtxWVP(GetVariableBySemantic("WorldViewProjection")->AsMatrix()),
 				m_pColor(GetVariableBySemantic("Color")->AsVector()),
@@ -9,32 +9,32 @@ PosColEffect::PosColEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect):
     ASSERT(m_pMtxWVP->IsValid() != 0, "");
 	ASSERT(m_pColor->IsValid() != 0, "");
 
-    CreateInputLayout<VertexPos>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
+    CreateInputLayout<VertexPosNormTanTex>(pDXDevice, this, &m_pInputLayout, m_VertexStride);
 }
 
 
-PosColEffect::~PosColEffect(void)
+UnlitNoTexEffect::~UnlitNoTexEffect(void)
 {
     SafeRelease(m_pInputLayout);
 }
 
-void PosColEffect::SetWorldViewProjection(const Matrix& wvp)
+void UnlitNoTexEffect::SetWorldViewProjection(const Matrix& wvp)
 {
 	D3DXMATRIX mat = (D3DXMATRIX)wvp;
     m_pMtxWVP->SetMatrix((float*)mat);
 }
-void PosColEffect::SetColor(const Color& color)
+void UnlitNoTexEffect::SetColor(const Color& color)
 {
-	D3DXVECTOR4 vec(color.R, color.G, color.B, color.A);
+    float vec[4] = {color.R, color.G, color.B, color.A};
 	m_pColor->SetFloatVector(vec);
 }
 
-ID3D10InputLayout* PosColEffect::GetInputLayout() const
+ID3D10InputLayout* UnlitNoTexEffect::GetInputLayout() const
 {
     ASSERT(m_pInputLayout != 0, "");
     return m_pInputLayout;
 }
-UINT PosColEffect::GetVertexStride() const
+UINT UnlitNoTexEffect::GetVertexStride() const
 {
     return m_VertexStride;
 }

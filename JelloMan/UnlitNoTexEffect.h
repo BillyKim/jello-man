@@ -4,11 +4,11 @@
 #include "Matrix.h"
 #include "Color.h"
 
-class PosColEffect : public Effect
+class UnlitNoTexEffect : public Effect
 {
 public:
-	PosColEffect(ID3D10Device* pDevice, ID3D10Effect* effect);
-	virtual ~PosColEffect(void);
+	UnlitNoTexEffect(ID3D10Device* pDevice, ID3D10Effect* effect);
+	virtual ~UnlitNoTexEffect(void);
 
     void SetWorldViewProjection(const Matrix& wvp);
 	void SetColor(const Color& color);

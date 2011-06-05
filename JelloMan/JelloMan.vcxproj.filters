@@ -498,6 +498,9 @@
     <ClInclude Include="Infopane.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
     </ClInclude>
+    <ClInclude Include="UnlitNoTexEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -818,6 +821,9 @@
     <ClCompile Include="Infopane.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
     </ClCompile>
+    <ClCompile Include="UnlitNoTexEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
@@ -861,6 +867,9 @@
     </None>
     <None Include="Content\Effects\fluidPreEffect.fx">
       <Filter>Content\effect\fluids</Filter>
+    </None>
+    <None Include="Content\Effects\unlit-notex.fx">
+      <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>
 </Project>

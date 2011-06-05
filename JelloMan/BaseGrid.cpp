@@ -26,7 +26,6 @@ void BaseGrid::Init()
 
 void BaseGrid::Draw(const RenderContext* pRenderContext)
 {
-	m_pEffect->SetWorld(m_mtxWorld);
 	m_pEffect->SetWorldViewProjection(m_mtxWorld * pRenderContext->GetCamera()->GetViewProjection());
 
 	m_pEffect->SetColor(Color(0.f,.1f,.2f,1.f));
