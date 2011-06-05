@@ -58,7 +58,7 @@ void Blox2DEngine::SetColor(int r, int g, int b, float a)
 	}
 }
 
-void Blox2DEngine::SetColor(D2D1_COLOR_F color)
+void Blox2DEngine::SetColor(const D2D1_COLOR_F& color)
 {
 	m_pColorBrush->SetColor(color);
 }

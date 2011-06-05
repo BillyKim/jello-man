@@ -64,6 +64,9 @@ void MoveGizmo::DrawAxis(const Vector3& pos, Axis axis,
             if (m_bLockZ) isSelected = true; 
             color.r = 1.0f; color.g = 1.0f;
             break;
+
+		default:
+			ASSERT(false, "This is not an axis!");
     }
 
     BX2D->SetColor(color);
@@ -84,23 +87,24 @@ void MoveGizmo::DrawAxis(const Vector3& pos, Axis axis,
 		pointEnd.Y,
 		2.0f);
 
-    if (isSelected)
-    {
-        BX2D->SetColor(255, 255, 255);
-        BX2D->FillEllipse(
-		pointEnd.X,
-		pointEnd.Y,
-		static_cast<float>(END_ELLIPSE_RADIUS*2.5f),
-		static_cast<float>(END_ELLIPSE_RADIUS*2.5f));
-        BX2D->SetColor(color);
-    }
-
 	BX2D->FillEllipse(
 		pointEnd.X,
 		pointEnd.Y,
 		static_cast<float>(END_ELLIPSE_RADIUS*2),
 		static_cast<float>(END_ELLIPSE_RADIUS*2));
 
+    if (isSelected)
+    {
+        BX2D->SetColor(255, 255, 255);
+        BX2D->DrawEllipse(
+		pointEnd.X,
+		pointEnd.Y,
+		static_cast<float>(END_ELLIPSE_RADIUS*2.25f),
+		static_cast<float>(END_ELLIPSE_RADIUS*2.25f),
+		2.5f);
+    }
+
+	BX2D->SetColor(color);
 	BX2D->DrawString(label,
 		pointEnd.X - 20,
 		pointEnd.Y - 10);

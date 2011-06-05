@@ -141,21 +141,32 @@ void Level::AddLevelObject(ILevelObject* pLevelObject)
 }
 void Level::RemoveLevelObject(ILevelObject* pLevelObject)
 {
-    using namespace Instancing;
-    IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
-    if (instObj != 0)
-    {
-        m_pInstancingManager->DeleteObject(instObj);
-    }
-    else
-    {
-        IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
-        ASSERT(drawObj != 0, "What are you?");
-        m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), drawObj));
-    }
+	// triggers
+	Trigger* pTrigger = dynamic_cast<Trigger*>(pLevelObject);
 
-    m_pLevelObjects.erase(remove(m_pLevelObjects.begin(), m_pLevelObjects.end(), pLevelObject));
-    delete pLevelObject;
+	if (pTrigger != 0)
+	{
+		auto it = m_pTriggers.find(pTrigger->GetTriggerName());
+		m_pTriggers.erase(it);
+	}
+	else
+	{
+		using namespace Instancing;
+		IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+		if (instObj != 0)
+		{
+			m_pInstancingManager->DeleteObject(instObj);
+		}
+		else
+		{
+			IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
+			ASSERT(drawObj != 0, "What are you?");
+			m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), drawObj));
+		}		
+	}
+
+	m_pLevelObjects.erase(remove(m_pLevelObjects.begin(), m_pLevelObjects.end(), pLevelObject));
+	delete pLevelObject;
 }
 
 void Level::AddLight(Light* pLight)

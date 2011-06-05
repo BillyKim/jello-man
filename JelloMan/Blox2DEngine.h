@@ -32,7 +32,7 @@ public:
 	//* Sets the color of the brush. *
 	void SetColor(int r, int g, int b, float a = 1.0f);
 	//* Sets the color of the brush. *
-	void SetColor(D2D1_COLOR_F color);
+	void SetColor(const D2D1_COLOR_F& color);
 	//* Sets the textformat. *
 	void SetFont(TextFormat* pTextFormat);
 	//* Sets the transformation matrix of the world. *

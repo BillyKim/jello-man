@@ -954,6 +954,7 @@ void EditorGUI::DrawSelectedObjects()
 				pSObj->GetActor()->getShapes()[0]->getWorldBounds(bounds);
 
 				NxVec3 mid;
+				mid.zero();
 				bounds.getCenter(mid);
 				NxVec3 dim;
 				bounds.getDimensions(dim);
