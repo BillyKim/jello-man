@@ -2,9 +2,8 @@ cbuffer cbPerObject
 {
 	matrix mtxWVP : WorldViewProjection;
 	matrix mtxWorld : World;
+	float4 fColor : Color;
 };
-
-RasterizerState DisableCulling { CullMode = NONE; };
 
 RasterizerState WireFrame
 {
@@ -17,7 +16,6 @@ RasterizerState WireFrame
 struct VS_IN
 {
 	float3 Pos		:POSITION;
-	float3 Color	:COLOR;
 };
 
 struct VS_OUT
@@ -30,7 +28,7 @@ VS_OUT VS(VS_IN vIn)
 {
 	VS_OUT vOut;
 	vOut.Pos = mul(float4(vIn.Pos, 1.0f), mtxWVP);
-    vOut.Color = float4(vIn.Color,1);
+    vOut.Color = fColor;
 	return vOut;
 }
 

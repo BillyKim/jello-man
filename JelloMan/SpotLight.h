@@ -95,9 +95,9 @@ private:
 
 	Image* m_pSpotLightImage;
 
-	Model<VertexPosCol>* m_pAttenuationSpline;
-	Model<VertexPosCol>* m_pAttenuationSpline2;
-	Model<VertexPosCol>* m_pAttenuationSpline3;
+	Model<VertexPos>* m_pAttenuationSpline;
+	Model<VertexPos>* m_pAttenuationSpline2;
+	Model<VertexPos>* m_pAttenuationSpline3;
 	PosColEffect* m_pEffect;
 
     void UpdateShadowCameraView();

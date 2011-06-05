@@ -38,7 +38,7 @@ public:
 	void Initialize();
 	void Draw(const RenderContext* pRenderContext);
 	void Tick();
-    void Clear();
+    void Clear();	
 
 	// GETTERS
 	Button* GetLightButton() const
@@ -67,7 +67,15 @@ public:
 
 private:
 
+	/*void DrawUserBar();
+		void DrawButtons();
+
+	void DrawInfo();
+		void DrawLightInfo();
+		void DrawObjectInfo();*/
+
 	void DrawSelectedObjects();
+	//void DrawTriggerBoxes();
 
 	// DATAMEMBERS
 

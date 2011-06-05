@@ -82,7 +82,7 @@ private:
 
 	Image* m_pPointLightImage;
 	
-	Model<VertexPosCol>* m_pAttenuationSpline;
+	Model<VertexPos>* m_pAttenuationSpline;
 	PosColEffect* m_pEffect;
 };
 

@@ -18,7 +18,7 @@ PointLight::PointLight():
 
 	m_pPointLightImage = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/orb_path.obj"));
 	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 
     ZeroMemory(&m_Desc, sizeof(PointLightDesc));
@@ -39,7 +39,7 @@ PointLight::PointLight(const PointLightDesc& desc):
 
 	m_pPointLightImage = Content->LoadImage(_T("../Content/Images/Editor/plight.png"));
 
-	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/orb_path.obj"), Color(255.0f,255.0f,255.0f,1.0f));
+	m_pAttenuationSpline = Content->LoadSpline(_T("../Content/Models/orb_path.obj"));
 	m_pEffect = Content->LoadEffect<PosColEffect>(_T("../Content/Effects/poscol.fx"));
 }
 PointLight::~PointLight()
@@ -153,6 +153,7 @@ void PointLight::Draw(const RenderContext* rc)
 
 		m_pEffect->SetWorld(matWorld);
 		m_pEffect->SetWorldViewProjection(matWorld * rc->GetCamera()->GetViewProjection());
+		m_pEffect->SetColor(Color(1.0f,1.0f,1.0f,1.0f));
 		m_pAttenuationSpline->Draw(m_pEffect);
 	}
 }

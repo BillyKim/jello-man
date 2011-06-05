@@ -4,7 +4,7 @@
 SplineLoader::SplineLoader(void): 
                 m_pCurrentModel(0), 
                 m_pCurrentMesh(0),
-                m_pAssetContainer(new AssetContainer<Model<VertexPosCol>>())
+                m_pAssetContainer(new AssetContainer<Model<VertexPos>>())
 {
 }
 
@@ -14,7 +14,7 @@ SplineLoader::~SplineLoader(void)
     delete m_pAssetContainer;
 }
 
-Model<VertexPosCol>* SplineLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName, Color& col)
+Model<VertexPos>* SplineLoader::Load(ID3D10Device *pDXDevice, const tstring& assetName)
 {
     if (m_pAssetContainer->IsAssetPresent(assetName))
     {
@@ -23,16 +23,16 @@ Model<VertexPosCol>* SplineLoader::Load(ID3D10Device *pDXDevice, const tstring& 
     else
     {
 		m_pCurrentModel = 0;
-        m_pCurrentModel = new Model<VertexPosCol>(pDXDevice);
+        m_pCurrentModel = new Model<VertexPos>(pDXDevice);
 		m_VertexData.clear();
 		m_IndexData.clear();
 		m_VPNTTData.clear();
 		m_pCurrentMesh = 0;
 
         if (assetName.rfind(_T(".obj")) != -1)
-            ReadASCIIObj(assetName,col); //assigns all meshes
+            ReadASCIIObj(assetName); //assigns all meshes
         else if (assetName.rfind(_T(".binobj")) != -1)
-            ReadBinObj(assetName,col);
+            ReadBinObj(assetName);
 
         m_pAssetContainer->AddAsset(assetName, m_pCurrentModel);
 
@@ -40,7 +40,7 @@ Model<VertexPosCol>* SplineLoader::Load(ID3D10Device *pDXDevice, const tstring& 
     }
 }
 
-void SplineLoader::ReadBinObj(const tstring& assetName, Color col)
+void SplineLoader::ReadBinObj(const tstring& assetName)
 {
     //LAYOUT
     //DWord : #meshes
@@ -74,7 +74,7 @@ void SplineLoader::ReadBinObj(const tstring& assetName, Color col)
         {
             Vector3 pos = stream.readVector3();
 
-			m_VPNTTData.push_back(VertexPosCol(pos,Vector4(col.R,col.G,col.B,col.A)));
+			m_VPNTTData.push_back(VertexPos(pos));
         }
 
         m_pCurrentMesh->SetVertices(m_VPNTTData);
@@ -84,7 +84,7 @@ void SplineLoader::ReadBinObj(const tstring& assetName, Color col)
 //*********************
 //  ASCII
 //******************
-void SplineLoader::ReadASCIIObj(const tstring& assetName, Color col)
+void SplineLoader::ReadASCIIObj(const tstring& assetName)
 {
     ifstream stream;
     stream.open(assetName.c_str());
@@ -103,7 +103,7 @@ void SplineLoader::ReadASCIIObj(const tstring& assetName, Color col)
         {
             Vector3 v;
             sscanf_s(line.c_str(), "v %f %f %f", &v.X, &v.Y, &v.Z);
-            AddVertex(v,col);
+            AddVertex(v);
         }
 
 		else if (line.find("l", 0) == 0) //v is 0'd char
@@ -161,13 +161,13 @@ void SplineLoader::ReadASCIIObj(const tstring& assetName, Color col)
     stream.close();
 }
 
-void SplineLoader::AddVertex(const Vector3& v, Color& col)
+void SplineLoader::AddVertex(const Vector3& v)
 {
 	Vector3 copy = v;
 	copy.Z *= -1;
     m_VertexData.push_back(copy);
 
-	m_VPNTTData.push_back(VertexPosCol(copy,Vector4(col.R,col.G,col.B,col.A)));
+	m_VPNTTData.push_back(VertexPos(copy));
 }
 void SplineLoader::AddMesh(const tstring& name)
 {

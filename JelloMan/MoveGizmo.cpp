@@ -3,15 +3,15 @@
 
 // CONSTRUCTOR - DESTRUCTOR
 MoveGizmo::MoveGizmo()	:	m_pRenderContext(0),
-								m_pAxisFont(0),
-                                m_bLockX(false),
-                                m_bLockY(false),
-                                m_bLockZ(false),
-                                m_vAnchor(Vector3::Zero),
-								m_bSnap(false),
-								m_SnapSize(0.1f),
-								m_bSnapToGrid(false),
-                                m_bCanCopy(true)
+							m_pAxisFont(0),
+                            m_bLockX(false),
+                            m_bLockY(false),
+                            m_bLockZ(false),
+                            m_vAnchor(Vector3::Zero),
+							m_bSnap(false),
+							m_SnapSize(0.1f),
+							m_bSnapToGrid(false),
+                            m_bCanCopy(true)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 
@@ -202,6 +202,7 @@ void MoveGizmo::Tick(ObjectSelecter* pObjectSelecter)
 		return;
 
     m_vCenterPos = pObjectSelecter->GetCenterPos();
+
     if (m_vCenterPos != Vector3::Infinity)
     {
         // VIEWPORT
@@ -262,9 +263,8 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
         //<-------
 
 		// Lock Checks ----->
-        bool setAnchor = false;
-        /*if (CONTROLS->LeftMBDown() == true)
-        {*/
+        if (CONTROLS->LeftMBDown() == true)
+        {
             if (m_bLockX == false && m_bLockY == false && m_bLockZ == false)
             {
                 #pragma region
@@ -334,13 +334,13 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
                     }
                 }
                 #pragma endregion
-                setAnchor = (m_bLockX == true || m_bLockY == true || m_bLockZ == true);
             }
-		//}
+		}
         //<---------------
 		
         if (m_bCanCopy == false && m_bLockX == false && m_bLockY == false && m_bLockZ == false == true)
             m_bCanCopy = true;
+
         if (m_bLockX || m_bLockY || m_bLockZ)
         {
 			if (CONTROLS->LeftMBDown())
@@ -350,105 +350,120 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
                     m_bCanCopy = false;
                     pObjectSelecter->CopySelected();
                 }
-				if (m_bLockX == true)
-				{
-					Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.Z);
-					Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
-					if (setAnchor)
-						m_vAnchor.X = (mousePos3D - posLineX).X;
-					float diff = (mousePos3D - posLineX).X - m_vAnchor.X;
-
-					if (m_bSnapToGrid && m_bSnap)
-					{
-						for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-						{
-							int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().X * 1000) % (int)(m_SnapSize * 1000));
-
-							if (diffToGrid != 0)
-							{
-								pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * (-diffToGrid / 1000.0f));
-								diff = 0;
-							}
-						}
-					}
-
-					if (m_bSnap)
-						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
-                    if (diff != 0)
-                    {
-					    for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-					    {
-						    pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
-					    }
-                    }
-				}
-				if (m_bLockY == true)
-				{
-					Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.Z);
-					Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
-					if (setAnchor)
-						m_vAnchor.Y = (mousePos3D - posLineY).Y;
-					float diff = (mousePos3D - posLineY).Y - m_vAnchor.Y;
-
-					if (m_bSnapToGrid && m_bSnap)
-					{
-						for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-						{
-							int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Y * 1000) % (int)(m_SnapSize * 1000));
-
-							if (diffToGrid != 0)
-							{
-								pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * (-diffToGrid / 1000.0f));
-								diff = 0;
-							}
-						}
-					}
-
-					if (m_bSnap)
-						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
-
-					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-					{
-						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
-					}
-				}
-				if (m_bLockZ == true)
-				{
-					Vector3 mousePos = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.Z);
-					Vector3 mousePos3D = Vector3::UnProject(mousePos, &m_ViewPort, matProj, matView, matWorld);
-					if (setAnchor)
-						m_vAnchor.Z = (mousePos3D - posLineZ).Z;
-					float diff = (mousePos3D - posLineZ).Z - m_vAnchor.Z;
-
-					if (m_bSnapToGrid && m_bSnap)
-					{
-						for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-						{
-							int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Z * 1000) % (int)(m_SnapSize * 1000));
-
-							if (diffToGrid != 0)
-							{
-								pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * (diffToGrid / 1000.0f));
-								diff = 0;
-							}
-						}
-					}
-
-					if (m_bSnap)
-						diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
-
-					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-					{
-						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
-					}
-				}
-
-				pObjectSelecter->CalcCenterPos();
 			}
-        }
-	}
+		}
 
-    
+		Vector3 mousePosX = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineX_2D.Z);
+		Vector3 mousePosX3D = Vector3::UnProject(mousePosX, &m_ViewPort, matProj, matView, matWorld);
+		mousePosX3D.X -= l * 100;
+
+		if (m_bLockX == true)
+		{
+			float diff = (mousePosX3D - m_vAnchor).X;
+
+			m_vAnchor.X = mousePosX3D.X;
+
+			if (m_bSnapToGrid && m_bSnap)
+			{
+				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				{
+					int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().X * 1000) % (int)(m_SnapSize * 1000));
+
+					if (diffToGrid != 0)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * (-diffToGrid / 1000.0f));
+						diff = 0;
+					}
+				}
+			}
+
+			if (m_bSnap)
+				diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
+
+            if (diff != 0)
+            {
+				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				{
+					pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
+				}
+            }
+		}
+		else
+			m_vAnchor.X = mousePosX3D.X;
+
+		Vector3 mousePosY = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineY_2D.Z);
+		Vector3 mousePosY3D = Vector3::UnProject(mousePosY, &m_ViewPort, matProj, matView, matWorld);
+		mousePosY3D.Y -= l * 100;
+
+		if (m_bLockY == true)
+		{
+			float diff = (mousePosY3D - m_vAnchor).Y;
+
+			m_vAnchor.Y = mousePosY3D.Y;
+
+			if (m_bSnapToGrid && m_bSnap)
+			{
+				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				{
+					int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Y * 1000) % (int)(m_SnapSize * 1000));
+
+					if (diffToGrid != 0)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * (-diffToGrid / 1000.0f));
+						diff = 0;
+					}
+				}
+			}
+
+			if (m_bSnap)
+				diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
+
+			for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+			{
+				pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
+			}
+		}
+		else
+			m_vAnchor.Y = mousePosY3D.Y;
+
+		Vector3 mousePosZ = Vector3(CONTROLS->GetMousePos().x, CONTROLS->GetMousePos().y, posLineZ_2D.Z);
+		Vector3 mousePosZ3D = Vector3::UnProject(mousePosZ, &m_ViewPort, matProj, matView, matWorld);
+
+		mousePosZ3D.Z -= l * 100;
+
+		if (m_bLockZ == true)
+		{
+			float diff = (mousePosZ3D - m_vAnchor).Z;
+
+			m_vAnchor.Z = mousePosZ3D.Z;
+
+			if (m_bSnapToGrid && m_bSnap)
+			{
+				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				{
+					int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Z * 1000) % (int)(m_SnapSize * 1000));
+
+					if (diffToGrid != 0)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * (diffToGrid / 1000.0f));
+						diff = 0;
+					}
+				}
+			}
+
+			if (m_bSnap)
+				diff = ((int)(1000 * diff) - ((int)(1000 * diff) % (int)(1000 * m_SnapSize))) / 1000.0f;
+
+			for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+			{
+				pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
+			}
+		}
+		else
+			m_vAnchor.Z = mousePosZ3D.Z;
+
+		pObjectSelecter->CalcCenterPos();
+	}
 }
 bool MoveGizmo::PolyCollisionCheck(const Vector3& pos, const Vector3& vAxis1, const Vector3& vAxis2, 
                                        const Matrix& proj, const Matrix& view, const Matrix& world)

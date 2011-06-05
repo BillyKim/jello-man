@@ -8,6 +8,8 @@
 #include "ILevelObject.h"
 #include "ISerializable.h"
 #include "PhysXBox.h"
+#include "Model.h"
+#include "PosColEffect.h"
 
 class Trigger:	public Actor,
 				public IDrawable,
@@ -66,5 +68,8 @@ private:
 	bool m_bTriggered;
 
 	Vector3 m_Dimensions;
+
+	Model<VertexPos>* m_pModel;
+	PosColEffect* m_pEffect;
 };
 

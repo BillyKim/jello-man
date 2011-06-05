@@ -17,7 +17,8 @@
 #include "Fluid.h"
 #include "SoftbodyCharacter.h"
 #include "FluidsCharacter.h"
-
+#include <map>
+#include "Trigger.h"
 
 #include "FollowCamera.h"
 
@@ -65,6 +66,10 @@ public:
 	// GETTERS
 	vector<ILevelObject*>& GetLevelObjects()
 	{ return m_pLevelObjects; }
+	map<tstring, Trigger*>& GetTriggers()
+	{ return m_pTriggers; }
+
+	bool Triggered(const tstring& triggerName);
 
 private:
 
@@ -81,6 +86,8 @@ private:
 	vector<ILevelObject*> m_pLevelObjects;
 
 	vector<IDrawable*> m_pDrawableObjects;
+
+	map<tstring, Trigger*> m_pTriggers;
 
 	Instancing::InstancingManager* m_pInstancingManager;
 
