@@ -1,7 +1,6 @@
 cbuffer cbPerObject
 {
 	matrix mtxWVP : WorldViewProjection;
-	matrix mtxWorld : World;
 	float4 fColor : Color;
 };
 
@@ -13,28 +12,31 @@ RasterizerState WireFrame
     MultisampleEnable = true;
 };
 
+BlendState blend
+{
+	BlendEnable[0] = FALSE;
+};
+
 struct VS_IN
 {
-	float3 Pos		:POSITION;
+	float3 pos		:POSITION;
 };
 
 struct VS_OUT
 {
-	float4 Pos		:SV_POSITION;
- 	float4 Color	:COLOR;
+	float4 pos		:SV_POSITION;
 };
 
 VS_OUT VS(VS_IN vIn)
 {
 	VS_OUT vOut;
-	vOut.Pos = mul(float4(vIn.Pos, 1.0f), mtxWVP);
-    vOut.Color = fColor;
+	vOut.pos = mul(float4(vIn.pos, 1.0f), mtxWVP);
 	return vOut;
 }
 
 float4 PS(VS_OUT pIn) : SV_Target
 {
-	return pIn.Color;
+	return fColor;
 }
 
 technique10 Wires
@@ -45,5 +47,6 @@ technique10 Wires
         SetVertexShader( CompileShader( vs_4_0, VS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS() ) );
+		SetBlendState(blend, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xffffffff);
     }
 }

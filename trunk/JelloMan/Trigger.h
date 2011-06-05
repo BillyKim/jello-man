@@ -9,6 +9,7 @@
 #include "ISerializable.h"
 #include "PhysXBox.h"
 #include "Model.h"
+#include "UnlitNoTexEffect.h"
 #include "PosColEffect.h"
 
 class Trigger:	public Actor,
@@ -69,7 +70,10 @@ private:
 
 	Vector3 m_Dimensions;
 
-	Model<VertexPos>* m_pModel;
-	PosColEffect* m_pEffect;
+    Model<VertexPosNormTanTex>* m_pSolidModel;
+    Model<VertexPos>* m_pContourModel;
+
+	PosColEffect* m_pContourEffect;
+    UnlitNoTexEffect* m_pSolidEffect;
 };
 

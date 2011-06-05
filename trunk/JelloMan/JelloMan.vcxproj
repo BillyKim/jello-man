@@ -201,6 +201,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Toolbar.h" />
     <ClInclude Include="Trigger.h" />
+    <ClInclude Include="UnlitNoTexEffect.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
@@ -309,6 +310,7 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Toolbar.cpp" />
     <ClCompile Include="Trigger.cpp" />
+    <ClCompile Include="UnlitNoTexEffect.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
@@ -330,6 +332,7 @@
     <None Include="Content\Effects\normal.fx" />
     <None Include="Content\Effects\preShadowmapInstancedShader.fx" />
     <None Include="Content\Effects\preShadowmapShader.fx" />
+    <None Include="Content\Effects\unlit-notex.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
