@@ -289,6 +289,7 @@ void Level::DrawForward(RenderContext* pRenderContext)
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
 
+	// DRAW TRIGGERS
 	for_each(GetTriggers().cbegin(), GetTriggers().cend(),[&](pair<tstring, Trigger*> trigger)
 	{
 		trigger.second->Draw(const_cast<RenderContext*>(pRenderContext));

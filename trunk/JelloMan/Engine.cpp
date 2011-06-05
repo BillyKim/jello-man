@@ -216,16 +216,16 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	// We pause the game when the window is deactivated and unpause it 
 	// when it becomes active.  
 	case WM_ACTIVATE:
-		if( LOWORD(wParam) == WA_INACTIVE )
-		{
-			m_AppPaused = true;
-			m_GameTimer.Stop();
-		}
-		else
-		{
-			m_AppPaused = false;
-			m_GameTimer.Start();
-		}
+		//if( LOWORD(wParam) == WA_INACTIVE )
+		//{
+		//	//m_AppPaused = true;
+		//	m_GameTimer.Stop();
+		//}
+		//else
+		//{
+		//	m_AppPaused = false;
+		//	m_GameTimer.Start();
+		//}
 		return 0;
 
 	// WM_SIZE is sent when the user resizes the window.  
@@ -237,13 +237,13 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 		{
 			if( wParam == SIZE_MINIMIZED )
 			{
-				m_AppPaused = true;
+				//m_AppPaused = true;
 				m_Minimized = true;
 				m_Maximized = false;
 			}
 			else if( wParam == SIZE_MAXIMIZED )
 			{
-				m_AppPaused = false;
+				//m_AppPaused = false;
 				m_Minimized = false;
 				m_Maximized = true;
 				//RecreateSizedResources();
@@ -255,7 +255,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				// Restoring from minimized state?
 				if( m_Minimized )
 				{
-					m_AppPaused = false;
+					//m_AppPaused = false;
 					m_Minimized = false;
 					//RecreateSizedResources();
 					m_bResize = true;
@@ -264,7 +264,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 				// Restoring from maximized state?
 				else if( m_Maximized )
 				{
-					m_AppPaused = false;
+					//m_AppPaused = false;
 					m_Maximized = false;
 					//RecreateSizedResources();
 					m_bResize = true;
@@ -291,7 +291,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 
 	// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
 	case WM_ENTERSIZEMOVE:
-		m_AppPaused = true;
+		//m_AppPaused = true;
 		m_Resizing  = true;
 		m_GameTimer.Stop();
 		return 0;
@@ -299,7 +299,7 @@ LRESULT Engine::MsgProc(UINT msg, WPARAM wParam, LPARAM lParam)
 	// WM_EXITSIZEMOVE is sent when the user releases the resize bars.
 	// Here we reset everything based on the new window dimensions.
 	case WM_EXITSIZEMOVE:
-		m_AppPaused = false;
+		//m_AppPaused = false;
 		m_Resizing  = false;
 		m_GameTimer.Start();
 		//RecreateSizedResources();
