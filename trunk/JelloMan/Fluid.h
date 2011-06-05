@@ -24,7 +24,7 @@ public:
 	/* GETTERS */
 
 	NxFluid* GetNxFluid() { return m_pFluid; }
-	const Particle* GetParticles() { return m_pParticleBuffer; }
+	const vector<Particle>& GetParticles() { return m_ParticleBuffer; }
 	unsigned GetNrParticles() { return m_NrParticleBuffer; }
 	float GetParticleSize() { return m_ParticleSize; }
 	const Color& GetColor() { return m_ParticleColor; }
@@ -38,7 +38,7 @@ private:
 
 	/* DATAMEMBERS */
 	unsigned int m_NrParticleBuffer;
-	Particle* m_pParticleBuffer;
+	vector<Particle> m_ParticleBuffer;
 
 	NxFluid* m_pFluid;
 	Color m_ParticleColor;
@@ -47,6 +47,7 @@ private:
 
 	// RENDERSTUFF
 	void BuildVertexBuffer();
+	void UpdateVertexBuffer();
 
 	ID3D10Device* m_pDevice;
 
