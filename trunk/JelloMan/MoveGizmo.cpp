@@ -361,8 +361,6 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 		{
 			float diff = (mousePosX3D - m_vAnchor).X;
 
-			m_vAnchor.X = mousePosX3D.X;
-
 			if (m_bSnapToGrid && m_bSnap)
 			{
 				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
