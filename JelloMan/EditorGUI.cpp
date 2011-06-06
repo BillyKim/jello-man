@@ -1013,7 +1013,7 @@ void EditorGUI::DrawSelectedObjects()
 				pol6[2] = Point2F(cube2D[7].X, cube2D[7].Y);
 				pol6[3] = Point2F(cube2D[6].X, cube2D[6].Y);
 
-				BX2D->SetColor(255, 255, 0, 0.4f);
+				BX2D->SetColor(255, 255, 0, 0.2f);
 				BX2D->FillPolygon(pol1, 4);
 				BX2D->FillPolygon(pol2, 4);
 				BX2D->FillPolygon(pol3, 4);
