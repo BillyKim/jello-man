@@ -99,6 +99,7 @@
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
+    <ClInclude Include="FluidsCharacterActor.h" />
     <ClInclude Include="ICharacter.h" />
     <ClInclude Include="Infopane.h" />
     <ClInclude Include="IniReader.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
+    <ClCompile Include="FluidsCharacterActor.cpp" />
     <ClCompile Include="Infopane.cpp" />
     <ClCompile Include="IniReader.cpp" />
     <ClCompile Include="ContentManager.cpp" />

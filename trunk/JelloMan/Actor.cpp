@@ -70,7 +70,9 @@ void Actor::WakeUp()
 void Actor::AddForce(const Vector3& pos)
 {
 	NxVec3 v = static_cast<NxVec3>(pos);
+	m_pPhysX->GetPhysXLock().lock();
 	m_pActor->addForce(v);
+	m_pPhysX->GetPhysXLock().unlock();
 }
 void Actor::Translate(const Vector3& pos)
 {

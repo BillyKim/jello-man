@@ -16,7 +16,7 @@
 #include "ILevelObject.h"
 #include "Fluid.h"
 #include "SoftbodyCharacter.h"
-#include "FluidsCharacter.h"
+#include "FluidsCharacterActor.h"
 #include <map>
 #include "Trigger.h"
 
@@ -77,7 +77,7 @@ private:
 	ID3D10Device* m_pDXDevice;
 
 	SoftbodyCharacter* m_pCharacter;
-	FluidsCharacter* m_pFluidsCharacter;
+	FluidsCharacterActor* m_pFluidsCharacter;
 
 	PhysX* m_pPhysXEngine;
 
