@@ -7,7 +7,7 @@ RotateGizmo::RotateGizmo()	:	m_pRenderContext(0),
                                 m_bLockY(false),
                                 m_bLockZ(false),
 								m_bSnap(false),
-								m_SnapSize(1.0f),
+								m_SnapSize(ToRadians(5.0f)),
 								m_Move(0)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
@@ -249,68 +249,107 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			if (m_bLockX == true)
 			{
 				float move((CONTROLS->GetMouseMovement().y) / 100.0f);
-				/*for_each(pObjectSelecter->GetSelectedObjects().begin(),
-						 pObjectSelecter->GetSelectedObjects().end(), 
-						 [&](IEditorObject* obj)
-				{
-					obj->Rotate(Vector3::Right, move);
-				});*/
 
-				/*if (m_bSnap)
+				bool bSnapped(false);
+
+				if (m_bSnap)
 				{
 					m_Move += move;
 
-					m_Move = ((int)(1000 * m_Move) - ((int)(1000 * m_Move) % (int)(1000 * m_SnapSize))) / 1000;
-				}*/
-
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-				{
-					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Right, move);
+					if (m_Move >= m_SnapSize)
+					{
+						m_Move = m_SnapSize;
+						bSnapped = true;
+					}
+					else if (m_Move <= -m_SnapSize)
+					{
+						m_Move = -m_SnapSize;
+						bSnapped = true;
+					}
 				}
+				else 
+					m_Move = move;
+
+				if (bSnapped || !m_bSnap)
+				{
+					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Right, m_Move);
+					}
+				}
+
+				if (bSnapped)
+					m_Move = 0;
 			}
 			if (m_bLockY == true)
 			{
 				float move((CONTROLS->GetMouseMovement().x) / 100.0f);
-				/*for_each(pObjectSelecter->GetSelectedObjects().begin(),
-						 pObjectSelecter->GetSelectedObjects().end(), 
-						 [&](IEditorObject* obj)
+
+				bool bSnapped(false);
+
+				if (m_bSnap)
 				{
-					obj->Rotate(Vector3::Up, move);
-				});*/
+					m_Move += move;
 
-				//if (m_bSnap)
-				//{
-				//	m_Move += move;
-
-				//	m_Move = ((int)(1000 * m_Move) - ((int)(1000 * m_Move) % (int)(1000 * m_SnapSize))) / 1000;
-				//}
-
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-				{
-					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Up, move);
+					if (m_Move >= m_SnapSize)
+					{
+						m_Move = m_SnapSize;
+						bSnapped = true;
+					}
+					else if (m_Move <= -m_SnapSize)
+					{
+						m_Move = -m_SnapSize;
+						bSnapped = true;
+					}
 				}
+				else 
+					m_Move = move;
+
+				if (bSnapped || !m_bSnap)
+				{
+					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Up, m_Move);
+					}
+				}
+
+				if (bSnapped)
+					m_Move = 0;
 			}
 			if (m_bLockZ == true)
 			{
 				float move((CONTROLS->GetMouseMovement().y) / 100.0f);
-				/*for_each(pObjectSelecter->GetSelectedObjects().begin(),
-						 pObjectSelecter->GetSelectedObjects().end(), 
-						 [&](IEditorObject* obj)
-				{
-					obj->Rotate(Vector3::Forward, move);
-				});*/
 
-				/*if (m_bSnap)
+				bool bSnapped(false);
+
+				if (m_bSnap)
 				{
 					m_Move += move;
 
-					m_Move = ((int)(1000 * m_Move) - ((int)(1000 * m_Move) % (int)(1000 * m_SnapSize))) / 1000;
-				}*/
-
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
-				{
-					pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Forward, move);
+					if (m_Move >= m_SnapSize)
+					{
+						m_Move = m_SnapSize;
+						bSnapped = true;
+					}
+					else if (m_Move <= -m_SnapSize)
+					{
+						m_Move = -m_SnapSize;
+						bSnapped = true;
+					}
 				}
+				else 
+					m_Move = move;
+
+				if (bSnapped || !m_bSnap)
+				{
+					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					{
+						pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Forward, m_Move);
+					}
+				}
+
+				if (bSnapped)
+					m_Move = 0;
 			}
 		}
 	}

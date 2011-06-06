@@ -157,7 +157,12 @@ void Trigger::Draw(RenderContext* pRenderContext)
                                 Matrix::CreateScale(Vector3(m_Dimensions.X, m_Dimensions.Y, m_Dimensions.Z)) * 
                                 matWorld * 
                                 pRenderContext->GetCamera()->GetViewProjection());
-	m_pSolidEffect->SetColor(Color(0.8f,0.8f,1.0f,0.5f));
+
+	if (!m_bTriggered)
+		m_pSolidEffect->SetColor(Color(0.6f,0.6f,1.0f,0.5f));
+	else
+		m_pSolidEffect->SetColor(Color(1.0f,0.2f,1.0f,0.5f));
+
     m_pSolidModel->Draw(m_pSolidEffect);
     
 	m_pContourEffect->SetWorldViewProjection(

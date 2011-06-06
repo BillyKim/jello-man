@@ -26,7 +26,7 @@ public:
 	void SetLinearSnapSize(float snapSize)
 	{ m_LinearSnapSize = snapSize; }
 
-	//* Set the snap size for the rotate gizmo - accurate to 0.02 degrees *
+	//* Set the snap size for the rotate gizmo - accurate to 1 degree *
 	void SetAngularSnapSize(float snapSize)
 	{ m_AngularSnapSize = snapSize; }
 

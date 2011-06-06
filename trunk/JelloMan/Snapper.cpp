@@ -6,7 +6,7 @@ Snapper::Snapper(MoveGizmo* pMoveGizmo, RotateGizmo* pRotateGizmo)	:
 	m_pMoveGizmo(pMoveGizmo),
 	m_pRotateGizmo(pRotateGizmo),
 	m_LinearSnapSize(0.1f),
-	m_AngularSnapSize(1.0f),
+	m_AngularSnapSize(5.0f),
 	m_bSnapToGrid(false),
 	m_pLinearSnapTextBox(0),
 	m_pAngularSnapTextBox(0),
@@ -174,13 +174,19 @@ void Snapper::Tick()
 
 		f = static_cast<float>(atof(s));
 
-		if (!(f == 0 && s2 != "0") && f > 0.01)
+		if (!(f == 0 && s2 != "0") && f > 1)
 		{
 			m_AngularSnapSize = f;
-			m_pMoveGizmo->SetSnapSize(f);
+
+			float d(ToRadians(f));
+			m_pRotateGizmo->SetSnapSize(d);
 		}
 		else
+		{
+			m_AngularSnapSize = 1.0f;
+			m_pRotateGizmo->SetSnapSize(1.0f);
 			m_bTextBoxesSet = false;
+		}
 
 		m_pAngularSnapTextBox->LoseFocus();
 	}
