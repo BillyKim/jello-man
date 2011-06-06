@@ -9,6 +9,7 @@
 #include "SimpleObject.h"
 #include "IInstancible.h"
 #include "EditorGUI.h"
+#include "SpawnPoint.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -111,6 +112,12 @@ void Level::Tick(const float dTime)
 
 void Level::AddLevelObject(ILevelObject* pLevelObject)
 {
+    if (pLevelObject == 0)
+    {
+        PANIC("adding a NULL levelobject --> ignored");
+        return;
+    }
+
 	m_pLevelObjects.push_back(pLevelObject);
 
 	// triggers
@@ -186,6 +193,7 @@ ISerializable* GetObject(DWORD id)
         case SerializeTypes::PointLight: return new PointLight();
         case SerializeTypes::SimpleObject: return new SimpleObject(true);
         case SerializeTypes::PhysXTrigger: return new Trigger();
+        case SerializeTypes::SpawnPoint: return new SpawnPoint();
         default: PANIC("File corrupt!"); return 0;
     }
 }

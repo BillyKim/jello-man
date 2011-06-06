@@ -18,4 +18,5 @@ struct SerializeTypes
     const static DWORD PhysXTrigger = 600;
 
     const static DWORD SimpleObject = 1000;
+    const static DWORD SpawnPoint = 1100;
 };

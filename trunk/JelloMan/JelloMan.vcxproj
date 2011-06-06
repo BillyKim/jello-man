@@ -96,8 +96,10 @@
     <ClInclude Include="Blox2D.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="CameraBase.h" />
+    <ClInclude Include="CharacterController.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
+    <ClInclude Include="ICharacter.h" />
     <ClInclude Include="Infopane.h" />
     <ClInclude Include="IniReader.h" />
     <ClInclude Include="ContentManager.h" />
@@ -186,6 +188,7 @@
     <ClInclude Include="SoftbodyCharacter.h" />
     <ClInclude Include="SoftbodyMesh.h" />
     <ClInclude Include="Sound.h" />
+    <ClInclude Include="SpawnPoint.h" />
     <ClInclude Include="SplineLoader.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
@@ -215,6 +218,7 @@
     <ClCompile Include="Blox2DEngine.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CameraBase.cpp" />
+    <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="Infopane.cpp" />
@@ -295,6 +299,7 @@
     <ClCompile Include="SoftbodyCharacter.cpp" />
     <ClCompile Include="SoftbodyMesh.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SpawnPoint.cpp" />
     <ClCompile Include="SplineLoader.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Sprite.cpp" />

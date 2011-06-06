@@ -1,5 +1,6 @@
 #include "FluidsCharacter.h"
 #include "Level.h"
+#include "SpawnPoint.h"
 
 /* CONSTRUCTOR - DESTRUCTOR */
 FluidsCharacter::FluidsCharacter(Level* pLevel)	:	m_pPhysXEngine(0),
@@ -12,7 +13,8 @@ FluidsCharacter::FluidsCharacter(Level* pLevel)	:	m_pPhysXEngine(0),
                                                     m_CanSwitchGravity(true),
                                                     m_MoveDir(-Vector3::Right),
                                                     m_MoveSpeed(0.0f),
-                                                    m_RightDir(0, 0 ,0)
+                                                    m_RightDir(0, 0 ,0),
+                                                    m_IsDead(false)
 {
 }
 
@@ -137,6 +139,24 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
     #pragma endregion
 }
 
+
+void FluidsCharacter::Respawn(const SpawnPoint* pSpawnPoint)
+{
+    SetPosition(pSpawnPoint->GetPosition());
+    //ChangeMoveDirection(pSpawnPoint->GetForward());
+    //ChangeGravityDirection(pSpawnPoint->GetUp());
+    
+}
+void FluidsCharacter::ChangeGravityDirection(const Vector3& dir)
+{
+    NxVec3 grav;
+    m_pPhysXEngine->GetScene()->getGravity(grav);
+    grav = dir * grav.magnitude();
+    m_pPhysXEngine->GetScene()->setGravity(grav);
+    m_RightDir = Vector3::Normalize(m_MoveDir).Cross(Vector3::Normalize(-grav));
+
+    //TODO
+}
 void FluidsCharacter::ChangeMoveDirection(const Vector3& dir) //must be normalized!
 {
     m_MoveDir = dir;
