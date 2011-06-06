@@ -16,6 +16,7 @@ CharacterController::CharacterController(Level* pLevel) :
 
 CharacterController::~CharacterController(void)
 {
+	
 }
 
 void CharacterController::SetSpawnPoint(const SpawnPoint* pSpawnPoint)

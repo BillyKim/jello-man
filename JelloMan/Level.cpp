@@ -50,8 +50,8 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
 	/*m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
 	m_pCharacter->Init(m_pPhysXEngine);*/
     
-	m_pFluidsCharacter = new FluidsCharacter(this);
-	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, 1000, Vector3(-18, 3, 0));
+	m_pFluidsCharacter = new FluidsCharacterActor(this);
+	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, Vector3(0, 0, 0));
 
 	// forcefield
 	/*NxForceFieldLinearKernelDesc linearKernelDesc;

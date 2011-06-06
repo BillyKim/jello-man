@@ -510,6 +510,9 @@
     <ClInclude Include="CharacterController.h">
       <Filter>Game Files\LevelObjects</Filter>
     </ClInclude>
+    <ClInclude Include="FluidsCharacterActor.h">
+      <Filter>Game Files\LevelObjects\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -838,6 +841,9 @@
     </ClCompile>
     <ClCompile Include="CharacterController.cpp">
       <Filter>Game Files\LevelObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="FluidsCharacterActor.cpp">
+      <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

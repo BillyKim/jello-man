@@ -29,5 +29,9 @@ private:
     State m_State;
     float m_Timer;
     float m_SpawnWaitTime;
+
+	/* Disabling default copy constructor and assignment operator */
+    CharacterController(const CharacterController&);
+    CharacterController& operator=(const CharacterController&);
 };
 

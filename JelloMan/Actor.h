@@ -13,7 +13,6 @@ public:
 	virtual ~Actor(void);
 
     virtual void Tick(float dTime);
-    virtual void Draw(RenderContext* pRenderContext) = 0;
 
 	void AddForce(const Vector3& pos);
 
@@ -30,8 +29,8 @@ public:
 	NxActor* GetActor() const
 	{ return m_pActor; }
     
-	virtual void Serialize(Serializer* pSerializer)  const = 0;
-	virtual void Deserialize(Serializer* pSerializer) = 0;
+	virtual void Serialize(Serializer* pSerializer) const;
+	virtual void Deserialize(Serializer* pSerializer);
 
 protected:
 	PhysX* m_pPhysX;
