@@ -501,6 +501,15 @@
     <ClInclude Include="UnlitNoTexEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="ICharacter.h">
+      <Filter>Game Files\LevelObjects\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPoint.h">
+      <Filter>Game Files\LevelObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterController.h">
+      <Filter>Game Files\LevelObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -823,6 +832,12 @@
     </ClCompile>
     <ClCompile Include="UnlitNoTexEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnPoint.cpp">
+      <Filter>Game Files\LevelObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterController.cpp">
+      <Filter>Game Files\LevelObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

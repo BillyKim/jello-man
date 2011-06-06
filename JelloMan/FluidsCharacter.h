@@ -12,10 +12,11 @@
 #include "ILevelObject.h"
 #include "ISerializable.h"
 #include "FollowCamera.h"
+#include "ICharacter.h"
 
 class Level;
 
-class FluidsCharacter : public PhysXCharacter, public ILevelObject, public ISerializable
+class FluidsCharacter : public PhysXCharacter, public ILevelObject, public ISerializable, public ICharacter
 {
     enum GravityType
     {
@@ -35,10 +36,15 @@ public:
               Vector3 startPos);
 
     void ChangeMoveDirection(const Vector3& dir); //must be normalized!
+    void ChangeGravityDirection(const Vector3& dir); //must be normalized!
     void ChangeMoveSpeed(float speed);
 
     virtual IEditorObject* Copy() const { return 0; } //non copyable
 	
+    /* ICharacter */
+    virtual bool IsDead() const { return m_IsDead; }
+    virtual void Respawn(const SpawnPoint* pSpawnPoint);
+
 	/* IUpdateable */
 	virtual void Tick(float dTime);
 
@@ -87,5 +93,7 @@ private:
 	Graphics::Camera::FollowCamera* m_pCamera;
 
     bool m_IsTouchingGround;
+
+    bool m_IsDead;
 };
 
