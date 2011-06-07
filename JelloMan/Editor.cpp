@@ -163,7 +163,12 @@ void Editor::Tick(const RenderContext* pRenderContext)
 			{
 				if (m_pObjectSelecter->GetSelectedObjects().size() >= 1)
 				{
-					m_pInfopane->SetState(Infopane::INFO_STATE_LEVELOBJECTINFO);
+					Light* pLight = dynamic_cast<Light*>(m_pObjectSelecter->GetSelectedObjects()[0]);
+
+					if (pLight)
+						m_pInfopane->SetState(Infopane::INFO_STATE_LIGHTINFO);
+					else
+						m_pInfopane->SetState(Infopane::INFO_STATE_LEVELOBJECTINFO);
 				}
 				else
 				{

@@ -27,6 +27,7 @@ private:
 
 	/* DATAMEMBERS */
 	bool m_bTextBoxesSet;
+	bool m_bTrigger;
 
 	const RenderContext* m_pRenderContext;
 
@@ -35,6 +36,8 @@ private:
 	TextBox* m_pTextBoxX;
 	TextBox* m_pTextBoxY;
 	TextBox* m_pTextBoxZ;
+
+	TextBox* m_pTextBoxTriggerName;
 
 	TextFormat* m_pObjectInfoFont;
 	TextFormat* m_pObjectInfoFont2;

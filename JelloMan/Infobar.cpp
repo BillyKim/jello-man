@@ -92,12 +92,12 @@ void Infobar::ShowMessage(const tstring& message)
 
 void Infobar::AddButtonHoverMessage(Button* pButton, const tstring& message)
 {
-	/*if (m_ButtonMessages.find(pButton) != m_ButtonMessages.end())
-	{*/
+	if (m_ButtonMessages.find(pButton) == m_ButtonMessages.end())
+	{
 		m_ButtonMessages[pButton] = message;
-	/*}
+	}
 	else
-		ASSERT(false, "Button already has a hover message to display");*/
+		ASSERT(false, "Button already has a hover message to display");
 }
 
 /* SETTERS */
