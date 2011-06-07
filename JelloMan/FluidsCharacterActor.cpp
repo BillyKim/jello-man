@@ -15,7 +15,7 @@ FluidsCharacterActor::FluidsCharacterActor(Level* pLevel)	:	m_pPhysXEngine(0),
                                                     m_IsTouchingGround(true),
                                                     m_pLevel(pLevel),
                                                     m_CanSwitchGravity(true),
-                                                    m_MoveDir(Vector3::Forward),
+                                                    m_MoveDir(-Vector3::Right),
                                                     m_MoveSpeed(10.0f),
                                                     m_RightDir(0, 0 ,0),
                                                     m_IsDead(false),
@@ -159,9 +159,18 @@ void FluidsCharacterActor::Respawn(const SpawnPoint* pSpawnPoint)
 {
     m_pActor->setLinearVelocity(Vector3::Zero);
     SetPosition(pSpawnPoint->GetPosition());
-    //ChangeMoveDirection(pSpawnPoint->GetForward());
-    //ChangeGravityDirection(pSpawnPoint->GetUp());
+    m_MoveDir = -Vector3::Right;
     
+    m_GravityRotation = 0.0f;
+    m_MoveRotation = 0.0f;
+
+    NxVec3 grav;
+    m_pPhysXEngine->GetScene()->getGravity(grav);
+    m_pPhysXEngine->GetPhysXLock().lock();
+    m_pPhysXEngine->GetScene()->setGravity(-Vector3::Up * grav.magnitude());
+	m_pPhysXEngine->GetPhysXLock().unlock();
+
+    RotateMoveDirection(0.0f);
 }
 
 void FluidsCharacterActor::RotateGravityDirection(float rad) //must be normalized!
@@ -195,9 +204,9 @@ void FluidsCharacterActor::RotateMoveDirection(float rad) //must be normalized!
     Matrix mtxRotUp = Matrix::CreateRotation(m_MoveDir, m_GravityRotation);
     up = Vector3::Transform(up, mtxRotUp).XYZ();
 
-    m_pPhysXEngine->GetPhysXLock().lock();
+    //m_pPhysXEngine->GetPhysXLock().lock();
     m_pPhysXEngine->GetScene()->setGravity(up * -grav.magnitude());
-	m_pPhysXEngine->GetPhysXLock().unlock();
+	//m_pPhysXEngine->GetPhysXLock().unlock();
 
     m_RightDir = Vector3::Normalize(m_MoveDir).Cross(Vector3::Normalize(-grav));
 
@@ -287,11 +296,11 @@ void FluidsCharacterActor::OnTriggerEnter(const Trigger* pTrigger)
 
     if (pTrigger->GetTriggerName().find(_T("left")) != tstring::npos)
     {
-        RotateMoveDirection(PiOver2);
+        RotateMoveDirection(-PiOver2);
     }
     else if (pTrigger->GetTriggerName().find(_T("right")) != tstring::npos)
     {
-        RotateMoveDirection(-PiOver2);
+        RotateMoveDirection(PiOver2);
     }
     else if (pTrigger->GetTriggerName().find(_T("up")) != tstring::npos)
     {
