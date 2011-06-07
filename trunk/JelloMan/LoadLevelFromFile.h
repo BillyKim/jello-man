@@ -8,7 +8,7 @@ class LoadLevelFromFile
 public:
 
 	// CONSTRUCTOR - DESTRUCTOR
-	LoadLevelFromFile(Level* pLevel);
+	LoadLevelFromFile();
 	virtual ~LoadLevelFromFile();
 
 	// GENERAL
@@ -17,6 +17,17 @@ public:
 	void Clear();
 
 	void HideTextBoxes();
+
+	// GETTERS
+	bool Load() const
+	{ return m_pLoadButton->Clicked(); }
+	bool Save() const
+	{ return m_pSaveButton->Clicked(); }
+
+	const tstring& GetLoadPath() const
+	{ return m_LoadLevelPath; }
+	const tstring& GetSavePath() const
+	{ return m_SaveLevelPath; }
 
 private:
 
@@ -39,7 +50,5 @@ private:
 	tstring m_WorkingDirectory;
 
 	TextFormat* m_pFont;
-
-	Level* m_pLevel;
 };
 

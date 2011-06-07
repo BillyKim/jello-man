@@ -204,7 +204,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	// GUI
 	++m_Orbs;
 	m_LoadingText = _T("editor GUI");
-	m_pEditorGUI = new EditorGUI(m_pPhysXEngine, pDXDevice, m_pLevel);
+	m_pEditorGUI = new Editor(m_pPhysXEngine, pDXDevice, m_pLevel);
 
     m_pLevel->Initialize(m_pPhysXEngine, m_pEditorGUI, m_pTrackingCamera);	
 	m_pEditorGUI->Initialize();
@@ -239,7 +239,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 
 void MainGame::UpdateScene(const float dTime)
 {
-	if (m_pEditorGUI->GetMode() == EditorGUI::MODE_GAME)
+	if (m_pEditorGUI->GetEditorMode() == Editor::EDITOR_MODE_GAME)
 		CheckControls();
 
 	//if (!m_pAudioEngine)
@@ -255,7 +255,7 @@ void MainGame::UpdateScene(const float dTime)
 
     m_pLightController->Tick(dTime);
 
-	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_PLAY)
+	if (m_pEditorGUI->GetEditorMode() != Editor::EDITOR_MODE_PLAY)
 	{
 		m_pLevel->TickCharacter(false);
 		m_pEditorCamera->Tick(dTime);
@@ -269,7 +269,7 @@ void MainGame::UpdateScene(const float dTime)
 	//m_pAudioEngine->DoWork();
 	//m_pTestSound->Tick();
 
-	if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
+	if (m_pEditorGUI->GetEditorMode() != Editor::EDITOR_MODE_EDITOR)
 	{
 		m_pLevel->Tick(dTime);
 
@@ -277,11 +277,6 @@ void MainGame::UpdateScene(const float dTime)
 	}
 	else
 		m_pLevel->EditorMode(true);
-
-	if (m_pEditorGUI->GetShowGridButton()->IsActive())
-		m_pLevel->ShowGrid(true);
-	else
-		m_pLevel->ShowGrid(false);
 
 	/*if (CONTROLS->IsKeyPressed(VK_SPACE))
 	{
@@ -306,12 +301,12 @@ void MainGame::UpdateScene(const float dTime)
 		m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
 	}*/
 
-	if (m_pEditorGUI->GetLightButton()->IsActive())
-		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_LIT);
-	else
+	if (m_pEditorGUI->GetLightMode() == Editor::LIGHT_MODE_UNLIT)
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);
+	else
+		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_LIT);
 
-	m_pEditorGUI->Tick();
+	m_pEditorGUI->Tick(m_pRenderContext);
 }
 
 void MainGame::DrawScene()
@@ -337,13 +332,13 @@ void MainGame::DrawScene()
     });
     #pragma endregion
 
-    if (m_pEditorGUI->GetMode() == EditorGUI::MODE_PLAY)
+    if (m_pEditorGUI->GetEditorMode() == Editor::EDITOR_MODE_PLAY)
 		m_pRenderContext->SetCamera(m_pTrackingCamera);
 	else
 		m_pRenderContext->SetCamera(m_pEditorCamera);
 
 	// POST PROCESS
-	if (m_pEditorGUI->GetPostFXButton()->IsActive())
+	if (m_pEditorGUI->GetPostFXMode() == Editor::POST_EFFECTS_ON)
 		m_pPostProcessor->Begin();
 
 	    // START DEFERRED
@@ -365,12 +360,12 @@ void MainGame::DrawScene()
 	    m_pForwardRenderer->End();
 
 	// POST PROCESS
-	if (m_pEditorGUI->GetPostFXButton()->IsActive())
-        m_pPostProcessor->End(m_pDeferredRenderer);
+	if (m_pEditorGUI->GetPostFXMode() == Editor::POST_EFFECTS_ON)
+		m_pPostProcessor->End(m_pDeferredRenderer);
 		
 	// --------------------------------------
 
-	m_pEditorGUI->Draw(m_pRenderContext);
+	m_pEditorGUI->Draw();
 
 	BX2D->SetColor(255,255,255);
 	BX2D->ShowFPS(m_dTtime,true,0.5f);
@@ -456,7 +451,7 @@ void MainGame::LoadScreen()
 	BX2D->DrawStringCentered(stream.str(), 0, 300);
 
 	BX2D->SetFont(m_pHappyEngineFont);
-	BX2D->DrawStringCentered(_T("HAPPY ENGINE wishes a happy birthday to BAS!"), 0, 150);
+	BX2D->DrawStringCentered(_T("HAPPY ENGINE"), 0, 150);
 
 	D2D1_MATRIX_3X2_F rot;
 	D2D1MakeRotateMatrix(90,Point2F(BX2D->GetWindowSize().width/2,
@@ -513,7 +508,7 @@ void MainGame::UpdatePhysics()
 		{
 			m_pPhysXEngine->GetPhysXLock().lock(); // simulate
 		
-                if (m_pEditorGUI->GetMode() != EditorGUI::MODE_EDITOR)
+                if (m_pEditorGUI->GetEditorMode() != Editor::EDITOR_MODE_EDITOR)
 				    m_pPhysXEngine->Simulate(m_PhysXDTime);
                 else
 				    m_pPhysXEngine->Simulate(0.0f);

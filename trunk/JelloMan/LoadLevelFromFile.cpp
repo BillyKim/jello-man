@@ -3,14 +3,13 @@
 #include "SimpleObject.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-LoadLevelFromFile::LoadLevelFromFile(Level* pLevel)
+LoadLevelFromFile::LoadLevelFromFile()
 	:	m_LoadLevelPath(_T("")),
 		m_SaveLevelPath(_T("")),
 		m_pLoadButton(0),
 		m_pSaveButton(0),
 		m_pFont(0),
-		m_WorkingDirectory(_T("")),
-		m_pLevel(pLevel)
+		m_WorkingDirectory(_T(""))
 {
 	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_normal.png")));
 	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_hover.png")));
@@ -54,8 +53,6 @@ LoadLevelFromFile::~LoadLevelFromFile()
 {
 	delete m_pLoadButton;
     delete m_pSaveButton;
-
-	m_pLevel = 0;
 
 	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 		delete (*it);
@@ -102,7 +99,7 @@ void LoadLevelFromFile::Tick()
 		SetCurrentDirectory(m_WorkingDirectory.c_str());
 	}
 
-	if (m_pLoadButton->Clicked())
+	/*if (m_pLoadButton->Clicked())
 	{
 		if (m_LoadLevelPath != _T(""))
 		{
@@ -120,7 +117,7 @@ void LoadLevelFromFile::Tick()
 
 			m_pLevel->Serialize(s);
 		}
-	}
+	}*/
 
 	if (m_TextBoxes[0]->Entered())
 	{

@@ -25,7 +25,7 @@
 #include "FollowCamera.h"
 
 
-class EditorGUI;
+class Editor;
 class CharacterController;
 
 class Level
@@ -37,7 +37,7 @@ public:
 	virtual ~Level();
 
 	// GENERAL
-	void Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::FollowCamera* pTrackingCamera);
+	void Initialize(PhysX* pPhysXEngine, Editor* pGUI, Graphics::Camera::FollowCamera* pTrackingCamera);
 	void Tick(const float dTime);
 	void DrawDeferred(RenderContext* pRenderContext);
 	void DrawForward(RenderContext* pRenderContext);
@@ -94,7 +94,7 @@ private:
 
     FluidRenderer* m_pFluidRenderer;
 
-    EditorGUI* m_pGUI;
+    Editor* m_pGUI;
     CharacterController* m_pCharacterController;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT

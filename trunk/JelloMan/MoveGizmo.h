@@ -12,12 +12,12 @@ class MoveGizmo
 {
 public:
 	// CONSTRUCTOR - DESTRUCTOR
-	MoveGizmo();
+	MoveGizmo(ObjectSelecter* pObjectSelecter);
 	virtual ~MoveGizmo();
 
 	// GENERAL
 	void Show(ITransformable* pLevelObject, int id);
-    void Tick(ObjectSelecter* pObjectSelecter);
+    void Tick();
 
     // DRAW
     void Draw(const RenderContext* pRenderContext);
@@ -44,7 +44,7 @@ private:
     void DrawGizmo(const Vector3& pos);
 
     // CONTROLS
-    void CheckControls(ObjectSelecter* pObjectSelecter);
+    void CheckControls();
     bool PolyCollisionCheck(const Vector3& pos, const Vector3& axis1, const Vector3& axis2, 
                             const Matrix& proj, const Matrix& view, const Matrix& world);
 
@@ -66,5 +66,7 @@ private:
 
     Vector3 m_vCenterPos;
     Vector3 m_vAnchor;
+
+	ObjectSelecter* m_pObjectSelecter;
 };
 

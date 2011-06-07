@@ -12,7 +12,7 @@
 #include "LightController.h"
 #include "Matrix.h"
 #include <vector>
-#include "EditorGUI.h"
+#include "Editor.h"
 #include "PostProcessor.h"
 #include "EdgeDetectionPostEffect.h"
 #include "DeferredRenderer.h"
@@ -66,7 +66,7 @@ private:
 	TextFormat* m_pLoadingResourcesFont;
 	TextFormat* m_pHappyEngineFont;
 
-	EditorGUI* m_pEditorGUI;
+	Editor* m_pEditorGUI;
 
 	Level* m_pLevel;
 

@@ -142,9 +142,6 @@
     <Filter Include="Engine Files\Graphics\GUI\Editor\Components">
       <UniqueIdentifier>{846becc6-9db6-4df5-afdf-ce57e0365c06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\PhysX\Triggers">
-      <UniqueIdentifier>{e2bdd244-65b7-4008-a563-504d15f4d808}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -327,14 +324,8 @@
     <ClInclude Include="PosColEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="EditorGUI.h">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="LoadModelFromFile.h">
       <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualLightDebugger.h">
-      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
     </ClInclude>
     <ClInclude Include="ColorPicker.h">
       <Filter>Engine Files\Graphics\GUI\Lights</Filter>
@@ -492,6 +483,9 @@
     <ClInclude Include="LevelObjectInfo.h">
       <Filter>Engine Files\Graphics\GUI\LevelObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Trigger.h">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClInclude>
     <ClInclude Include="Toolbar.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
     </ClInclude>
@@ -513,17 +507,29 @@
     <ClInclude Include="FluidsCharacterActor.h">
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClInclude>
-    <ClInclude Include="UnlitTexEffect.h">
-      <Filter>Engine Files\Graphics\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Trigger.h">
-      <Filter>Engine Files\PhysX\Triggers</Filter>
+    <ClInclude Include="IGizmo.h">
+      <Filter>Game Files\interfaces</Filter>
     </ClInclude>
     <ClInclude Include="ITriggerable.h">
       <Filter>Game Files</Filter>
     </ClInclude>
+    <ClInclude Include="UnlitTexEffect.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
     <ClInclude Include="UserData.h">
-      <Filter>Engine Files\PhysX</Filter>
+      <Filter>Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Infobar.h">
+      <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorLoader.h">
+      <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="LightInfo.h">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -704,9 +710,6 @@
     <ClCompile Include="PosColEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="EditorGUI.cpp">
-      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="LoadModelFromFile.cpp">
       <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
     </ClCompile>
@@ -714,9 +717,6 @@
       <Filter>Engine Files\Graphics\GUI\Editor</Filter>
     </ClCompile>
     <ClCompile Include="ColorPicker.cpp">
-      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualLightDebugger.cpp">
       <Filter>Engine Files\Graphics\GUI\Lights</Filter>
     </ClCompile>
     <ClCompile Include="Image.cpp">
@@ -836,6 +836,9 @@
     <ClCompile Include="LevelObjectInfo.cpp">
       <Filter>Engine Files\Graphics\GUI\LevelObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Trigger.cpp">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClCompile>
     <ClCompile Include="Toolbar.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
     </ClCompile>
@@ -855,13 +858,22 @@
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
     <ClCompile Include="UnlitTexEffect.cpp">
-      <Filter>Engine Files\Graphics\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="Trigger.cpp">
-      <Filter>Engine Files\PhysX\Triggers</Filter>
+      <Filter>Engine Files</Filter>
     </ClCompile>
     <ClCompile Include="UserData.cpp">
-      <Filter>Engine Files\PhysX</Filter>
+      <Filter>Engine Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Infobar.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Engine Files\Graphics\GUI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorLoader.cpp">
+      <Filter>Engine Files\Graphics\GUI\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="LightInfo.cpp">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

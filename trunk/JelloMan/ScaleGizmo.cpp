@@ -1,11 +1,12 @@
 #include "ScaleGizmo.h"
 #include "ContentManager.h"
 
-ScaleGizmo::ScaleGizmo()	:	m_pRenderContext(0),
+ScaleGizmo::ScaleGizmo(ObjectSelecter* pObjectSelecter)	:	m_pRenderContext(0),
 								m_pAxisFont(0),
                                 m_bLockX(false),
                                 m_bLockY(false),
-                                m_bLockZ(false)
+                                m_bLockZ(false),
+								m_pObjectSelecter(pObjectSelecter)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 
@@ -123,12 +124,12 @@ void ScaleGizmo::DrawGizmo(const Vector3& pos)
 }
 
 // GENERAL
-void ScaleGizmo::Tick(ObjectSelecter* pObjectSelecter)
+void ScaleGizmo::Tick()
 {
 	if (!m_pRenderContext)
 		return;
 
-    m_vCenterPos = pObjectSelecter->GetCenterPos();
+    m_vCenterPos = m_pObjectSelecter->GetCenterPos();
     if (m_vCenterPos != Vector3::Infinity)
     {
         // VIEWPORT
@@ -139,13 +140,13 @@ void ScaleGizmo::Tick(ObjectSelecter* pObjectSelecter)
 	        m_bLockX = m_bLockY = m_bLockZ = false;
 
         if (m_bLockX || m_bLockY || m_bLockZ)
-            pObjectSelecter->AbortControls();
+            m_pObjectSelecter->AbortControls();
 
-        CheckControls(pObjectSelecter);
+        CheckControls();
     }
 }
 
-void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
+void ScaleGizmo::CheckControls()
 { 
 	// MATRIX
 	Matrix matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -265,9 +266,9 @@ void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				if (move == 0.0f)
 					move = 0.01f;
 
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
+					m_pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
 				}
 			}
 			if (m_bLockY == true)
@@ -290,9 +291,9 @@ void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				if (move == 0.0f)
 					move = 0.01f;
 
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
+					m_pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
 				}
 			}
 			if (m_bLockZ == true)
@@ -317,9 +318,9 @@ void ScaleGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 				if (move == 0.0f)
 					move = 0.01f;
 
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
+					m_pObjectSelecter->GetSelectedObjects()[i]->Scale(Vector3(move, move, move));
 				}
 			}
 		}

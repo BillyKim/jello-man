@@ -2,24 +2,28 @@
 
 #include "ILevelObject.h"
 #include "Blox2D.h"
-#include "Level.h"
-#include "RenderContext.h"
-#include "PhysX.h"
+#include <vector>
 
 class LoadModelFromFile
 {
 public:
 
 	// CONSTRUCTOR - DESTRUCTOR
-	LoadModelFromFile(Level* pLevel, PhysX* pPhysXEngine);
+	LoadModelFromFile();
 	virtual ~LoadModelFromFile();
 
 	// GENERAL
-	void Tick(const RenderContext* pRenderContext);
+	void Tick();
 	void Show();
 	void Clear();
 
 	void HideTextBoxes();
+
+	// GETTERS
+	bool Load() const
+	{ return m_pbtnLoadModel->Clicked(); }
+
+	vector<tstring> GetPaths() const;
 
 private:
 
@@ -48,10 +52,6 @@ private:
 
 	TextFormat* m_pFont;
 
-	Level* m_pLevel;
-
 	const RenderContext* m_pRenderContext;
-
-	PhysX* m_pPhysXEngine;
 };
 

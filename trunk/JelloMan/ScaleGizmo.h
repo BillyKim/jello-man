@@ -12,12 +12,12 @@ class ScaleGizmo
 {
 public:
 	// CONSTRUCTOR - DESTRUCTOR
-	ScaleGizmo();
+	ScaleGizmo(ObjectSelecter* pObjectSelecter);
 	virtual ~ScaleGizmo();
 
 	// GENERAL
 	void Show(ITransformable* pLevelObject, int id);
-    void Tick(ObjectSelecter* pObjectSelecter);
+    void Tick();
 
     // DRAW
     void Draw(const RenderContext* pRenderContext);
@@ -32,7 +32,7 @@ private:
     void DrawGizmo(const Vector3& pos);
 
     // CONTROLS
-    void CheckControls(ObjectSelecter* pObjectSelecter);
+    void CheckControls();
 
 	// DATAMEMBERS
 	const RenderContext* m_pRenderContext;
@@ -46,5 +46,7 @@ private:
 	TextFormat* m_pAxisFont;
 
     Vector3 m_vCenterPos;
+
+	ObjectSelecter* m_pObjectSelecter;
 };
 

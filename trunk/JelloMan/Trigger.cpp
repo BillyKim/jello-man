@@ -154,6 +154,8 @@ void Trigger::OnTriggerEnter(const NxShape& otherShape)
             pObj->OnTriggerEnter(this);
         }
     }
+
+	m_bTriggered = true;
 }
 void Trigger::OnTriggerLeave(const NxShape& otherShape)
 {
