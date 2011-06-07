@@ -1,5 +1,6 @@
 #include "LevelObjectInfo.h"
 #include "ContentManager.h"
+#include "Trigger.h"
 
 /* CONSTRUCTOR - DESTRUCTOR*/
 LevelObjectInfo::LevelObjectInfo(Level* pLevel) :	m_pLevel(pLevel),
@@ -11,7 +12,9 @@ LevelObjectInfo::LevelObjectInfo(Level* pLevel) :	m_pLevel(pLevel),
 													m_pObjectInfoFont2(0),
 													m_pPreviousLevelObject(0),
 													m_PreviousPos(Vector3(0,0,0)),
-													m_bTextBoxesSet(false)
+													m_bTextBoxesSet(false),
+													m_pTextBoxTriggerName(0),
+													m_bTrigger(false)
 {
 	// FONT
 	m_pObjectInfoFont = Content->LoadTextFormat(_T("Verdana"),10, false,false);
@@ -30,6 +33,7 @@ LevelObjectInfo::~LevelObjectInfo()
 	delete m_pTextBoxX;
 	delete m_pTextBoxY;
 	delete m_pTextBoxZ;
+	delete m_pTextBoxTriggerName;
 }
 
 /* GENERAL */
@@ -53,6 +57,12 @@ void LevelObjectInfo::Tick()
 		m_pTextBoxZ->SetBounds(30,145,80,20);
 	}
 
+	if (!m_pTextBoxTriggerName)
+	{
+		m_pTextBoxTriggerName = new TextBox();
+		m_pTextBoxTriggerName->SetBounds(30,210,80,20);
+	}
+
 	if (GetNrObjectsSelected() == 1)
 	{
 		for_each(m_pLevel->GetLevelObjects().cbegin(), m_pLevel->GetLevelObjects().cend(), [&](ILevelObject* pObj)
@@ -60,6 +70,23 @@ void LevelObjectInfo::Tick()
 			if (pObj->IsSelected())
 				m_pLevelObject = pObj;
 		});
+
+		Trigger* pTrigger(dynamic_cast<Trigger*>(m_pLevelObject));
+
+		if (pTrigger)
+			m_bTrigger = true;
+		else
+			m_bTrigger = false;
+
+		if (m_bTrigger)
+		{
+			if (m_pTextBoxTriggerName->Entered())
+			{
+				pTrigger->SetTriggerName(m_pTextBoxTriggerName->GetText());
+
+				m_pTextBoxTriggerName->LoseFocus();
+			}
+		}
 
 		if (m_pTextBoxX->Entered())
 		{
@@ -214,13 +241,24 @@ void LevelObjectInfo::ShowModelInfo()
 		tstringstream strmZ;
 		strmZ << t.substr(0, t.find(_T(".")) + 4);
 		m_pTextBoxZ->SetText(strmZ.str());
+
+		if (m_bTrigger)
+		{
+			Trigger* pTrigger(dynamic_cast<Trigger*>(m_pLevelObject));
+
+			m_pTextBoxTriggerName->SetText(pTrigger->GetTriggerName());
+		}
 	}
+
 
 	m_bTextBoxesSet = true;
 
 	m_pTextBoxX->Show();
 	m_pTextBoxY->Show();
 	m_pTextBoxZ->Show();
+
+	if (m_bTrigger)
+		m_pTextBoxTriggerName->Show();
 
 	BX2D->SetColor(40,40,40);
 	BX2D->DrawLine(10,180,190,180);
@@ -238,6 +276,7 @@ void LevelObjectInfo::HideTextBoxes()
 	m_pTextBoxX->Hide();
 	m_pTextBoxY->Hide();
 	m_pTextBoxZ->Hide();
+	m_pTextBoxTriggerName->Hide();
 
 	m_bTextBoxesSet = false;
 }

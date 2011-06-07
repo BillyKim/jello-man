@@ -263,6 +263,18 @@ void Toolbar::LoadButtons()
 	m_Buttons["POSTFX"]->SetState(Button::STATE_DEACTIVATED);
 
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["POSTFX"], _T("Turns on/off post processing effects."));
+
+	// TRIGGERBOX
+	m_Buttons["TRIGGERBOX"] = new Button(600,7,36,36);
+
+	m_ButtonImages["TRIGGERBOX"].push_back(Content->LoadImage(_T("../Content/Images/Editor/triggerbox_normal.png")));
+	m_ButtonImages["TRIGGERBOX"].push_back(Content->LoadImage(_T("../Content/Images/Editor/triggerbox_hover.png")));
+
+	m_Buttons["TRIGGERBOX"]->SetNormalState(m_ButtonImages["TRIGGERBOX"][0]);
+	m_Buttons["TRIGGERBOX"]->SetHoverState(m_ButtonImages["TRIGGERBOX"][1]);
+	m_Buttons["TRIGGERBOX"]->SetDownState(m_ButtonImages["TRIGGERBOX"][1]);
+
+	m_pInfobar->AddButtonHoverMessage(m_Buttons["TRIGGERBOX"], _T("Adds a triggerbox to the scene."));
 }
 
 void Toolbar::Tick()
@@ -322,6 +334,10 @@ void Toolbar::Tick()
 
 	if (m_Buttons["SPOTLIGHT"]->Clicked())
 		m_pLoader->AddSpotLight();
+
+	// add triggerbox
+	if (m_Buttons["TRIGGERBOX"]->Clicked())
+		m_pLoader->AddTrigger();
 }
 
 void Toolbar::Draw()

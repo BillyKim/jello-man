@@ -157,6 +157,7 @@ void Trigger::OnTriggerEnter(const NxShape& otherShape)
 
 	m_bTriggered = true;
 }
+
 void Trigger::OnTriggerLeave(const NxShape& otherShape)
 {
     if (otherShape.userData != 0)
@@ -169,4 +170,22 @@ void Trigger::OnTriggerLeave(const NxShape& otherShape)
             pObj->OnTriggerLeave(this);
         }
     }
+}
+
+void Trigger::Scale(const Vector3& scale)
+{
+	m_Dimensions *= scale;
+
+	delete m_pTriggerShape;
+	m_pTriggerShape = new PhysXBox(m_Dimensions, 1);
+
+	delete m_pUserData;
+    m_pUserData = new UserData(UserDataFlag_IsPickable, dynamic_cast<ILevelObject*>(this));
+	m_pTriggerShape->GetShape()->userData = m_pUserData;
+
+	m_pPhysX->GetScene()->releaseActor(*m_pActor);
+	m_pActor = 0;
+	InitActor(m_pPhysX, *m_pTriggerShape, false, true);	
+
+	m_pActor->userData = this;
 }

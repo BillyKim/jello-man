@@ -19,7 +19,8 @@ Infopane::Infopane(Infobar* pInfobar, Toolbar* pToolbar, Level* pLevel, EditorLo
 																													m_State(INFO_STATE_NONE),
 																													m_pLoader(pLoader),
 																													m_pSnapper(pSnapper),
-																													m_bInit(true)
+																													m_bInit(true),
+																													m_bSetLightColor(false)
 {
 	m_pLightInfo = new LightInfo();
 	m_pLevelObjectInfo = new LevelObjectInfo(pLevel);
@@ -90,11 +91,30 @@ void Infopane::Tick(const RenderContext* pRenderContext)
 		case INFO_STATE_NONE:
 		{
 			break;
-		}	
+		}
+
+		case INFO_STATE_LIGHTINFO:
+		{
+			m_pLightInfo->Tick(pRenderContext);
+
+			m_Buttons["COLORPICKER"]->Tick();
+
+			m_bSetLightColor = false;
+
+			if (m_Buttons["COLORPICKER"]->IsActive())
+			{
+				m_Buttons["APPLY"]->Tick();
+
+				if (m_Buttons["APPLY"]->Clicked())
+					m_bSetLightColor = true;
+			}
+
+			break;
+		}
+
 		case INFO_STATE_LEVELOBJECTINFO:
 		{
 			m_pLevelObjectInfo->Tick();
-			m_pLightInfo->Tick(pRenderContext);
 
 			break;
 		}
@@ -157,17 +177,17 @@ void Infopane::Draw()
 			Clear();
 			break;
 		}
-		case INFO_STATE_LEVELOBJECTINFO:
+
+		case INFO_STATE_LIGHTINFO:
 		{
 			m_pLightInfo->Draw();
-			m_pLevelObjectInfo->Draw(m_pRenderContext);
 
-			if (m_Buttons["COLORPICKER"]->IsActive() && m_pToolbar->GetEditorState() == Toolbar::EDITOR_STATE_EDITOR)
+			m_Buttons["COLORPICKER"]->Show();
+
+			if (m_Buttons["COLORPICKER"]->IsActive())
 			{
 				if (m_pLightInfo->GetNrLightsSelected() == 1)
 				{
-					m_Buttons["APPLY"]->Tick();
-		
 					//TODO
 					for (unsigned int i = 0; i < m_pRenderContext->GetLightController()->GetLights().size(); ++i)
 					{
@@ -177,7 +197,7 @@ void Infopane::Draw()
 
 							m_pColorPicker->SetPreviousColor(prevColor);
 
-							if (m_Buttons["APPLY"]->Clicked())
+							if (m_bSetLightColor)
 							{
 								m_pRenderContext->GetLightController()->GetLights()[i]->SetColor(m_pColorPicker->GetCurrentColor() / 255.0f);
 
@@ -189,6 +209,7 @@ void Infopane::Draw()
 					}
 
 					m_pColorPicker->Show();
+
 					m_Buttons["APPLY"]->Show();
 				}
 
@@ -200,6 +221,19 @@ void Infopane::Draw()
 				m_pColorPicker->PreviousColorSet(false);
 			}
 
+			m_pLevelObjectInfo->HideTextBoxes();
+			m_pLoadLevelFromFile->HideTextBoxes();
+			m_pLoadModelFromFile->HideTextBoxes();
+			m_pSnapper->HideTextBoxes();
+
+			break;
+		}
+
+		case INFO_STATE_LEVELOBJECTINFO:
+		{
+			m_pLevelObjectInfo->Draw(m_pRenderContext);
+
+			m_pLightInfo->HideTextBoxes();
 			m_pLoadModelFromFile->HideTextBoxes();
 			m_pLoadLevelFromFile->HideTextBoxes();
 			m_pSnapper->HideTextBoxes();
@@ -231,6 +265,12 @@ void Infopane::Draw()
 		case INFO_STATE_SNAPPINGOPTIONS:
 		{
 			m_pSnapper->Draw();
+
+			m_pLightInfo->HideTextBoxes();
+			m_pLevelObjectInfo->HideTextBoxes();
+			m_pLoadModelFromFile->HideTextBoxes();
+			m_pLoadLevelFromFile->HideTextBoxes();
+
 			break;
 		}
 	}

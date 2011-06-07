@@ -22,6 +22,7 @@ public:
 	enum INFO_STATE
 	{
 		INFO_STATE_NONE,
+		INFO_STATE_LIGHTINFO,
 		INFO_STATE_LEVELOBJECTINFO,
 		INFO_STATE_LOADMODEL,
 		INFO_STATE_LOADLEVEL,
@@ -74,5 +75,6 @@ private:
 	INFO_STATE m_State;
 
 	bool m_bInit;
+	bool m_bSetLightColor;
 };
 
