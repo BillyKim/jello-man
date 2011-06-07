@@ -55,13 +55,7 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
     m_pCharacterController = new CharacterController(this);
     m_pCharacterController->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera);
 
-	//test
-	Trigger* pTrigger = new Trigger();
-	pTrigger->Init(m_pPhysXEngine, Vector3(5,5,5));
-	pTrigger->Translate(Vector3(4,10,5));
-	AddLevelObject(pTrigger);
-
-    SpawnPoint* pSpawnpoint = new SpawnPoint(Vector3::Zero);
+    SpawnPoint* pSpawnpoint = new SpawnPoint();
     pSpawnpoint->Init(m_pPhysXEngine);
     AddLevelObject(pSpawnpoint);
     m_pCharacterController->SetSpawnPoint(pSpawnpoint);
@@ -92,6 +86,22 @@ void Level::Tick(const float dTime)
     //    AddLevelObject(pSpawnpoint);
     //    m_pCharacterController->SetSpawnPoint(pSpawnpoint);
     //}
+    if (CONTROLS->IsKeyPressed('T'))
+    {
+	    Trigger* pTrigger = new Trigger();
+	    pTrigger->Init(m_pPhysXEngine, Vector3(5,5,5));
+	    pTrigger->Translate(Vector3(0,0,0));
+        pTrigger->SetTriggerName(_T("left"));
+	    AddLevelObject(pTrigger);
+    }
+    else if (CONTROLS->IsKeyPressed('Y'))
+    {
+	    Trigger* pTrigger = new Trigger();
+	    pTrigger->Init(m_pPhysXEngine, Vector3(5,5,5));
+	    pTrigger->Translate(Vector3(0,0,0));
+        pTrigger->SetTriggerName(_T("right"));
+	    AddLevelObject(pTrigger);
+    }
 }
 
 void Level::AddLevelObject(ILevelObject* pLevelObject)

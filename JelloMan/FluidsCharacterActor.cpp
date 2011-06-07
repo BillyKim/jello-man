@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "PhysXSphere.h"
 #include "Fluid.h"
+#include "UserData.h"
 
 /* CONSTRUCTOR - DESTRUCTOR */
 FluidsCharacterActor::FluidsCharacterActor(Level* pLevel)	:	m_pPhysXEngine(0),
@@ -14,17 +15,22 @@ FluidsCharacterActor::FluidsCharacterActor(Level* pLevel)	:	m_pPhysXEngine(0),
                                                     m_IsTouchingGround(true),
                                                     m_pLevel(pLevel),
                                                     m_CanSwitchGravity(true),
-                                                    m_MoveDir(-Vector3::Right),
-                                                    m_MoveSpeed(0.0f),
+                                                    m_MoveDir(Vector3::Forward),
+                                                    m_MoveSpeed(10.0f),
                                                     m_RightDir(0, 0 ,0),
                                                     m_IsDead(false),
-													m_Radius(0.01f)
+													m_Radius(0.5f),
+                                                    m_pUserData(0),
+                                                    m_GravityRotation(0.0f),
+                                                    m_MoveRotation(0.0f)
 {
 }
 
 FluidsCharacterActor::~FluidsCharacterActor()
 {
 	SafeDelete(m_pFluid);
+
+    delete m_pUserData;
 
 	m_pEmitter = 0;
 	m_pPhysXEngine = 0;
@@ -43,12 +49,14 @@ void FluidsCharacterActor::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Gr
     m_pCamera->SetFollowDistance(8);
 
 	PhysXSphere sphere(0.5f, 10);
+    m_pUserData = new UserData(UserDataFlag_IsTriggerable, dynamic_cast<ITriggerable*>(this));
+    sphere.GetShape()->userData = m_pUserData;
 	InitActor(pPhysXEngine, sphere, true);
 
 	m_pPhysXEngine = pPhysXEngine;
 
 	SetPosition(startPos);
-    ChangeMoveDirection(m_MoveDir); // calc right
+    RotateMoveDirection(0.0f); // calc right
     
 	#pragma region Fluids
 	// FLUID
@@ -155,22 +163,45 @@ void FluidsCharacterActor::Respawn(const SpawnPoint* pSpawnPoint)
     //ChangeGravityDirection(pSpawnPoint->GetUp());
     
 }
-void FluidsCharacterActor::ChangeGravityDirection(const Vector3& dir)
+
+void FluidsCharacterActor::RotateGravityDirection(float rad) //must be normalized!
 {
     NxVec3 grav;
     m_pPhysXEngine->GetScene()->getGravity(grav);
-    grav = dir * grav.magnitude();
+    Matrix rotGrav = Matrix::CreateRotation(m_MoveDir, m_GravityRotation);
+    grav = static_cast<NxVec3>(Vector3::Transform(grav, rotGrav).XYZ());
+    
+	m_pPhysXEngine->GetPhysXLock().lock();
     m_pPhysXEngine->GetScene()->setGravity(grav);
+	m_pPhysXEngine->GetPhysXLock().unlock();
+    
     m_RightDir = Vector3::Normalize(m_MoveDir).Cross(Vector3::Normalize(-grav));
 
-    //TODO
+    m_GravityRotation += rad;
 }
-void FluidsCharacterActor::ChangeMoveDirection(const Vector3& dir) //must be normalized!
+void FluidsCharacterActor::RotateMoveDirection(float rad) //must be normalized!
 {
-    m_MoveDir = dir;
+    Matrix deRot = Matrix::CreateRotation(m_MoveDir, -m_GravityRotation);
     NxVec3 grav;
     m_pPhysXEngine->GetScene()->getGravity(grav);
+    grav = static_cast<NxVec3>(Vector3::Transform(grav, deRot).XYZ());
+    
+    Vector3 up(-grav);
+    up.Normalize();
+
+    Matrix mtxRot = Matrix::CreateRotation(up, rad);
+    m_MoveDir = Vector3::Transform(m_MoveDir, mtxRot).XYZ();
+    
+    Matrix mtxRotUp = Matrix::CreateRotation(m_MoveDir, m_GravityRotation);
+    up = Vector3::Transform(up, mtxRotUp).XYZ();
+
+    m_pPhysXEngine->GetPhysXLock().lock();
+    m_pPhysXEngine->GetScene()->setGravity(up * -grav.magnitude());
+	m_pPhysXEngine->GetPhysXLock().unlock();
+
     m_RightDir = Vector3::Normalize(m_MoveDir).Cross(Vector3::Normalize(-grav));
+
+    m_MoveRotation += rad;
 }
 void FluidsCharacterActor::ChangeMoveSpeed(float speed)
 {
@@ -180,19 +211,16 @@ void FluidsCharacterActor::ChangeMoveSpeed(float speed)
 void FluidsCharacterActor::Tick(float dTime)
 {
     Vector3 move = Vector3(0, 0, 0);
-
-    NxVec3 grav;
-    m_pPhysXEngine->GetScene()->getGravity(grav);
-    move += m_MoveDir * m_MoveSpeed;
+    move += -m_MoveDir * 10000 * dTime;
     
     if (CONTROLS->IsKeyDown(VK_UP))
-        move += m_MoveDir * dTime * -10000;
+        move += m_MoveDir * dTime * -20000;
     if (CONTROLS->IsKeyDown(VK_DOWN))
-        move += m_MoveDir * dTime * 10000;
+        move += m_MoveDir * dTime * 20000;
     if (CONTROLS->IsKeyDown(VK_RIGHT))
-        move += m_RightDir * dTime * 10000;
+        move += m_RightDir * dTime * 20000;
     if (CONTROLS->IsKeyDown(VK_LEFT))
-        move += m_RightDir * dTime * -10000;
+        move += m_RightDir * dTime * -20000;
 
     if (m_IsTouchingGround == false)
     {
@@ -207,29 +235,27 @@ void FluidsCharacterActor::Tick(float dTime)
         {
             if (CONTROLS->IsKeyDown(VK_RIGHT))
             {
-                grav = m_RightDir * grav.magnitude(); 
+                RotateGravityDirection(-PiOver2);
             }
             else if (CONTROLS->IsKeyDown(VK_LEFT))
             {
-                grav = m_RightDir * -grav.magnitude();
+                RotateGravityDirection(PiOver2);
             }
             if (CONTROLS->IsKeyDown(VK_LEFT) || CONTROLS->IsKeyDown(VK_RIGHT)) 
             {
-	            m_pPhysXEngine->GetPhysXLock().lock();
-                m_pPhysXEngine->GetScene()->setGravity(grav);
-	            m_pPhysXEngine->GetPhysXLock().unlock();
                 m_pLevel->WakeUpAll();
-                m_RightDir = Vector3::Normalize(m_MoveDir).Cross(Vector3::Normalize(-grav));
                 m_CanSwitchGravity = false;
             }
         }
 	}
 
-	if (m_pActor->getLinearVelocity().magnitude() < 5.5f)
+	if (m_pActor->getLinearVelocity().magnitude() < m_MoveSpeed)
 		AddForce(move);
 
 	CheckIfOnGround();
 
+    NxVec3 grav;
+    m_pPhysX->GetScene()->getGravity(grav);
     m_pCamera->SetFollowPosition(GetPosition());
     m_pCamera->SetFollowUp(-Vector3::Normalize(grav));
     m_pCamera->SetFollowDirection(Vector3::Normalize(Vector3::Normalize(-m_MoveDir) + Vector3::Normalize(grav) / 2.0f));
@@ -251,35 +277,30 @@ void FluidsCharacterActor::CheckIfOnGround()
 void FluidsCharacterActor::Draw(const RenderContext* pRenderContext)
 {
 	m_pFluid->Draw(pRenderContext);
+}
+void FluidsCharacterActor::OnTriggerEnter(const Trigger* pTrigger)
+{
+    NxVec3 grav;
+    m_pPhysX->GetScene()->getGravity(grav);
+    Vector3 up(grav);
+    up.Normalize();
 
-	/*BX2D->SetColor(255,0,255);
+    if (pTrigger->GetTriggerName().find(_T("left")) != tstring::npos)
+    {
+        RotateMoveDirection(PiOver2);
+    }
+    else if (pTrigger->GetTriggerName().find(_T("right")) != tstring::npos)
+    {
+        RotateMoveDirection(-PiOver2);
+    }
+    else if (pTrigger->GetTriggerName().find(_T("up")) != tstring::npos)
+    {
+    }
+    else if (pTrigger->GetTriggerName().find(_T("down")) != tstring::npos)
+    {
+    }
+}
+void FluidsCharacterActor::OnTriggerLeave(const Trigger* /*pTrigger*/)
+{
 
-	D3D10_VIEWPORT viewPort;
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
-	viewPort.MinDepth = 0.0f;
-	viewPort.MaxDepth = 1.0f;
-	viewPort.Width = BX2D->GetWindowSize().width;
-	viewPort.Height = BX2D->GetWindowSize().height;
-
-	D3DXVECTOR3 pos3D(GetPosition());
-	
-	D3DXVECTOR3 pos2D;
-	D3DXMATRIX projection(pRenderContext->GetCamera()->GetProjection());
-	D3DXMATRIX view(pRenderContext->GetCamera()->GetView());
-	D3DXMATRIX world;
-
-	D3DXVec3Project(&pos2D, &pos3D, &viewPort, &projection, &view, 0);
-
-	BX2D->SetColor(255,0,255);
-	BX2D->FillEllipse(pos2D.x, pos2D.y, 5, 5);*/
-
-
-	// DEBUG
-	/*
-	tstringstream stream;
-	stream << Actor::m_pActor->getLinearVelocity().magnitude();
-
-	BX2D->DrawString(stream.str(), 500,200);
-	*/
 }

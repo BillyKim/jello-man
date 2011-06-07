@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "Light.h"
 #include "Level.h"
+#include "UserData.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 ObjectSelecter::ObjectSelecter(Level* pLevel, PhysX* pPhysXEngine)	:	m_bClick(false),
@@ -149,23 +150,22 @@ bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext)
 
 	if (shape != 0 && shape->userData != 0)
 	{
+        
         void* temp = shape->userData;
-        ILevelObject* obj = static_cast<ILevelObject*>(temp);
-        bool cont = true;
-        try { const char* c = typeid(*obj).name(); c; } //only used to throw an error when cast fails -- 'c;' is used to diable warning C4189
-        catch (...) { cont = false; }
-
-        if (cont == true)
+        UserData* pData = static_cast<UserData*>(temp);
+        if (pData->flags & UserDataFlag_IsPickable)
         {
-            if (obj->IsSelected())
+            ILevelObject* pObj = static_cast<ILevelObject*>(pData->object);
+
+            if (pObj->IsSelected())
             {
-                m_SelectedObjects.erase(remove(m_SelectedObjects.begin(), m_SelectedObjects.end(), obj));
-                obj->Selected(false);
+                m_SelectedObjects.erase(remove(m_SelectedObjects.begin(), m_SelectedObjects.end(), pObj));
+                pObj->Selected(false);
             }
             else
             {
-		        m_SelectedObjects.push_back(dynamic_cast<IEditorObject*>(obj));
-                obj->Selected(true);
+		        m_SelectedObjects.push_back(dynamic_cast<IEditorObject*>(pObj));
+                pObj->Selected(true);
             }
             return true;
         }

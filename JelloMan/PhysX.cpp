@@ -117,10 +117,8 @@ NxShape *PhysX::GetClosestShape(NxRay& ray,float distance)
 	return result;
 }
 
-void PhysX::onTrigger(NxShape& triggerShape, NxShape& /*otherShape*/, NxTriggerFlag status)
+void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag status)
 {
-    //PANIC("Not Implemented");
-
 	NxActor& triggerActor = triggerShape.getActor();
 
 	//NxActor& otherActor = otherShape.getActor();
@@ -128,18 +126,14 @@ void PhysX::onTrigger(NxShape& triggerShape, NxShape& /*otherShape*/, NxTriggerF
 	if (triggerActor.userData == NULL) // || otherActor.userData == NULL)
 		return;
 
-	Trigger* pTrigger = (Trigger*)triggerActor.userData;
-
-	//Character* player = (Character*)otherActor.userData;
-	//LevelElement* object = (LevelElement*)triggerActor.userData;
+	Trigger* pTrigger = static_cast<Trigger*>(triggerActor.userData);
 	
 	if(status & NX_TRIGGER_ON_ENTER)
 	{	
-		pTrigger->OnTrigger();
-		//object->OnTriggerEnter(player);
+		pTrigger->OnTriggerEnter(otherShape);
 	}
-	/*else if(status & NX_TRIGGER_ON_LEAVE)
+	else if(status & NX_TRIGGER_ON_LEAVE)
 	{
-		object->OnTriggerExit(player);
-	}*/
+		pTrigger->OnTriggerLeave(otherShape);
+	}
 }

@@ -9,6 +9,8 @@
 #include "PhysXShape.h"
 #include "IInstancible.h"
 
+struct UserData;
+
 class SimpleObject : public Actor, public ILevelObject, public ISerializable, public Instancing::IInstancible, public IDrawable
 {
 public:
@@ -91,6 +93,7 @@ private:
     bool m_bIsRigid;
 
     LevelObjectType m_Type;
+    UserData* m_pUserData;
 
     //Disable default copy constructor and assignment operator
     SimpleObject(const SimpleObject& copy);
