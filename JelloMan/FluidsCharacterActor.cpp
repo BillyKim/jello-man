@@ -168,7 +168,7 @@ void FluidsCharacterActor::RotateGravityDirection(float rad) //must be normalize
 {
     NxVec3 grav;
     m_pPhysXEngine->GetScene()->getGravity(grav);
-    Matrix rotGrav = Matrix::CreateRotation(m_MoveDir, m_GravityRotation);
+    Matrix rotGrav = Matrix::CreateRotation(m_MoveDir, rad);
     grav = static_cast<NxVec3>(Vector3::Transform(grav, rotGrav).XYZ());
     
 	m_pPhysXEngine->GetPhysXLock().lock();
