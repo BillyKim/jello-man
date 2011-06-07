@@ -4,15 +4,25 @@
 #include "IEditorObject.h"
 #include "PhysX.h"
 
+enum LevelObjectType
+{
+    LevelObjectType_NormalDraw,
+    LevelObjectType_NoDraw,
+    LevelObjectType_InstancedDraw,
+    LevelObjectType_Trigger,
+    LevelObjectType_Spawnpoint
+};
 class ILevelObject : public IUpdatable, public IEditorObject
 {
 public:
+
     virtual ~ILevelObject() {}
 
     virtual void Init(PhysX* pPhysX) = 0;
     virtual void Selected(bool selected) = 0;
     virtual bool IsSelected() const = 0;
     virtual IEditorObject* Copy() const = 0;
+    virtual LevelObjectType GetType() const = 0;
 
     //ITransformable
     virtual void Rotate(const Vector3& axis, float angle) = 0;

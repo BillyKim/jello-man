@@ -513,6 +513,9 @@
     <ClInclude Include="FluidsCharacterActor.h">
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClInclude>
+    <ClInclude Include="UnlitTexEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -845,6 +848,9 @@
     <ClCompile Include="FluidsCharacterActor.cpp">
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
+    <ClCompile Include="UnlitTexEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
@@ -890,6 +896,9 @@
       <Filter>Content\effect\fluids</Filter>
     </None>
     <None Include="Content\Effects\unlit-notex.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\unlit-tex.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

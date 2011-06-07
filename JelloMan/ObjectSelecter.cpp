@@ -147,11 +147,10 @@ bool ObjectSelecter::TrySelectObject(const RenderContext* pRenderContext)
 	NxShape* shape = m_pPhysXEngine->GetScene()->raycastClosestShape(ray, NX_ALL_SHAPES, hit);
     //<-----
 
-	if (shape && shape->getGlobalPosition() != NxVec3(0,0,0))
+	if (shape != 0 && shape->userData != 0)
 	{
-        ASSERT(shape->userData != 0, "Shape hasn't been set a userdata");
         void* temp = shape->userData;
-        ILevelObject* obj = reinterpret_cast<ILevelObject*>(temp);
+        ILevelObject* obj = static_cast<ILevelObject*>(temp);
         bool cont = true;
         try { const char* c = typeid(*obj).name(); c; } //only used to throw an error when cast fails -- 'c;' is used to diable warning C4189
         catch (...) { cont = false; }
