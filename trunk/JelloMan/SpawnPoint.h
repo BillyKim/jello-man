@@ -9,11 +9,12 @@
 #include "UnlitTexEffect.h"
 #include "Actor.h"
 
+struct UserData;
+
 class SpawnPoint : public Actor, public ILevelObject, public ISerializable, public IDrawable
 {
 public:
     SpawnPoint();
-    SpawnPoint(const Vector3& position);
     virtual ~SpawnPoint(void);
     
     virtual void Init(PhysX* pPhysX);
@@ -37,6 +38,8 @@ public:
 
 private:
     bool m_IsSelected;
+
+    UserData* m_pUserData;
 
     Model<VertexPosNormTanTex>* m_pModel;
     UnlitTexEffect* m_pEffect;

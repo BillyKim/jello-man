@@ -3,21 +3,19 @@
 #include "ContentManager.h"
 #include "PhysXBox.h"
 #include "Vector3.h"
+#include "UserData.h"
 
 SpawnPoint::SpawnPoint() :
             m_IsSelected(false),
-            m_pModel(0)
-{
-}
-SpawnPoint::SpawnPoint(const Vector3& position): 
-            m_IsSelected(false),
-            m_pModel(0)
+            m_pModel(0),
+            m_pUserData(0)
 {
 }
 
 
 SpawnPoint::~SpawnPoint(void)
 {
+    delete m_pUserData;
 }
 
 void SpawnPoint::Init(PhysX* pPhysX)
@@ -27,7 +25,8 @@ void SpawnPoint::Init(PhysX* pPhysX)
     m_pTexture = Content->LoadTexture2D(_T("../Content/Textures/engine/tex_spawnpoint.png"));
 
     PhysXBox box(Vector3(0.591f, 0.6f, 0.683f), 10);
-    box.GetShape()->userData = dynamic_cast<ILevelObject*>(this);
+    m_pUserData = new UserData(UserDataFlag_IsPickable, dynamic_cast<ILevelObject*>(this));
+    box.GetShape()->userData = m_pUserData;
     InitActor(pPhysX, box, false, false);
     SetPosition(Vector3::Zero);
 }

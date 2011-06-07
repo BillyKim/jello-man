@@ -1,6 +1,7 @@
 #pragma once
 #include "Actor.h"
 #include "ISerializable.h"
+#include "ITriggerable.h"
 #include "ICharacter.h"
 #include "FollowCamera.h"
 
@@ -9,10 +10,11 @@ struct Vector3;
 class PhysX;
 class Fluid;
 class NxFluidEmitter;
+struct UserData;
 
 
 
-class FluidsCharacterActor : public Actor, public ICharacter
+class FluidsCharacterActor : public Actor, public ICharacter, public ITriggerable
 {
 public:
 	/* CONSTRUCTOR - DESTRUCTOR */
@@ -24,8 +26,8 @@ public:
               Graphics::Camera::FollowCamera* pCamera, 
               Vector3 startPos);
 
-    void ChangeMoveDirection(const Vector3& dir); //must be normalized!
-    void ChangeGravityDirection(const Vector3& dir); //must be normalized!
+    void RotateMoveDirection(float rad);
+    void RotateGravityDirection(float rad);
     void ChangeMoveSpeed(float speed);
 	
     /* ICharacter */
@@ -35,6 +37,10 @@ public:
 	virtual void Tick(float dTime);
 	virtual void Draw(const RenderContext* pRenderContext);
 
+    /* ITriggerable */
+    virtual void OnTriggerEnter(const Trigger* pTrigger);
+    virtual void OnTriggerLeave(const Trigger* pTrigger);
+
 private:
 	void CheckIfOnGround();
 
@@ -42,6 +48,7 @@ private:
 
 	PhysX* m_pPhysXEngine;
     Level* m_pLevel;
+    UserData* m_pUserData;
 
     Vector3 m_MoveDir;
     Vector3 m_RightDir;
@@ -49,6 +56,9 @@ private:
 
     bool m_CanSwitchGravity;
 	float m_Radius;
+
+    float m_GravityRotation;
+    float m_MoveRotation;
 
 	Fluid* m_pFluid;
 	NxFluidEmitter* m_pEmitter;

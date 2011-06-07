@@ -1,6 +1,7 @@
 #include "SimpleObject.h"
 #include "ContentManager.h"
 #include "PhysXMesh.h"
+#include "UserData.h"
 
 SimpleObject::SimpleObject(bool useForInstancing): Actor(),
     m_bIsSelected(false), 
@@ -14,13 +15,15 @@ SimpleObject::SimpleObject(bool useForInstancing): Actor(),
     m_pTexDiffuse(0), m_pTexSpec(0), m_pTexGloss(0), m_pTexNormal(0),
     m_pModel(0), m_pEffect(0),
     m_bIsRigid(false),
-    m_Type(useForInstancing?LevelObjectType_InstancedDraw:LevelObjectType_NormalDraw)
+    m_Type(useForInstancing?LevelObjectType_InstancedDraw:LevelObjectType_NormalDraw),
+    m_pUserData(0)
 
 {
 }
 SimpleObject::~SimpleObject(void)
 {
     delete m_pPhysXShape;
+    delete m_pUserData;
 }
 
 #pragma region ILevelObject
@@ -58,7 +61,8 @@ void SimpleObject::Init(PhysX* pPhysX)
     }
     m_pEffect = Content->LoadEffect<DeferredPreEffectNormals>(_T("../Content/Effects/predeferredNormal.fx"));
     
-    m_pPhysXShape->GetShape()->userData = dynamic_cast<ILevelObject*>(this);
+    m_pUserData = new UserData(UserDataFlag_IsPickable, dynamic_cast<ILevelObject*>(this));
+    m_pPhysXShape->GetShape()->userData = m_pUserData;
     InitActor(pPhysX, *m_pPhysXShape, m_bIsRigid);
 }
 tstring SimpleObject::GetUniqueInstancingID() const

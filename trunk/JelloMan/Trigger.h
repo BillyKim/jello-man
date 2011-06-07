@@ -12,13 +12,14 @@
 #include "UnlitNoTexEffect.h"
 #include "PosColEffect.h"
 
+struct UserData;
+
 class Trigger:	public Actor,
 				public IDrawable,
 				public ILevelObject,
 				public ISerializable
 {
 public:
-
 	/* CONSTRUCTOR - DESTRUCTOR */
 	Trigger();
 	virtual ~Trigger();
@@ -40,7 +41,7 @@ public:
 	virtual IEditorObject* Copy() const;
 
 	/* SETTERS */
-	void SetTriggerName(tstring& name) { m_TriggerName = name; }
+	void SetTriggerName(const tstring& name);
 	void ResetTrigger() { m_bTriggered = false; }
 
 	virtual void SetPosition(const Vector3& pos) { Actor::SetPosition(pos); }
@@ -58,14 +59,17 @@ public:
     virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::PhysXTrigger; }
 
 	/* PHYSX INTERNAL */
-	void OnTrigger();
+	virtual void OnTriggerEnter(const NxShape& otherShape);
+	virtual void OnTriggerLeave(const NxShape& otherShape) ;
 
 private:
+    static int s_Count;
 
 	/* DATAMEMBERS */
 	tstring m_TriggerName;
 
 	PhysXShape* m_pTriggerShape;
+    UserData* m_pUserData;
 
 	bool m_bIsSelected;
 	bool m_bTriggered;
