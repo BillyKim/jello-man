@@ -35,6 +35,8 @@ public:
 	virtual void Translate(const Vector3& add) { Actor::Translate(add); }
 	virtual void Scale(const Vector3& scale) { Actor::Scale(scale); }
 
+    virtual LevelObjectType GetType() const { return LevelObjectType_Trigger; }
+
 	virtual IEditorObject* Copy() const;
 
 	/* SETTERS */

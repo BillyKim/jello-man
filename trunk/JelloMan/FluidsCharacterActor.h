@@ -32,12 +32,8 @@ public:
     virtual bool IsDead() const { return m_IsDead; }
     virtual void Respawn(const SpawnPoint* pSpawnPoint);
 
-	/* IUpdateable */
 	virtual void Tick(float dTime);
-
-	/* IDrawable */
-	virtual void Draw(RenderContext* pRenderContext);
-	virtual void DrawShadow(RenderContext* /*pRenderContext*/) {}
+	virtual void Draw(const RenderContext* pRenderContext);
 
 private:
 	void CheckIfOnGround();

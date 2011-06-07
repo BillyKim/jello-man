@@ -21,6 +21,7 @@ public:
     virtual void Selected(bool selected) { m_bIsSelected = selected; }
     virtual bool IsSelected() const { return m_bIsSelected; }
     virtual IEditorObject* Copy() const;
+    virtual LevelObjectType GetType() const { return m_Type; }
     #pragma endregion
 
     #pragma region ITransformable
@@ -51,7 +52,7 @@ public:
     #pragma endregion
 
 	#pragma region IInstancible
-	virtual bool IsUsedForInstancing() const { return m_bIsUsedForInstancing; }
+    virtual bool IsUsedForInstancing() const { return m_Type == LevelObjectType_InstancedDraw; }
 	virtual tstring GetUniqueInstancingID() const;
 
 	virtual Model<VertexPosNormTanTex>* GetModel() const { return m_pModel; }
@@ -89,7 +90,7 @@ private:
     bool m_bIsSelected;
     bool m_bIsRigid;
 
-	bool m_bIsUsedForInstancing;
+    LevelObjectType m_Type;
 
     //Disable default copy constructor and assignment operator
     SimpleObject(const SimpleObject& copy);

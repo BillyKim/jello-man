@@ -1,22 +1,35 @@
 #include "SpawnPoint.h"
 #include "FluidsCharacter.h"
+#include "ContentManager.h"
+#include "PhysXBox.h"
+#include "Vector3.h"
 
 SpawnPoint::SpawnPoint() :
-            m_Position(Vector3::Zero), 
-            m_mtxWorld(Matrix::CreateTranslation(Vector3::Zero)),
-            m_IsSelected(false)
+            m_IsSelected(false),
+            m_pModel(0)
 {
 }
 SpawnPoint::SpawnPoint(const Vector3& position): 
-            m_Position(position), 
-            m_mtxWorld(Matrix::CreateTranslation(position)),
-            m_IsSelected(false)
+            m_IsSelected(false),
+            m_pModel(0)
 {
 }
 
 
 SpawnPoint::~SpawnPoint(void)
 {
+}
+
+void SpawnPoint::Init(PhysX* pPhysX)
+{
+    m_pModel = Content->LoadModel(_T("../Content/Models/engine/spawnpoint.binobj"));
+    m_pEffect = Content->LoadEffect<UnlitTexEffect>(_T("../Content/Effects/unlit-tex.fx"));
+    m_pTexture = Content->LoadTexture2D(_T("../Content/Textures/engine/tex_spawnpoint.png"));
+
+    PhysXBox box(Vector3(0.591f, 0.6f, 0.683f), 10);
+    box.GetShape()->userData = dynamic_cast<ILevelObject*>(this);
+    InitActor(pPhysX, box, false, false);
+    SetPosition(Vector3::Zero);
 }
 
 /* ILevelObject */
@@ -32,26 +45,25 @@ bool SpawnPoint::IsSelected() const
 /* ITransformable */
 void SpawnPoint::Translate(const Vector3& add)
 {
-    m_Position += add;
-    m_mtxWorld = Matrix::CreateTranslation(m_Position);
+    Actor::Translate(add);
 }
 void SpawnPoint::SetPosition(const Vector3& pos)
 {
-    m_Position = pos;
-    m_mtxWorld = Matrix::CreateTranslation(m_Position);
+    Actor::SetPosition(pos);
 }
 Vector3 SpawnPoint::GetPosition() const
 {
-    return m_Position;
+    return Actor::GetPosition();
 }
 
 /* ISerializable */
 void SpawnPoint::Serialize(Serializer* pSerializer) const
 {
-    pSerializer->GetStream()->storeVector3(m_Position);
+    pSerializer->GetStream()->storeVector3(GetPosition());
 }
 void SpawnPoint::Deserialize(Serializer* pSerializer)
 {
+    Init(pSerializer->GetPhysX());
     SetPosition(pSerializer->GetStream()->readVector3());
 }
 DWORD SpawnPoint::GetUniqueIdentifier() const
@@ -60,6 +72,10 @@ DWORD SpawnPoint::GetUniqueIdentifier() const
 }
 
 /* IDrawable */
-void SpawnPoint::Draw(RenderContext* /*pRenderContext*/)
+void SpawnPoint::Draw(RenderContext* pRenderContext)
 {
+    m_pEffect->SetWorldViewProjection(m_mtxWorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
+    m_pEffect->SetDiffuseMap(m_pTexture);
+
+    m_pModel->Draw(m_pEffect);
 }

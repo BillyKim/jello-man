@@ -10,6 +10,7 @@
 #include "IInstancible.h"
 #include "EditorGUI.h"
 #include "SpawnPoint.h"
+#include "CharacterController.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -18,11 +19,10 @@ Level::Level(ID3D10Device* pDXDevice)	:
 				m_pBaseGrid(new BaseGrid()),
 				m_bShowGrid(false),
 				m_bTickCharacter(false),
-				m_pCharacter(0),
 				m_bEditor(true),
-				m_pFluidsCharacter(0),
                 m_pGUI(0),
-                m_pFluidRenderer(0)
+                m_pFluidRenderer(0),
+                m_pCharacterController(0)
 {
 
 }
@@ -32,10 +32,9 @@ Level::~Level()
 {
 	Clear();
 	delete m_pBaseGrid;
-	delete m_pCharacter;
     delete m_pFluidRenderer;
-	delete m_pFluidsCharacter;
     delete m_pInstancingManager;
+    delete m_pCharacterController;
 }
 
 // GENERAL
@@ -47,45 +46,25 @@ void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::F
 
     m_pGUI = pGUI;
 
-	/*m_pCharacter = new SoftbodyCharacter(Vector3(0, 0, 500), pTrackingCamera);
-	m_pCharacter->Init(m_pPhysXEngine);*/
-    
-	m_pFluidsCharacter = new FluidsCharacterActor(this);
-	m_pFluidsCharacter->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera, Vector3(0, 0, 0));
-
-	// forcefield
-	/*NxForceFieldLinearKernelDesc linearKernelDesc;
-    linearKernelDesc.constant = NxVec3(-1000,-500,500);
-    
-    NxForceFieldLinearKernel* pLinearKernel;
-    pLinearKernel = pPhysXEngine->GetScene()->createForceFieldLinearKernel(linearKernelDesc);
-
-    NxForceFieldDesc fieldDesc;
-	fieldDesc.coordinates = NX_FFC_SPHERICAL;
-    fieldDesc.kernel = pLinearKernel;
-
-    NxForceField *pForceField; 
-    pForceField = pPhysXEngine->GetScene()->createForceField(fieldDesc);
-
-	NxForceFieldShape* s = NULL;
-	NxBoxForceFieldShapeDesc b;
-	b.dimensions = NxVec3(500, 700, 500);
-	b.pose.t = NxVec3(0, 350, 0);
-	s = pForceField->getIncludeShapeGroup().createShape(b);*/
-
     m_pFluidRenderer = new FluidRenderer(m_pDXDevice, 
                                             static_cast<int>(BX2D->GetWindowSize().width), 
                                             static_cast<int>(BX2D->GetWindowSize().height));
 
     m_pInstancingManager = new Instancing::InstancingManager(m_pDXDevice);
 
-	//test
+    m_pCharacterController = new CharacterController(this);
+    m_pCharacterController->Init(m_pDXDevice, m_pPhysXEngine, pTrackingCamera);
 
+	//test
 	Trigger* pTrigger = new Trigger();
 	pTrigger->Init(m_pPhysXEngine, Vector3(5,5,5));
 	pTrigger->Translate(Vector3(4,10,5));
-
 	AddLevelObject(pTrigger);
+
+    SpawnPoint* pSpawnpoint = new SpawnPoint(Vector3::Zero);
+    pSpawnpoint->Init(m_pPhysXEngine);
+    AddLevelObject(pSpawnpoint);
+    m_pCharacterController->SetSpawnPoint(pSpawnpoint);
 }
 void Level::WakeUpAll()
 {
@@ -101,13 +80,18 @@ void Level::Tick(const float dTime)
 {
     for_each(m_pLevelObjects.begin(), m_pLevelObjects.end(), [&](ILevelObject* obj)
 	{
-		obj->Tick(dTime);	
+		obj->Tick(dTime);
 	});
+    
+    m_pCharacterController->Tick(dTime);
 
-	//m_pCharacter->Tick(dTime);
-
-	//if (m_bTickCharacter)
-		m_pFluidsCharacter->Tick(dTime);
+    //if (CONTROLS->IsKeyPressed('R'))
+    //{
+    //    SpawnPoint* pSpawnpoint = new SpawnPoint(Vector3::Zero);
+    //    pSpawnpoint->Init(m_pPhysXEngine);
+    //    AddLevelObject(pSpawnpoint);
+    //    m_pCharacterController->SetSpawnPoint(pSpawnpoint);
+    //}
 }
 
 void Level::AddLevelObject(ILevelObject* pLevelObject)
@@ -120,56 +104,83 @@ void Level::AddLevelObject(ILevelObject* pLevelObject)
 
 	m_pLevelObjects.push_back(pLevelObject);
 
-	// triggers
-	Trigger* pTrigger = dynamic_cast<Trigger*>(pLevelObject);
-
-	if (pTrigger != 0)
-	{
+    if (pLevelObject->GetType() == LevelObjectType_InstancedDraw)
+    {
+        using namespace Instancing;
+	    IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+        ASSERT(instObj != 0, "trying to add an instanced object which isn't an instancible object");
+		m_pInstancingManager->AddObject(instObj);
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_NormalDraw)
+    {
+        IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
+		ASSERT(drawObj != 0, "trying to add a drawable object which can't be drawn");
+		m_pDrawableObjects.push_back(drawObj);
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_Spawnpoint)
+    {
+        SpawnPoint* pSpawnpoint = dynamic_cast<SpawnPoint*>(pLevelObject);
+	    ASSERT(pSpawnpoint != 0, "trying to add a spawnpoint object which isn't a spawnpoint");
+        m_pCharacterController->SetSpawnPoint(pSpawnpoint);
+        m_pDrawableObjects.push_back(pSpawnpoint);
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_Trigger)
+    {
+        Trigger* pTrigger = dynamic_cast<Trigger*>(pLevelObject);
+	    ASSERT(pTrigger != 0, "trying to add a trigger object which isn't a trigger");
 		tstring triggerName = pTrigger->GetTriggerName();
 		m_pTriggers[triggerName] = pTrigger;
-	}
-	else
-	{
-		// instancing
-		using namespace Instancing;
-		IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_NoDraw)
+    {
+    }
+    else
+    {
+        ASSERT(false, "Unkown LevelObjectType");
+    }
 
-		if (instObj != 0 && instObj->IsUsedForInstancing() == true)
-		{
-			m_pInstancingManager->AddObject(instObj);
-		}
-		else
-		{
-			IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
-			if (drawObj != 0) //we allow objects that don't need to be drawn
-				m_pDrawableObjects.push_back(drawObj);
-		}
-	}
 }
 void Level::RemoveLevelObject(ILevelObject* pLevelObject)
 {
-	// triggers
-	Trigger* pTrigger = dynamic_cast<Trigger*>(pLevelObject);
+    if (pLevelObject == 0)
+    {
+        PANIC("removing a NULL levelobject --> ignored");
+        return;
+    }
 
-	if (pTrigger != 0)
-	{
+    if (pLevelObject->GetType() == LevelObjectType_InstancedDraw)
+    {
+        using namespace Instancing;
+	    IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+        ASSERT(instObj != 0, "trying to delete an instanced object which isn't an instancible object");
+		m_pInstancingManager->DeleteObject(instObj);
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_NormalDraw)
+    {
+        IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
+		ASSERT(drawObj != 0, "trying to delete a drawable object which can't be drawn");
+		m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), drawObj));
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_Spawnpoint)
+    {
+        SpawnPoint* pSpawnpoint = dynamic_cast<SpawnPoint*>(pLevelObject);
+	    ASSERT(pSpawnpoint != 0, "trying to delete a spawnpoint object which isn't a spawnpoint");
+        m_pCharacterController->SetSpawnPoint(0);
+		m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), pSpawnpoint));
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_Trigger)
+    {
+        Trigger* pTrigger = dynamic_cast<Trigger*>(pLevelObject);
+	    ASSERT(pTrigger != 0, "trying to delete a trigger object which isn't a trigger");
         m_pTriggers.erase(pTrigger->GetTriggerName());
-	}
-	else
-	{
-		using namespace Instancing;
-		IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
-		if (instObj != 0)
-		{
-			m_pInstancingManager->DeleteObject(instObj);
-		}
-		else
-		{
-			IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
-			ASSERT(drawObj != 0, "What are you?");
-			m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), drawObj));
-		}		
-	}
+    }
+    else if (pLevelObject->GetType() == LevelObjectType_NoDraw)
+    {
+    }
+    else
+    {
+        ASSERT(false, "Unkown LevelObjectType");
+    }
 
 	m_pLevelObjects.erase(remove(m_pLevelObjects.begin(), m_pLevelObjects.end(), pLevelObject));
 	delete pLevelObject;
@@ -270,7 +281,7 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
 
     m_pInstancingManager->Draw(pRenderContext);
 
-	//m_pCharacter->Draw(pRenderContext);
+    m_pCharacterController->DrawDeferred(m_pRenderContext);
 }
 
 void Level::DrawShadowMap(RenderContext* pRenderContext)
@@ -285,14 +296,7 @@ void Level::DrawShadowMap(RenderContext* pRenderContext)
 
 void Level::DrawForward(RenderContext* pRenderContext)
 {
-	if (m_pFluidsCharacter)
-    {
-        m_pFluidRenderer->Begin();
-
-		m_pFluidsCharacter->Draw(pRenderContext);
-
-        m_pFluidRenderer->End(pRenderContext);
-    }
+    m_pCharacterController->DrawForward(m_pRenderContext);
 
 	if (m_bShowGrid)
 		m_pBaseGrid->Draw(pRenderContext);
@@ -302,16 +306,21 @@ void Level::DrawForward(RenderContext* pRenderContext)
 	{
 		trigger.second->Draw(pRenderContext);
 	});
+ 
+    m_pFluidRenderer->Begin();
+    m_pCharacterController->DrawFluids(m_pRenderContext);
+    m_pFluidRenderer->End(pRenderContext);
 
 	// DRAW LIGHTS
 	if (m_bEditor)
 	{
 		BX2D->SetAntiAliasing(true);
 
-		for (unsigned int i = 0; i < pRenderContext->GetLightController()->GetLights().size(); ++i)
+        for_each(m_pRenderContext->GetLightController()->GetLights().cbegin(),
+                 m_pRenderContext->GetLightController()->GetLights().cend(), [&](Light* l)
 		{
-			m_pRenderContext->GetLightController()->GetLights()[i]->Draw(m_pRenderContext);
-		}
+			l->Draw(m_pRenderContext);
+		});
         
 		BX2D->SetAntiAliasing(false);
 	}

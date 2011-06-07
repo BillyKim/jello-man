@@ -4,6 +4,7 @@
 #include "PhysX.h"
 #include "Vector3.h"
 #include "PhysXSphere.h"
+#include "Fluid.h"
 
 /* CONSTRUCTOR - DESTRUCTOR */
 FluidsCharacterActor::FluidsCharacterActor(Level* pLevel)	:	m_pPhysXEngine(0),
@@ -41,7 +42,7 @@ void FluidsCharacterActor::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Gr
     m_pCamera->SetSmoothFlags(Graphics::Camera::FollowCamera::SmoothFlag_Direction | Graphics::Camera::FollowCamera::SmoothFlag_Up);
     m_pCamera->SetFollowDistance(8);
 
-	PhysXSphere sphere(0.1f, 10);
+	PhysXSphere sphere(0.5f, 10);
 	InitActor(pPhysXEngine, sphere, true);
 
 	m_pPhysXEngine = pPhysXEngine;
@@ -52,7 +53,7 @@ void FluidsCharacterActor::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Gr
 	#pragma region Fluids
 	// FLUID
 	//int MAX_PARTICLES = (int)maxParticles;
-    int MAX_PARTICLES = 10000;
+    int MAX_PARTICLES = 1500;
 
 	// setup fluid descriptor
 	NxFluidDesc fluidDesc;
@@ -60,7 +61,7 @@ void FluidsCharacterActor::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Gr
     fluidDesc.kernelRadiusMultiplier		= 2.3f;
     fluidDesc.restParticlesPerMeter			= 5.0f;
 	fluidDesc.motionLimitMultiplier			= 1.0f;
-	fluidDesc.packetSizeMultiplier			= 32;
+	fluidDesc.packetSizeMultiplier			= 8;
     fluidDesc.collisionDistanceMultiplier   = 1.0f;
     fluidDesc.stiffness						= 25.0f;
     fluidDesc.viscosity						= 50.0f;
@@ -89,7 +90,7 @@ void FluidsCharacterActor::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Gr
 	emitterDesc.fluidVelocityMagnitude = .1f;
 
 	emitterDesc.shape = NX_FE_RECTANGULAR;
-	emitterDesc.particleLifetime = 20.0f; // in seconds
+	emitterDesc.particleLifetime = 2.0f; // in seconds
 
 	////attach to actor
 	//emitterDesc.flags |= NX_FEF_ADD_BODY_VELOCITY;
@@ -148,6 +149,7 @@ void FluidsCharacterActor::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Gr
 
 void FluidsCharacterActor::Respawn(const SpawnPoint* pSpawnPoint)
 {
+    m_pActor->setLinearVelocity(Vector3::Zero);
     SetPosition(pSpawnPoint->GetPosition());
     //ChangeMoveDirection(pSpawnPoint->GetForward());
     //ChangeGravityDirection(pSpawnPoint->GetUp());
@@ -246,7 +248,7 @@ void FluidsCharacterActor::CheckIfOnGround()
 	NxRay ray(GetPosition() + m_Radius * gravDir, gravDir);
 	m_IsTouchingGround = m_pPhysX->GetScene()->raycastAnyShape(ray, NX_ALL_SHAPES, 4294967295U, m_Radius / 10.0f);
 }
-void FluidsCharacterActor::Draw(RenderContext* pRenderContext)
+void FluidsCharacterActor::Draw(const RenderContext* pRenderContext)
 {
 	m_pFluid->Draw(pRenderContext);
 

@@ -2,7 +2,11 @@
 
 class SpawnPoint;
 class Level;
-class ICharacter;
+class FluidsCharacterActor;
+class RenderContext;
+struct ID3D10Device;
+class PhysXEngine;
+#include "FollowCamera.h"
 
 class CharacterController
 {
@@ -15,16 +19,23 @@ public:
     CharacterController(Level* pLevel);
     virtual ~CharacterController(void);
 
+    void Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, 
+              Graphics::Camera::FollowCamera* pCamera);
+
     void SetSpawnPoint(const SpawnPoint* pSpawnPoint);
 
     void Tick(float dTime);
+
+    void DrawForward(const RenderContext* pRenderContext);
+    void DrawFluids(const RenderContext* pRenderContext);
+    void DrawDeferred(const RenderContext* pRenderContext);
 
     void Respawn();
 
 private:
     const SpawnPoint* m_pSpawnPoint;
     Level* m_pLevel;
-    ICharacter* m_pCharacter;
+    FluidsCharacterActor* m_pCharacter;
 
     State m_State;
     float m_Timer;

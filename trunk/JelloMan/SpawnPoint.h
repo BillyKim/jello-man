@@ -5,14 +5,19 @@
 #include "ISerializable.h"
 #include "IDrawable.h"
 #include "ICharacter.h"
+#include "Model.h"
+#include "UnlitTexEffect.h"
+#include "Actor.h"
 
-class SpawnPoint : public ILevelObject, public ISerializable, public IDrawable
+class SpawnPoint : public Actor, public ILevelObject, public ISerializable, public IDrawable
 {
 public:
     SpawnPoint();
     SpawnPoint(const Vector3& position);
     virtual ~SpawnPoint(void);
     
+    virtual void Init(PhysX* pPhysX);
+
     /* ILevelObject */
     virtual void Selected(bool selected);
     virtual bool IsSelected() const;
@@ -31,22 +36,27 @@ public:
     virtual void Draw(RenderContext* pRenderContext);
 
 private:
-    Vector3 m_Position;
-    Matrix m_mtxWorld;
-
     bool m_IsSelected;
+
+    Model<VertexPosNormTanTex>* m_pModel;
+    UnlitTexEffect* m_pEffect;
+    Texture2D* m_pTexture;
+
 
   /* Disabled because not used */
     /* ILevelObject */
-    virtual void Init(PhysX* /*pPhysX*/) {};
     virtual IEditorObject* Copy() const { return 0; }; //only one spawnpoint allowed
+    virtual LevelObjectType GetType() const { return LevelObjectType_Spawnpoint; }
     
     /* ITransformable */
     virtual void Rotate(const Vector3& /*axis*/, float /*angle*/) {};
     virtual void Scale(const Vector3& /*scale*/) {};
     
     /* IUpdateable */
-    virtual void Tick(float /*dTime*/) {};
+    virtual void Tick(float dTime) 
+    {
+        Actor::Tick(dTime);
+    };
 
     /* IDrawable */
     virtual void DrawShadow(RenderContext* /*pRenderContext*/) {};

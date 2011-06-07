@@ -48,7 +48,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
 
 	// FLUID
 	//int MAX_PARTICLES = (int)maxParticles;
-    int MAX_PARTICLES = 10000;
+    int MAX_PARTICLES = 1000;
 
 	// setup fluid descriptor
 	NxFluidDesc fluidDesc;
@@ -65,7 +65,7 @@ void FluidsCharacter::Init(ID3D10Device* pDXDevice, PhysX* pPhysXEngine, Graphic
     fluidDesc.restitutionForStaticShapes	= 0.1f;
 	fluidDesc.dynamicFrictionForStaticShapes= 0.1f;
 	fluidDesc.simulationMethod				= NX_F_SPH;
-	fluidDesc.flags &= ~NX_FF_HARDWARE;
+	//fluidDesc.flags &= ~NX_FF_HARDWARE;
 	fluidDesc.dynamicFrictionForDynamicShapes= 0.8f;
 	fluidDesc.collisionGroup = 4;
 

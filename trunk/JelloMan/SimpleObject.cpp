@@ -14,7 +14,7 @@ SimpleObject::SimpleObject(bool useForInstancing): Actor(),
     m_pTexDiffuse(0), m_pTexSpec(0), m_pTexGloss(0), m_pTexNormal(0),
     m_pModel(0), m_pEffect(0),
     m_bIsRigid(false),
-	m_bIsUsedForInstancing(useForInstancing)
+    m_Type(useForInstancing?LevelObjectType_InstancedDraw:LevelObjectType_NormalDraw)
 
 {
 }

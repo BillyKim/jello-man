@@ -1,30 +1,32 @@
 #pragma once
 
 #include "D3DUtil.h"
+#include "InstancingManager.h"
+#include "PhysX.h"
+
 #include "DeferredRenderer.h"
 #include "ForwardRenderer.h"
 #include "FluidRenderer.h"
-#include "TestSoftbody.h"
+
 #include "Blox2D.h"
 #include "RenderContext.h"
 #include "PostProcessor.h"
+
 #include "EdgeDetectionPostEffect.h"
-#include "PhysX.h"
-#include "BaseGrid.h"
-#include "Softbody.h"
 #include "PreShadowEffect.h"
+
+#include "BaseGrid.h"
+
 #include "ILevelObject.h"
-#include "Fluid.h"
-#include "SoftbodyCharacter.h"
-#include "FluidsCharacterActor.h"
+
 #include <map>
 #include "Trigger.h"
 
 #include "FollowCamera.h"
 
-#include "InstancingManager.h"
 
 class EditorGUI;
+class CharacterController;
 
 class Level
 {
@@ -76,19 +78,12 @@ private:
 	// DATAMEMBERS
 	ID3D10Device* m_pDXDevice;
 
-	SoftbodyCharacter* m_pCharacter;
-	FluidsCharacterActor* m_pFluidsCharacter;
-
 	PhysX* m_pPhysXEngine;
-
 	const RenderContext* m_pRenderContext;
 
 	vector<ILevelObject*> m_pLevelObjects;
-
 	vector<IDrawable*> m_pDrawableObjects;
-
 	map<tstring, Trigger*> m_pTriggers;
-
 	Instancing::InstancingManager* m_pInstancingManager;
 
 	BaseGrid* m_pBaseGrid;
@@ -100,6 +95,7 @@ private:
     FluidRenderer* m_pFluidRenderer;
 
     EditorGUI* m_pGUI;
+    CharacterController* m_pCharacterController;
 
 	// DISABLE DEFAULT COPY & ASSIGNMENT
 	Level(const Level& t);
