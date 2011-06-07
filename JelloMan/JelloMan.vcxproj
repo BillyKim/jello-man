@@ -99,8 +99,11 @@
     <ClInclude Include="CharacterController.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="ColorPicker.h" />
+    <ClInclude Include="EditorLoader.h" />
     <ClInclude Include="FluidsCharacterActor.h" />
     <ClInclude Include="ICharacter.h" />
+    <ClInclude Include="IGizmo.h" />
+    <ClInclude Include="Infobar.h" />
     <ClInclude Include="Infopane.h" />
     <ClInclude Include="IniReader.h" />
     <ClInclude Include="ContentManager.h" />
@@ -112,7 +115,7 @@
     <ClInclude Include="DeferredPreEffectNormalsInstanced.h" />
     <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="EdgeDetectionPostEffect.h" />
-    <ClInclude Include="EditorGUI.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="D3DUtil.h" />
@@ -213,7 +216,7 @@
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="vertex.h" />
-    <ClInclude Include="VisualLightDebugger.h" />
+    <ClInclude Include="LightInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
@@ -225,7 +228,9 @@
     <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColorPicker.cpp" />
+    <ClCompile Include="EditorLoader.cpp" />
     <ClCompile Include="FluidsCharacterActor.cpp" />
+    <ClCompile Include="Infobar.cpp" />
     <ClCompile Include="Infopane.cpp" />
     <ClCompile Include="IniReader.cpp" />
     <ClCompile Include="ContentManager.cpp" />
@@ -237,7 +242,7 @@
     <ClCompile Include="DeferredPreEffectNormalsInstanced.cpp" />
     <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="EdgeDetectionPostEffect.cpp" />
-    <ClCompile Include="EditorGUI.cpp" />
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EffectLoader.cpp" />
@@ -327,7 +332,7 @@
     <ClCompile Include="Vector3.cpp" />
     <ClCompile Include="Vector4.cpp" />
     <ClCompile Include="vertex.cpp" />
-    <ClCompile Include="VisualLightDebugger.cpp" />
+    <ClCompile Include="LightInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\blur.fx" />

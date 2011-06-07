@@ -8,7 +8,7 @@
 #include "ParticleFactory.h"
 #include "SimpleObject.h"
 #include "IInstancible.h"
-#include "EditorGUI.h"
+#include "Editor.h"
 #include "SpawnPoint.h"
 #include "CharacterController.h"
 
@@ -38,7 +38,7 @@ Level::~Level()
 }
 
 // GENERAL
-void Level::Initialize(PhysX* pPhysXEngine, EditorGUI* pGUI, Graphics::Camera::FollowCamera* pTrackingCamera)
+void Level::Initialize(PhysX* pPhysXEngine, Editor* pGUI, Graphics::Camera::FollowCamera* pTrackingCamera)
 {
 	m_pPhysXEngine = pPhysXEngine;
 	

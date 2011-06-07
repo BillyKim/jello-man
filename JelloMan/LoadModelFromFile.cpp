@@ -3,18 +3,15 @@
 #include "SimpleObject.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-LoadModelFromFile::LoadModelFromFile(Level* pLevel, PhysX* pPhysXEngine)	:	m_pbtnUseNormalMap(0),
-																				m_pbtnLoadModel(0),
-																				m_ModelPath(_T("")),
-																				m_PhysXModelPath(_T("")),
-																				m_NormalPath(_T("")),
-																				m_DiffusePath(_T("")),
-																				m_SpecPath(_T("")),
-																				m_GlossPath(_T("")),
-																				m_WorkingDirectory(_T("")),
-																				m_pLevel(pLevel),
-																				m_pRenderContext(0),
-																				m_pPhysXEngine(pPhysXEngine)
+LoadModelFromFile::LoadModelFromFile()	:	m_pbtnUseNormalMap(0),
+											m_pbtnLoadModel(0),
+											m_ModelPath(_T("")),
+											m_PhysXModelPath(_T("")),
+											m_NormalPath(_T("")),
+											m_DiffusePath(_T("")),
+											m_SpecPath(_T("")),
+											m_GlossPath(_T("")),
+											m_WorkingDirectory(_T(""))
 {
 	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_normal.png")));
 	m_LoadPathBitmaps.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_hover.png")));
@@ -51,10 +48,6 @@ LoadModelFromFile::~LoadModelFromFile()
 	delete m_pbtnUseNormalMap;
     delete m_pbtnLoadModel;
 
-	m_pLevel = 0;
-	m_pRenderContext = 0;
-	m_pPhysXEngine = 0;
-
 	for (vector<Button*>::iterator it = m_Buttons.begin(); it != m_Buttons.end(); ++it)
 		delete (*it);
 
@@ -63,10 +56,8 @@ LoadModelFromFile::~LoadModelFromFile()
 }
 
 // GENERAL
-void LoadModelFromFile::Tick(const RenderContext* pRenderContext)
+void LoadModelFromFile::Tick()
 {
-	m_pRenderContext = pRenderContext;
-
 	if (m_TextBoxes.size() == 0)
 	{
 		for (int i = 0; i < 6; ++i)
@@ -146,7 +137,7 @@ void LoadModelFromFile::Tick(const RenderContext* pRenderContext)
 		SetCurrentDirectory(m_WorkingDirectory.c_str());
 	}
 
-	if (m_pbtnLoadModel->Clicked())
+	/*if (m_pbtnLoadModel->Clicked())
 	{
 		if (m_ModelPath != _T("") && m_PhysXModelPath != _T(""))
 		{        
@@ -180,7 +171,7 @@ void LoadModelFromFile::Tick(const RenderContext* pRenderContext)
 
 			m_pLevel->AddLevelObject(pObj);
 		}
-	}
+	}*/
 
 	if (m_TextBoxes[0]->Entered())
 	{
@@ -310,4 +301,18 @@ tstring LoadModelFromFile::StripPath(const tstring& path)
 	relativePath = stream.str();
 
 	return relativePath;
+}
+
+vector<tstring> LoadModelFromFile::GetPaths() const
+{
+	vector<tstring> paths;
+
+	paths.push_back(m_ModelPath);
+	paths.push_back(m_PhysXModelPath);
+	paths.push_back(m_NormalPath);
+	paths.push_back(m_DiffusePath);
+	paths.push_back(m_SpecPath);
+	paths.push_back(m_GlossPath);
+
+	return paths;
 }

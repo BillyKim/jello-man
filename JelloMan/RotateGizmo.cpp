@@ -1,14 +1,15 @@
 #include "RotateGizmo.h"
 #include "ContentManager.h"
 
-RotateGizmo::RotateGizmo()	:	m_pRenderContext(0),
-								m_pAxisFont(0),
-                                m_bLockX(false),
-                                m_bLockY(false),
-                                m_bLockZ(false),
-								m_bSnap(false),
-								m_SnapSize(ToRadians(5.0f)),
-								m_Move(0)
+RotateGizmo::RotateGizmo(ObjectSelecter* pObjectSelecter)	:	m_pRenderContext(0),
+																m_pAxisFont(0),
+																m_bLockX(false),
+																m_bLockY(false),
+																m_bLockZ(false),
+																m_bSnap(false),
+																m_SnapSize(ToRadians(5.0f)),
+																m_Move(0),
+																m_pObjectSelecter(pObjectSelecter)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 
@@ -126,12 +127,13 @@ void RotateGizmo::DrawGizmo(const Vector3& pos)
 }
 
 // GENERAL
-void RotateGizmo::Tick(ObjectSelecter* pObjectSelecter)
+void RotateGizmo::Tick()
 {
 	if (!m_pRenderContext)
 		return;
 
-    m_vCenterPos = pObjectSelecter->GetCenterPos();
+    m_vCenterPos = m_pObjectSelecter->GetCenterPos();
+
     if (m_vCenterPos != Vector3::Infinity)
     {
         // VIEWPORT
@@ -142,13 +144,13 @@ void RotateGizmo::Tick(ObjectSelecter* pObjectSelecter)
 	        m_bLockX = m_bLockY = m_bLockZ = false;
 
         if (m_bLockX || m_bLockY || m_bLockZ)
-            pObjectSelecter->AbortControls();
+            m_pObjectSelecter->AbortControls();
 
-        CheckControls(pObjectSelecter);
+        CheckControls();
     }
 }
 
-void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
+void RotateGizmo::CheckControls()
 { 
 	// MATRIX
 	Matrix matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -272,9 +274,9 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 				if (bSnapped || !m_bSnap)
 				{
-					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
-						pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Right, m_Move);
+						m_pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Right, m_Move);
 					}
 				}
 
@@ -307,9 +309,9 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 				if (bSnapped || !m_bSnap)
 				{
-					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
-						pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Up, m_Move);
+						m_pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Up, m_Move);
 					}
 				}
 
@@ -342,9 +344,9 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 				if (bSnapped || !m_bSnap)
 				{
-					for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+					for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 					{
-						pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Forward, m_Move);
+						m_pObjectSelecter->GetSelectedObjects()[i]->Rotate(Vector3::Forward, m_Move);
 					}
 				}
 
@@ -353,5 +355,7 @@ void RotateGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			}
 		}
 	}
+
+	m_pObjectSelecter->CalcCenterPos();
 }
 

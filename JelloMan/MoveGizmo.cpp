@@ -2,16 +2,17 @@
 #include "ContentManager.h"
 
 // CONSTRUCTOR - DESTRUCTOR
-MoveGizmo::MoveGizmo()	:	m_pRenderContext(0),
-							m_pAxisFont(0),
-                            m_bLockX(false),
-                            m_bLockY(false),
-                            m_bLockZ(false),
-                            m_vAnchor(Vector3::Zero),
-							m_bSnap(false),
-							m_SnapSize(0.1f),
-							m_bSnapToGrid(false),
-                            m_bCanCopy(true)
+MoveGizmo::MoveGizmo(ObjectSelecter* pObjectSelecter)	:	m_pRenderContext(0),
+															m_pAxisFont(0),
+															m_bLockX(false),
+															m_bLockY(false),
+															m_bLockZ(false),
+															m_vAnchor(Vector3::Zero),
+															m_bSnap(false),
+															m_SnapSize(0.1f),
+															m_bSnapToGrid(false),
+															m_bCanCopy(true),
+															m_pObjectSelecter(pObjectSelecter)
 {
 	m_pAxisFont = Content->LoadTextFormat(_T("Verdana"),14, false, false);
 
@@ -200,12 +201,12 @@ void MoveGizmo::DrawGizmo(const Vector3& pos)
 }
 
 // GENERAL
-void MoveGizmo::Tick(ObjectSelecter* pObjectSelecter)
+void MoveGizmo::Tick()
 {
 	if (!m_pRenderContext)
 		return;
 
-    m_vCenterPos = pObjectSelecter->GetCenterPos();
+    m_vCenterPos = m_pObjectSelecter->GetCenterPos();
 
     if (m_vCenterPos != Vector3::Infinity)
     {
@@ -217,13 +218,13 @@ void MoveGizmo::Tick(ObjectSelecter* pObjectSelecter)
 	        m_bLockX = m_bLockY = m_bLockZ = false;
 
         if (m_bLockX || m_bLockY || m_bLockZ)
-            pObjectSelecter->AbortControls();
+            m_pObjectSelecter->AbortControls();
 
-        CheckControls(pObjectSelecter);
+		CheckControls();
     }
 }
 
-void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
+void MoveGizmo::CheckControls()
 { 
 	// MATRIX
 	Matrix matProj = m_pRenderContext->GetCamera()->GetProjection();
@@ -352,7 +353,7 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
                 if (CONTROLS->IsKeyDown(VK_LSHIFT) && m_bCanCopy == true)
                 {
                     m_bCanCopy = false;
-                    pObjectSelecter->CopySelected();
+                    m_pObjectSelecter->CopySelected();
                 }
 			}
 		}
@@ -367,13 +368,13 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 			if (m_bSnapToGrid && m_bSnap)
 			{
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().X * 1000) % (int)(m_SnapSize * 1000));
+					int diffToGrid = ((int)(m_pObjectSelecter->GetSelectedObjects()[i]->GetPosition().X * 1000) % (int)(m_SnapSize * 1000));
 
 					if (diffToGrid != 0)
 					{
-						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * (-diffToGrid / 1000.0f));
+						m_pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * (-diffToGrid / 1000.0f));
 						diff = 0;
 					}
 				}
@@ -386,9 +387,9 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			{
 				m_vAnchor.X = mousePosX3D.X;
 
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
+					m_pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Right * diff);
 				}
 			}
 		}
@@ -405,13 +406,13 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 			if (m_bSnapToGrid && m_bSnap)
 			{
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Y * 1000) % (int)(m_SnapSize * 1000));
+					int diffToGrid = ((int)(m_pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Y * 1000) % (int)(m_SnapSize * 1000));
 
 					if (diffToGrid != 0)
 					{
-						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * (-diffToGrid / 1000.0f));
+						m_pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * (-diffToGrid / 1000.0f));
 						diff = 0;
 					}
 				}
@@ -424,9 +425,9 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			{
 				m_vAnchor.Y = mousePosY3D.Y;
 
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
+					m_pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Up * diff);
 				}
 			}
 		}
@@ -444,13 +445,13 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 
 			if (m_bSnapToGrid && m_bSnap)
 			{
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					int diffToGrid = ((int)(pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Z * 1000) % (int)(m_SnapSize * 1000));
+					int diffToGrid = ((int)(m_pObjectSelecter->GetSelectedObjects()[i]->GetPosition().Z * 1000) % (int)(m_SnapSize * 1000));
 
 					if (diffToGrid != 0)
 					{
-						pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * (diffToGrid / 1000.0f));
+						m_pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * (diffToGrid / 1000.0f));
 						diff = 0;
 					}
 				}
@@ -463,16 +464,16 @@ void MoveGizmo::CheckControls(ObjectSelecter* pObjectSelecter)
 			{
 				m_vAnchor.Z = mousePosZ3D.Z;
 
-				for (UINT i = 0; i < pObjectSelecter->GetSelectedObjects().size(); ++i)
+				for (UINT i = 0; i < m_pObjectSelecter->GetSelectedObjects().size(); ++i)
 				{
-					pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
+					m_pObjectSelecter->GetSelectedObjects()[i]->Translate(Vector3::Forward * -diff);
 				}
 			}
 		}
 		else
 			m_vAnchor.Z = mousePosZ3D.Z;
 
-		pObjectSelecter->CalcCenterPos();
+		m_pObjectSelecter->CalcCenterPos();
 	}
 }
 bool MoveGizmo::PolyCollisionCheck(const Vector3& pos, const Vector3& vAxis1, const Vector3& vAxis2, 
