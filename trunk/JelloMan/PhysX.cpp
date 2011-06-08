@@ -71,7 +71,7 @@ bool PhysX::Init(void)
 
     #pragma region default material
 	NxMaterial* defaultMaterial = m_pScene->getMaterialFromIndex(0);
-	defaultMaterial->setRestitution(0.3f);
+	defaultMaterial->setRestitution(0.0f);
 	defaultMaterial->setStaticFriction(.6f);
 	defaultMaterial->setDynamicFriction(.5f);
     #pragma endregion

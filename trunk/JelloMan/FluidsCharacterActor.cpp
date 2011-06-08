@@ -262,7 +262,7 @@ void FluidsCharacterActor::Tick(float dTime)
 	if (m_pActor->getLinearVelocity().magnitude() < m_MoveSpeed)
 		AddForce(move);
 
-	CheckIfOnGround();
+	//CheckIfOnGround();
 
     NxVec3 grav;
     m_pPhysX->GetScene()->getGravity(grav);
