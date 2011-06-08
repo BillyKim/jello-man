@@ -25,8 +25,9 @@ public:
 private:
 	Texture2D* Load(ID3D10Device* pDXDevice, const tstring& key, bool skipLoadDefault);
 
-	TextureLoader(TextureLoader& t);
-	TextureLoader& operator=(TextureLoader& t);
+	//Disable default copy constructor and assignment operator
+	TextureLoader(const TextureLoader& t);
+	TextureLoader& operator=(const TextureLoader& t);
 
     AssetContainer<Texture2D>* m_pAssets;
 };

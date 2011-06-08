@@ -46,5 +46,9 @@ private:
 	ID3D10Device* m_pDXDevice;
 
 	PhysX* m_pPhysXEngine;
+
+	/* Disable default assigment operator en copy constructor */
+	EditorLoader(const EditorLoader&);
+	EditorLoader& operator=(const EditorLoader&);
 };
 

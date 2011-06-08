@@ -59,4 +59,9 @@ private:
     Texture2D* m_pTexRainbow;
 
 	Matrix m_mtxWorld;
+
+	
+	/* Disableing default copyconstructor and assignment operator */
+	Fluid(const Fluid&);
+	Fluid& operator=(const Fluid&);
 };

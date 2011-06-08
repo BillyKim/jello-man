@@ -14,11 +14,11 @@ public:
 
     void Open(string path);
 
-    bool IsOpen() { return m_IsOpen; }
+    bool IsOpen() const { return m_IsOpen; }
 
-    int GetInt(const tstring& root, const tstring& node);
-    float GetFloat(const tstring& root, const tstring& node); 
-    tstring GetString(const tstring& root, const tstring& node);
+    int GetInt(const tstring& root, const tstring& node) const;
+    float GetFloat(const tstring& root, const tstring& node) const; 
+    tstring GetString(const tstring& root, const tstring& node) const;
 
 private:
     IniReadData m_Data;

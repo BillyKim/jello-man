@@ -14,9 +14,13 @@ public:
     virtual void SetMotor(bool enable, float velocityTarget = 0, float maxForce = FLT_MAX, bool freeSpin = false);
     virtual void SetLimits(bool enable, float low = -Pi, float high = Pi);
 
-    virtual JointType GetType();
+	virtual JointType GetType() const { return JointType_Revolute; }
 
 private:
     NxRevoluteJoint* m_pJoint;
+
+	/* Disableing default copyconstructor and assignment operator */
+	RevoluteJoint(const RevoluteJoint&);
+	RevoluteJoint& operator=(const RevoluteJoint&);
 };
 

@@ -50,5 +50,10 @@ private:
 	tstring m_WorkingDirectory;
 
 	TextFormat* m_pFont;
+
+	
+	/* Disable default assigment operator en copy constructor */
+	LoadLevelFromFile(const LoadLevelFromFile&);
+	LoadLevelFromFile& operator=(const LoadLevelFromFile&);
 };
 

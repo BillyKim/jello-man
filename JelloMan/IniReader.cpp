@@ -102,7 +102,7 @@ void IniReader::Open(string path)
     m_IsOpen = true;
 }
 
-int IniReader::GetInt(const tstring& root, const tstring& node)
+int IniReader::GetInt(const tstring& root, const tstring& node) const
 {
     tstring temp(GetString(root, node));
     string fString(temp.cbegin(), temp.cend());
@@ -111,7 +111,7 @@ int IniReader::GetInt(const tstring& root, const tstring& node)
         throw ParseFailException();
     return ret;
 }
-float IniReader::GetFloat(const tstring& root, const tstring& node)
+float IniReader::GetFloat(const tstring& root, const tstring& node) const
 {
     tstring temp(GetString(root, node));
     string fString(temp.cbegin(), temp.cend());
@@ -120,7 +120,7 @@ float IniReader::GetFloat(const tstring& root, const tstring& node)
         throw ParseFailException();
     return ret;
 }
-tstring IniReader::GetString(const tstring& root, const tstring& node)
+tstring IniReader::GetString(const tstring& root, const tstring& node) const
 {
     IniReadData::const_iterator itRoot = m_Data.find(root);
     if (itRoot != m_Data.cend())

@@ -10,9 +10,14 @@ public:
     virtual void SetBreakable(float maxForce = FLT_MAX, float maxTorque = FLT_MAX);
     virtual void SetGlobalAnchor(const Vector3& anchor);
     
-    virtual JointType GetType() = 0;
+	virtual JointType GetType() const { return JointType_Fixed; };
 
 private:
     NxFixedJoint* m_pJoint;
+
+	
+	/* Disableing default copyconstructor and assignment operator */
+	FixedJoint(const FixedJoint&);
+	FixedJoint& operator=(const FixedJoint&);
 };
 

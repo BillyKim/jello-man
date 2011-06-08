@@ -20,7 +20,7 @@ public:
 	IXACT3Cue* Prepare(string name);
 	void Update3DAudio(IXACT3Cue *p3DCue, X3DAUDIO_EMITTER &emitter, const X3DAUDIO_LISTENER &listener);
 	void SetGlobalVariable(string name, float value);
-	float GetGlobalVariable(string name);
+	float GetGlobalVariable(string name) const;
 
 private:
 
@@ -36,6 +36,7 @@ private:
 	X3DAUDIO_HANDLE m_Xact3dInstance;
 	X3DAUDIO_DSP_SETTINGS m_3DAudioDSPSettings;
 	IXACT3Cue *m_p3DCue;
+
 	AudioEngine(const AudioEngine& t);
 	AudioEngine& operator=(const AudioEngine& t);
 };

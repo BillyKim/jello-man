@@ -19,7 +19,7 @@ public:
 	virtual void Deserialize(Serializer* pSerializer);
     virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::PhysXShapeMesh; };
     
-    virtual PhysXShape* Copy();
+    virtual PhysXShape* Copy() const;
 
 private:
     void Init(const string& path, float mass);

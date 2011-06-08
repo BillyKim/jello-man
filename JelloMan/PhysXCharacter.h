@@ -36,5 +36,9 @@ private:
 
     PhysX* m_pPhysX;
     NxController* m_pController;
+
+	/* Disableing default copyconstructor and assignment operator */
+	PhysXCharacter(const PhysXCharacter&);
+	PhysXCharacter& operator=(const PhysXCharacter&);
 };
 

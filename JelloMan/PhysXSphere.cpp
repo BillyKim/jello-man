@@ -17,7 +17,7 @@ PhysXSphere::~PhysXSphere(void)
     delete m_pSphereDesc;
 }
 
-PhysXShape* PhysXSphere::Copy()
+PhysXShape* PhysXSphere::Copy() const
 {
     PhysXSphere* s = new PhysXSphere();
     s->m_pSphereDesc = new NxSphereShapeDesc();

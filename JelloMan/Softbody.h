@@ -40,7 +40,6 @@ protected:
 
 	float GetRadius() const { return m_Radius; }
 
-protected:  
 	NxSoftBody* m_pSoftbody;
 	PhysX* m_pPhysX;
 
@@ -56,5 +55,9 @@ private:
     Vector3 m_CenterPoint;
     Vector3 m_Dimension;
     float m_Radius;
+
+	/* Disabling default copy constructor and assignment operator */
+	Softbody(const Softbody&);
+	Softbody& operator=(const Softbody&);
 };
 

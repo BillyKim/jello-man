@@ -15,6 +15,6 @@ public:
 
 	virtual void Scale(const Vector3& scale) = 0;
 
-    virtual PhysXShape* Copy() = 0;
+    virtual PhysXShape* Copy() const = 0;
 };
 

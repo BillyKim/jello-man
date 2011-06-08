@@ -45,6 +45,10 @@ private:
 
 	vector<Matrix> m_CPUBuffer;
 	ID3D10Buffer* m_pBuffer;
+
+	//Disable default copy constructor and assignment operator
+    InstancedModelManager(const InstancedModelManager& copy);
+    InstancedModelManager& operator=(const InstancedModelManager& other);
 };
 
 } // end namespace

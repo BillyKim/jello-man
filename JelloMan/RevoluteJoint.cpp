@@ -65,8 +65,3 @@ void RevoluteJoint::SetLimits(bool enable, float low, float high)
         m_pJoint->setFlags(m_pJoint->getFlags() | ~NX_RJF_LIMIT_ENABLED);
     }
 }
-
-JointType RevoluteJoint::GetType()
-{
-    return static_cast<JointType>(m_pJoint->getType());
-}

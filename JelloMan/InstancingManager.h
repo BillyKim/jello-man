@@ -27,6 +27,10 @@ private:
     vector<InstancedModelManager*> m_vecModelManagers;
 
 	ID3D10Device* m_pDxDevice;
+
+	//Disable default copy constructor and assignment operator
+    InstancingManager(const InstancingManager& copy);
+    InstancingManager& operator=(const InstancingManager& other);
 };
 
 } //end namespace
