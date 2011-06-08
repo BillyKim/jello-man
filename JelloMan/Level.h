@@ -39,9 +39,9 @@ public:
 	// GENERAL
 	void Initialize(PhysX* pPhysXEngine, Editor* pGUI, Graphics::Camera::FollowCamera* pTrackingCamera);
 	void Tick(const float dTime);
-	void DrawDeferred(RenderContext* pRenderContext);
-	void DrawForward(RenderContext* pRenderContext);
-    void DrawShadowMap(RenderContext* pRenderContext);
+	void DrawDeferred(const RenderContext* pRenderContext);
+	void DrawForward(const RenderContext* pRenderContext);
+    void DrawShadowMap(const RenderContext* pRenderContext);
 
 	void AddLevelObject(ILevelObject* pLevelObject);
     void RemoveLevelObject(ILevelObject* pLevelObject);
@@ -51,7 +51,7 @@ public:
     void WakeUpAll();
 
     // SERIALISATION
-    void Serialize(const string& path);
+    void Serialize(const string& path) const ;
     void Deserialize(const string& path);
     void Clear();
 

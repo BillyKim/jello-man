@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector3.h"
+struct Vector3;
 
 class ITransformable
 {

@@ -1,7 +1,8 @@
 #pragma once
 #include "D3DUtil.h"
-#include "Texture2D.h"
 #include "Model.h"
+
+class Texture2D;
 
 namespace Instancing{
 

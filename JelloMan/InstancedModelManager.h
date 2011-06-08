@@ -21,8 +21,8 @@ public:
 	void AddInstance(const Matrix* mtxWorld);
     void RemoveInstance(const Matrix* mtxWorld);
 
-	void Draw(RenderContext* pRendercontext);
-    void DrawShadow(RenderContext* pRenderContext);
+	void Draw(const RenderContext* pRendercontext);
+    void DrawShadow(const RenderContext* pRenderContext);
 
 	void SetDiffuse(Texture2D* tex) { m_pTexDiffuse = tex; }
     void SetSpec(Texture2D* tex) { m_pTexSpec = tex; }

@@ -123,7 +123,6 @@
     <ClInclude Include="Exception.h" />
     <ClInclude Include="FileNotFoundException.h" />
     <ClInclude Include="FixedJoint.h" />
-    <ClInclude Include="FluidsCharacter.h" />
     <ClInclude Include="FluidEffect.h" />
     <ClInclude Include="FluidPostEffect.h" />
     <ClInclude Include="FluidRenderer.h" />
@@ -248,7 +247,6 @@
     <ClCompile Include="EffectLoader.cpp" />
     <ClCompile Include="FileNotFoundException.cpp" />
     <ClCompile Include="FixedJoint.cpp" />
-    <ClCompile Include="FluidsCharacter.cpp" />
     <ClCompile Include="FluidEffect.cpp" />
     <ClCompile Include="FluidPostEffect.cpp" />
     <ClCompile Include="FluidRenderer.cpp" />

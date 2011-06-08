@@ -7,7 +7,7 @@ template<typename T>
 class AssetContainer
 {
 public:
-    AssetContainer(void) { /*m_Map.insert( make_pair<tstring, T*>(_T(""), 0));*/ }
+    AssetContainer(void) { }
     virtual ~AssetContainer(void) { RemoveAllAssets(); }
 
 	bool IsAssetPresent(const tstring &key) const
@@ -32,15 +32,14 @@ public:
     }
 	void RemoveAllAssets()
     {
-	    map<tstring, T*>::iterator it;
-	    for(it = m_Map.begin(); it != m_Map.end(); ++it)
+	    for_each(m_Map.begin(), m_Map.end(), [&](pair<tstring, T*> obj)
 	    {
 	        #if defined DEBUG || _DEBUG
-	        wcout << "Releasing Asset: " << (*it).first << "\n";
+	        tcout << "Releasing Asset: " << obj.first << "\n";
             #endif
 
-			SafeDelete((*it).second);
-	    }
+			SafeDelete(obj.second);
+	    });
 	    m_Map.clear();
     }
     

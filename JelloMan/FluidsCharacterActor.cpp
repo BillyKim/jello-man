@@ -308,8 +308,15 @@ void FluidsCharacterActor::OnTriggerEnter(const Trigger* pTrigger)
     else if (pTrigger->GetTriggerName().find(_T("down")) != tstring::npos)
     {
     }
+	else if (pTrigger->GetTriggerName().find(_T("killinside")) != tstring::npos)
+    {
+		m_IsDead = true;
+    }
 }
-void FluidsCharacterActor::OnTriggerLeave(const Trigger* /*pTrigger*/)
+void FluidsCharacterActor::OnTriggerLeave(const Trigger* pTrigger)
 {
-
+	if (pTrigger->GetTriggerName().find(_T("killoutside")) != tstring::npos)
+    {
+		m_IsDead = true;
+    }
 }

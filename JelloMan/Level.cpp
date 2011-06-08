@@ -218,7 +218,7 @@ ISerializable* GetObject(DWORD id)
         default: PANIC("File corrupt!"); return 0;
     }
 }
-void Level::Serialize(const string& path)
+void Level::Serialize(const string& path) const 
 {
     Serializer s(path, m_pPhysXEngine);
 
@@ -280,7 +280,7 @@ void Level::Clear()
 }
 
 // DRAW
-void Level::DrawDeferred(RenderContext* pRenderContext)
+void Level::DrawDeferred(const RenderContext* pRenderContext)
 {
 	m_pRenderContext = pRenderContext;
 
@@ -294,7 +294,7 @@ void Level::DrawDeferred(RenderContext* pRenderContext)
     m_pCharacterController->DrawDeferred(m_pRenderContext);
 }
 
-void Level::DrawShadowMap(RenderContext* pRenderContext)
+void Level::DrawShadowMap(const RenderContext* pRenderContext)
 {
     for_each(m_pDrawableObjects.cbegin(), m_pDrawableObjects.cend(), [&](IDrawable* obj)
 	{
@@ -304,7 +304,7 @@ void Level::DrawShadowMap(RenderContext* pRenderContext)
     m_pInstancingManager->DrawShadow(pRenderContext);
 }
 
-void Level::DrawForward(RenderContext* pRenderContext)
+void Level::DrawForward(const RenderContext* pRenderContext)
 {
     m_pCharacterController->DrawForward(m_pRenderContext);
 

@@ -54,14 +54,14 @@ void InstancingManager::DeleteObject(IInstancible* obj)
 }
 
 
-void InstancingManager::Draw(RenderContext* pRenderContext)
+void InstancingManager::Draw(const RenderContext* pRenderContext)
 {
     for_each(m_vecModelManagers.cbegin(), m_vecModelManagers.cend(), [&](InstancedModelManager* obj)
     {
         obj->Draw(pRenderContext);
     });
 }
-void InstancingManager::DrawShadow(RenderContext* pRenderContext)
+void InstancingManager::DrawShadow(const RenderContext* pRenderContext)
 {
     for_each(m_vecModelManagers.cbegin(), m_vecModelManagers.cend(), [&](InstancedModelManager* obj)
     {

@@ -31,8 +31,8 @@ public:
 	virtual void Tick(float dTime);
 
     //IDrawable
-    virtual void Draw(RenderContext* pRenderContext);
-    virtual void DrawShadow(RenderContext* pRenderContext);
+    virtual void Draw(const RenderContext* pRenderContext);
+    virtual void DrawShadow(const RenderContext* pRenderContext);
 
 private:
     DeferredPreEffect* m_pEffect;

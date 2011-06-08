@@ -51,7 +51,7 @@ void Trigger::Tick(float dTime)
 	Actor::Tick(dTime);
 }
 
-void Trigger::Draw(RenderContext* pRenderContext)
+void Trigger::Draw(const RenderContext* pRenderContext)
 {
 	Matrix matWorld = Matrix(m_pActor->getGlobalPose());
 

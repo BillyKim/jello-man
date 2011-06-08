@@ -76,7 +76,7 @@ void SoftbodyCharacter::Tick(const float dTime)
     }
 }
 
-void SoftbodyCharacter::Draw(RenderContext* pRenderContext)
+void SoftbodyCharacter::Draw(const RenderContext* pRenderContext)
 {
     m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->SetWorld(Matrix::Identity);
@@ -88,7 +88,7 @@ void SoftbodyCharacter::Draw(RenderContext* pRenderContext)
 
     m_pSoftbodyMesh->Draw(m_pEffect);
 }
-void SoftbodyCharacter::DrawShadow(RenderContext* pRenderContext)
+void SoftbodyCharacter::DrawShadow(const RenderContext* pRenderContext)
 {
     pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 	
