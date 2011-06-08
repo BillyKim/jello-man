@@ -76,7 +76,7 @@ bool PhysX::Init(void)
 	defaultMaterial->setDynamicFriction(.5f);
     #pragma endregion
 
-    #pragma region groundplane
+    /*#pragma region groundplane
 	NxPlaneShapeDesc planeDesc;
 	planeDesc.d = 0;
 
@@ -84,7 +84,7 @@ bool PhysX::Init(void)
 	actorDesc.shapes.pushBack(&planeDesc);
 
 	m_pScene->createActor(actorDesc);
-    #pragma endregion
+    #pragma endregion*/
 
 	NxReal myTimestep = 1/60.0f;
 	m_pScene->setTiming(myTimestep, 8, NX_TIMESTEP_FIXED);
