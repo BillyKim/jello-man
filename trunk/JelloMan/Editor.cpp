@@ -96,10 +96,16 @@ void Editor::Draw()
 
 			BX2D->SetAntiAliasing(false);
 
+			m_pToolbar->Draw();
+		m_pInfobar->Draw();
+
 			break;
 		}
 		case EDITOR_MODE_GAME:
 		{
+			m_pToolbar->Draw();
+			m_pInfobar->Draw();
+
 			break;
 		}
 		case EDITOR_MODE_PLAY:
@@ -107,9 +113,6 @@ void Editor::Draw()
 			break;
 		}
 	}
-
-	m_pToolbar->Draw();
-	m_pInfobar->Draw();
 
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != EDITOR_MODE_PLAY)

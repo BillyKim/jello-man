@@ -338,6 +338,13 @@ void Toolbar::Tick()
 	// add triggerbox
 	if (m_Buttons["TRIGGERBOX"]->Clicked())
 		m_pLoader->AddTrigger();
+
+	// play mode
+	if (m_EditorState == EDITOR_STATE_PLAY)
+	{
+		if (CONTROLS->IsKeyPressed(VK_ESCAPE))
+			m_EditorState = EDITOR_STATE_EDITOR;
+	}
 }
 
 void Toolbar::Draw()
@@ -485,44 +492,47 @@ void Toolbar::ModeButtons()
 			m_bEditorModeDown = true;
 		}
 	}
-	else if (m_EditorState == EDITOR_STATE_PLAY)
-	{
-		m_Buttons["EDITOR"]->SetPosition(20,43);
-		m_Buttons["GAME"]->SetPosition(20,79);
-		m_Buttons["PLAY"]->SetPosition(20,7);
+	//else if (m_EditorState == EDITOR_STATE_PLAY)
+	//{
+	//	/*m_Buttons["EDITOR"]->SetPosition(20,43);
+	//	m_Buttons["GAME"]->SetPosition(20,79);
+	//	m_Buttons["PLAY"]->SetPosition(20,7);
 
-		if (CONTROLS->LeftMBUp() && m_bPlayModeDown)
-		{
-			if (m_Buttons["EDITOR"]->Hover())
-			{
-				m_EditorState = EDITOR_STATE_EDITOR;
-			}
-			else if (m_Buttons["GAME"]->Hover())
-			{
-				m_EditorState = EDITOR_STATE_GAME;
-			}
-			else if (m_Buttons["PLAY"]->Hover())
-			{
-				m_EditorState = EDITOR_STATE_PLAY;
-			}
-		}
+	//	if (CONTROLS->LeftMBUp() && m_bPlayModeDown)
+	//	{
+	//		if (m_Buttons["EDITOR"]->Hover())
+	//		{
+	//			m_EditorState = EDITOR_STATE_EDITOR;
+	//		}
+	//		else if (m_Buttons["GAME"]->Hover())
+	//		{
+	//			m_EditorState = EDITOR_STATE_GAME;
+	//		}
+	//		else if (m_Buttons["PLAY"]->Hover())
+	//		{
+	//			m_EditorState = EDITOR_STATE_PLAY;
+	//		}
+	//	}
 
-		if (CONTROLS->LeftMBDown() && m_bPlayModeDown == true)
-		{
-			m_Buttons["GAME"]->Show();
-			m_Buttons["EDITOR"]->Show();
-			m_Buttons["PLAY"]->Show();
-		}
-		else
-		{
-			m_Buttons["PLAY"]->Show();
+	//	if (CONTROLS->LeftMBDown() && m_bPlayModeDown == true)
+	//	{
+	//		m_Buttons["GAME"]->Show();
+	//		m_Buttons["EDITOR"]->Show();
+	//		m_Buttons["PLAY"]->Show();
+	//	}
+	//	else
+	//	{
+	//		m_Buttons["PLAY"]->Show();
 
-			m_bPlayModeDown = false;
-		}
+	//		m_bPlayModeDown = false;
+	//	}
 
-		if (m_Buttons["PLAY"]->Down())
-		{
-			m_bPlayModeDown = true;
-		}
-	}
+	//	if (m_Buttons["PLAY"]->Down())
+	//	{
+	//		m_bPlayModeDown = true;
+	//	}*/
+
+	//	if (CONTROLS->IsKeyPressed(VK_ESCAPE))
+	//		m_EditorState = EDITOR_STATE_EDITOR;
+	//}
 }
