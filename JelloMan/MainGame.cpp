@@ -249,9 +249,9 @@ void MainGame::UpdateScene(const float dTime)
 		m_pAudioEngine = new AudioEngine(projectLocation);
 		m_pAudioEngine->Initialize();
 
-		m_pTestSound = new Sound(m_pAudioEngine,_T("BackgroundMusic"),_T("BackGroundMusicVolume"));
+		m_pTestSound = new Sound(m_pAudioEngine,_T("KeygenMusic"),_T("Keygen"));
 		m_pTestSound->PreLoad();
-		m_pTestSound->SetLoopCount(1);
+		m_pTestSound->SetLoopCount(-1);
 		m_pTestSound->SetVolume(90);
 	}
 
@@ -283,36 +283,16 @@ void MainGame::UpdateScene(const float dTime)
 	else
 		m_pLevel->EditorMode(true);
 
-	//if (CONTROLS->IsKeyPressed(VK_SPACE))
-	//{
-	//	if (!m_pTestSound->IsPlaying())
-	//	{
-	//		m_pTestSound->Play();
-	//	}
-	//	else
-	//	{
-	//		m_pTestSound->Pause();
-	//	}
-	//}
-	//
-	//if (CONTROLS->IsKeyPressed(VK_ADD))
-	//{
-	//	//m_pTestSound->SetVolume(m_pTestSound->GetVolume() + 1);
-
-	//	
-	//}
-	//else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
-	//{
-	//	m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
-	//}
-
 	if (m_pEditorGUI->GetEditorMode() == Editor::EDITOR_MODE_PLAY)
 	{
 		if (!m_pTestSound->IsPlaying())
 			m_pTestSound->Play();
 	}
 	else
-		m_pTestSound->Stop();
+	{
+		if (m_pTestSound->IsPlaying())
+			m_pTestSound->Stop();
+	}
 
 	if (m_pEditorGUI->GetLightMode() == Editor::LIGHT_MODE_UNLIT)
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);

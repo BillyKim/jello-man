@@ -16,8 +16,8 @@ Global Settings
     Header File = JelloMan.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 3106379908;
-    Last Modified High = 30138767;
+    Last Modified Low = 2030962005;
+    Last Modified High = 30156223;
 
     Category
     {
@@ -232,13 +232,30 @@ Global Settings
         Max = 100.000000;
     }
 
+    Variable
+    {
+        Name = Keygen;
+        Public = 1;
+        Global = 1;
+        Internal = 0;
+        External = 1;
+        Monitored = 1;
+        Reserved = 0;
+        Read Only = 0;
+        Time = 0;
+        Value = 0.000000;
+        Initial Value = 0.000000;
+        Min = 0.000000;
+        Max = 100.000000;
+    }
+
     RPC
     {
         Name = BackgroundMusicVolume;
 
         RPC Curve
         {
-            Name = 1::a7f2034b-47ee-4b36-8919-e01432ca56a2;
+            Name = 1::86dff17d-485a-4538-a049-6e340f3d5269;
             Property = 0;
             Sound = 0;
             Line Color = 4288422820;
@@ -264,6 +281,39 @@ Global Settings
             }
         }
     }
+
+    RPC
+    {
+        Name = Keygen;
+
+        RPC Curve
+        {
+            Name = 1::f24a197b-61c8-4606-820a-1c70eb0c2726;
+            Property = 0;
+            Sound = 0;
+            Line Color = 4287545143;
+            Viewable = 1;
+
+            Variable Entry
+            {
+                Name = Keygen;
+            }
+
+            RPC Point
+            {
+                X = 33.333332;
+                Y = 0.000000;
+                Curve = 0;
+            }
+
+            RPC Point
+            {
+                X = 66.666664;
+                Y = 0.000000;
+                Curve = 0;
+            }
+        }
+    }
 }
 
 Wave Bank
@@ -277,12 +327,10 @@ Wave Bank
     Compression Preset Name = <none>;
     Xbox Bank Last Modified Low = 0;
     Xbox Bank Last Modified High = 0;
-    PC Bank Last Modified Low = 2975464027;
-    PC Bank Last Modified High = 30138560;
-    Header Last Modified Low = 0;
-    Header Last Modified High = 0;
-    Bank Last Revised Low = 2885428877;
-    Bank Last Revised High = 30138560;
+    PC Bank Last Modified Low = 2031062005;
+    PC Bank Last Modified High = 30156223;
+    Bank Last Revised Low = 3321207678;
+    Bank Last Revised High = 30156221;
 
     Wave
     {
@@ -302,8 +350,31 @@ Wave Bank
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 704067815;
-            Last Modified High = 30077695;
+            Last Modified Low = 2467154288;
+            Last Modified High = 30153722;
+        }
+    }
+
+    Wave
+    {
+        Name = epic_keygen;
+        File = F:\epic_keygen.wav;
+        Build Settings Last Modified Low = 3226107545;
+        Build Settings Last Modified High = 30156221;
+
+        Cache
+        {
+            Format Tag = 0;
+            Channels = 2;
+            Sampling Rate = 48000;
+            Bits Per Sample = 1;
+            Play Region Offset = 46;
+            Play Region Length = 38205800;
+            Loop Region Offset = 0;
+            Loop Region Length = 0;
+            File Type = 1;
+            Last Modified Low = 263986176;
+            Last Modified High = 30156219;
         }
     }
 }
@@ -315,8 +386,8 @@ Sound Bank
     Windows File = Win\JelloMan.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
-    Bank Last Modified Low = 1766903295;
-    Bank Last Modified High = 30138767;
+    Bank Last Modified Low = 2053262036;
+    Bank Last Modified High = 30156223;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 
@@ -373,7 +444,65 @@ Sound Bank
             RPC Curve Entry
             {
                 RPC Name = BackgroundMusicVolume;
-                RPC Curve Name = 1::a7f2034b-47ee-4b36-8919-e01432ca56a2;
+                RPC Curve Name = 1::86dff17d-485a-4538-a049-6e340f3d5269;
+            }
+        }
+    }
+
+    Sound
+    {
+        Name = epic_keygen;
+        Volume = -1200;
+        Pitch = 0;
+        Priority = 0;
+
+        Category Entry
+        {
+            Name = Default;
+        }
+
+        RPC Entry
+        {
+            RPC Name = Keygen;
+        }
+
+        Track
+        {
+            Volume = 0;
+            Use Filter = 0;
+
+            Play Wave Event
+            {
+                Break Loop = 0;
+                Use Speaker Position = 0;
+                Use Center Speaker = 1;
+                New Speaker Position On Loop = 1;
+                Speaker Position Angle = 0.000000;
+                Speaker Position Arc = 0.000000;
+
+                Event Header
+                {
+                    Timestamp = 0;
+                    Relative = 0;
+                    Random Recurrence = 0;
+                    Random Offset = 0;
+                }
+
+                Wave Entry
+                {
+                    Bank Name = JelloMan;
+                    Bank Index = 0;
+                    Entry Name = epic_keygen;
+                    Entry Index = 1;
+                    Weight = 255;
+                    Weight Min = 0;
+                }
+            }
+
+            RPC Curve Entry
+            {
+                RPC Name = Keygen;
+                RPC Curve Name = 1::f24a197b-61c8-4606-820a-1c70eb0c2726;
             }
         }
     }
@@ -393,6 +522,26 @@ Sound Bank
         {
             Name = GameGroove;
             Index = 0;
+            Weight Min = 0;
+            Weight Max = 255;
+        }
+    }
+
+    Cue
+    {
+        Name = KeygenMusic;
+
+        Variation
+        {
+            Variation Type = 3;
+            Variation Table Type = 1;
+            New Variation on Loop = 0;
+        }
+
+        Sound Entry
+        {
+            Name = epic_keygen;
+            Index = 1;
             Weight Min = 0;
             Weight Max = 255;
         }
