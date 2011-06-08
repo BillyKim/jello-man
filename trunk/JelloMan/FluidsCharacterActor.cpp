@@ -312,6 +312,12 @@ void FluidsCharacterActor::OnTriggerEnter(const Trigger* pTrigger)
     {
 		m_IsDead = true;
     }
+	else if (pTrigger->GetTriggerName().find(_T("win")) != tstring::npos)
+    {
+		MessageBeep(0xFFFFFFFF);
+		MessageBox(NULL, _T("You won!\nPress enter to play again"), _T("You WON!"), MB_ICONEXCLAMATION | MB_OK);
+		m_IsDead = true;
+    }
 }
 void FluidsCharacterActor::OnTriggerLeave(const Trigger* pTrigger)
 {

@@ -10,5 +10,5 @@ enum JointType
 
 class IJoint
 {    
-    virtual JointType GetType() = 0;
+    virtual JointType GetType() const = 0;
 };

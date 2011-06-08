@@ -17,7 +17,7 @@ PhysXBox::~PhysXBox(void)
     delete m_pBoxShapeDesc;
 }
 
-PhysXShape* PhysXBox::Copy()
+PhysXShape* PhysXBox::Copy() const
 {
     PhysXBox* b = new PhysXBox();
     b->m_pBoxShapeDesc = new NxBoxShapeDesc();

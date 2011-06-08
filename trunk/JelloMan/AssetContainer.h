@@ -51,5 +51,9 @@ public:
 private:
     map<tstring, T*> m_Map;
 
+	
+    //Disable default copy constructor and assignment operator
+    AssetContainer(const AssetContainer& copy);
+    AssetContainer& operator=(const AssetContainer& other);
 };
 

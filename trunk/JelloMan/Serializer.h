@@ -33,5 +33,9 @@ private:
     bool m_bLoad;
 
     PhysX* m_pPhysX;
+
+	
+	Serializer(const PhysX& t);
+	Serializer& operator=(const PhysX& t);
 };
 

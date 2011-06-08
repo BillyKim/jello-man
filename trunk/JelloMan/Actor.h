@@ -41,5 +41,11 @@ protected:
 	void InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable, bool bTrigger = false);
 	//protected constructor
 	Actor(void);
+
+private:
+	
+	/* Disabling default copy constructor and assignment operator */
+	Actor(const Actor&);
+	Actor& operator=(const Actor&);
 };
 

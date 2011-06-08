@@ -139,7 +139,7 @@
     <Filter Include="Engine Files\Graphics\GUI\Editor\Components">
       <UniqueIdentifier>{846becc6-9db6-4df5-afdf-ce57e0365c06}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Math\IO">
+    <Filter Include="Engine Files\IO">
       <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -196,7 +196,7 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Controls.h">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Engine Files\Core</Filter>
@@ -271,7 +271,7 @@
       <Filter>Engine Files\Graphics\Effect\post</Filter>
     </ClInclude>
     <ClInclude Include="CookingStream.h">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClInclude>
     <ClInclude Include="RenderContext.h">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -460,10 +460,10 @@
       <Filter>Engine Files\Instancing</Filter>
     </ClInclude>
     <ClInclude Include="IniReader.h">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClInclude>
     <ClInclude Include="IniWriter.h">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClInclude>
     <ClInclude Include="Snapper.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
@@ -507,9 +507,6 @@
     <ClInclude Include="IGizmo.h">
       <Filter>Game Files\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="UserData.h">
-      <Filter>Game Files</Filter>
-    </ClInclude>
     <ClInclude Include="Infobar.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
     </ClInclude>
@@ -527,6 +524,9 @@
     </ClInclude>
     <ClInclude Include="UnlitTexEffect.h">
       <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="UserData.h">
+      <Filter>Engine Files\PhysX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -576,7 +576,7 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Controls.cpp">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Engine Files\Core</Filter>
@@ -651,7 +651,7 @@
       <Filter>Engine Files\Graphics\Effect\post</Filter>
     </ClCompile>
     <ClCompile Include="CookingStream.cpp">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="RenderContext.cpp">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -810,10 +810,10 @@
       <Filter>Engine Files\Instancing</Filter>
     </ClCompile>
     <ClCompile Include="IniReader.cpp">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="IniWriter.cpp">
-      <Filter>Engine Files\Math\IO</Filter>
+      <Filter>Engine Files\IO</Filter>
     </ClCompile>
     <ClCompile Include="PhysXCharacter.cpp">
       <Filter>Engine Files\PhysX\Character</Filter>
@@ -851,9 +851,6 @@
     <ClCompile Include="FluidsCharacterActor.cpp">
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
-    <ClCompile Include="UserData.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="Infobar.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Components</Filter>
     </ClCompile>
@@ -868,6 +865,9 @@
     </ClCompile>
     <ClCompile Include="UnlitTexEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="UserData.cpp">
+      <Filter>Engine Files\PhysX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

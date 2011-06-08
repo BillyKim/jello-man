@@ -24,8 +24,3 @@ void FixedJoint::SetGlobalAnchor(const Vector3& anchor)
 {
     m_pJoint->setGlobalAnchor(anchor);
 }
-
-JointType FixedJoint::GetType()
-{
-    return static_cast<JointType>(m_pJoint->getType());
-}

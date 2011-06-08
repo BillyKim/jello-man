@@ -269,7 +269,7 @@ void AudioEngine::SetGlobalVariable(string name, float value)
 	
 	m_pXACT3Engine->SetGlobalVariable(varI,value);
 }
-float AudioEngine::GetGlobalVariable(string name)
+float AudioEngine::GetGlobalVariable(string name) const
 {
 	XACTINDEX varI;
 	varI = m_pXACT3Engine->GetGlobalVariableIndex(name.c_str());
