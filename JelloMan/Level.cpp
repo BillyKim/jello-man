@@ -261,10 +261,8 @@ void Level::Deserialize(const string& path)
             if (l != 0)
             {
 				int r = rand() % 10;
-				if (r < 2)
+				if (r < 4)
 					l->SetBehaviour(new LightBehaviourBroken(BrokenLightType_LightBulb));
-				else if (r < 4)
-					l->SetBehaviour(new LightBehaviourBroken(BrokenLightType_Fluorescent));
                 m_pRenderContext->GetLightController()->AddLight(l);              
             }
         }

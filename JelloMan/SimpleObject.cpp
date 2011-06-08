@@ -57,7 +57,7 @@ void SimpleObject::Init(PhysX* pPhysX)
 
     if (m_pPhysXShape == 0 && m_strPhysXModelPath != _T(""))
     {
-        m_pPhysXShape = new PhysXMesh(pPhysX, string(m_strPhysXModelPath.cbegin(), m_strPhysXModelPath.cend()), 10);
+        m_pPhysXShape = new PhysXMesh(pPhysX, string(m_strPhysXModelPath.cbegin(), m_strPhysXModelPath.cend()), 1);
     }
     m_pEffect = Content->LoadEffect<DeferredPreEffectNormals>(_T("../Content/Effects/predeferredNormal.fx"));
     
