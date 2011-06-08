@@ -132,13 +132,18 @@ void Trigger::Serialize(Serializer* pSerializer) const
 }
 void Trigger::Deserialize(Serializer* pSerializer)
 {
-	m_TriggerName = pSerializer->GetStream()->readTString();
+	tstring triggerName = pSerializer->GetStream()->readTString();
+
+	tstring newName;
+    newName = triggerName.substr(0, triggerName.rfind('_'));
+
+	SetTriggerName(newName);
 
     Vector3 dim(pSerializer->GetStream()->readVector3());
 
 	Init(pSerializer->GetPhysX(), dim);
 
-	Actor::Deserialize(pSerializer);
+	Actor::Deserialize(pSerializer);	
 }
 
 /* PHYSX INTERNAL */
