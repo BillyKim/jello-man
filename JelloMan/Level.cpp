@@ -312,10 +312,13 @@ void Level::DrawForward(const RenderContext* pRenderContext)
 		m_pBaseGrid->Draw(pRenderContext);
 
 	// DRAW TRIGGERS
-	for_each(GetTriggers().cbegin(), GetTriggers().cend(), [&](pair<tstring, Trigger*> trigger)
+	if (m_pGUI->GetEditorMode() != Editor::EDITOR_MODE_PLAY)
 	{
-		trigger.second->Draw(pRenderContext);
-	});
+		for_each(GetTriggers().cbegin(), GetTriggers().cend(), [&](pair<tstring, Trigger*> trigger)
+		{
+			trigger.second->Draw(pRenderContext);
+		});
+	}
  
     m_pFluidRenderer->Begin();
     m_pCharacterController->DrawFluids(m_pRenderContext);

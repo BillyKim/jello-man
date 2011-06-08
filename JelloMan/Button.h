@@ -56,14 +56,14 @@ public:
 	void Deactivate();
 
 	// getters
-	bool Clicked();
+	bool Clicked() const;
 	bool Hover() const
 	{ return m_bHover; }
 	bool Down() const
 	{ return m_bDown; }
-	int GetWith()
+	int GetWith() const
 	{return (int)m_Size.width;}
-	int GetHeight()
+	int GetHeight() const
 	{return (int)m_Size.height;}
 	bool IsActive() const
 	{ return m_bActivated; }
@@ -94,4 +94,8 @@ private:
 	bool m_bDown;
 
 	float m_Opacity;
+
+	// copy & assignment operator
+	Button(const Button& second);
+	Button& operator=(const Button& second);
 };

@@ -54,5 +54,9 @@ private:
 	TextFormat* m_pFont;
 
 	int m_Hue;
+
+	// copy & assignment operator
+	ColorPicker(const ColorPicker& second);
+	ColorPicker& operator=(const ColorPicker& second);
 };
 

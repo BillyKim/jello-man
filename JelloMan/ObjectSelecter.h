@@ -50,4 +50,8 @@ private:
     Level* m_pLevel;
 
     vector<IEditorObject*> m_SelectedObjects;
+
+	// copy & assignment operator
+	ObjectSelecter(const ObjectSelecter& second);
+	ObjectSelecter& operator=(const ObjectSelecter& second);
 };

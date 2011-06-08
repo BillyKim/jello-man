@@ -19,19 +19,19 @@ public:
 	virtual ~TextBox();
 
 	void SetBounds(int x, int y, int width, int height);
-	tstring GetText();
+	tstring GetText() const;
 	void SetText(tstring const& text);
 	void SetFont(tstring const& fontName, bool bold, bool italic, bool underline, int size);
 	void SetBackcolor( COLORREF color );
 	void SetForecolor( COLORREF color );
-	COLORREF GetForecolor();
-	COLORREF GetBackcolor();
-	HBRUSH GetBackcolorBrush();
-	RECT GetRect();
+	COLORREF GetForecolor() const;
+	COLORREF GetBackcolor() const;
+	HBRUSH GetBackcolorBrush() const;
+	RECT GetRect() const;
 	void SetEnabled(bool bEnable);
 	void Update(void);
-	void Show();
-	void Hide();
+	void Show() const;
+	void Hide() const;
 
 	bool Entered()
 	{

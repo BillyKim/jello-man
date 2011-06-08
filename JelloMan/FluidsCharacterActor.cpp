@@ -171,6 +171,7 @@ void FluidsCharacterActor::Respawn(const SpawnPoint* pSpawnPoint)
 	m_pPhysXEngine->GetPhysXLock().unlock();
 
     RotateMoveDirection(0.0f);
+	m_IsDead = false;
 }
 
 void FluidsCharacterActor::RotateGravityDirection(float rad) //must be normalized!

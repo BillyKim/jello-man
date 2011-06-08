@@ -177,27 +177,12 @@ void Engine::OnRender()
 		}
 		else
 		{
-			//m_UpdateThread = boost::thread(&MainGame::UpdateScene, m_pGame, m_GameTimer.GetDeltaTime());
-
 			m_pGame->UpdateScene(m_GameTimer.GetDeltaTime());
 			m_pGame->DrawScene();
 		}
 
 		m_pBackBufferRT->EndDraw();
 	}	
-
-	/*if (CONTROLS->LeftMBDown())
-	{
-		if (m_bMouseMoving)
-		{
-			POINT pt;
-			pt.x = m_ClientWidth/2;
-			pt.y = m_ClientHeight/2;
-			ClientToScreen(GetMainWnd(),&pt);
-			SetCursorPos(pt.x,pt.y);
-			CONTROLS->SetOldMousePos(Point2F(m_ClientWidth/2,m_ClientHeight/2));
-		}
-	}*/
 
 	// displaying backbuffer - vsync on
 	//m_pSwapChain->Present(1, 0);
@@ -386,12 +371,12 @@ void Engine::InitMainWindow(const tstring* pTitle)
 
 	// Compute window rectangle dimensions based on requested client area dimensions.
 	RECT R = { 0, 0, m_ClientWidth, m_ClientHeight };
-    AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, false);
+    AdjustWindowRect(&R, WS_POPUPWINDOW | WS_CAPTION | WS_CLIPCHILDREN | WS_MINIMIZEBOX, false);
 	int width  = R.right - R.left;
 	int height = R.bottom - R.top;
 
 	m_hMainWnd = CreateWindow(L"D3DWndClassName", pTitle->c_str(), 
-		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hAppInst, this); 
+		WS_POPUPWINDOW | WS_CAPTION | WS_CLIPCHILDREN | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hAppInst, this); 
 	if( !m_hMainWnd )
 	{
 		MessageBox(0, L"CreateWindow FAILED", 0, 0);
@@ -412,36 +397,6 @@ HRESULT Engine::CreateDeviceIndependentResources()
 
 	// Create a Direct2D factory.
 	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
-
- //   if (SUCCEEDED(hr))
-	//{
- //       // Create a DirectWrite factory.
- //       hr = DWriteCreateFactory(
- //           DWRITE_FACTORY_TYPE_SHARED,
- //           __uuidof(m_pDWriteFactory),
- //           reinterpret_cast<IUnknown **>(&m_pDWriteFactory)
- //           );
- //   }
- //   if (SUCCEEDED(hr))
- //   {
- //       // Create a DirectWrite text format object.
- //       hr = m_pDWriteFactory->CreateTextFormat(
- //           msc_fontName,
- //           NULL,
- //           DWRITE_FONT_WEIGHT_NORMAL,
- //           DWRITE_FONT_STYLE_NORMAL,
- //           DWRITE_FONT_STRETCH_NORMAL,
- //           msc_fontSize,
- //           L"", //locale
- //           &m_pTextFormat
- //           );
- //   }
- //   if (SUCCEEDED(hr))
- //   {
- //       // Center the text horizontally and vertically.
- //       m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
- //       m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
- //   }
 
     SafeRelease(pSink);
 
@@ -586,12 +541,6 @@ HRESULT Engine::CreateDeviceResources()
         }
 		if (SUCCEEDED(hr))
         {
-            //// Create a brush.
-            //hr = m_pBackBufferRT->CreateSolidColorBrush(
-            //    D2D1::ColorF(D2D1::ColorF::Black),
-            //    &m_pColorBrush
-            //    );
-
 			// anti-aliasing for direct2D
 			if (m_pGameConfig->Blox2DAntiAliasing())
 				m_pBackBufferRT->SetAntialiasMode(D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);

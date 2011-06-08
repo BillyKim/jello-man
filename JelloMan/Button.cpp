@@ -218,7 +218,7 @@ void Button::Deactivate()
 }
 
 // getters
-bool Button::Clicked()
+bool Button::Clicked() const
 {
 	return m_bClicked;
 }

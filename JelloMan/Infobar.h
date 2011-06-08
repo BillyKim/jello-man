@@ -34,5 +34,9 @@ private:
 	TextFormat* m_pInfoFont;
 
 	vector<int> m_SceneInfo;
+
+	// copy & assignment operator
+	Infobar(const Infobar& second);
+	Infobar& operator=(const Infobar& second);
 };
 

@@ -62,7 +62,7 @@ void TextBox::SetBounds(int x, int y, int width, int height)
 	MoveWindow(m_hWndEdit, x, y, width, height, true);
 }
 
-RECT TextBox::GetRect()
+RECT TextBox::GetRect() const
 {
 	RECT rc;
 
@@ -86,21 +86,21 @@ void TextBox::Update()
 	UpdateWindow(m_hWndEdit);
 }
 
-void TextBox::Show()
+void TextBox::Show() const
 {
 	// Show and update the edit box
 	ShowWindow(m_hWndEdit, SW_SHOW);
 	UpdateWindow(m_hWndEdit);
 }
 
-void TextBox::Hide()
+void TextBox::Hide() const
 {
 	// Show and update the edit box
 	ShowWindow(m_hWndEdit, SW_HIDE);
 	UpdateWindow(m_hWndEdit);
 }
 
-tstring TextBox::GetText()
+tstring TextBox::GetText() const
 {
 	int textLength = (int) SendMessage(m_hWndEdit, (UINT) WM_GETTEXTLENGTH, 0, 0);
 	
@@ -161,17 +161,17 @@ void TextBox::SetBackcolor( COLORREF color )
 	InvalidateRect(m_hWndEdit, NULL, true);
 }
 
-COLORREF TextBox::GetForecolor()
+COLORREF TextBox::GetForecolor() const
 {
 	return m_ForeColor;
 }
 
-COLORREF TextBox::GetBackcolor()
+COLORREF TextBox::GetBackcolor() const
 {
 	return m_BgColor;
 }
 
-HBRUSH TextBox::GetBackcolorBrush()
+HBRUSH TextBox::GetBackcolorBrush() const
 {
 	return m_BgColorBrush;
 }
