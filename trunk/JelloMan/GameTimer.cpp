@@ -1,7 +1,3 @@
-//=======================================================================================
-// GameTimer.cpp by Frank Luna (C) 2008 All Rights Reserved.
-// Adapted for DAE GP1 by Bart Uyttenhove
-//=======================================================================================
 #include "StdAfx.h"
 #include "GameTimer.h"
 #include <windows.h>

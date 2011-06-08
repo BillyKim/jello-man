@@ -46,5 +46,9 @@ private:
 	ILevelObject* m_pPreviousLevelObject;
 
 	Vector3 m_PreviousPos;
+
+	// copy & assignment operator
+	LevelObjectInfo(const LevelObjectInfo& second);
+	LevelObjectInfo& operator=(const LevelObjectInfo& second);
 };
 

@@ -118,5 +118,9 @@ private:
 
 	map<string, Button*> m_Buttons;
 	map<string, vector<Image*> > m_ButtonImages;
+
+	// copy & assignment operator
+	Toolbar(const Toolbar& second);
+	Toolbar& operator=(const Toolbar& second);
 };
 

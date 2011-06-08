@@ -242,13 +242,18 @@ void MainGame::UpdateScene(const float dTime)
 	if (m_pEditorGUI->GetEditorMode() == Editor::EDITOR_MODE_GAME)
 		CheckControls();
 
-	//if (!m_pAudioEngine)
-	//{
-	//	// AUDIO
-	//	tstring projectLocation = tstring(_T("../Audio/Win/JelloMan"));
-	//	m_pAudioEngine = new AudioEngine(projectLocation);
-	//	m_pAudioEngine->Initialize();
-	//}
+	if (!m_pAudioEngine)
+	{
+		// AUDIO
+		tstring projectLocation = tstring(_T("../Audio/Win/JelloMan"));
+		m_pAudioEngine = new AudioEngine(projectLocation);
+		m_pAudioEngine->Initialize();
+
+		m_pTestSound = new Sound(m_pAudioEngine,_T("BackgroundMusic"),_T("BackGroundMusicVolume"));
+		m_pTestSound->PreLoad();
+		m_pTestSound->SetLoopCount(1);
+		m_pTestSound->SetVolume(90);
+	}
 
 	// dtime
 	m_dTtime = dTime;
@@ -266,8 +271,8 @@ void MainGame::UpdateScene(const float dTime)
         m_pTrackingCamera->Tick(dTime);
     }
 
-	//m_pAudioEngine->DoWork();
-	//m_pTestSound->Tick();
+	m_pAudioEngine->DoWork();
+	m_pTestSound->Tick();
 
 	if (m_pEditorGUI->GetEditorMode() != Editor::EDITOR_MODE_EDITOR)
 	{
@@ -278,28 +283,36 @@ void MainGame::UpdateScene(const float dTime)
 	else
 		m_pLevel->EditorMode(true);
 
-	/*if (CONTROLS->IsKeyPressed(VK_SPACE))
+	//if (CONTROLS->IsKeyPressed(VK_SPACE))
+	//{
+	//	if (!m_pTestSound->IsPlaying())
+	//	{
+	//		m_pTestSound->Play();
+	//	}
+	//	else
+	//	{
+	//		m_pTestSound->Pause();
+	//	}
+	//}
+	//
+	//if (CONTROLS->IsKeyPressed(VK_ADD))
+	//{
+	//	//m_pTestSound->SetVolume(m_pTestSound->GetVolume() + 1);
+
+	//	
+	//}
+	//else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
+	//{
+	//	m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
+	//}
+
+	if (m_pEditorGUI->GetEditorMode() == Editor::EDITOR_MODE_PLAY)
 	{
 		if (!m_pTestSound->IsPlaying())
-		{
 			m_pTestSound->Play();
-		}
-		else
-		{
-			m_pTestSound->Pause();
-		}
 	}
-	
-	if (CONTROLS->IsKeyPressed(VK_ADD))
-	{
-		//m_pTestSound->SetVolume(m_pTestSound->GetVolume() + 1);
-
-		
-	}
-	else if (CONTROLS->IsKeyDown(VK_SUBTRACT))
-	{
-		m_pTestSound->SetVolume(m_pTestSound->GetVolume() - 1);
-	}*/
+	else
+		m_pTestSound->Stop();
 
 	if (m_pEditorGUI->GetLightMode() == Editor::LIGHT_MODE_UNLIT)
 		m_pDeferredRenderer->SetLightMode(LIGHT_MODE_UNLIT);

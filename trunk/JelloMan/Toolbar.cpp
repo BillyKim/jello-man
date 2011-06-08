@@ -153,7 +153,7 @@ void Toolbar::LoadButtons()
 
 	m_Buttons["SCALE"]->SetState(Button::STATE_DEACTIVATED);
 
-	m_pInfobar->AddButtonHoverMessage(m_Buttons["SCALE"], _T("DISABLED!"));
+	m_pInfobar->AddButtonHoverMessage(m_Buttons["SCALE"], _T("ONLY FOR TRIGGERBOXES!"));
 
 	// SNAPPING BUTTON
 	m_Buttons["SNAPPING"] = new Button(296,7,36,36,true);

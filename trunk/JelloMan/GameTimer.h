@@ -1,8 +1,3 @@
-//=======================================================================================
-// GameTimer.h by Frank Luna (C) 2008 All Rights Reserved.
-// Adapted for DAE GP1 by Bart Uyttenhove
-//=======================================================================================
-
 #ifndef GAMETIMER_H
 #define GAMETIMER_H
 
@@ -31,6 +26,10 @@ private:
 	__int64 m_CurrTime;
 
 	bool m_bStopped;
+
+	// copy & assignment operator
+	GameTimer(const GameTimer& second);
+	GameTimer& operator=(const GameTimer& second);
 };
 
 #endif // GAMETIMER_H

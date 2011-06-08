@@ -76,5 +76,9 @@ private:
 
 	bool m_bInit;
 	bool m_bSetLightColor;
+
+	// copy & assignment operator
+	Infopane(const Infopane& second);
+	Infopane& operator=(const Infopane& second);
 };
 

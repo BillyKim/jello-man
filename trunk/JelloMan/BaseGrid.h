@@ -29,5 +29,9 @@ private:
 	PosColEffect* m_pEffect;
 
 	Matrix m_mtxWorld;
+
+	// copy & assignment operator
+	BaseGrid(const BaseGrid& second);
+	BaseGrid& operator=(const BaseGrid& second);
 };
 

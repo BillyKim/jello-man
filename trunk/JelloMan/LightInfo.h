@@ -67,4 +67,8 @@ private:
 	GameTimer m_ClickTimer;
 
 	float m_dTime;
+
+	// copy & assignment operator
+	LightInfo(const LightInfo& second);
+	LightInfo& operator=(const LightInfo& second);
 };

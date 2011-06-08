@@ -20,12 +20,6 @@ public:
 	// destructor
 	virtual  ~HitRegion();
 
-	// default copy constructor
-	HitRegion(const HitRegion& second);
-
-	// default assignment operator
-	HitRegion& operator=(const HitRegion& second);
-
 	// getters
 	bool HitTest(HitRegion* hitRect, bool draw = false); // returns true if 2 hitregions hit
 	bool HitTest(D2D1_POINT_2F pos); // returns centerpoint of 2 intersecting hitregions - else returns (-999999,-999999)
@@ -64,4 +58,10 @@ private:
 
 	D2D1_POINT_2F m_CurrentPos;
 	Matrix3x2F m_matWorld;
+
+	// default copy constructor
+	HitRegion(const HitRegion& second);
+
+	// default assignment operator
+	HitRegion& operator=(const HitRegion& second);
 };

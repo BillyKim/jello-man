@@ -7,6 +7,7 @@ class RenderContext;
 struct ID3D10Device;
 class PhysXEngine;
 #include "FollowCamera.h"
+#include "Blox2D.h"
 
 class CharacterController
 {
@@ -40,6 +41,9 @@ private:
     State m_State;
     float m_Timer;
     float m_SpawnWaitTime;
+
+	TextFormat* m_pRespawnFormatCounter;
+	TextFormat* m_pRespawnFormatHappyFace;
 
 	/* Disabling default copy constructor and assignment operator */
     CharacterController(const CharacterController&);
