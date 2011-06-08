@@ -1,6 +1,7 @@
 #include "LoadModelFromFile.h"
 #include "ContentManager.h"
 #include "SimpleObject.h"
+#include "RenderContext.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 LoadModelFromFile::LoadModelFromFile()	:	m_pbtnUseNormalMap(0),

@@ -109,7 +109,7 @@ void SimpleObject::Tick(float dTime)
 #pragma endregion
 
 #pragma region IDrawable
-void SimpleObject::Draw(RenderContext* pRenderContext)
+void SimpleObject::Draw(const RenderContext* pRenderContext)
 {
     m_pEffect->SetDiffuseMap(m_pTexDiffuse);
     m_pEffect->SetSpecMap(m_pTexSpec);
@@ -120,7 +120,7 @@ void SimpleObject::Draw(RenderContext* pRenderContext)
     m_pEffect->Selected(m_bIsSelected);
     m_pModel->Draw(m_pEffect);
 }
-void SimpleObject::DrawShadow(RenderContext* pRenderContext)
+void SimpleObject::DrawShadow(const RenderContext* pRenderContext)
 {
     pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(m_mtxWorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
     m_pModel->Draw(pRenderContext->GetPreShadowEffect());

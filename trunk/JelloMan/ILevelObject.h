@@ -1,8 +1,7 @@
 #pragma once
 #include "IUpdatable.h"
-#include "IDrawable.h"
 #include "IEditorObject.h"
-#include "PhysX.h"
+class PhysX;
 
 enum LevelObjectType
 {

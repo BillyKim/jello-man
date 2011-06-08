@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "ILevelObject.h"
 #include "ISerializable.h"
+#include "IDrawable.h"
 
 #include "Texture2D.h"
 #include "Model.h"
@@ -41,8 +42,8 @@ public:
     #pragma endregion
 
     #pragma region IDrawable
-    virtual void Draw(RenderContext* pRenderContext);
-    virtual void DrawShadow(RenderContext* pRenderContext);
+    virtual void Draw(const RenderContext* pRenderContext);
+    virtual void DrawShadow(const RenderContext* pRenderContext);
     #pragma endregion
     #pragma endregion
 

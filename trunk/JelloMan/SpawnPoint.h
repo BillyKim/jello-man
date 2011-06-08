@@ -34,7 +34,7 @@ public:
     virtual DWORD GetUniqueIdentifier() const;
 
     /* IDrawable */
-    virtual void Draw(RenderContext* pRenderContext);
+    virtual void Draw(const RenderContext* pRenderContext);
 
 private:
     bool m_IsSelected;
@@ -62,7 +62,7 @@ private:
     };
 
     /* IDrawable */
-    virtual void DrawShadow(RenderContext* /*pRenderContext*/) {};
+    virtual void DrawShadow(const RenderContext* /*pRenderContext*/) {};
 
     /* Disabling default copy and assignment operator */
     SpawnPoint(const SpawnPoint&);

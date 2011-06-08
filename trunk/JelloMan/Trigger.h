@@ -28,9 +28,12 @@ public:
 	virtual void Init(PhysX* /*pPhysX*/) {}
 	virtual void Init(PhysX* pPhysX, const Vector3& dimensions);	
 
+	/* IUpdateable */
 	virtual void Tick(float dTime);
-	virtual void Draw(RenderContext* pRenderContext);
-	virtual void DrawShadow(RenderContext* /*pRenderContext*/) { }
+
+	/* IDrawable */
+	virtual void Draw(const RenderContext* pRenderContext);
+	virtual void DrawShadow(const RenderContext* /*pRenderContext*/) { }
 
 	virtual void Rotate(const Vector3& axis, float angle) { Actor::Rotate(axis, angle); }
 	virtual void Translate(const Vector3& add) { Actor::Translate(add); }

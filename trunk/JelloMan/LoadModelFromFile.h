@@ -4,6 +4,8 @@
 #include "Blox2D.h"
 #include <vector>
 
+class RenderContext;
+
 class LoadModelFromFile
 {
 public:
@@ -53,5 +55,9 @@ private:
 	TextFormat* m_pFont;
 
 	const RenderContext* m_pRenderContext;
+
+	/* Disable default assigment operator en copy constructor */
+	LoadModelFromFile(const LoadModelFromFile&);
+	LoadModelFromFile& operator=(const LoadModelFromFile&);
 };
 

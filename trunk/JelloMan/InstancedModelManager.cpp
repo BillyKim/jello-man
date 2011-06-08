@@ -61,7 +61,7 @@ void InstancedModelManager::RemoveInstance(const Matrix* mtxWorld)
     m_CPUBuffer.pop_back(); //make one smaller
 }
 
-void InstancedModelManager::Draw(RenderContext* pRendercontext)
+void InstancedModelManager::Draw(const RenderContext* pRendercontext)
 {
 	m_pEffect->SetDiffuseMap(m_pTexDiffuse);
 	m_pEffect->SetSpecMap(m_pTexSpec);
@@ -78,7 +78,7 @@ void InstancedModelManager::Draw(RenderContext* pRendercontext)
 
 	m_pModel->DrawInstanced(m_pEffect, m_pBuffer, m_mtxInstances.size());
 }
-void InstancedModelManager::DrawShadow(RenderContext* pRenderContext)
+void InstancedModelManager::DrawShadow(const RenderContext* pRenderContext)
 {
     pRenderContext->GetPreShadowEffectInstanced()->SetViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 

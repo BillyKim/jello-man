@@ -124,9 +124,6 @@
     <Filter Include="Engine Files\Instancing">
       <UniqueIdentifier>{16626585-4a92-4a6c-907e-d6a813d936cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\IO">
-      <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine Files\PhysX\Character">
       <UniqueIdentifier>{e102e386-8c06-4cdc-afd6-1db9a2fd33bf}</UniqueIdentifier>
     </Filter>
@@ -141,6 +138,9 @@
     </Filter>
     <Filter Include="Engine Files\Graphics\GUI\Editor\Components">
       <UniqueIdentifier>{846becc6-9db6-4df5-afdf-ce57e0365c06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Files\Math\IO">
+      <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +196,7 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Controls.h">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Engine Files\Core</Filter>
@@ -271,7 +271,7 @@
       <Filter>Engine Files\Graphics\Effect\post</Filter>
     </ClInclude>
     <ClInclude Include="CookingStream.h">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClInclude>
     <ClInclude Include="RenderContext.h">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -460,19 +460,16 @@
       <Filter>Engine Files\Instancing</Filter>
     </ClInclude>
     <ClInclude Include="IniReader.h">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClInclude>
     <ClInclude Include="IniWriter.h">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClInclude>
     <ClInclude Include="Snapper.h">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
     </ClInclude>
     <ClInclude Include="PhysXCharacter.h">
       <Filter>Engine Files\PhysX\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="FluidsCharacter.h">
-      <Filter>Game Files\LevelObjects\Character</Filter>
     </ClInclude>
     <ClInclude Include="PreShadowEffectInstanced.h">
       <Filter>Engine Files\Graphics\Effect\pre</Filter>
@@ -510,12 +507,6 @@
     <ClInclude Include="IGizmo.h">
       <Filter>Game Files\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ITriggerable.h">
-      <Filter>Game Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UnlitTexEffect.h">
-      <Filter>Game Files</Filter>
-    </ClInclude>
     <ClInclude Include="UserData.h">
       <Filter>Game Files</Filter>
     </ClInclude>
@@ -530,6 +521,12 @@
     </ClInclude>
     <ClInclude Include="LightInfo.h">
       <Filter>Engine Files\Graphics\GUI\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="ITriggerable.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="UnlitTexEffect.h">
+      <Filter>Engine Files\Graphics\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -579,7 +576,7 @@
       <Filter>Engine Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Controls.cpp">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Engine Files\Core</Filter>
@@ -654,7 +651,7 @@
       <Filter>Engine Files\Graphics\Effect\post</Filter>
     </ClCompile>
     <ClCompile Include="CookingStream.cpp">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClCompile>
     <ClCompile Include="RenderContext.cpp">
       <Filter>Engine Files\Graphics\RenderContext</Filter>
@@ -813,16 +810,13 @@
       <Filter>Engine Files\Instancing</Filter>
     </ClCompile>
     <ClCompile Include="IniReader.cpp">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClCompile>
     <ClCompile Include="IniWriter.cpp">
-      <Filter>Engine Files\IO</Filter>
+      <Filter>Engine Files\Math\IO</Filter>
     </ClCompile>
     <ClCompile Include="PhysXCharacter.cpp">
       <Filter>Engine Files\PhysX\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="FluidsCharacter.cpp">
-      <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
     <ClCompile Include="Snapper.cpp">
       <Filter>Engine Files\Graphics\GUI\Editor\Gizmos</Filter>
@@ -857,9 +851,6 @@
     <ClCompile Include="FluidsCharacterActor.cpp">
       <Filter>Game Files\LevelObjects\Character</Filter>
     </ClCompile>
-    <ClCompile Include="UnlitTexEffect.cpp">
-      <Filter>Engine Files</Filter>
-    </ClCompile>
     <ClCompile Include="UserData.cpp">
       <Filter>Engine Files</Filter>
     </ClCompile>
@@ -874,6 +865,9 @@
     </ClCompile>
     <ClCompile Include="LightInfo.cpp">
       <Filter>Engine Files\Graphics\GUI\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="UnlitTexEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

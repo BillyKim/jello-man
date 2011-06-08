@@ -32,7 +32,7 @@ void TestSoftbody::Tick(const float /*dTime*/)
     TransformPositions();
 }
 
-void TestSoftbody::Draw(RenderContext* pRenderContext)
+void TestSoftbody::Draw(const RenderContext* pRenderContext)
 {
     m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->SetWorld(Matrix::Identity);
@@ -44,7 +44,7 @@ void TestSoftbody::Draw(RenderContext* pRenderContext)
 
     m_pSoftbodyMesh->Draw(m_pEffect);
 }
-void TestSoftbody::DrawShadow(RenderContext* pRenderContext)
+void TestSoftbody::DrawShadow(const RenderContext* pRenderContext)
 {
     pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 	

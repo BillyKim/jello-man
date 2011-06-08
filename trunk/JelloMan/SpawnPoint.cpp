@@ -1,5 +1,4 @@
 #include "SpawnPoint.h"
-#include "FluidsCharacter.h"
 #include "ContentManager.h"
 #include "PhysXBox.h"
 #include "Vector3.h"
@@ -71,7 +70,7 @@ DWORD SpawnPoint::GetUniqueIdentifier() const
 }
 
 /* IDrawable */
-void SpawnPoint::Draw(RenderContext* pRenderContext)
+void SpawnPoint::Draw(const RenderContext* pRenderContext)
 {
     m_pEffect->SetWorldViewProjection(m_mtxWorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->SetDiffuseMap(m_pTexture);
