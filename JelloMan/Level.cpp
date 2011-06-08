@@ -11,6 +11,7 @@
 #include "Editor.h"
 #include "SpawnPoint.h"
 #include "CharacterController.h"
+#include "LightBehaviourBroken.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -259,6 +260,11 @@ void Level::Deserialize(const string& path)
             Light* l = dynamic_cast<Light*>(obj);
             if (l != 0)
             {
+				int r = rand() % 10;
+				if (r < 2)
+					l->SetBehaviour(new LightBehaviourBroken(BrokenLightType_LightBulb));
+				else if (r < 4)
+					l->SetBehaviour(new LightBehaviourBroken(BrokenLightType_Fluorescent));
                 m_pRenderContext->GetLightController()->AddLight(l);              
             }
         }
