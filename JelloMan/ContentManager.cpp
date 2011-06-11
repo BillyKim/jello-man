@@ -17,6 +17,7 @@ ContentManager::ContentManager():
 	,m_pImageLoader(0)
 	,m_pTextFormatLoader(0)
 	,m_pSplineLoader(0)
+    ,m_pTerrainLoader(0)
 {
 	CreateWICFactory();
 }
@@ -29,6 +30,7 @@ ContentManager::~ContentManager()
 	delete m_pImageLoader;
 	delete m_pTextFormatLoader;
 	delete m_pSplineLoader;
+    delete m_pTerrainLoader;
 	m_pSingleton = 0;
 }
 
@@ -41,11 +43,12 @@ void ContentManager::Init(ID3D10Device* pDXDevice)
 	m_pTextFormatLoader = new TextFormatLoader();
 	m_pImageLoader = new ImageLoader(m_pWICFactory);
 	m_pSplineLoader = new SplineLoader();
+    m_pTerrainLoader = new TerrainLoader();
 }
 
-Texture2D* ContentManager::LoadTexture2D(const tstring& assetName)
+Texture2D* ContentManager::LoadTexture2D(const tstring& assetName, bool cpuReadAccess)
 {
-    return m_pTextureLoader->Load(m_pDevice, assetName);
+    return m_pTextureLoader->Load(m_pDevice, assetName, cpuReadAccess);
 }
 Texture2D* ContentManager::LoadTexture2D(DefaultTextureType type)
 {
@@ -66,6 +69,11 @@ Model<VertexPosNormTanTex>* ContentManager::LoadModel(const tstring& assetName)
 SoftbodyMesh* ContentManager::LoadSoftbodyMesh(const tstring& assetName)
 {
     return m_pModelLoader->LoadSoftbodyMesh(m_pDevice, assetName);
+}
+
+Model<VertexPosNormTanTex>* ContentManager::LoadTerrain(const tstring& assetName)
+{
+    return m_pTerrainLoader->Load(m_pDevice, assetName);
 }
 
 Model<VertexPos>* ContentManager::LoadSpline(const tstring& assetName)

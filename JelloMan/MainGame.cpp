@@ -84,7 +84,7 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 {
     IniReader reader;
     try { reader.Open("config.ini"); }
-    catch (exceptions::FileNotFoundException e) { cout << "config.ini not found, loading defaults\n"; }
+    catch (const exceptions::FileNotFoundException& e) { cout << "config.ini not found, loading defaults\n"; }
     
     int width = -1, 
         height = -1;
@@ -96,15 +96,15 @@ void MainGame::Initialize(GameConfig& refGameConfig)
             width = reader.GetInt(_T("GFX"), _T("width"));
             height = reader.GetInt(_T("GFX"), _T("height"));
         }
-        catch (RootNotFoundException) { cout << "warning: reading config.ini, root [GFX] not found, width/height set to default\n"; }
-        catch (NodeNotFoundException) {  cout << "warning: reading config.ini, node 'width' or 'height' not found, width/height set to default\n"; }
-        catch (ParseFailException) { cout << "warning: reading config.ini, error while parsing 'width' or 'height', using defaults\n"; }
+        catch (const RootNotFoundException&) { cout << "warning: reading config.ini, root [GFX] not found, width/height set to default\n"; }
+        catch (const NodeNotFoundException&) {  cout << "warning: reading config.ini, node 'width' or 'height' not found, width/height set to default\n"; }
+        catch (const ParseFailException&) { cout << "warning: reading config.ini, error while parsing 'width' or 'height', using defaults\n"; }
         try 
         {
             keylayout = reader.GetString(_T("IO"), _T("layout"));
         }
-        catch (RootNotFoundException) { cout << "warning: reading config.ini, root [IO] not found, keylayout set to AZERTY\n"; }
-        catch (NodeNotFoundException) {  cout << "warning: reading config.ini, node 'keylayout' not found, keylayout set to AZERTY\n"; }
+        catch (const RootNotFoundException&) { cout << "warning: reading config.ini, root [IO] not found, keylayout set to AZERTY\n"; }
+        catch (const NodeNotFoundException&) {  cout << "warning: reading config.ini, node 'keylayout' not found, keylayout set to AZERTY\n"; }
     }
     if (width == -1 || height == -1)
     {

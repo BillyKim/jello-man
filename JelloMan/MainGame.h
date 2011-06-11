@@ -31,7 +31,7 @@ public:
 
 	// CONSTRUCTOR - DESTRUCTOR
 	MainGame();
-	~MainGame();
+	virtual ~MainGame();
 
 	// GENERAL
 	void Initialize(GameConfig& refGameConfig);
@@ -97,4 +97,8 @@ private:
 
 	float m_PhysXDTime;
 	float m_PhysXTimeBase;
+
+    // Disable default copy constructor and assignment operator
+    MainGame(const MainGame&);
+    MainGame& operator=(const MainGame&);
 };
