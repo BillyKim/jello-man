@@ -7,6 +7,7 @@
 #include "ImageLoader.h"
 #include "TextFormatLoader.h"
 #include "SplineLoader.h"
+#include "TerrainLoader.h"
 
 class TextureLoader;
 class EffectLoader;
@@ -34,11 +35,13 @@ public:
         return m_pEffectLoader->Load<T>(m_pDevice, assetName); 
     }
 
-	Texture2D* LoadTexture2D(const tstring& assetName);
+	Texture2D* LoadTexture2D(const tstring& assetName, bool cpuReadAccess = false);
 	Texture2D* LoadTexture2D(DefaultTextureType type);
 
 	Model<VertexPosNormTanTex>* LoadModel(const tstring& assetName);
 	Model<VertexPos>* LoadSpline(const tstring& assetName);
+    
+	Model<VertexPosNormTanTex>* LoadTerrain(const tstring& assetName);
 
 	SoftbodyMesh* LoadSoftbodyMesh(const tstring& assetName);
 
@@ -69,6 +72,7 @@ private:
 	TextureLoader* m_pTextureLoader;
 	EffectLoader* m_pEffectLoader;
 	ModelLoader* m_pModelLoader;
+    TerrainLoader* m_pTerrainLoader;
 	SplineLoader* m_pSplineLoader;
 	
 	static ContentManager* m_pSingleton;

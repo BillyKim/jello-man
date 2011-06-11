@@ -81,10 +81,10 @@ PixelShaderOutput  PS(VertexShaderOutput input)
 
     float3 normal = CalcNormal(input.normal, input.tangent, normalMap.Sample(mapSampler, input.texCoord).rgb);
 
-	output.colorGlow = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, selected?1.0f:0.0);
+	output.colorGlow = float4(diffuseMap.Sample(mapSampler, input.texCoord).rgb, selected?1.0f:0.0f);
     if (selected)
     {
-        output.colorGlow.rgb = output.colorGlow.rgb * 0.5 + float3(1.0f, 1.0f, 0.0f) * 0.5;
+        output.colorGlow.rgb = output.colorGlow.rgb * 0.5f + float3(1.0f, 1.0f, 0.0f) * 0.5f;
     }
     output.colorGlow = saturate(output.colorGlow);
 

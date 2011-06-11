@@ -175,6 +175,7 @@
     <ClInclude Include="PhysXMesh.h" />
     <ClInclude Include="PhysXShape.h" />
     <ClInclude Include="PhysXSphere.h" />
+    <ClInclude Include="PhysXTerrain.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PosColEffect.h" />
     <ClInclude Include="PostProcessEffect.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="TerrainLoader.h" />
     <ClInclude Include="TestSoftbody.h" />
     <ClInclude Include="TextBox.h" />
     <ClInclude Include="TextFormat.h" />
@@ -291,6 +293,7 @@
     <ClCompile Include="PhysXMesh.cpp" />
     <ClCompile Include="PhysXShape.cpp" />
     <ClCompile Include="PhysXSphere.cpp" />
+    <ClCompile Include="PhysXTerrain.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PosColEffect.cpp" />
     <ClCompile Include="PostProcessEffect.cpp" />
@@ -315,6 +318,7 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TerrainLoader.cpp" />
     <ClCompile Include="TestSoftbody.cpp" />
     <ClCompile Include="TextBox.cpp" />
     <ClCompile Include="TextFormat.cpp" />

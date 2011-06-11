@@ -2,15 +2,28 @@
 #include "Texture2D.h"
 
 
-Texture2D::Texture2D(ID3D10ShaderResourceView* pTex): 
+Texture2D::Texture2D(ID3D10Device* device, ID3D10Resource* pTex): 
     m_Width(0),
     m_Height(0),
-    m_ColorFormat(DXGI_FORMAT_B8G8R8A8_UNORM),
-    m_pDevice(0),
-    m_pColorMapSRV(pTex), m_pColorMapRTV(0),
+    m_ColorFormat(DXGI_FORMAT_UNKNOWN),
+    m_pDevice(device),
+    m_pColorMapSRV(0), m_pColorMapRTV(0),
     m_pDepthMapSRV(0), m_pDepthMapDSV(0)
 {
     ZeroMemory(&m_Viewport, sizeof(D3D10_VIEWPORT)); 
+
+    ID3D10Texture2D* pTex2D = static_cast<ID3D10Texture2D*>(pTex);
+    D3D10_TEXTURE2D_DESC desc;
+    pTex2D->GetDesc(&desc);
+    
+    m_Width = desc.Width;
+    m_Height = desc.Height;
+    m_ColorFormat = desc.Format;
+
+    m_pTex2D = pTex2D;
+
+    if (desc.Usage != D3D10_USAGE_STAGING)
+        HR(m_pDevice->CreateShaderResourceView(m_pTex2D, 0, &m_pColorMapSRV));
 }
 Texture2D::Texture2D(ID3D10Device* device, UINT width, UINT height, bool hasColormap, bool mips, DXGI_FORMAT colorFormat):  
     m_Width(width),
@@ -40,12 +53,12 @@ Texture2D::~Texture2D(void)
     SafeRelease(m_pColorMapSRV);
     SafeRelease(m_pDepthMapDSV);
     SafeRelease(m_pDepthMapSRV);
+//    SafeRelease(m_pTex2D);
 }
 
 
 void Texture2D::BuildColorMap()
 {
-    ID3D10Texture2D* colorMap = 0;
     D3D10_TEXTURE2D_DESC texDesc;
 
     texDesc.Width = m_Width;
@@ -58,14 +71,12 @@ void Texture2D::BuildColorMap()
     texDesc.Usage = D3D10_USAGE_DEFAULT;
     texDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
     texDesc.CPUAccessFlags = 0;
-    texDesc.MiscFlags = D3D10_RESOURCE_MISC_GENERATE_MIPS;
+    texDesc.MiscFlags = m_MakeMips?D3D10_RESOURCE_MISC_GENERATE_MIPS:0;
 
-    HR(m_pDevice->CreateTexture2D(&texDesc, 0, &colorMap));
+    HR(m_pDevice->CreateTexture2D(&texDesc, 0, &m_pTex2D));
 
-    HR(m_pDevice->CreateRenderTargetView(colorMap, 0, &m_pColorMapRTV));
-    HR(m_pDevice->CreateShaderResourceView(colorMap, 0, &m_pColorMapSRV));
-
-    SafeRelease(colorMap);
+    HR(m_pDevice->CreateRenderTargetView(m_pTex2D, 0, &m_pColorMapRTV));
+    HR(m_pDevice->CreateShaderResourceView(m_pTex2D, 0, &m_pColorMapSRV));
 }
 void Texture2D::BuildDepthMap()
 {
@@ -106,7 +117,7 @@ void Texture2D::BuildDepthMap()
 
 void Texture2D::BeginDraw()
 {
-    ASSERT(m_pDepthMapDSV != 0, "");
+    ASSERT(m_pDepthMapDSV != 0, "Texture2D not made for drawing!");
 
     m_pDevice->OMGetRenderTargets(1, &m_pPrevRenderTarget, &m_pPrevDSV);
 

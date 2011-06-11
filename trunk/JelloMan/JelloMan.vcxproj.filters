@@ -103,9 +103,6 @@
     <Filter Include="Engine Files\Core">
       <UniqueIdentifier>{45d872af-e322-43d7-988e-aacd4f905e0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine Files\Terrain">
-      <UniqueIdentifier>{acaac779-21a2-40c0-947a-69d86b9e5581}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine Files\PhysX\Fluids">
       <UniqueIdentifier>{ef259942-41c4-419f-a8a7-2a772120b849}</UniqueIdentifier>
     </Filter>
@@ -393,9 +390,6 @@
     <ClInclude Include="SerializeTypes.h">
       <Filter>Engine Files\Serialize</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>Engine Files\Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Engine Files\PhysX\Fluids</Filter>
     </ClInclude>
@@ -519,6 +513,12 @@
     <ClInclude Include="LightInfo.h">
       <Filter>Engine Files\Graphics\GUI\Lights</Filter>
     </ClInclude>
+    <ClInclude Include="PhysXTerrain.h">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainLoader.h">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClInclude>
     <ClInclude Include="ITriggerable.h">
       <Filter>Game Files\interfaces</Filter>
     </ClInclude>
@@ -527,6 +527,9 @@
     </ClInclude>
     <ClInclude Include="UserData.h">
       <Filter>Engine Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Game Files\LevelObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -752,9 +755,6 @@
     <ClCompile Include="FileNotFoundException.cpp">
       <Filter>Engine Files\Exceptions\IO</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>Engine Files\Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleFactory.cpp">
       <Filter>Engine Files\PhysX\Fluids</Filter>
     </ClCompile>
@@ -863,11 +863,20 @@
     <ClCompile Include="LightInfo.cpp">
       <Filter>Engine Files\Graphics\GUI\Lights</Filter>
     </ClCompile>
+    <ClCompile Include="PhysXTerrain.cpp">
+      <Filter>Engine Files\PhysX\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainLoader.cpp">
+      <Filter>Engine Files\ContentManager</Filter>
+    </ClCompile>
     <ClCompile Include="UnlitTexEffect.cpp">
       <Filter>Engine Files\Graphics\Effect</Filter>
     </ClCompile>
     <ClCompile Include="UserData.cpp">
       <Filter>Engine Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Game Files\LevelObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

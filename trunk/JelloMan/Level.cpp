@@ -12,6 +12,7 @@
 #include "SpawnPoint.h"
 #include "CharacterController.h"
 #include "LightBehaviourBroken.h"
+#include "Terrain.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -60,6 +61,12 @@ void Level::Initialize(PhysX* pPhysXEngine, Editor* pGUI, Graphics::Camera::Foll
     pSpawnpoint->Init(m_pPhysXEngine);
     AddLevelObject(pSpawnpoint);
     m_pCharacterController->SetSpawnPoint(pSpawnpoint);
+
+    Terrain* pTerrain = new Terrain();
+    pTerrain->SetDiffusePath(_T("../Content/Textures/heightmap_tex.png"));
+    pTerrain->SetTerrainPath(_T("../Content/Textures/heightmap.png"));
+    pTerrain->Init(m_pPhysXEngine);
+    AddLevelObject(pTerrain);
 }
 void Level::WakeUpAll()
 {
