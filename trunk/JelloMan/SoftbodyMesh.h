@@ -8,7 +8,7 @@ class SoftbodyMesh
 {
 public:
     SoftbodyMesh(ID3D10Device* device, const tstring& name);
-    ~SoftbodyMesh(void);
+    virtual ~SoftbodyMesh(void);
    
     void SetIndices(const vector<DWORD>& indices);
     void SetVertices(const vector<VertexPosNormTanTex>& vertices);
@@ -21,6 +21,8 @@ public:
     const vector<Vector3>& GetBaryCentricCoords() const;
 
     void SetName(const tstring& name);
+
+    SoftbodyMesh* Copy() const;
 
     void Draw(Effect* effect);
 
@@ -36,5 +38,9 @@ private:
 	vector<Vector3> m_VecBC;
 
     tstring m_Name;
+
+    //Disable default copyconstructor and assignment operator
+    SoftbodyMesh(const SoftbodyMesh&);
+    SoftbodyMesh& operator=(const SoftbodyMesh&);
 };
 

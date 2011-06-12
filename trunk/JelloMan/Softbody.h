@@ -44,12 +44,10 @@ protected:
 	PhysX* m_pPhysX;
 
 private:
-    static const int MAXTETRA = 10000;
-
-    Vector3 m_arrPositions[MAXTETRA];
+    vector<Vector3> m_vecPositions;
     NxU32 m_numPositions;
 
-    NxU32 m_arrIndices[MAXTETRA*4];
+    vector<NxU32> m_vecIndices;
     NxU32 m_numIndices;
 
     Vector3 m_CenterPoint;

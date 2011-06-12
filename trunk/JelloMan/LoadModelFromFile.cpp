@@ -89,7 +89,7 @@ void LoadModelFromFile::Tick()
 	}
 	if (m_Buttons[1]->Clicked())
 	{
-		m_PhysXModelPath = GetPath(_T("Load PhysX Model"), L"NX Files\0*.nxconvex;*.nxconcave*\0\0");
+		m_PhysXModelPath = GetPath(_T("Load PhysX Model"), L"NX Files\0*.nxconvex;*.nxconcave*;*.nxsoftbody\0\0");
 
 		m_PhysXModelPath = StripPath(m_PhysXModelPath);
 		

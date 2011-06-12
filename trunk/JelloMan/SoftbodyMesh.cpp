@@ -98,6 +98,18 @@ void SoftbodyMesh::SetName(const tstring& name)
     m_Name = name;
 }
 
+
+SoftbodyMesh* SoftbodyMesh::Copy() const
+{
+    SoftbodyMesh* pCopy = new SoftbodyMesh(m_pDevice, m_Name);
+    pCopy->SetBaryCentricCoords(m_VecBC);
+    pCopy->SetIndices(m_VecIndices);
+    pCopy->SetVertices(m_VecVertices);
+    pCopy->SetTetra(m_VecTetra);
+
+    return pCopy;
+}
+
 void SoftbodyMesh::Draw(Effect* effect)
 {
     ASSERT(m_pVertexBuffer != 0 && m_pIndexBuffer != 0 && effect != 0, "");

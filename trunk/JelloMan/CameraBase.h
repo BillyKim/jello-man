@@ -4,6 +4,9 @@
 #include "Vector4.h"
 #include "Controls.h"
 #include "Blox2D.h"
+#include "BoundingFrustum.h"
+#include "BoundingSphere.h"
+#include "Matrix.h"
 
 namespace Graphics {
 namespace Camera {
@@ -45,6 +48,7 @@ public:
 	//	make camera active
     virtual void SetActive(bool active) { m_bIsActive = active; }
 
+    virtual bool IsInView(const BoundingSphere& sphere);
 
 	// GETTERS
 	//	matrices
@@ -72,15 +76,16 @@ protected:
 	void BuildProjectionMatrix();
 
 	// DATAMEMBERS
-	D3DXMATRIX m_matView;
-	D3DXMATRIX m_matProjection;
-	D3DXMATRIX m_matViewProjection;
-	D3DXMATRIX m_World;
+	Matrix m_matView;
+	Matrix m_matProjection;
+	Matrix m_matViewProjection;
 
 	Vector3 m_PosWorld;
 	Vector3 m_RightWorld;
 	Vector3 m_UpWorld;
 	Vector3 m_LookWorld;
+
+    BoundingFrustum m_BoundingFrustum;
 
 	float m_Speed;
 	float m_FastForward;

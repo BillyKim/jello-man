@@ -4,6 +4,7 @@
 #include "SpotLight.h"
 #include "RenderContext.h"
 #include "SimpleObject.h"
+#include "SimpleSoftbody.h"
 
 EditorLoader::EditorLoader(Level* pLevel, RenderContext* pRenderContext, ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	:	m_pLevel(pLevel),
@@ -74,36 +75,56 @@ bool EditorLoader::AddLevelObject(	const tstring& modelPath,
 {
 	if (modelPath != _T("") && physxModelPath != _T(""))
 	{        
-        bool rigid = false;
-        int ret = MessageBoxA(0, "Load as staticmesh?", "Loading: ", MB_ICONQUESTION | MB_YESNO);
-		switch (ret)
-		{
-            case IDYES: rigid = false; break;
-            default: rigid = true; break;
-        }
+        if (physxModelPath.rfind(_T(".nxsoftbody")) == tstring::npos)
+        {
+            bool rigid = false;
+            int ret = MessageBoxA(0, "Load as staticmesh?", "Loading: ", MB_ICONQUESTION | MB_YESNO);
+		    switch (ret)
+		    {
+                case IDYES: rigid = false; break;
+                default: rigid = true; break;
+            }
 
-        SimpleObject* pObj = new SimpleObject();
+            SimpleObject* pObj = new SimpleObject();
 
-		pObj->SetNormalPath(normalPath);
+		    pObj->SetNormalPath(normalPath);
 
-		pObj->SetModelPath(modelPath);
-		pObj->SetPhysXModel(physxModelPath);
+		    pObj->SetModelPath(modelPath);
+		    pObj->SetPhysXModel(physxModelPath);
 			
-		pObj->SetDiffusePath(diffusePath);
-		pObj->SetSpecPath(specPath);
-		pObj->SetGlossPath(glossPath);
+		    pObj->SetDiffusePath(diffusePath);
+		    pObj->SetSpecPath(specPath);
+		    pObj->SetGlossPath(glossPath);
 
-		pObj->SetRigid(rigid);
+		    pObj->SetRigid(rigid);
 
-		Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
-		vLook.Normalize();
+		    Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
+		    vLook.Normalize();
 
-		pObj->Init(m_pPhysXEngine);
+		    pObj->Init(m_pPhysXEngine);
 
-		pObj->Translate(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
+		    pObj->Translate(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
 
-		m_pLevel->AddLevelObject(pObj);
+		    m_pLevel->AddLevelObject(pObj);
+        }
+        else
+        {
+		    Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
+		    vLook.Normalize();
+            SimpleSoftbody* pSoftbody = new SimpleSoftbody(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
 
+		    pSoftbody->SetModelPath(modelPath);
+		    pSoftbody->SetPhysXModel(physxModelPath);
+			
+		    pSoftbody->SetDiffusePath(diffusePath);
+		    pSoftbody->SetSpecPath(specPath);
+		    pSoftbody->SetGlossPath(glossPath);
+            pSoftbody->SetNormalPath(normalPath);
+
+            pSoftbody->Init(m_pPhysXEngine);
+
+            m_pLevel->AddLevelObject(pSoftbody);
+        }
 		return true;
 	}
 	

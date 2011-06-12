@@ -72,36 +72,25 @@ void FlyCamera::Tick(const float dTime)
 		float pitch = mouseMovement.y / m_MouseSensitivity;
 		float yAngle = mouseMovement.x / m_MouseSensitivity;
 
-		D3DXMATRIX R;
-		D3DXVECTOR3 rightWorld = m_RightWorld.ToD3DVector3();
-		D3DXVECTOR3 lookWorld = m_LookWorld.ToD3DVector3();
-		D3DXVECTOR3 upWorld = m_UpWorld.ToD3DVector3();
+		Matrix R(Matrix::CreateRotation(m_RightWorld, pitch));
+        m_LookWorld = Vector3::Transform(m_LookWorld, R).XYZ();
+        m_UpWorld = Vector3::Transform(m_UpWorld, R).XYZ();
 
-		D3DXMatrixRotationAxis(&R, &rightWorld, pitch);
-		D3DXVec3TransformCoord(&lookWorld, &lookWorld, &R);
-		D3DXVec3TransformCoord(&upWorld, &upWorld,&R);
-
-		D3DXMatrixRotationY(&R, yAngle);
-		D3DXVec3TransformCoord(&rightWorld, &rightWorld, &R);
-		D3DXVec3TransformCoord(&upWorld, &upWorld, &R);
-		D3DXVec3TransformCoord(&lookWorld, &lookWorld, &R);
-
-		m_RightWorld = Vector3(rightWorld);
-		m_LookWorld = Vector3(lookWorld);
-		m_UpWorld = Vector3(upWorld);
+        R = Matrix::CreateRotation(Vector3::Up, yAngle);
+        m_LookWorld = Vector3::Transform(m_LookWorld, R).XYZ();
+        m_UpWorld = Vector3::Transform(m_UpWorld, R).XYZ();
+        m_RightWorld = Vector3::Transform(m_RightWorld, R).XYZ();
 
 		if (CONTROLS->GetKeyboardLayout() == GameConfig::KEYBOARD_LAYOUT_AZERTY)
 		{
 			if (CONTROLS->IsKeyDown('A'))
 			{
 				m_FOV += 0.1f;
-				BuildProjectionMatrix();
 			}
 
 			else if (CONTROLS->IsKeyDown('W'))
 			{
 				m_FOV -= 0.1f;
-				BuildProjectionMatrix();
 			}
 		}
 		else
@@ -109,13 +98,11 @@ void FlyCamera::Tick(const float dTime)
 			if (CONTROLS->IsKeyDown('Q'))
 			{
 				m_FOV += 0.1f;
-				BuildProjectionMatrix();
 			}
 
 			else if (CONTROLS->IsKeyDown('Z'))
 			{
 				m_FOV -= 0.1f;
-				BuildProjectionMatrix();
 			}
 		}
 	}
@@ -124,7 +111,7 @@ void FlyCamera::Tick(const float dTime)
 
 	BuildProjectionMatrix();
 	BuildViewMatrix();
-	m_matViewProjection = m_matView * m_matProjection;
+    m_BoundingFrustum.BuildFrustum(m_matViewProjection);
 }
 
 }} //end namespace

@@ -104,7 +104,7 @@ int main()
         
         while(model != 0)
         {
-            cout << "Action: -1 stop; 0 cook bin; 1 cook convex; 2 cook concave\n";
+            cout << "Action: -1 stop; 0 cook bin; 1 cook convex; 2 cook concave, 3 cook softbody\n";
             string action;
             cin >> action;
             if (action == "-1")

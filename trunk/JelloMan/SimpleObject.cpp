@@ -111,6 +111,9 @@ void SimpleObject::Tick(float dTime)
 #pragma region IDrawable
 void SimpleObject::Draw(const RenderContext* pRenderContext)
 {
+    if (m_pModel->IsInView(pRenderContext->GetCamera(), m_mtxWorldMatrix) == false)
+        return;
+
     m_pEffect->SetDiffuseMap(m_pTexDiffuse);
     m_pEffect->SetSpecMap(m_pTexSpec);
     m_pEffect->SetGlossMap(m_pTexGloss);
@@ -118,10 +121,14 @@ void SimpleObject::Draw(const RenderContext* pRenderContext)
     m_pEffect->SetWorld(m_mtxWorldMatrix);
     m_pEffect->SetWorldViewProjection(m_mtxWorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->Selected(m_bIsSelected);
+
     m_pModel->Draw(m_pEffect);
 }
 void SimpleObject::DrawShadow(const RenderContext* pRenderContext)
 {
+    if (m_pModel->IsInView(pRenderContext->GetCamera()) == false)
+        return;
+
     pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(m_mtxWorldMatrix * pRenderContext->GetCamera()->GetViewProjection());
     m_pModel->Draw(pRenderContext->GetPreShadowEffect());
 }

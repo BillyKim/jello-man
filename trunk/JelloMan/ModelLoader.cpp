@@ -164,9 +164,9 @@ void ModelLoader::ReadBinSBObj(const tstring& assetName)
         DWORD index0 = stream.readDword();
         DWORD index1 = stream.readDword();
         DWORD index2 = stream.readDword();
-        m_IndexData.push_back(index2);
-        m_IndexData.push_back(index1);
         m_IndexData.push_back(index0);
+        m_IndexData.push_back(index1);
+        m_IndexData.push_back(index2);
 
 		CalculateTangents(m_VPNTTData[index2], m_VPNTTData[index1], m_VPNTTData[index0]);
     }

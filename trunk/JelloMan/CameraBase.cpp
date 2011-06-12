@@ -11,13 +11,11 @@ CameraBase::CameraBase(int windowWidth, int windowHeight) :	m_Speed(4.0f),
 																		m_AspectRatio(4.0f/3.0f),
 																		m_NearClippingPlane(0.1f),
 																		m_FarClippingPlane(1000.0f),
-																		m_bIsActive(true)
+																		m_bIsActive(true),
+                                                                        m_matView(Matrix::Identity),
+                                                                        m_matProjection(Matrix::Identity),
+                                                                        m_matViewProjection(Matrix::Identity)
 {
-	D3DXMatrixIdentity(&m_matView);
-	D3DXMatrixIdentity(&m_matProjection);
-	D3DXMatrixIdentity(&m_matViewProjection);
-	D3DXMatrixIdentity(&m_World);
-
 	m_PosWorld = Vector3(0.0f,7.0f,-18.0f);
 	m_RightWorld = Vector3(1.0f,0.0f,0.0f);
 	m_UpWorld = Vector3(0.0f,1.0f,0.0f);
@@ -30,10 +28,14 @@ CameraBase::~CameraBase()
 {
 }
 
+bool CameraBase::IsInView(const BoundingSphere& sphere)
+{
+    return m_BoundingFrustum.CheckCollision(sphere);
+}
+
 // GENERAL
 void CameraBase::Tick(const float /*dTime*/)
 {
-
 }
 
 void CameraBase::OnResize(int windowWidth, int windowHeight)
@@ -60,8 +62,6 @@ void CameraBase::LookAt(	const Vector3& pos,
 	m_LookWorld = lookAt;
 
 	BuildViewMatrix();
-
-	m_matViewProjection = m_matView * m_matProjection;
 }
 
 //	camera params
@@ -87,51 +87,15 @@ void CameraBase::SetMouseSensitivity(float sens)
 //	build matrix
 void CameraBase::BuildViewMatrix()
 {
-	D3DXVECTOR3 posW,upW,lookW,rightW;
-	D3DXVECTOR4 out;
-
-	D3DXVECTOR3 rightWorld = m_RightWorld.ToD3DVector3();
-	D3DXVECTOR3 lookWorld = m_LookWorld.ToD3DVector3();
-	D3DXVECTOR3 upWorld = m_UpWorld.ToD3DVector3();
-	D3DXVECTOR3 posWorld = m_PosWorld.ToD3DVector3();
-
-	D3DXVec3Transform(&out, &posWorld, &m_World);
-	posW = D3DXVECTOR3(out.x,out.y,out.z);
-
-	m_World._41 = 0;
-	m_World._42 = 0;
-	m_World._43 = 0;
-
-	D3DXVec3Transform(&out, &upWorld, &m_World);
-	upW = D3DXVECTOR3(out.x,out.y,out.z);
-
-	D3DXVec3Transform(&out, &lookWorld, &m_World);
-	lookW = D3DXVECTOR3(out.x,out.y,out.z);
-
-	D3DXVec3Transform(&out, &rightWorld, &m_World);
-	rightW = D3DXVECTOR3(out.x,out.y,out.z);
-
-	D3DXVec3Normalize(&lookW, &lookW);
-
-	D3DXVec3Cross(&upW, &lookW, &rightW);
-	D3DXVec3Normalize(&upW, &upW);
-
-	D3DXVec3Cross(&rightW, &upW, &lookW);
-	D3DXVec3Normalize(&rightW, &rightW);
-
-    D3DXVECTOR3 lookWPlusPosW = lookW + posW;
-
-	D3DXMatrixLookAtLH(&m_matView, &posW, &lookWPlusPosW, &upW);
+    m_matView = Matrix::CreateLookAt(m_PosWorld, m_PosWorld + m_LookWorld, -m_UpWorld);
+	m_matViewProjection = m_matView * m_matProjection;
 }
 void CameraBase::BuildProjectionMatrix()
 {
 	if (m_FOV > Pi / 5 * 4.0f) m_FOV = static_cast<float>(Pi / 5 * 4.0f);
 	if (m_FOV < Pi / 30.0f) m_FOV = static_cast<float>(Pi / 30.0f);
 
-	D3DXMatrixPerspectiveFovLH(	&m_matProjection,
-								m_FOV, m_AspectRatio,
-								m_NearClippingPlane,
-								m_FarClippingPlane);
+    m_matProjection = Matrix::CreatePerspectiveFov(m_FOV, m_AspectRatio, m_NearClippingPlane, m_FarClippingPlane);
 
 	m_matViewProjection = m_matView * m_matProjection;
 }
