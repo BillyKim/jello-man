@@ -16,29 +16,25 @@ Softbody::~Softbody(void)
 
 void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const tstring& path, const Vector3& pos)
 {
-	ASSERT(m_pSoftbody == 0, ""); //would be weird if the actor is already intialized
+	ASSERT(m_pSoftbody == 0, "Eeek softbody is already initialized");
     ASSERT(pSoftbodyMesh != 0, "");
 
 	m_pPhysX = pPhysX;
 
     m_pSoftbodyMesh = pSoftbodyMesh;
 
-    for (int i = 0; i < MAXTETRA; ++i)
-    {
-        m_arrPositions[i] = Vector3();
-    }
-    for (int i = 0; i < MAXTETRA*4; ++i)
-    {
-        m_arrIndices[i] = 0;
-    }
+    NxU32 maxTetra = *max_element(m_pSoftbodyMesh->GetTetra().cbegin(), m_pSoftbodyMesh->GetTetra().cend()) + 1;
+    m_vecPositions.resize(m_pSoftbodyMesh->GetVertices().size());
+    m_vecIndices.resize(maxTetra*4);
+
     NxMeshData meshData;
-    meshData.verticesPosBegin = static_cast<void*>(&m_arrPositions);
+    meshData.verticesPosBegin = &m_vecPositions[0];
     meshData.verticesPosByteStride = sizeof(Vector3);
-    meshData.maxVertices = MAXTETRA;
+    meshData.maxVertices = m_pSoftbodyMesh->GetVertices().size();
     meshData.numVerticesPtr = &m_numPositions;
-    meshData.indicesBegin = static_cast<void*>(&m_arrIndices);
+    meshData.indicesBegin = &m_vecIndices[0];
     meshData.indicesByteStride = sizeof(NxU32);
-    meshData.maxIndices = MAXTETRA * 4;
+    meshData.maxIndices = maxTetra * 4;
     meshData.numIndicesPtr = &m_numIndices;
 
 	//Make Actor
@@ -46,21 +42,21 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
 	
 	string str = string(path.begin(), path.end());
 	UserStream stream(UserStream(str.c_str(), true));
+    pPhysX->GetPhysXLock().lock();
 	NxSoftBodyMesh* pMesh = m_pPhysX->GetSDK()->createSoftBodyMesh(stream);
+    pPhysX->GetPhysXLock().unlock();
 	softbodyDesc.softBodyMesh = pMesh;
-	softbodyDesc.particleRadius = 8.0f;
     softbodyDesc.volumeStiffness = 0.8f;
     softbodyDesc.stretchingStiffness = 0.6f;
     softbodyDesc.friction = 1.0f;
     softbodyDesc.solverIterations = 8;
     softbodyDesc.flags = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION;
     softbodyDesc.meshData = meshData;
-    softbodyDesc.collisionResponseCoefficient = 1.0f;
-	softbodyDesc.sleepLinearVelocity = 10;
 
     softbodyDesc.globalPose = static_cast<NxMat34>(Matrix::CreateTranslation(pos));
 
 	m_pSoftbody = m_pPhysX->GetScene()->createSoftBody(softbodyDesc);
+    ASSERT(m_pSoftbody != 0, "");
 
     NxBounds3 b;
     m_pSoftbody->getWorldBounds(b);
@@ -73,7 +69,6 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
     m_Dimension = Vector3(dim);
     m_Radius = m_Dimension.Length() / 2.0f;
 
-    ASSERT(m_pSoftbody != 0, "");
 }
 
 void Softbody::TransformPositions()
@@ -92,10 +87,10 @@ void Softbody::TransformPositions()
 
     for (int i = 0; i < size; ++i)
     {
-        Vector3 position =	m_arrPositions[m_arrIndices[tetra[i] * 4 + 0]] * bc[i].X + 
-						    m_arrPositions[m_arrIndices[tetra[i] * 4 + 1]] * bc[i].Y + 
-						    m_arrPositions[m_arrIndices[tetra[i] * 4 + 2]] * bc[i].Z + 
-						    m_arrPositions[m_arrIndices[tetra[i] * 4 + 3]] * (1.0f - bc[i].X - bc[i].Y - bc[i].Z);
+        Vector3 position =	m_vecPositions[m_vecIndices[tetra[i] * 4 + 0]] * bc[i].X + 
+						    m_vecPositions[m_vecIndices[tetra[i] * 4 + 1]] * bc[i].Y + 
+						    m_vecPositions[m_vecIndices[tetra[i] * 4 + 2]] * bc[i].Z + 
+						    m_vecPositions[m_vecIndices[tetra[i] * 4 + 3]] * (1.0f - bc[i].X - bc[i].Y - bc[i].Z);
 
         maxP = Max(maxP, position);
         minP = Min(minP, position);
@@ -190,17 +185,19 @@ void Softbody::Translate(const Vector3& add)
         return;
     }
     vector<Vector3> buffer;
-    buffer.reserve(m_numPositions);
+    buffer.resize(m_numPositions);
     m_pSoftbody->getPositions(&buffer[0]);
 
-    for (NxU32 i = 0; i < m_numPositions; ++i)
+    for_each(buffer.begin(), buffer.end(), [&](Vector3& pos)
     {
-        buffer[i] += add;
-    }
+        pos += add;
+    });
 
     m_pSoftbody->setPositions(&buffer[0]);
+
+    m_CenterPoint += add;
 }
-void Softbody::SetPosition(const Vector3& pos)
+void Softbody::SetPosition(const Vector3& newPos)
 {
     if (m_numPositions == 0)
     {
@@ -208,15 +205,17 @@ void Softbody::SetPosition(const Vector3& pos)
         return;
     }
     vector<Vector3> buffer;
-    buffer.reserve(m_numPositions);
+    buffer.resize(m_numPositions);
     m_pSoftbody->getPositions(&buffer[0]);
 
-    for (NxU32 i = 0; i < m_numPositions; ++i)
+    for_each(buffer.begin(), buffer.end(), [&](Vector3& pos)
     {
-        buffer[i] += -GetPosition() + pos;
-    }
+        pos += -GetPosition() + newPos;
+    });
 
     m_pSoftbody->setPositions(&buffer[0]);
+
+    m_CenterPoint = newPos;
 }
 Vector3 Softbody::GetPosition() const
 {
@@ -224,35 +223,47 @@ Vector3 Softbody::GetPosition() const
 }
 
 void Softbody::Rotate(const Vector3& axis, float angle)
-{
-    Vector3* buffer = new Vector3[m_numPositions];
-    m_pSoftbody->getPositions(buffer);
-
-    Matrix mtxRot = Matrix::CreateRotation(axis, angle);
-    for (NxU32 i = 0; i < m_numPositions; ++i)
+{    
+    if (m_numPositions == 0)
     {
-        buffer[i] -= GetPosition();
-        buffer[i] = Vector3::Transform(buffer[i], mtxRot).XYZ();
-        buffer[i] += GetPosition();
+        PANIC("Trying to rotate softbody with 0 positions");
+        return;
     }
 
-    m_pSoftbody->setPositions(buffer);
-    delete buffer;
+    vector<Vector3> buffer;
+    buffer.resize(m_numPositions);
+    m_pSoftbody->getPositions(&buffer[0]);
+
+    Matrix mtxRot = Matrix::CreateRotation(axis, angle);
+    for_each(buffer.begin(), buffer.end(), [&](Vector3& pos)
+    {
+        pos -= GetPosition();
+        pos = Vector3::Transform(pos, mtxRot).XYZ();
+        pos += GetPosition();
+    });
+
+    m_pSoftbody->setPositions(&buffer[0]);
 }
 
 void Softbody::Scale(const Vector3& scale)
 {
-    Vector3* buffer = new Vector3[m_numPositions];
-    m_pSoftbody->getPositions(buffer);
-
-    Matrix mtxScale = Matrix::CreateScale(scale);
-    for (NxU32 i = 0; i < m_numPositions; ++i)
+    if (m_numPositions == 0)
     {
-        buffer[i] -= GetPosition();
-        buffer[i] = Vector3::Transform(buffer[i], mtxScale).XYZ();
-        buffer[i] += GetPosition();
+        PANIC("Trying to rotate softbody with 0 positions");
+        return;
     }
 
-    m_pSoftbody->setPositions(buffer);
-    delete buffer;
+    vector<Vector3> buffer;
+    buffer.resize(m_numPositions);
+    m_pSoftbody->getPositions(&buffer[0]);
+
+    Matrix mtxScale = Matrix::CreateScale(scale);
+    for_each(buffer.begin(), buffer.end(), [&](Vector3& pos)
+    {
+        pos -= GetPosition();
+        pos = Vector3::Transform(pos, mtxScale).XYZ();
+        pos += GetPosition();
+    });
+
+    m_pSoftbody->setPositions(&buffer[0]);
 }

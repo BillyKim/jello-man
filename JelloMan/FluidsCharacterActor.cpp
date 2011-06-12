@@ -268,7 +268,7 @@ void FluidsCharacterActor::Tick(float dTime)
     m_pPhysX->GetScene()->getGravity(grav);
     m_pCamera->SetFollowPosition(GetPosition());
     m_pCamera->SetFollowUp(-Vector3::Normalize(grav));
-    m_pCamera->SetFollowDirection(Vector3::Normalize(Vector3::Normalize(-m_MoveDir) + Vector3::Normalize(grav) / 2.0f));
+    m_pCamera->SetFollowDirection(Vector3::Normalize(Vector3::Normalize(-m_MoveDir) + Vector3::Normalize(grav) / 2.5f));
 	
 	m_pPhysXEngine->GetPhysXLock().lock();
     m_pEmitter->setGlobalPosition(GetPosition());

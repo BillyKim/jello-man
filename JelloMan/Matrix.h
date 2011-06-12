@@ -28,7 +28,7 @@ public:
     static Matrix CreateScale(float f);
     static Matrix CreateScale(const Vector3& f);
     static Matrix CreateLookAt(const Vector3& pos, const Vector3& target, const Vector3& up);
-    static Matrix CreatePerspectiveFov(float fov, float aspect, float near, float far);
+    static Matrix CreatePerspectiveFov(float fov, float aspect, float zNear, float zFar);
 
     //copy & assignment
     Matrix(const Matrix& mat);

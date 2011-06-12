@@ -139,6 +139,9 @@
     <Filter Include="Engine Files\IO">
       <UniqueIdentifier>{53a2e7da-3ad6-40c1-a8b1-d2b2ba52ed6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Files\Collision">
+      <UniqueIdentifier>{fc5d8265-155c-4413-a114-a9988c0d1649}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture2D.h">
@@ -531,8 +534,17 @@
     <ClInclude Include="Terrain.h">
       <Filter>Game Files\LevelObjects</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleSoftbody.h">
+      <Filter>Game Files\LevelObjects</Filter>
+    </ClInclude>
     <ClInclude Include="SSAOPostEffect.h">
       <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingSphere.h">
+      <Filter>Engine Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingFrustum.h">
+      <Filter>Engine Files\Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -881,8 +893,17 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>Game Files\LevelObjects</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleSoftbody.cpp">
+      <Filter>Game Files\LevelObjects</Filter>
+    </ClCompile>
     <ClCompile Include="SSAOPostEffect.cpp">
       <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>Engine Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingFrustum.cpp">
+      <Filter>Engine Files\Collision</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

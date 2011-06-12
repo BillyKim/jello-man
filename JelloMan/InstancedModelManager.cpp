@@ -39,7 +39,7 @@ void InstancedModelManager::UpdateBuffer()
 		HR(m_pBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &pData));
 
         //To GPU
-        memcpy(pData, static_cast<const void*>(m_CPUBuffer.data()), sizeof(Matrix) * m_CPUBuffer.size());
+        memcpy(pData, static_cast<const void*>(&m_CPUBuffer[0]), sizeof(Matrix) * m_CPUBuffer.size());
 
 		m_pBuffer->Unmap();
     }
@@ -63,36 +63,42 @@ void InstancedModelManager::RemoveInstance(const Matrix* mtxWorld)
 
 void InstancedModelManager::Draw(const RenderContext* pRendercontext)
 {
-	m_pEffect->SetDiffuseMap(m_pTexDiffuse);
-	m_pEffect->SetSpecMap(m_pTexSpec);
-	m_pEffect->SetGlossMap(m_pTexGloss);
-	m_pEffect->SetNormalMap(m_pTexNormal);
-	m_pEffect->SetViewProjection(pRendercontext->GetCamera()->GetViewProjection());
-
 	//update buffer
-	for (UINT i = 0; i < m_mtxInstances.size(); ++i)
+    m_CPUBuffer.clear();
+    for_each(m_mtxInstances.cbegin(), m_mtxInstances.cend(), [&](const Matrix* mtxWorld)
 	{
-		m_CPUBuffer[i] = *m_mtxInstances[i];
-	}
-	UpdateBuffer();
+		m_CPUBuffer.push_back(*mtxWorld);
+	});
 
-	m_pModel->DrawInstanced(m_pEffect, m_pBuffer, m_mtxInstances.size());
+    if (m_CPUBuffer.size() > 0)
+    {
+	    m_pEffect->SetDiffuseMap(m_pTexDiffuse);
+	    m_pEffect->SetSpecMap(m_pTexSpec);
+	    m_pEffect->SetGlossMap(m_pTexGloss);
+	    m_pEffect->SetNormalMap(m_pTexNormal);
+	    m_pEffect->SetViewProjection(pRendercontext->GetCamera()->GetViewProjection());
+	    UpdateBuffer();
+	    m_pModel->DrawInstanced(m_pEffect, m_pBuffer, m_CPUBuffer.size());
+    }
 }
 void InstancedModelManager::DrawShadow(const RenderContext* pRenderContext)
 {
-    pRenderContext->GetPreShadowEffectInstanced()->SetViewProjection(pRenderContext->GetCamera()->GetViewProjection());
+    if (m_CPUBuffer.size() > 0)
+    {
+        pRenderContext->GetPreShadowEffectInstanced()->SetViewProjection(pRenderContext->GetCamera()->GetViewProjection());
+    
+	    //update buffer
 
-	//update buffer
+        //Use old buffer
 
-    //Use old buffer
+	    /*for (int i = 0; i < m_mtxInstances.size(); ++i)
+	    {
+		    m_CPUBuffer[i] = *m_mtxInstances[i];
+	    }
+	    UpdateBuffer();*/
 
-	/*for (int i = 0; i < m_mtxInstances.size(); ++i)
-	{
-		m_CPUBuffer[i] = *m_mtxInstances[i];
-	}
-	UpdateBuffer();*/
-
-	m_pModel->DrawInstanced(pRenderContext->GetPreShadowEffectInstanced(), m_pBuffer, m_mtxInstances.size());
+	    m_pModel->DrawInstanced(pRenderContext->GetPreShadowEffectInstanced(), m_pBuffer, m_mtxInstances.size());
+    }
 }
 
 } //end namespace

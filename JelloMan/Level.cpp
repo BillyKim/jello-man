@@ -67,6 +67,21 @@ void Level::Initialize(PhysX* pPhysXEngine, Editor* pGUI, Graphics::Camera::Foll
     pTerrain->SetTerrainPath(_T("../Content/Textures/heightmap.png"));
     pTerrain->Init(m_pPhysXEngine);
     AddLevelObject(pTerrain);
+
+    //for (int x = 0; x < 20; ++x)
+    //    for (int y = 0; y < 20; ++y)
+    //        for (int z = 0; z < 20; ++z)
+    //        {
+    //            SimpleObject* pTemp = new SimpleObject(true);
+    //            pTemp->SetModelPath(_T("../Content/Models/box1.binobj"));
+    //            pTemp->SetPhysXModel(new PhysXBox(Vector3(1.0f, 1.0f, 1.0f), 1));
+    //            pTemp->SetRigid(false);
+    //            pTemp->Init(pPhysXEngine);
+    //            pTemp->Translate(Vector3(x*2, y*2, z*2));
+
+    //            AddLevelObject(pTemp);
+    //        }
+
 }
 void Level::WakeUpAll()
 {

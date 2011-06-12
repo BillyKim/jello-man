@@ -3,6 +3,7 @@
 #include <vector>
 #include "vertex.h"
 #include "Effect.h"
+#include "BoundingSphere.h"
 
 typedef D3D10_PRIMITIVE_TOPOLOGY TOPOLOGY_TYPE;
 
@@ -18,7 +19,7 @@ public:
 				, m_TopologyType(topoType)
     {
     }
-    ~ModelMesh(void)
+    virtual ~ModelMesh(void)
     {
 	    SafeRelease(m_pVertexBuffer);
 	    SafeRelease(m_pIndexBuffer);
@@ -46,6 +47,14 @@ public:
     void SetVertices(vector<T> vertices)
     {
 	    m_VecVertices = vertices;
+
+        D3DXVECTOR3 vCenter;
+        float radius;
+
+        Vector3* start = &vertices[0].position;
+        D3DXComputeBoundingSphere((D3DXVECTOR3*)start, vertices.size(), sizeof(T), &vCenter, &radius);
+        m_BoundingSphere.position = vCenter;
+        m_BoundingSphere.radius = radius;
 
 	    //if buffer exists => release
 	    SafeRelease(m_pVertexBuffer);
@@ -131,6 +140,7 @@ public:
 		    m_pDevice->DrawIndexedInstanced(m_VecIndices.size(), count, 0, 0, 0);
         }
 	}
+    const BoundingSphere& GetBoundingSphere() const { return m_BoundingSphere; }
 
 private:
     ID3D10Device* m_pDevice;
@@ -144,5 +154,11 @@ private:
     tstring m_Name;
 
 	TOPOLOGY_TYPE m_TopologyType;
+
+    BoundingSphere m_BoundingSphere;
+
+    //Disable default copy constructor and assignment operator
+    ModelMesh(const ModelMesh&);
+    ModelMesh& operator=(const ModelMesh&);
 };
 

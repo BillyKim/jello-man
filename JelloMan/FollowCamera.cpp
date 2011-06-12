@@ -90,6 +90,7 @@ void FollowCamera::Tick(const float /*dTime*/)
     }
 
     LookAt(m_Position - m_Direction * m_Distance, m_Position, m_Up);
+    m_BoundingFrustum.BuildFrustum(m_matViewProjection);
 }
 
 }} //end namespace

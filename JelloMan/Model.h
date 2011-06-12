@@ -4,6 +4,8 @@
 #include "ModelMesh.h"
 #include <algorithm>
 
+#include "CameraBase.h"
+
 template <typename T>
 class Model
 {
@@ -13,7 +15,7 @@ public:
     {
     }
 
-    ~Model(void)
+    virtual ~Model(void)
     {
 	    for_each(m_Meshes.cbegin(), m_Meshes.cend(), DeleteModelMesh<T>);
 	    m_Meshes.clear();   
@@ -33,8 +35,7 @@ public:
         for_each(m_Meshes.cbegin(), m_Meshes.cend(), [&](ModelMesh<T>* mesh)
 		{
             mesh->Draw(e);
-		});
-        
+		});       
     }
 
 	void DrawInstanced(Effect* effect, const ID3D10Buffer* pMtxWorldbuffer, int count)
@@ -45,9 +46,29 @@ public:
 		});
 	}
 
+    bool IsInView(Graphics::Camera::CameraBase* pCamera, const Matrix& world = Matrix::Identity)
+    {
+        vector<ModelMesh<T>*>::const_iterator it = m_Meshes.cbegin();
+        for(; it != m_Meshes.cend(); ++it)
+        {
+            BoundingSphere sphere((*it)->GetBoundingSphere());
+
+            sphere.position = Vector3::Transform(sphere.position, world).XYZ();
+            sphere.radius *= max(max(world(0, 0), world(1, 1)), world(2, 2)); //mult by max of scale
+
+            if (pCamera->IsInView(sphere) == true)
+                return true;
+        }
+        return false;
+    }
+
 private:
     ID3D10Device* m_pDevice;
     vector<ModelMesh<T>*> m_Meshes;
+
+    //Disable default copy constructor and assignment operator
+    Model(const Model&);
+    Model& operator=(const Model&);
 };
 
 template <typename T>
