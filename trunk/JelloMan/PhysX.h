@@ -30,7 +30,7 @@ public:
 	PhysX();
 	virtual ~PhysX( );
 
-	bool Init();
+	bool Init(bool bMakeGroundPlane = false);
 	void Simulate(float dt);
 	void FetchResults();
 

@@ -531,6 +531,9 @@
     <ClInclude Include="Terrain.h">
       <Filter>Game Files\LevelObjects</Filter>
     </ClInclude>
+    <ClInclude Include="SSAOPostEffect.h">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -878,6 +881,9 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>Game Files\LevelObjects</Filter>
     </ClCompile>
+    <ClCompile Include="SSAOPostEffect.cpp">
+      <Filter>Engine Files\Graphics\Effect\post</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Effects\lights.fx">
@@ -926,6 +932,9 @@
       <Filter>Content\effect</Filter>
     </None>
     <None Include="Content\Effects\unlit-tex.fx">
+      <Filter>Content\effect</Filter>
+    </None>
+    <None Include="Content\Effects\postSSAO.fx">
       <Filter>Content\effect</Filter>
     </None>
   </ItemGroup>

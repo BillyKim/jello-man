@@ -47,7 +47,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_pHappyEngineFont(0),
 							m_bRunning(true),
 							m_PhysXDTime(0),
-							m_PhysXTimeBase(0)
+							m_PhysXTimeBase(0),
+							m_pSSAOEffect(0)
 {
 
 }
@@ -144,7 +145,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_LoadingText = _T("PhysX");
 
 	m_pPhysXEngine = new PhysX();
-	m_pPhysXEngine->Init();
+	m_pPhysXEngine->Init(true);
 
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);
@@ -176,7 +177,10 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pEdgeDetectionEffect = Content->LoadEffect<EdgeDetectionPostEffect>(_T("../Content/Effects/postEdgeDetection.fx"));
     m_pEdgeDetectionEffect->SetTechnique(0);
 
-	m_pPostProcessor->SetEffect(m_pEdgeDetectionEffect);
+	m_pSSAOEffect = Content->LoadEffect<SSAOPostEffect>(_T("../Content/Effects/postSSAO.fx"));
+	//m_pSSAOEffect->SetTechnique(0);
+
+	m_pPostProcessor->SetEffect(m_pSSAOEffect);
 
 	m_pDeferredRenderer->Init(	static_cast<int>(BX2D->GetWindowSize().width),
 								static_cast<int>(BX2D->GetWindowSize().height));
@@ -505,6 +509,9 @@ void MainGame::UpdatePhysics()
 				    m_pPhysXEngine->Simulate(m_PhysXDTime);
                 else
 				    m_pPhysXEngine->Simulate(0.0f);
+
+			//m_pPhysXEngine->GetPhysXLock().lock();
+
 				m_pPhysXEngine->FetchResults();
 			
 			m_pPhysXEngine->GetPhysXLock().unlock();
