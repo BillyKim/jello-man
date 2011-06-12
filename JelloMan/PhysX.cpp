@@ -51,7 +51,7 @@ PhysX::~PhysX(void)
     delete m_pDefaultAllocator;
 }
 
-bool PhysX::Init(void)
+bool PhysX::Init(bool bMakeGroundPlane)
 {
     m_pUserOutputStream = new MyOutputStream();
 	m_pPhysicsSDK = NxCreatePhysicsSDK(NX_PHYSICS_SDK_VERSION, NULL, m_pUserOutputStream);
@@ -76,15 +76,18 @@ bool PhysX::Init(void)
 	defaultMaterial->setDynamicFriction(.5f);
     #pragma endregion
 
-    /*#pragma region groundplane
-	NxPlaneShapeDesc planeDesc;
-	planeDesc.d = 0;
+    #pragma region groundplane
+	if (bMakeGroundPlane)
+	{
+		NxPlaneShapeDesc planeDesc;
+		planeDesc.d = 0;
 
-	NxActorDesc actorDesc;
-	actorDesc.shapes.pushBack(&planeDesc);
+		NxActorDesc actorDesc;
+		actorDesc.shapes.pushBack(&planeDesc);
 
-	m_pScene->createActor(actorDesc);
-    #pragma endregion*/
+		m_pScene->createActor(actorDesc);
+	}
+    #pragma endregion
 
 	NxReal myTimestep = 1/60.0f;
 	m_pScene->setTiming(myTimestep, 8, NX_TIMESTEP_FIXED);

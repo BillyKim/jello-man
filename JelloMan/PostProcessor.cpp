@@ -75,6 +75,7 @@ void PostProcessor::End(DeferredRenderer* deferredRenderer)
     m_pEffect->SetColorGlowMap(deferredRenderer->GetColorGlowMap());
     m_pEffect->SetDepthMap(m_pBuffer->GetDepthMap());
     m_pEffect->SetNormalMap(deferredRenderer->GetNormalSpecMap());
+	m_pEffect->SetPositionGlossMap(deferredRenderer->GetPositionGlossMap());
 
     m_pScreenMesh->Draw(m_pEffect->GetEffect());
 
@@ -82,6 +83,7 @@ void PostProcessor::End(DeferredRenderer* deferredRenderer)
     m_pEffect->SetNormalMap(0);
     m_pEffect->SetDepthMap(0);
     m_pEffect->SetColorGlowMap(0);
+	m_pEffect->SetPositionGlossMap(0);
     m_pEffect->GetEffect()->GetCurrentTechnique()->GetPassByIndex(0)->Apply(0); //unbind rendertarget
 
     m_pDXDevice->OMSetRenderTargets(1, &m_pPrevBackBuffer, m_pPrevDepthStencilView);

@@ -198,6 +198,7 @@
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SimpleObject.h" />
+    <ClInclude Include="SSAOPostEffect.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Terrain.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SimpleObject.cpp" />
+    <ClCompile Include="SSAOPostEffect.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -345,6 +347,7 @@
     <None Include="Content\Effects\poscol.fx" />
     <None Include="Content\Effects\postdeferred.fx" />
     <None Include="Content\Effects\postEdgeDetection.fx" />
+    <None Include="Content\Effects\postSSAO.fx" />
     <None Include="Content\Effects\predeferred.fx" />
     <None Include="Content\Effects\predeferredNormal.fx" />
     <None Include="Content\Effects\predeferredNormalInstanced.fx" />

@@ -12,6 +12,7 @@ public:
     virtual void SetBackbufferMap(ID3D10ShaderResourceView* map);
     virtual void SetColorGlowMap(ID3D10ShaderResourceView* /*map*/) {};
 	virtual void SetNormalMap(ID3D10ShaderResourceView* map);
+	virtual void SetPositionGlossMap(ID3D10ShaderResourceView* /*map*/) {};
 	virtual void SetDepthMap(ID3D10ShaderResourceView* map);
     virtual void SetBackbufferSize(int width, int height);
     Effect* GetEffect();
