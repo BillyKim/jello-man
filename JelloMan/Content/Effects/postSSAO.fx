@@ -116,7 +116,7 @@ float3 PS_SSAO(VertexShaderOutput input) : SV_TARGET
 		ao += doAmbientOcclusion(input.TexCoord,coord1 * 0.75, p, n);
 		ao += doAmbientOcclusion(input.TexCoord,coord2, p, n);
 
-		float2 coord11 = reflect(vec[j], rand) * (rad / 2.0f);
+		float2 coord11 = reflect(vec[j], rand) * (rad / 4.0f);
 		float2 coord21 = float2(	coord11.x * 0.707 - coord11.y * 0.707,
 									coord11.x * 0.707 + coord11.y * 0.707);
   

@@ -5,6 +5,7 @@
 #include "RenderContext.h"
 #include "SimpleObject.h"
 #include "SimpleSoftbody.h"
+#include "FixedJoint.h"
 
 EditorLoader::EditorLoader(Level* pLevel, RenderContext* pRenderContext, ID3D10Device* pDXDevice, PhysX* pPhysXEngine)
 	:	m_pLevel(pLevel),
@@ -143,6 +144,40 @@ void EditorLoader::AddTrigger()
 	pTrigger->SetPosition(m_pRenderContext->GetCamera()->GetPosition() + look * 2);
 
 	m_pLevel->AddLevelObject(pTrigger);
+}
+
+FixedJoint* EditorLoader::AddJoint(SimpleObject* pObj1, SimpleObject* pObj2)
+{
+	m_pPhysXEngine->GetScene()->resetJointIterator();
+	unsigned int joints = m_pPhysXEngine->GetScene()->getNbJoints();
+
+	bool bExists(false);
+	NxJoint* j(0);
+
+	for (unsigned int i(0); i < joints; ++i)
+	{
+		NxJoint* joint(m_pPhysXEngine->GetScene()->getNextJoint());
+
+		NxActor* pActor1, *pActor2;
+		joint->getActors(&pActor1,&pActor2);
+
+		if ((pObj1->GetActor() == pActor1 || pObj1->GetActor() == pActor2) && (pObj2->GetActor() == pActor1 || pObj2->GetActor() == pActor2))
+		{
+			bExists = true;
+			j = joint;
+		}
+	}
+
+	if (bExists && j != 0)
+	{
+		m_pPhysXEngine->GetPhysXLock().lock();
+		m_pPhysXEngine->GetScene()->releaseJoint(*j);
+		m_pPhysXEngine->GetPhysXLock().unlock();
+	}
+	else
+		return new FixedJoint(m_pPhysXEngine, pObj1->GetActor(), pObj2->GetActor());
+
+	return 0;
 }
 
 void EditorLoader::LoadLevel(const tstring& fileName)

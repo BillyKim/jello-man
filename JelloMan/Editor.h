@@ -71,6 +71,7 @@ public:
 private:
 
 	void DrawSelectedObjects();
+	void DrawJoints();
 
 	/* DATAMEMBERS */
 	Image* m_pCameraBitmap;

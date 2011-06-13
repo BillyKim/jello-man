@@ -97,7 +97,9 @@ void Editor::Draw()
 			BX2D->SetAntiAliasing(false);
 
 			m_pToolbar->Draw();
-		m_pInfobar->Draw();
+			m_pInfobar->Draw();
+
+			DrawJoints();
 
 			break;
 		}
@@ -222,6 +224,18 @@ void Editor::Tick(const RenderContext* pRenderContext)
 				m_bMoveable = false;
 				m_bRotateable = false;
 				m_bScaleable = false;
+			}
+
+			if (CONTROLS->IsKeyPressed('J'))
+			{
+				if (m_pObjectSelecter->GetSelectedObjects().size() == 2)
+				{
+					SimpleObject* pObj1(dynamic_cast<SimpleObject*>(m_pObjectSelecter->GetSelectedObjects()[0]));
+					SimpleObject* pObj2(dynamic_cast<SimpleObject*>(m_pObjectSelecter->GetSelectedObjects()[1]));
+
+					if (pObj1 && pObj2)
+						m_pEditorLoader->AddJoint(pObj1, pObj2);
+				}
 			}
 
 			break;
@@ -360,6 +374,54 @@ void Editor::DrawSelectedObjects()
 			}
 		}
 	});
+}
+
+void Editor::DrawJoints()
+{
+	m_pPhysXEngine->GetScene()->resetJointIterator();
+
+	unsigned int joints = m_pPhysXEngine->GetScene()->getNbJoints();
+
+	Matrix matProj = m_pRenderContext->GetCamera()->GetProjection();
+	Matrix matView = m_pRenderContext->GetCamera()->GetView();
+	Matrix matWorld = Matrix::Identity;
+
+	D3D10_VIEWPORT viewPort;
+	viewPort.MinDepth = 0.0f;
+	viewPort.MaxDepth = 1.0f;
+	viewPort.TopLeftX = 0;
+	viewPort.TopLeftY = 0;
+	viewPort.Height = static_cast<UINT>(BX2D->GetWindowSize().height);
+	viewPort.Width = static_cast<UINT>(BX2D->GetWindowSize().width);
+
+	BX2D->SetAntiAliasing(true);
+
+	for (unsigned int i(0); i < joints; ++i)
+	{
+		NxJoint* joint(m_pPhysXEngine->GetScene()->getNextJoint());
+
+		NxActor* pActor1, *pActor2;
+		joint->getActors(&pActor1,&pActor2);
+
+		Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
+		Vector3 length = m_pRenderContext->GetCamera()->GetPosition() - ((pActor1->getGlobalPosition() + pActor2->getGlobalPosition()) / 2);
+		float l = length.Length() / 100;
+
+		Vector3 pos2D1(Vector3::Project(pActor1->getGlobalPosition(), &viewPort, matProj, matView, matWorld));
+		Vector3 pos2D2(Vector3::Project(pActor2->getGlobalPosition(), &viewPort, matProj, matView, matWorld));
+
+		if (vLook.Dot(length) < 0)
+		{
+			BX2D->SetColor(255,255,255);
+			BX2D->DrawLine(pos2D1.X, pos2D1.Y, pos2D2.X, pos2D2.Y, 1.0f / l);
+
+			BX2D->SetColor(255,0,255);
+			BX2D->FillEllipse(pos2D1.X, pos2D1.Y, 2.0f / l, 2.0f / l);
+			BX2D->FillEllipse(pos2D2.X, pos2D2.Y, 2.0f / l, 2.0f / l);
+		}	
+	}
+	
+	BX2D->SetAntiAliasing(false);
 }
 
 // GETTERS

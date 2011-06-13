@@ -4,7 +4,7 @@
 class FixedJoint : public IJoint
 {
 public:
-    FixedJoint(PhysX* pPhysX, Actor* pActor1, Actor* pActor2 = 0);
+    FixedJoint(PhysX* pPhysX, NxActor* pActor1, NxActor* pActor2 = 0);
     virtual ~FixedJoint(void);
 
     virtual void SetBreakable(float maxForce = FLT_MAX, float maxTorque = FLT_MAX);
