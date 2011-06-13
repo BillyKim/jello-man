@@ -5,6 +5,8 @@
 class Level;
 class RenderContext;
 class PhysX;
+class SimpleObject;
+class FixedJoint;
 
 class EditorLoader
 {
@@ -28,6 +30,7 @@ public:
 							const tstring& specPath,
 							const tstring& glossPath	);
 	void AddTrigger();
+	FixedJoint* AddJoint(SimpleObject* pObj1, SimpleObject* pObj2);
 
 	void LoadLevel(const tstring& fileName);
 	void SaveLevel(const tstring& fileName);

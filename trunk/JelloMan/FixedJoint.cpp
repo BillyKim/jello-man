@@ -1,13 +1,15 @@
 #include "FixedJoint.h"
 
 
-FixedJoint::FixedJoint(PhysX* pPhysX, Actor* pActor1, Actor* pActor2) : m_pJoint(0)
+FixedJoint::FixedJoint(PhysX* pPhysX, NxActor* pActor1, NxActor* pActor2) : m_pJoint(0)
 {
     NxFixedJointDesc desc;
-    desc.actor[0] = pActor1->GetActor();
-    desc.actor[1] = pActor2->GetActor();
+    desc.actor[0] = pActor1;
+    desc.actor[1] = pActor2;
     
+	pPhysX->GetPhysXLock().lock();
     m_pJoint = dynamic_cast<NxFixedJoint*>(pPhysX->GetScene()->createJoint(desc));
+	pPhysX->GetPhysXLock().unlock();
 }
 
 
