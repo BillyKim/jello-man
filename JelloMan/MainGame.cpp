@@ -18,6 +18,7 @@
 #include "IniWriter.h"
 #include "PreShadowEffect.h"
 #include "PreShadowEffectInstanced.h"
+#include "ALOptions.h"
 
 using namespace Graphics::Camera;
 using namespace IO;
@@ -333,6 +334,17 @@ void MainGame::DrawScene()
 		m_pRenderContext->SetCamera(m_pTrackingCamera);
 	else
 		m_pRenderContext->SetCamera(m_pEditorCamera);
+
+	// SSAO
+	SSAOSettings ss(m_pEditorGUI->GetSSAOSettings());
+	m_pSSAOEffect->SetRadius(ss.radius);
+	m_pSSAOEffect->SetIntensity(ss.intensity);
+	m_pSSAOEffect->SetScale(ss.scale);
+	m_pSSAOEffect->SetBias(ss.bias);
+	m_pSSAOEffect->SetMinIterations(ss.minIterations);
+	m_pSSAOEffect->SetMaxIterations(ss.maxIterations);
+
+	m_pSSAOEffect->SetWorldView(m_pRenderContext->GetCamera()->GetView());
 
 	// POST PROCESS
 	if (m_pEditorGUI->GetPostFXMode() == Editor::POST_EFFECTS_ON)

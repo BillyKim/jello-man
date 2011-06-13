@@ -89,6 +89,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="ALOptions.h" />
     <ClInclude Include="AudioEngine.h" />
     <ClInclude Include="Axis.h" />
     <ClInclude Include="BaseGrid.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="ColorPicker.h" />
     <ClInclude Include="EditorLoader.h" />
     <ClInclude Include="FluidsCharacterActor.h" />
+    <ClInclude Include="ForceField.h" />
     <ClInclude Include="ICharacter.h" />
     <ClInclude Include="IGizmo.h" />
     <ClInclude Include="Infobar.h" />
@@ -227,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="ALOptions.cpp" />
     <ClCompile Include="AudioEngine.cpp" />
     <ClCompile Include="BaseGrid.cpp" />
     <ClCompile Include="Blox2DEngine.cpp" />
@@ -240,6 +243,7 @@
     <ClCompile Include="ColorPicker.cpp" />
     <ClCompile Include="EditorLoader.cpp" />
     <ClCompile Include="FluidsCharacterActor.cpp" />
+    <ClCompile Include="ForceField.cpp" />
     <ClCompile Include="Infobar.cpp" />
     <ClCompile Include="Infopane.cpp" />
     <ClCompile Include="IniReader.cpp" />

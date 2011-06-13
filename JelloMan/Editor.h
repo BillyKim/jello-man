@@ -20,7 +20,7 @@
 #include "SimpleObject.h"
 
 class Toolbar;
-class Infopane;
+#include "Infopane.h"
 class Infobar;
 class EditorLoader;
 
@@ -65,6 +65,8 @@ public:
 	LIGHT_MODE GetLightMode() const;
 
 	POST_EFFECTS GetPostFXMode() const;
+
+	SSAOSettings GetSSAOSettings() const;
 
 private:
 

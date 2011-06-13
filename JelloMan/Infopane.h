@@ -15,6 +15,8 @@ class RenderContext;
 class EditorLoader;
 class Snapper;
 
+#include "ALOptions.h"
+
 class Infopane
 {
 public:
@@ -26,7 +28,8 @@ public:
 		INFO_STATE_LEVELOBJECTINFO,
 		INFO_STATE_LOADMODEL,
 		INFO_STATE_LOADLEVEL,
-		INFO_STATE_SNAPPINGOPTIONS
+		INFO_STATE_SNAPPINGOPTIONS,
+		INFO_STATE_ALOPTIONS
 	};
 
 	/* CONSTRUCTOR - DESTRUCTOR */
@@ -46,6 +49,9 @@ public:
 	/* GETTERS */
 	bool IsColorPickerActive()
 	{ return m_Buttons["COLORPICKER"]->IsActive(); }
+
+	SSAOSettings GetSSAOSettings() const
+	{ return m_pALOptions->GetSSAOSettings(); }
 
 private:
 
@@ -69,6 +75,8 @@ private:
 	EditorLoader* m_pLoader;
 
 	Snapper* m_pSnapper;
+
+	ALOptions* m_pALOptions;
 
 	const RenderContext* m_pRenderContext;
 

@@ -17,6 +17,8 @@ struct SerializeTypes
 
     const static DWORD PhysXTrigger = 600;
 
+	const static DWORD PhysXForceField = 700;
+
     const static DWORD SimpleObject = 1000;
     const static DWORD SimpleSoftbody = 1010;
     const static DWORD SpawnPoint = 1100;

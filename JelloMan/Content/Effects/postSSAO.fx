@@ -11,6 +11,10 @@ float bias;
 
 int bbWidth;
 int bbHeight;
+int minIterations;
+int maxIterations;
+
+matrix mtxWorldView;
 
 RasterizerState rState
 {
@@ -38,11 +42,13 @@ SamplerState mapSampler
 
 struct VertexShaderInput
 {
+	float4 Position : POSITION0;
 	float2 TexCoord : TEXCOORD0;
 };
 
 struct VertexShaderOutput
 {
+	float4 Position : SV_POSITION;
 	float2 TexCoord : TEXCOORD;
 };
 
@@ -50,6 +56,7 @@ VertexShaderOutput VS(VertexShaderInput input)
 {
     VertexShaderOutput output;
 
+	output.Position = input.Position;
     output.TexCoord = input.TexCoord;
 
     return output;
@@ -57,62 +64,71 @@ VertexShaderOutput VS(VertexShaderInput input)
 
 float3 getPosition(in float2 uv)
 {
- return positionGlossMap.Sample(mapSampler, uv).xyz;
+	return mul(float4(positionGlossMap.Sample(mapSampler, uv).xyz, 1.0f), mtxWorldView).xyz;
 }
 
 float3 getNormal(in float2 uv)
 {
- return normalSpecMap.Sample(mapSampler, uv).xyz;
+	return normalSpecMap.Sample(mapSampler, uv).xyz;
 }
 
 float2 getRandom(in float2 uv)
 {
- float2 screenSize = float2(bbWidth,bbHeight);
+	float2 screenSize = float2(bbWidth,bbHeight);
 
- return (randomNormalMap.Sample(mapSampler, screenSize * uv / randomSize).xy * 2.0f - 1.0f);
+	return (randomNormalMap.Sample(mapSampler, screenSize * uv / randomSize).xy * 2.0f - 1.0f);
 }
 
 float doAmbientOcclusion(in float2 tcoord,in float2 uv, in float3 p, in float3 cnorm)
 {
- float3 diff = getPosition(tcoord + uv) - p;
- const float3 v = normalize(diff);
- const float d = length(diff)*scale;
- return max(0.0,dot(cnorm,v)-bias)*(1.0/(1.0+d))*intensity;
+	float3 diff = getPosition(tcoord + uv) - p;
+	const float3 v = normalize(diff);
+	const float d = length(diff) * scale;
+	return max(0.0, dot(cnorm, v) - bias) * (1.0 / (1.0 + d)) * intensity;
 }
 
 float3 PS_SSAO(VertexShaderOutput input) : SV_TARGET
 {
 	float3 bbCol = backBuffer.Sample(mapSampler, input.TexCoord).xyz;
 
- const float2 vec[4] = {float2(1,0),float2(-1,0),
-            float2(0,1),float2(0,-1)};
+	const float2 vec[4] = {	float2(1,0),float2(-1,0),
+							float2(0,1),float2(0,-1) };
 
- float3 p = getPosition(input.TexCoord);
- float3 n = getNormal(input.TexCoord);
- float2 rand = getRandom(input.TexCoord);
+	float3 p = getPosition(input.TexCoord);
+	float3 n = getNormal(input.TexCoord);
+	float2 rand = getRandom(input.TexCoord);
 
- float ao = 0.0f;
- float rad = sampleRadius/p.z;
+	float ao = 0.0f;
+	float rad = sampleRadius / p.z;
 
- //**SSAO Calculation**//
- int iterations = 4;
- for (int j = 0; j < iterations; ++j)
- {
-  float2 coord1 = reflect(vec[j],rand)*rad;
-  float2 coord2 = float2(coord1.x*0.707 - coord1.y*0.707,
-              coord1.x*0.707 + coord1.y*0.707);
+	//int iterations = minIterations;
+
+	int iterations = lerp(maxIterations,minIterations,p.z/1000);  //LOD
+
+	for (int j = 0; j < iterations; ++j)
+	{
+		float2 coord1 = reflect(vec[j], rand) * rad;
+		float2 coord2 = float2(	coord1.x * 0.707 - coord1.y * 0.707,
+								coord1.x * 0.707 + coord1.y * 0.707);
   
-  ao += doAmbientOcclusion(input.TexCoord,coord1*0.25, p, n);
-  ao += doAmbientOcclusion(input.TexCoord,coord2*0.5, p, n);
-  ao += doAmbientOcclusion(input.TexCoord,coord1*0.75, p, n);
-  ao += doAmbientOcclusion(input.TexCoord,coord2, p, n);
- } 
- ao/=(float)iterations*4.0;
- //**END**//
+		ao += doAmbientOcclusion(input.TexCoord,coord1 * 0.25, p, n);
+		ao += doAmbientOcclusion(input.TexCoord,coord2 * 0.5, p, n);
+		ao += doAmbientOcclusion(input.TexCoord,coord1 * 0.75, p, n);
+		ao += doAmbientOcclusion(input.TexCoord,coord2, p, n);
 
- bbCol -= ao;
+		float2 coord11 = reflect(vec[j], rand) * (rad / 2.0f);
+		float2 coord21 = float2(	coord11.x * 0.707 - coord11.y * 0.707,
+									coord11.x * 0.707 + coord11.y * 0.707);
+  
+		ao += doAmbientOcclusion(input.TexCoord,coord11 * 0.25, p, n);
+		ao += doAmbientOcclusion(input.TexCoord,coord21 * 0.5, p, n);
+		ao += doAmbientOcclusion(input.TexCoord,coord11 * 0.75, p, n);
+		ao += doAmbientOcclusion(input.TexCoord,coord21, p, n);
+	}
 
- return bbCol;
+	ao /= (float)iterations * 8.0;
+
+	return (bbCol * (1.0f - ao));
 }
 
 technique10 tech_SSAO
