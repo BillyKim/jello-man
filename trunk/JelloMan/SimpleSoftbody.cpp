@@ -7,7 +7,7 @@ SimpleSoftbody::SimpleSoftbody(const Vector3& pos):
                 m_strDiffusePath(_T("")), m_strSpecPath(_T("")),
                 m_strGlossPath(_T("")), m_strNormalPath(_T("")),
                 m_strModelPath(_T("")), m_strPhysXPath(_T("")),
-                m_Timer(0), m_pUserData(0)
+                m_Timer(0), m_pUserData(0), m_bIsSelected(false)
 {
 }
 

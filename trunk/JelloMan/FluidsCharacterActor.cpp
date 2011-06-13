@@ -22,7 +22,9 @@ FluidsCharacterActor::FluidsCharacterActor(Level* pLevel)	:	m_pPhysXEngine(0),
 													m_Radius(0.5f),
                                                     m_pUserData(0),
                                                     m_GravityRotation(0.0f),
-                                                    m_MoveRotation(0.0f)
+                                                    m_MoveRotation(0.0f),
+                                                    m_ScoreTimer(0.0f),
+                                                    m_Score(120)
 {
 }
 
@@ -172,6 +174,9 @@ void FluidsCharacterActor::Respawn(const SpawnPoint* pSpawnPoint)
 
     RotateMoveDirection(0.0f);
 	m_IsDead = false;
+
+    m_Score = 120;
+    m_ScoreTimer = 0.0f;
 }
 
 void FluidsCharacterActor::RotateGravityDirection(float rad) //must be normalized!
@@ -220,6 +225,13 @@ void FluidsCharacterActor::ChangeMoveSpeed(float speed)
 
 void FluidsCharacterActor::Tick(float dTime)
 {
+    m_ScoreTimer += dTime;
+    while (m_ScoreTimer > 1.0f)
+    {
+        m_ScoreTimer -= 1.0f;
+        --m_Score;
+    }
+
     Vector3 move = Vector3(0, 0, 0);
     move += -m_MoveDir * 10000 * dTime;
     
@@ -286,9 +298,12 @@ void FluidsCharacterActor::CheckIfOnGround()
 }
 void FluidsCharacterActor::Draw(const RenderContext* pRenderContext)
 {
+    tstringstream stream;
+    stream << "Score: " << m_Score;
+    BX2D->DrawString(stream.str(), RectF(8, 8, 200, 200));
 	m_pFluid->Draw(pRenderContext);
 }
-void FluidsCharacterActor::OnTriggerEnter(const Trigger* pTrigger)
+void FluidsCharacterActor::OnTriggerEnter(const ITrigger* pTrigger)
 {
     NxVec3 grav;
     m_pPhysX->GetScene()->getGravity(grav);
@@ -309,6 +324,11 @@ void FluidsCharacterActor::OnTriggerEnter(const Trigger* pTrigger)
     else if (pTrigger->GetTriggerName().find(_T("down")) != tstring::npos)
     {
     }
+    else if (pTrigger->GetTriggerName().find(_T("coin")) != tstring::npos)
+    {
+        m_pLevel->RemoveLevelObjectWaitTick(dynamic_cast<const ILevelObject*>(pTrigger));
+        m_Score += 10;
+    }
 	else if (pTrigger->GetTriggerName().find(_T("killinside")) != tstring::npos)
     {
 		m_IsDead = true;
@@ -316,11 +336,15 @@ void FluidsCharacterActor::OnTriggerEnter(const Trigger* pTrigger)
 	else if (pTrigger->GetTriggerName().find(_T("win")) != tstring::npos)
     {
 		MessageBeep(0xFFFFFFFF);
-		MessageBox(NULL, _T("You won!\nPress enter to play again"), _T("You WON!"), MB_ICONEXCLAMATION | MB_OK);
+        tstringstream stream;
+        stream << "You won! \n";
+        stream << "Final score: " << m_Score << "\n";
+        stream << "\nPress enter to play again";
+		MessageBox(NULL, stream.str().c_str(), _T("You WON!"), MB_ICONEXCLAMATION | MB_OK);
 		m_IsDead = true;
     }
 }
-void FluidsCharacterActor::OnTriggerLeave(const Trigger* pTrigger)
+void FluidsCharacterActor::OnTriggerLeave(const ITrigger* pTrigger)
 {
 	if (pTrigger->GetTriggerName().find(_T("killoutside")) != tstring::npos)
     {

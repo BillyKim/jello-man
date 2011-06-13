@@ -13,6 +13,7 @@
 #include "CharacterController.h"
 #include "LightBehaviourBroken.h"
 #include "Terrain.h"
+#include "Coin.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -68,6 +69,10 @@ void Level::Initialize(PhysX* pPhysXEngine, Editor* pGUI, Graphics::Camera::Foll
     pTerrain->Init(m_pPhysXEngine);
     AddLevelObject(pTerrain);
 
+    Coin* pCoin = new Coin();
+    pCoin->Init(pPhysXEngine);
+    AddLevelObject(pCoin);
+    pCoin->Translate(Vector3(5, 0.5f, 0.0f));
     //for (int x = 0; x < 20; ++x)
     //    for (int y = 0; y < 20; ++y)
     //        for (int z = 0; z < 20; ++z)
@@ -95,10 +100,17 @@ void Level::WakeUpAll()
 
 void Level::Tick(const float dTime)
 {
+    while (m_RemoveQueue.size() > 0)
+    {
+        RemoveLevelObject(m_RemoveQueue.front());
+        m_RemoveQueue.pop_front();
+    }
+
     for_each(m_pLevelObjects.begin(), m_pLevelObjects.end(), [&](ILevelObject* obj)
 	{
 		obj->Tick(dTime);
 	});
+
     
     m_pCharacterController->Tick(dTime);
 
@@ -173,7 +185,12 @@ void Level::AddLevelObject(ILevelObject* pLevelObject)
     }
 
 }
-void Level::RemoveLevelObject(ILevelObject* pLevelObject)
+
+void Level::RemoveLevelObjectWaitTick(const ILevelObject* pLevelObject)
+{
+    m_RemoveQueue.push_back(pLevelObject);
+}
+void Level::RemoveLevelObject(const ILevelObject* pLevelObject)
 {
     if (pLevelObject == 0)
     {
@@ -184,26 +201,26 @@ void Level::RemoveLevelObject(ILevelObject* pLevelObject)
     if (pLevelObject->GetType() == LevelObjectType_InstancedDraw)
     {
         using namespace Instancing;
-	    IInstancible* instObj = dynamic_cast<IInstancible*>(pLevelObject);
+	    const IInstancible* instObj = dynamic_cast<const IInstancible*>(pLevelObject);
         ASSERT(instObj != 0, "trying to delete an instanced object which isn't an instancible object");
 		m_pInstancingManager->DeleteObject(instObj);
     }
     else if (pLevelObject->GetType() == LevelObjectType_NormalDraw)
     {
-        IDrawable* drawObj = dynamic_cast<IDrawable*>(pLevelObject);
+        const IDrawable* drawObj = dynamic_cast<const IDrawable*>(pLevelObject);
 		ASSERT(drawObj != 0, "trying to delete a drawable object which can't be drawn");
 		m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), drawObj));
     }
     else if (pLevelObject->GetType() == LevelObjectType_Spawnpoint)
     {
-        SpawnPoint* pSpawnpoint = dynamic_cast<SpawnPoint*>(pLevelObject);
+        const SpawnPoint* pSpawnpoint = dynamic_cast<const SpawnPoint*>(pLevelObject);
 	    ASSERT(pSpawnpoint != 0, "trying to delete a spawnpoint object which isn't a spawnpoint");
         m_pCharacterController->SetSpawnPoint(0);
 		m_pDrawableObjects.erase(remove(m_pDrawableObjects.begin(), m_pDrawableObjects.end(), pSpawnpoint));
     }
     else if (pLevelObject->GetType() == LevelObjectType_Trigger)
     {
-        Trigger* pTrigger = dynamic_cast<Trigger*>(pLevelObject);
+        const Trigger* pTrigger = dynamic_cast<const Trigger*>(pLevelObject);
 	    ASSERT(pTrigger != 0, "trying to delete a trigger object which isn't a trigger");
         m_pTriggers.erase(pTrigger->GetTriggerName());
     }
@@ -238,6 +255,7 @@ ISerializable* GetObject(DWORD id)
         case SerializeTypes::SimpleObject: return new SimpleObject(true);
         case SerializeTypes::PhysXTrigger: return new Trigger();
         case SerializeTypes::SpawnPoint: return new SpawnPoint();
+        case SerializeTypes::Coin: return new Coin();
         default: PANIC("File corrupt!"); return 0;
     }
 }

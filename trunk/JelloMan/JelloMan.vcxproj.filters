@@ -546,6 +546,12 @@
     <ClInclude Include="BoundingFrustum.h">
       <Filter>Engine Files\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Coin.h">
+      <Filter>Game Files\LevelObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="ITrigger.h">
+      <Filter>Game Files\interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -904,6 +910,9 @@
     </ClCompile>
     <ClCompile Include="BoundingFrustum.cpp">
       <Filter>Engine Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Coin.cpp">
+      <Filter>Game Files\LevelObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

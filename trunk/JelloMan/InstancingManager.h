@@ -16,7 +16,7 @@ public:
 
     void Clear();
 	void AddObject(IInstancible* obj);
-	void DeleteObject(IInstancible* obj);
+	void DeleteObject(const IInstancible* obj);
 
     void Draw(const RenderContext* pRenderContext);
     void DrawShadow(const RenderContext* pRenderContext);

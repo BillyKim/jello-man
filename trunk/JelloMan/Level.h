@@ -20,6 +20,7 @@
 #include "ILevelObject.h"
 
 #include <map>
+#include <deque>
 #include "Trigger.h"
 
 #include "FollowCamera.h"
@@ -44,7 +45,8 @@ public:
     void DrawShadowMap(const RenderContext* pRenderContext);
 
 	void AddLevelObject(ILevelObject* pLevelObject);
-    void RemoveLevelObject(ILevelObject* pLevelObject);
+    void RemoveLevelObject(const ILevelObject* pLevelObject);
+    void RemoveLevelObjectWaitTick(const ILevelObject* pLevelObject);
     void AddLight(Light* pLight);
     void RemoveLight(Light* pLight);
 
@@ -85,6 +87,8 @@ private:
 	vector<IDrawable*> m_pDrawableObjects;
 	map<tstring, Trigger*> m_pTriggers;
 	Instancing::InstancingManager* m_pInstancingManager;
+
+    deque<const ILevelObject*> m_RemoveQueue;
 
 	BaseGrid* m_pBaseGrid;
 

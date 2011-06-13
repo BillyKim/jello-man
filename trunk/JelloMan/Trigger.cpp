@@ -38,7 +38,7 @@ void Trigger::Init(PhysX* pPhysX, const Vector3& dimensions)
 
 	InitActor(pPhysX, *m_pTriggerShape, false, true);	
 
-	m_pActor->userData = this;
+	m_pActor->userData = dynamic_cast<ITrigger*>(this);
 
     m_pContourModel = Content->LoadSpline(_T("../Content/Models/box_path.obj"));
     m_pSolidModel = Content->LoadModel(_T("../Content/Models/box1.binobj"));
