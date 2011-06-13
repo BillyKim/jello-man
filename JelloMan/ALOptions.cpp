@@ -4,12 +4,12 @@
 /* CONSTRUCTOR - DESTRUCTOR */
 ALOptions::ALOptions()
 {
-	m_SSAOSettings.radius = 0.5f;
-	m_SSAOSettings.intensity = 8.0f;
+	m_SSAOSettings.radius = 0.1f;
+	m_SSAOSettings.intensity = 14.0f;
 	m_SSAOSettings.scale = 2.0f;
 	m_SSAOSettings.bias = 0.03f;
 	m_SSAOSettings.minIterations = 8;
-	m_SSAOSettings.maxIterations = 16;
+	m_SSAOSettings.maxIterations = 64;
 
 	m_AddSubtractButtonImages.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_normal.png")));
 	m_AddSubtractButtonImages.push_back(Content->LoadImage(_T("../Content/Images/Editor/add_small_hover.png")));
@@ -98,9 +98,9 @@ void ALOptions::Tick()
 
 	// radius
 	if (m_Buttons["RADIUS_ADD"]->Clicked())
-		m_SSAOSettings.radius += 0.1f;
+		m_SSAOSettings.radius += 0.02f;
 	else if (m_Buttons["RADIUS_SUB"]->Clicked())
-		m_SSAOSettings.radius -= 0.1f;
+		m_SSAOSettings.radius -= 0.02f;
 
 	// intensity
 	if (m_Buttons["INTENSITY_ADD"]->Clicked())
@@ -110,9 +110,9 @@ void ALOptions::Tick()
 
 	// scale
 	if (m_Buttons["SCALE_ADD"]->Clicked())
-		m_SSAOSettings.scale += 0.25f;
+		m_SSAOSettings.scale += 0.2f;
 	else if (m_Buttons["SCALE_SUB"]->Clicked())
-		m_SSAOSettings.scale -= 0.25f;
+		m_SSAOSettings.scale -= 0.2f;
 
 	// bias
 	if (m_Buttons["BIAS_ADD"]->Clicked())

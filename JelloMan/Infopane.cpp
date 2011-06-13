@@ -284,6 +284,7 @@ void Infopane::Draw()
 		}
 		case INFO_STATE_ALOPTIONS:
 		{
+			Clear();
 			m_pALOptions->Draw();
 
 			break;
