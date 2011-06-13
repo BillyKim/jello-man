@@ -158,29 +158,36 @@ void Editor::Tick(const RenderContext* pRenderContext)
 			if (!m_pInfopane->IsColorPickerActive())
 				m_pObjectSelecter->Tick(m_pRenderContext);
 
-			if (m_pToolbar->GetSnappingOptionsState() == Toolbar::SNAPPING_OPTIONS_ACTIVE)
+			if (m_pToolbar->GetALOptionsState() == Toolbar::AL_OPTIONS_ON)
 			{
-				m_pInfopane->SetState(Infopane::INFO_STATE_SNAPPINGOPTIONS);
+				m_pInfopane->SetState(Infopane::INFO_STATE_ALOPTIONS);
 			}
 			else
 			{
-				if (m_pObjectSelecter->GetSelectedObjects().size() >= 1)
+				if (m_pToolbar->GetSnappingOptionsState() == Toolbar::SNAPPING_OPTIONS_ACTIVE)
 				{
-					Light* pLight = dynamic_cast<Light*>(m_pObjectSelecter->GetSelectedObjects()[0]);
-
-					if (pLight)
-						m_pInfopane->SetState(Infopane::INFO_STATE_LIGHTINFO);
-					else
-						m_pInfopane->SetState(Infopane::INFO_STATE_LEVELOBJECTINFO);
+					m_pInfopane->SetState(Infopane::INFO_STATE_SNAPPINGOPTIONS);
 				}
 				else
 				{
-					if (m_pToolbar->GetLoadState() == Toolbar::LOAD_STATE_MODEL)
-						m_pInfopane->SetState(Infopane::INFO_STATE_LOADMODEL);
-					else if (m_pToolbar->GetLoadState() == Toolbar::LOAD_STATE_LEVEL)
-						m_pInfopane->SetState(Infopane::INFO_STATE_LOADLEVEL);
+					if (m_pObjectSelecter->GetSelectedObjects().size() >= 1)
+					{
+						Light* pLight = dynamic_cast<Light*>(m_pObjectSelecter->GetSelectedObjects()[0]);
+
+						if (pLight)
+							m_pInfopane->SetState(Infopane::INFO_STATE_LIGHTINFO);
+						else
+							m_pInfopane->SetState(Infopane::INFO_STATE_LEVELOBJECTINFO);
+					}
 					else
-						m_pInfopane->SetState(Infopane::INFO_STATE_NONE);
+					{
+						if (m_pToolbar->GetLoadState() == Toolbar::LOAD_STATE_MODEL)
+							m_pInfopane->SetState(Infopane::INFO_STATE_LOADMODEL);
+						else if (m_pToolbar->GetLoadState() == Toolbar::LOAD_STATE_LEVEL)
+							m_pInfopane->SetState(Infopane::INFO_STATE_LOADLEVEL);
+						else
+							m_pInfopane->SetState(Infopane::INFO_STATE_NONE);
+					}
 				}
 			}
 
@@ -369,4 +376,9 @@ Editor::LIGHT_MODE Editor::GetLightMode() const
 Editor::POST_EFFECTS Editor::GetPostFXMode() const
 {
 	return static_cast<POST_EFFECTS>(m_pToolbar->GetPostEffectsState());
+}
+
+SSAOSettings Editor::GetSSAOSettings() const
+{
+	return m_pInfopane->GetSSAOSettings();
 }

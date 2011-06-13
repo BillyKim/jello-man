@@ -20,13 +20,15 @@ Infopane::Infopane(Infobar* pInfobar, Toolbar* pToolbar, Level* pLevel, EditorLo
 																													m_pLoader(pLoader),
 																													m_pSnapper(pSnapper),
 																													m_bInit(true),
-																													m_bSetLightColor(false)
+																													m_bSetLightColor(false),
+																													m_pALOptions(0)
 {
 	m_pLightInfo = new LightInfo();
 	m_pLevelObjectInfo = new LevelObjectInfo(pLevel);
 	m_pColorPicker = new ColorPicker();
 	m_pLoadLevelFromFile = new LoadLevelFromFile();
 	m_pLoadModelFromFile = new LoadModelFromFile();
+	m_pALOptions = new ALOptions();
 }
 
 Infopane::~Infopane()
@@ -41,6 +43,7 @@ Infopane::~Infopane()
 	delete m_pLevelObjectInfo;
 	delete m_pLoadLevelFromFile;
 	delete m_pLoadModelFromFile;
+	delete m_pALOptions;
 }
 
 /* GENERAL */
@@ -152,6 +155,12 @@ void Infopane::Tick(const RenderContext* pRenderContext)
 		case INFO_STATE_SNAPPINGOPTIONS:
 		{
 			m_pSnapper->Tick();
+
+			break;
+		}
+		case INFO_STATE_ALOPTIONS:
+		{
+			m_pALOptions->Tick();
 
 			break;
 		}
@@ -270,6 +279,12 @@ void Infopane::Draw()
 			m_pLevelObjectInfo->HideTextBoxes();
 			m_pLoadModelFromFile->HideTextBoxes();
 			m_pLoadLevelFromFile->HideTextBoxes();
+
+			break;
+		}
+		case INFO_STATE_ALOPTIONS:
+		{
+			m_pALOptions->Draw();
 
 			break;
 		}

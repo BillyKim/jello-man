@@ -552,6 +552,12 @@
     <ClInclude Include="ITrigger.h">
       <Filter>Game Files\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="ForceField.h">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="ALOptions.h">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture2D.cpp">
@@ -913,6 +919,12 @@
     </ClCompile>
     <ClCompile Include="Coin.cpp">
       <Filter>Game Files\LevelObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ForceField.cpp">
+      <Filter>Engine Files\PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="ALOptions.cpp">
+      <Filter>Engine Files\Graphics\GUI\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

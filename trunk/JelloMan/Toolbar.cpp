@@ -16,7 +16,8 @@ Toolbar::Toolbar(Editor* pEditor, Infobar* pInfobar, EditorLoader* pLoader) :	m_
 																				m_SnappingOptions(SNAPPING_OPTIONS_NACTIVE),
 																				m_PostEffectsState(POST_EFFECTS_OFF),
 																				m_LoadState(LOAD_STATE_NONE),
-																				m_pLoader(pLoader)
+																				m_pLoader(pLoader),
+																				m_ALOptions(AL_OPTIONS_OFF)
 {
 }
 
@@ -51,7 +52,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["LIGHT"], _T("Switch between lit and unlit mode."));
 
 	// MOVE BUTTON
-	m_Buttons["MOVE"] = new Button(168,7,36,36,true);
+	m_Buttons["MOVE"] = new Button(204,7,36,36,true);
 
 	m_ButtonImages["MOVE"].push_back(Content->LoadImage(_T("../Content/Images/Editor/move_on_normal.png")));
 	m_ButtonImages["MOVE"].push_back(Content->LoadImage(_T("../Content/Images/Editor/move_on_hover.png")));
@@ -94,7 +95,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["EDITOR"], _T("Switch between game - editor - play mode."));
 
 	// POINTLIGHT BUTTON
-	m_Buttons["POINTLIGHT"] = new Button(352,7,36,36);
+	m_Buttons["POINTLIGHT"] = new Button(388,7,36,36);
 
 	m_ButtonImages["POINTLIGHT"].push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_normal.png")));
 	m_ButtonImages["POINTLIGHT"].push_back(Content->LoadImage(_T("../Content/Images/Editor/pointlight_hover.png")));
@@ -106,7 +107,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["POINTLIGHT"], _T("Add a pointlight to the scene."));
 
 	// SPOTLIGHT BUTTON
-	m_Buttons["SPOTLIGHT"] = new Button(388,7,36,36);
+	m_Buttons["SPOTLIGHT"] = new Button(424,7,36,36);
 
 	m_ButtonImages["SPOTLIGHT"].push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_normal.png")));
 	m_ButtonImages["SPOTLIGHT"].push_back(Content->LoadImage(_T("../Content/Images/Editor/spotlight_hover.png")));
@@ -118,7 +119,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["SPOTLIGHT"], _T("Add a spotlight to the scene."));
 
 	// ROTATE BUTTON
-	m_Buttons["ROTATE"] = new Button(204,7,36,36,true);
+	m_Buttons["ROTATE"] = new Button(240,7,36,36,true);
 
 	m_ButtonImages["ROTATE"].push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_normal.png")));
 	m_ButtonImages["ROTATE"].push_back(Content->LoadImage(_T("../Content/Images/Editor/rotate_on_hover.png")));
@@ -137,7 +138,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["ROTATE"], _T("Use the rotate gizmo to rotate objects and lights present in the scene."));
 
 	// SCALE BUTTON
-	m_Buttons["SCALE"] = new Button(240,7,36,36,true);
+	m_Buttons["SCALE"] = new Button(276,7,36,36,true);
 
 	m_ButtonImages["SCALE"].push_back(Content->LoadImage(_T("../Content/Images/Editor/scale_on_normal.png")));
 	m_ButtonImages["SCALE"].push_back(Content->LoadImage(_T("../Content/Images/Editor/scale_on_hover.png")));
@@ -156,7 +157,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["SCALE"], _T("ONLY FOR TRIGGERBOXES!"));
 
 	// SNAPPING BUTTON
-	m_Buttons["SNAPPING"] = new Button(296,7,36,36,true);
+	m_Buttons["SNAPPING"] = new Button(332,7,36,36,true);
 
 	m_ButtonImages["SNAPPING"].push_back(Content->LoadImage(_T("../Content/Images/Editor/snapping_normal.png")));
 	m_ButtonImages["SNAPPING"].push_back(Content->LoadImage(_T("../Content/Images/Editor/snapping_hover.png")));
@@ -185,7 +186,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["PLAY"], _T("Switch between game - editor - play mode."));
 
 	// LOAD MODEL BUTTON
-	m_Buttons["LOADMODEL"] = new Button(444,7,36,36, true);
+	m_Buttons["LOADMODEL"] = new Button(480,7,36,36, true);
 
 	m_ButtonImages["LOADMODEL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_normal.png")));
 	m_ButtonImages["LOADMODEL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/load_model_off_hover.png")));
@@ -205,7 +206,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["LOADMODEL"], _T("Load a new levelobject from a file."));
 
 	// LOAD LEVEL BUTTON
-	m_Buttons["LOADLEVEL"] = new Button(480,7,36,36, true);
+	m_Buttons["LOADLEVEL"] = new Button(516,7,36,36, true);
 
 	m_ButtonImages["LOADLEVEL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_normal.png")));
 	m_ButtonImages["LOADLEVEL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/load_level_off_hover.png")));
@@ -225,7 +226,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["LOADLEVEL"], _T("load or save a level to a file."));
 
 	// SHOW GRID BUTTON
-	m_Buttons["GRID"] = new Button(544,7,36,36,true);
+	m_Buttons["GRID"] = new Button(580,7,36,36,true);
 
 	m_ButtonImages["GRID"].push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_normal.png")));
 	m_ButtonImages["GRID"].push_back(Content->LoadImage(_T("../Content/Images/Editor/grid_on_hover.png")));
@@ -265,7 +266,7 @@ void Toolbar::LoadButtons()
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["POSTFX"], _T("Turns on/off post processing effects."));
 
 	// TRIGGERBOX
-	m_Buttons["TRIGGERBOX"] = new Button(600,7,36,36);
+	m_Buttons["TRIGGERBOX"] = new Button(636,7,36,36);
 
 	m_ButtonImages["TRIGGERBOX"].push_back(Content->LoadImage(_T("../Content/Images/Editor/triggerbox_normal.png")));
 	m_ButtonImages["TRIGGERBOX"].push_back(Content->LoadImage(_T("../Content/Images/Editor/triggerbox_hover.png")));
@@ -275,6 +276,26 @@ void Toolbar::LoadButtons()
 	m_Buttons["TRIGGERBOX"]->SetDownState(m_ButtonImages["TRIGGERBOX"][1]);
 
 	m_pInfobar->AddButtonHoverMessage(m_Buttons["TRIGGERBOX"], _T("Adds a triggerbox to the scene."));
+
+	// AMBIENT LIGHTING
+	m_Buttons["AL"] = new Button(148,7,36,36,true);
+
+	m_ButtonImages["AL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/ambient_lighting_on_normal.png")));
+	m_ButtonImages["AL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/ambient_lighting_on_hover.png")));
+	m_ButtonImages["AL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/ambient_lighting_off_normal.png")));
+	m_ButtonImages["AL"].push_back(Content->LoadImage(_T("../Content/Images/Editor/ambient_lighting_off_hover.png")));
+
+	m_Buttons["AL"]->SetNormalState(m_ButtonImages["AL"][0]);
+	m_Buttons["AL"]->SetHoverState(m_ButtonImages["AL"][1]);
+	m_Buttons["AL"]->SetDownState(m_ButtonImages["AL"][1]);
+
+	m_Buttons["AL"]->SetDeactivatedState(m_ButtonImages["AL"][2]);
+	m_Buttons["AL"]->SetDeactivatedStateHover(m_ButtonImages["AL"][3]);
+	m_Buttons["AL"]->SetDeactivatedStateDown(m_ButtonImages["AL"][3]);
+
+	m_Buttons["AL"]->SetState(Button::STATE_DEACTIVATED);
+
+	m_pInfobar->AddButtonHoverMessage(m_Buttons["AL"], _T("View ambient lighting options."));
 }
 
 void Toolbar::Tick()
@@ -327,6 +348,9 @@ void Toolbar::Tick()
 
 	// post fx
 	m_PostEffectsState = m_Buttons["POSTFX"]->IsActive() ? POST_EFFECTS_ON : POST_EFFECTS_OFF;
+
+	// ambient lighting
+	m_ALOptions = m_Buttons["AL"]->IsActive() ? AL_OPTIONS_ON : AL_OPTIONS_OFF;
 
 	// add lights
 	if (m_Buttons["POINTLIGHT"]->Clicked())

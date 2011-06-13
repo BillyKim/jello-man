@@ -300,9 +300,9 @@ void Level::Deserialize(const string& path)
             Light* l = dynamic_cast<Light*>(obj);
             if (l != 0)
             {
-				int r = rand() % 10;
+				/*int r = rand() % 10;
 				if (r < 4)
-					l->SetBehaviour(new LightBehaviourBroken(BrokenLightType_LightBulb));
+					l->SetBehaviour(new LightBehaviourBroken(BrokenLightType_LightBulb));*/
                 m_pRenderContext->GetLightController()->AddLight(l);              
             }
         }

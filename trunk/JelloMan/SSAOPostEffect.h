@@ -9,6 +9,8 @@ public:
 	SSAOPostEffect(ID3D10Device* pDevice, ID3D10Effect* effect);
 	virtual ~SSAOPostEffect(void);
 
+	void SetWorldView(const Matrix& wvp);
+
     virtual void SetBackbufferMap(ID3D10ShaderResourceView* map);
     virtual void SetColorGlowMap(ID3D10ShaderResourceView* /*map*/) {};
 	virtual void SetPositionGlossMap(ID3D10ShaderResourceView* map);
@@ -19,6 +21,20 @@ public:
     
     virtual ID3D10InputLayout* GetInputLayout() const;
     virtual UINT GetVertexStride() const;
+
+	void SetRadius(float radius);
+	void SetIntensity(float intensity);
+	void SetScale(float scale);
+	void SetBias(float bias);
+	void SetMinIterations(int minIterations);
+	void SetMaxIterations(int maxIterations);
+
+	float GetRadius();
+	float GetIntensity();
+	float GetScale();
+	float GetBias();
+	int GetMinIterations();
+	int GetMaxIterations();
 
 private:
 	ID3D10EffectShaderResourceVariable* m_pColorMap;
@@ -32,6 +48,9 @@ private:
 	ID3D10EffectScalarVariable* m_pBias;
 	ID3D10EffectScalarVariable* m_pMapWidth;
 	ID3D10EffectScalarVariable* m_pMapHeight;
+	ID3D10EffectMatrixVariable* m_pWV;
+	ID3D10EffectScalarVariable* m_pMinIterations;
+	ID3D10EffectScalarVariable* m_pMaxIterations;
 
     ID3D10InputLayout* m_pInputLayout;
     UINT m_VertexStride;

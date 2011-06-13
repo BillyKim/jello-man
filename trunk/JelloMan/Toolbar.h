@@ -59,6 +59,12 @@ public:
 		LOAD_STATE_LEVEL
 	};
 
+	enum AL_OPTIONS
+	{
+		AL_OPTIONS_OFF,
+		AL_OPTIONS_ON
+	};
+
 	/* CONSTRUCTOR - DESTRUCTOR */
 	Toolbar(Editor* pEditor, Infobar* pInfobar, EditorLoader* pLoader);
 	virtual ~Toolbar();
@@ -94,6 +100,9 @@ public:
 	LOAD_STATE GetLoadState() const
 	{ return m_LoadState; }
 
+	AL_OPTIONS GetALOptionsState() const
+	{ return m_ALOptions; }
+
 private:
 
 	void FlipButtons(vector<Button*>&  buttons);
@@ -111,6 +120,7 @@ private:
 	SNAPPING_OPTIONS m_SnappingOptions;
 	POST_EFFECTS m_PostEffectsState;
 	LOAD_STATE m_LoadState;
+	AL_OPTIONS m_ALOptions;
 
 	Editor* m_pEditor;
 	Infobar* m_pInfobar;
