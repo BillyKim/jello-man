@@ -57,18 +57,22 @@ void SimpleSoftbody::Selected(bool selected)
 
 void SimpleSoftbody::Tick(const float dTime)
 {
-    m_Timer += dTime;
+    /*m_Timer += dTime;
 
     if (m_Timer >= 1.0f / 60.0f)
     {
         TransformPositions();
 	    SetVertices();
         m_Timer = 0.0f;
-    }
+    }*/
 }
 
 void SimpleSoftbody::Draw(const RenderContext* pRenderContext)
-{
+{   
+    TransformPositions();
+	SetVertices();
+    
+
     m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->SetWorld(Matrix::Identity);
 

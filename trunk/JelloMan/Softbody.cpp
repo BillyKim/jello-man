@@ -50,7 +50,7 @@ void Softbody::InitSoftbody(PhysX* pPhysX, SoftbodyMesh* pSoftbodyMesh, const ts
     softbodyDesc.stretchingStiffness = 0.6f;
     softbodyDesc.friction = 1.0f;
     softbodyDesc.solverIterations = 8;
-    softbodyDesc.flags = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION;
+    softbodyDesc.flags = NX_SBF_GRAVITY | NX_SBF_VOLUME_CONSERVATION | NX_SBF_COLLISION_TWOWAY;
     softbodyDesc.meshData = meshData;
 
     softbodyDesc.globalPose = static_cast<NxMat34>(Matrix::CreateTranslation(pos));
@@ -98,22 +98,25 @@ void Softbody::TransformPositions()
         m_CenterPoint += position;
 
         newVert.push_back(VertexPosNormTanTex(position, Vector3(), Vector3(), vert[i].tex));
-    }
+    } 
 
     m_CenterPoint /= static_cast<float>(size);
     m_Dimension = maxP - minP;
     ASSERT(m_Dimension.X >= 0 && m_Dimension.Y >= 0 && m_Dimension.Z >= 0, "Softbody dimension == 0");
     m_Radius = m_Dimension.Length() / 2.0f;
 
-    const vector<DWORD>& ind = m_pSoftbodyMesh->GetIndices();
-    DWORD numTris = ind.size() / 3;
+#pragma region normal
+    const vector<DWORD>& indices = m_pSoftbodyMesh->GetIndices();
+    vector<VertexPosNormTanTex>& vertices = newVert;
+    DWORD numTris = indices.size() / 3;
     for (DWORD i = 0; i < numTris; ++i)
     {
         Vector3 normal;
 
-        Vector3 pos1 = newVert[ind[i * 3]].position, 
-                pos2 = newVert[ind[i * 3 + 1]].position, 
-                pos3 = newVert[ind[i * 3 + 2]].position;
+        const Vector3& pos1 = vertices[indices[i * 3]].position, 
+                       pos2 = vertices[indices[i * 3 + 1]].position, 
+                       pos3 = vertices[indices[i * 3 + 2]].position;
+
         Vector3 v1 = pos2 - pos1;
         Vector3 v2 = pos3 - pos1;
         v1.Normalize();
@@ -121,31 +124,100 @@ void Softbody::TransformPositions()
         Vector3 cross = v1.Cross(v2);
         cross.Normalize();
 
-        if (newVert[ind[i * 3 + 0]].normal == Vector3::Zero)
-            newVert[ind[i * 3 + 0]].normal = cross;
+        if (vertices[indices[i * 3 + 0]].normal == Vector3::Zero)
+            vertices[indices[i * 3 + 0]].normal = cross;
         else
         {
-            newVert[ind[i * 3 + 0]].normal += cross;
-            newVert[ind[i * 3 + 0]].normal.Normalize();
+            vertices[indices[i * 3 + 0]].normal += cross;
+            vertices[indices[i * 3 + 0]].normal.Normalize();
         }
 
-        if (newVert[ind[i * 3 + 1]].normal == Vector3::Zero)
-            newVert[ind[i * 3 + 1]].normal = cross;
+        if (vertices[indices[i * 3 + 1]].normal == Vector3::Zero)
+            vertices[indices[i * 3 + 1]].normal = cross;
         else
         {
-            newVert[ind[i * 3 + 1]].normal += cross;
-            newVert[ind[i * 3 + 1]].normal.Normalize();
+            vertices[indices[i * 3 + 1]].normal += cross;
+            vertices[indices[i * 3 + 1]].normal.Normalize();
         }
 
-        if (newVert[ind[i * 3 + 2]].normal == Vector3::Zero)
-            newVert[ind[i * 3 + 2]].normal = cross;
+        if (vertices[indices[i * 3 + 2]].normal == Vector3::Zero)
+            vertices[indices[i * 3 + 2]].normal = cross;
         else
         {
-            newVert[ind[i * 3 + 2]].normal += cross;
-            newVert[ind[i * 3 + 2]].normal.Normalize();
+            vertices[indices[i * 3 + 2]].normal += cross;
+            vertices[indices[i * 3 + 2]].normal.Normalize();
         }
-
     }
+#pragma endregion
+#pragma region tangent
+    vector<VertexPosNormTanTex>& vecVPNTData = newVert;
+    const vector<DWORD>& vecIndexData = indices;
+    Vector3* tan1 = new Vector3[vecVPNTData.size()];
+    Vector3* tan2 = new Vector3[vecVPNTData.size()];
+    ZeroMemory(tan1, vecVPNTData.size() * 12);
+    ZeroMemory(tan2, vecVPNTData.size() * 12);
+    for (DWORD i = 0; i < vecIndexData.size(); i += 3)
+    {
+        int i1 = vecIndexData[i], 
+            i2 = vecIndexData[i+1], 
+            i3 = vecIndexData[i+2];
+
+	    const Vector3& v1 = vecVPNTData[i1].position;
+	    const Vector3& v2 = vecVPNTData[i2].position;
+	    const Vector3& v3 = vecVPNTData[i3].position;
+
+	    const Vector2& tx1 = vecVPNTData[i1].tex;
+	    const Vector2& tx2 = vecVPNTData[i2].tex;
+	    const Vector2& tx3 = vecVPNTData[i3].tex;
+
+	    float x1 = v2.X - v1.X;
+	    float x2 = v3.X - v1.X;
+	    float y1 = v2.Y - v1.Y;
+	    float y2 = v3.Y - v1.Y;
+	    float z1 = v2.Z - v1.Z;
+	    float z2 = v3.Z - v1.Z;
+
+	    float s1 = tx2.X - tx1.X;
+	    float s2 = tx3.X - tx1.X;
+	    float t1 = tx2.Y - tx1.Y;
+	    float t2 = tx3.Y - tx1.Y;
+
+	    float r = 1.0f / (s1 * t2 - s2 * t1);
+
+	    Vector3 sdir(
+            (t2 * x1 - t1 * x2) * r, 
+            (t2 * y1 - t1 * y2) * r, 
+            (t2 * z1 - t1 * z2) * r );
+	    Vector3 tdir(
+            (s1 * x2 - s2 * x1) * r, 
+            (s1 * y2 - s2 * y1) * r, 
+            (s1 * z2 - s2 * z1) * r );
+
+        tan1[i1] += sdir;
+        tan1[i2] += sdir;
+        tan1[i3] += sdir;
+
+        tan2[i1] += tdir;
+        tan2[i2] += tdir;
+        tan2[i3] += tdir;
+    }
+
+    for(DWORD i = 0; i < vecVPNTData.size(); ++i)
+    {
+        const Vector3& n = vecVPNTData[i].normal;
+        const Vector3& t = tan1[i];
+
+        vecVPNTData[i].tangent = (t - n * n.Dot(t));
+        vecVPNTData[i].tangent.Normalize();
+
+        if (vecVPNTData[i].tangent.Dot(vecVPNTData[i].normal) > 0.0001f)
+            PANIC("Tangent not loodrecht op Normal");
+    }
+
+
+    delete[] tan1;
+    delete[] tan2;
+#pragma endregion
 
 	m_TransformedVertices = newVert;
 }

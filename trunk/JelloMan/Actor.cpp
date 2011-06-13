@@ -9,7 +9,11 @@ Actor::Actor(void): m_mtxWorldMatrix(Matrix::Identity), m_pActor(0), m_pPhysX(0)
 Actor::~Actor(void)
 {
     if (m_pActor != 0)
+    {
+        m_pPhysX->GetPhysXLock().lock();
 	    m_pPhysX->GetScene()->releaseActor(*m_pActor);
+        m_pPhysX->GetPhysXLock().unlock();
+    }
 }
 
 void Actor::InitActor(PhysX* pPhysX, const PhysXShape& shape, bool moveable, bool bTrigger)
@@ -100,7 +104,9 @@ void Actor::Rotate(const Vector3& axis, float angle)
     m_mtxWorldMatrix *= Matrix::CreateTranslation(pos);
 
 	NxMat34 mat = static_cast<NxMat34>(m_mtxWorldMatrix);
+    m_pPhysX->GetPhysXLock().lock();
 	m_pActor->setGlobalPose(mat);
+    m_pPhysX->GetPhysXLock().unlock();
 	
 }
 void Actor::Scale(const Vector3& /*scale*/)
@@ -158,7 +164,10 @@ void Actor::Deserialize(Serializer* pSerializer)
 
     m_mtxWorldMatrix = pSerializer->GetStream()->readMatrix();
     NxMat34 mat(static_cast<NxMat34>(m_mtxWorldMatrix));
+
+    m_pPhysX->GetPhysXLock().lock();
     m_pActor->setGlobalPose(mat);
+    m_pPhysX->GetPhysXLock().unlock();
 
 	if (pSerializer->GetStream()->readByte() == TRUE)
 	{

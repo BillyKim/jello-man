@@ -248,7 +248,8 @@ void ModelLoader::ReadTet(const string& fileName)
         {
             Vector3 v;
             sscanf_s(line.c_str(), "v %f %f %f", &v.X, &v.Y, &v.Z);
-                       
+              
+            v.Z *= -1;
             vertices.push_back(VertexPos(v));
         }
         else if (line.find("t", 0) == 0)
@@ -308,6 +309,7 @@ void ModelLoader::LinkSBtoModel(const string& fileName)
 
     ModelMesh<VertexPNTSoftbody>* mesh = m_pCurrentModel->SetSoftbodyDrawMesh();
     vector<VertexPNTSoftbody> vertices;
+    //vector<DWORD> softbodyLinkIndices;
     for (DWORD i = 0; i < m_VPNTData.size(); ++i)
     {
         char buf[50];
@@ -323,9 +325,12 @@ void ModelLoader::LinkSBtoModel(const string& fileName)
         v.barycentricCoords = m_SBLinkData[vi].barycentricCoord;
 
         vertices.push_back(v);
+        //softbodyLinkIndices.push_back(vi);
     }
     mesh->SetVertices(vertices);
     mesh->SetIndices(m_IndexData);
+
+
 }
 
 void ModelLoader::AddVertex(const Vector3& v)
