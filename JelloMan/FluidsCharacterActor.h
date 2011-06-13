@@ -13,7 +13,6 @@ class NxFluidEmitter;
 struct UserData;
 
 
-
 class FluidsCharacterActor : public Actor, public ICharacter, public ITriggerable
 {
 public:
@@ -38,8 +37,8 @@ public:
 	virtual void Draw(const RenderContext* pRenderContext);
 
     /* ITriggerable */
-    virtual void OnTriggerEnter(const Trigger* pTrigger);
-    virtual void OnTriggerLeave(const Trigger* pTrigger);
+    virtual void OnTriggerEnter(const ITrigger* pTrigger);
+    virtual void OnTriggerLeave(const ITrigger* pTrigger);
 
 private:
 	void CheckIfOnGround();
@@ -70,5 +69,8 @@ private:
     bool m_IsTouchingGround;
 
     bool m_IsDead;
+
+    UINT m_Score;
+    float m_ScoreTimer;
 };
 

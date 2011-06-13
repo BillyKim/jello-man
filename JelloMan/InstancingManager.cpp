@@ -39,7 +39,7 @@ void InstancingManager::AddObject(IInstancible* obj)
 	ASSERT(man != 0, "Instancemanager == 0!");
 	man->AddInstance(obj->GetMtxWorldPointer());
 }
-void InstancingManager::DeleteObject(IInstancible* obj)
+void InstancingManager::DeleteObject(const IInstancible* obj)
 {
 	tstring id = obj->GetUniqueInstancingID();
 

@@ -80,6 +80,37 @@
 #endif
 
 
+using namespace std;
+#ifdef _UNICODE	// extra unicode defines
+	#define tstring wstring
+	#define tcin wcin
+	#define tcout wcout
+	#define tstringstream wstringstream
+	#define tofstream wofstream
+	#define tifstream wifstream
+	#define tfstream wfstream
+	#define tstrtod wcstod
+	#define tstrtol wcstol
+	#define tchar wchar_t 
+	#define tstrcmp wcscmp
+	#define tstrcpy_s wcscpy_s
+	#define tfopen _wfopen_s
+#else
+	#define tstring string
+	#define tcin cin
+	#define tcout cout
+	#define tstringstream stringstream
+	#define tofstream ofstream
+	#define tifstream ifstream
+	#define tfstream fstream
+	#define tstrod strtod
+	#define tstrtol strtol
+	#define tchar char 
+	#define tstrcmp strcmp
+	#define tstrcpy_s strcpy_s
+	#define tfopen fopen_s
+#endif
+
 //*****************************************************************************
 // Assert Macro
 //*****************************************************************************

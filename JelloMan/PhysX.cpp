@@ -7,7 +7,7 @@
 #pragma comment(lib, "PhysXLoader.lib")
 #pragma comment(lib, "NxCharacter.lib")
 
-#include "Trigger.h"
+#include "ITrigger.h"
 
 #pragma region MyOutputStream
 void MyOutputStream::reportError(NxErrorCode code, const char *message, const char*, int)
@@ -129,7 +129,7 @@ void PhysX::onTrigger(NxShape& triggerShape, NxShape& otherShape, NxTriggerFlag 
 	if (triggerActor.userData == NULL) // || otherActor.userData == NULL)
 		return;
 
-	Trigger* pTrigger = static_cast<Trigger*>(triggerActor.userData);
+	ITrigger* pTrigger = static_cast<ITrigger*>(triggerActor.userData);
 	
 	if(status & NX_TRIGGER_ON_ENTER)
 	{	

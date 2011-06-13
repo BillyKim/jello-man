@@ -11,13 +11,15 @@
 #include "Model.h"
 #include "UnlitNoTexEffect.h"
 #include "PosColEffect.h"
+#include "ITrigger.h"
 
 struct UserData;
 
 class Trigger:	public Actor,
 				public IDrawable,
 				public ILevelObject,
-				public ISerializable
+				public ISerializable,
+                public ITrigger
 {
 public:
 	/* CONSTRUCTOR - DESTRUCTOR */
@@ -63,7 +65,7 @@ public:
 
 	/* PHYSX INTERNAL */
 	virtual void OnTriggerEnter(const NxShape& otherShape);
-	virtual void OnTriggerLeave(const NxShape& otherShape) ;
+	virtual void OnTriggerLeave(const NxShape& otherShape);
 
 private:
     static int s_Count;
