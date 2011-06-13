@@ -159,17 +159,12 @@ void ModelLoader::ReadBinSBObj(const tstring& assetName)
 
     DWORD tris = stream.readDword();
     m_IndexData.clear();
-    for (DWORD i = 0; i < tris; ++i)
+    for (DWORD i = 0; i < tris * 3; ++i)
     {
-        DWORD index0 = stream.readDword();
-        DWORD index1 = stream.readDword();
-        DWORD index2 = stream.readDword();
-        m_IndexData.push_back(index0);
-        m_IndexData.push_back(index1);
-        m_IndexData.push_back(index2);
-
-		CalculateTangents(m_VPNTTData[index2], m_VPNTTData[index1], m_VPNTTData[index0]);
+        DWORD index = stream.readDword();
+        m_IndexData.push_back(index);
     }
+
     m_pCurrentSBMesh->SetVertices(m_VPNTTData);
     m_pCurrentSBMesh->SetIndices(m_IndexData);
     m_pCurrentSBMesh->SetTetra(tetraData);

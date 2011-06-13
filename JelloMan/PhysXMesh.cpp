@@ -31,7 +31,9 @@ void PhysXMesh::Init(const string& path, float mass)
     {
         NxConvexShapeDesc* desc = new NxConvexShapeDesc();
         desc->mass = mass;
+        m_pPhysX->GetPhysXLock().lock();
         desc->meshData = m_pPhysX->GetSDK()->createConvexMesh(UserStream(path.c_str(), true)); //mem leak
+        m_pPhysX->GetPhysXLock().unlock();
         m_pShapeDesc = desc;
         m_isConvex = true;
     }
@@ -39,7 +41,9 @@ void PhysXMesh::Init(const string& path, float mass)
     {
         NxTriangleMeshShapeDesc* desc = new NxTriangleMeshShapeDesc();
         desc->mass = mass;
+        m_pPhysX->GetPhysXLock().lock();
         desc->meshData = m_pPhysX->GetSDK()->createTriangleMesh(UserStream(path.c_str(), true)); //mem leak
+        m_pPhysX->GetPhysXLock().unlock();
         m_pShapeDesc = desc;
         m_isConvex = false;
     }

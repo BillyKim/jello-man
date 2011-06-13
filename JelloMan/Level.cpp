@@ -121,21 +121,11 @@ void Level::Tick(const float dTime)
     //    AddLevelObject(pSpawnpoint);
     //    m_pCharacterController->SetSpawnPoint(pSpawnpoint);
     //}
-    if (CONTROLS->IsKeyPressed('T'))
+    if (CONTROLS->IsKeyPressed('C'))
     {
-	    Trigger* pTrigger = new Trigger();
-	    pTrigger->Init(m_pPhysXEngine, Vector3(5,5,5));
-	    pTrigger->Translate(Vector3(0,0,0));
-        pTrigger->SetTriggerName(_T("left"));
-	    AddLevelObject(pTrigger);
-    }
-    else if (CONTROLS->IsKeyPressed('Y'))
-    {
-	    Trigger* pTrigger = new Trigger();
-	    pTrigger->Init(m_pPhysXEngine, Vector3(5,5,5));
-	    pTrigger->Translate(Vector3(0,0,0));
-        pTrigger->SetTriggerName(_T("right"));
-	    AddLevelObject(pTrigger);
+        Coin* pCoin = new Coin();
+        pCoin->Init(m_pPhysXEngine);
+        AddLevelObject(pCoin);
     }
 }
 
