@@ -38,12 +38,12 @@ SSAOPostEffect::SSAOPostEffect(ID3D10Device* pDXDevice, ID3D10Effect* effect):
 	m_pRandomNormalMap->SetResource(Content->LoadTexture2D(_T("../Content/Textures/Engine/random_normals.png"))->GetColorMap());
 
 	m_pRandomSize->SetFloat(64.0f);
-	m_pSampleRadius->SetFloat(0.5f);
-	m_pIntensity->SetFloat(8.0f);
+	m_pSampleRadius->SetFloat(0.1f);
+	m_pIntensity->SetFloat(14.0f);
 	m_pScale->SetFloat(2.0f);
 	m_pBias->SetFloat(0.03f);
 	m_pMinIterations->SetInt(8);
-	m_pMaxIterations->SetInt(16);
+	m_pMaxIterations->SetInt(64);
 }
 
 SSAOPostEffect::~SSAOPostEffect(void)
