@@ -14,6 +14,7 @@
 #include "LightBehaviourBroken.h"
 #include "Terrain.h"
 #include "Coin.h"
+#include "SimpleSoftbody.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -245,6 +246,7 @@ ISerializable* GetObject(DWORD id)
         case SerializeTypes::SimpleObject: return new SimpleObject(true);
         case SerializeTypes::PhysXTrigger: return new Trigger();
         case SerializeTypes::SpawnPoint: return new SpawnPoint();
+        case SerializeTypes::SimpleSoftbody: return new SimpleSoftbody();
         case SerializeTypes::Coin: return new Coin();
         default: PANIC("File corrupt!"); return 0;
     }
