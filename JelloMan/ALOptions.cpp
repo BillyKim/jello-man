@@ -2,7 +2,7 @@
 #include "ContentManager.h"
 
 /* CONSTRUCTOR - DESTRUCTOR */
-ALOptions::ALOptions()
+ALOptions::ALOptions() : m_bUseAO(false)
 {
 	m_SSAOSettings.radius = 0.1f;
 	m_SSAOSettings.intensity = 14.0f;
@@ -16,62 +16,75 @@ ALOptions::ALOptions()
 	m_AddSubtractButtonImages.push_back(Content->LoadImage(_T("../Content/Images/Editor/subtract_small_normal.png")));
 	m_AddSubtractButtonImages.push_back(Content->LoadImage(_T("../Content/Images/Editor/subtract_small_hover.png")));
 
-	m_Buttons["RADIUS_ADD"] = new Button(40,200,15,15);
+	m_UseAOButtonImages.push_back(Content->LoadImage(_T("../Content/Images/Editor/checkbox_empty_normal.png")));
+	m_UseAOButtonImages.push_back(Content->LoadImage(_T("../Content/Images/Editor/checkbox_full_normal.png")));
+
+	m_Buttons["USEAO"] = new Button(20,150,15,15, true);
+	m_Buttons["USEAO"]->SetNormalState(m_UseAOButtonImages[1]);
+	m_Buttons["USEAO"]->SetHoverState(m_UseAOButtonImages[1]);
+	m_Buttons["USEAO"]->SetDownState(m_UseAOButtonImages[1]);
+	m_Buttons["USEAO"]->SetDeactivatedState(m_UseAOButtonImages[0]);
+	m_Buttons["USEAO"]->SetDeactivatedStateHover(m_UseAOButtonImages[0]);
+	m_Buttons["USEAO"]->SetDeactivatedStateDown(m_UseAOButtonImages[0]);
+
+	m_Buttons["USEAO"]->SetState(Button::STATE_DEACTIVATED);
+
+	m_Buttons["RADIUS_ADD"] = new Button(40,230,15,15);
 	m_Buttons["RADIUS_ADD"]->SetNormalState(m_AddSubtractButtonImages[0]);
 	m_Buttons["RADIUS_ADD"]->SetHoverState(m_AddSubtractButtonImages[1]);
 	m_Buttons["RADIUS_ADD"]->SetDownState(m_AddSubtractButtonImages[1]);
 
-	m_Buttons["RADIUS_SUB"] = new Button(20,200,15,15);
+	m_Buttons["RADIUS_SUB"] = new Button(20,230,15,15);
 	m_Buttons["RADIUS_SUB"]->SetNormalState(m_AddSubtractButtonImages[2]);
 	m_Buttons["RADIUS_SUB"]->SetHoverState(m_AddSubtractButtonImages[3]);
 	m_Buttons["RADIUS_SUB"]->SetDownState(m_AddSubtractButtonImages[3]);
 
-	m_Buttons["INTENSITY_ADD"] = new Button(40,259,15,15);
+	m_Buttons["INTENSITY_ADD"] = new Button(40,289,15,15);
 	m_Buttons["INTENSITY_ADD"]->SetNormalState(m_AddSubtractButtonImages[0]);
 	m_Buttons["INTENSITY_ADD"]->SetHoverState(m_AddSubtractButtonImages[1]);
 	m_Buttons["INTENSITY_ADD"]->SetDownState(m_AddSubtractButtonImages[1]);
 
-	m_Buttons["INTENSITY_SUB"] = new Button(20,259,15,15);
+	m_Buttons["INTENSITY_SUB"] = new Button(20,289,15,15);
 	m_Buttons["INTENSITY_SUB"]->SetNormalState(m_AddSubtractButtonImages[2]);
 	m_Buttons["INTENSITY_SUB"]->SetHoverState(m_AddSubtractButtonImages[3]);
 	m_Buttons["INTENSITY_SUB"]->SetDownState(m_AddSubtractButtonImages[3]);
 
-	m_Buttons["SCALE_ADD"] = new Button(40,318,15,15);
+	m_Buttons["SCALE_ADD"] = new Button(40,348,15,15);
 	m_Buttons["SCALE_ADD"]->SetNormalState(m_AddSubtractButtonImages[0]);
 	m_Buttons["SCALE_ADD"]->SetHoverState(m_AddSubtractButtonImages[1]);
 	m_Buttons["SCALE_ADD"]->SetDownState(m_AddSubtractButtonImages[1]);
 
-	m_Buttons["SCALE_SUB"] = new Button(20,318,15,15);
+	m_Buttons["SCALE_SUB"] = new Button(20,348,15,15);
 	m_Buttons["SCALE_SUB"]->SetNormalState(m_AddSubtractButtonImages[2]);
 	m_Buttons["SCALE_SUB"]->SetHoverState(m_AddSubtractButtonImages[3]);
 	m_Buttons["SCALE_SUB"]->SetDownState(m_AddSubtractButtonImages[3]);
 
-	m_Buttons["BIAS_ADD"] = new Button(40,377,15,15);
+	m_Buttons["BIAS_ADD"] = new Button(40,407,15,15);
 	m_Buttons["BIAS_ADD"]->SetNormalState(m_AddSubtractButtonImages[0]);
 	m_Buttons["BIAS_ADD"]->SetHoverState(m_AddSubtractButtonImages[1]);
 	m_Buttons["BIAS_ADD"]->SetDownState(m_AddSubtractButtonImages[1]);
 
-	m_Buttons["BIAS_SUB"] = new Button(20,377,15,15);
+	m_Buttons["BIAS_SUB"] = new Button(20,407,15,15);
 	m_Buttons["BIAS_SUB"]->SetNormalState(m_AddSubtractButtonImages[2]);
 	m_Buttons["BIAS_SUB"]->SetHoverState(m_AddSubtractButtonImages[3]);
 	m_Buttons["BIAS_SUB"]->SetDownState(m_AddSubtractButtonImages[3]);
 
-	m_Buttons["MIN_IT_ADD"] = new Button(40,436,15,15);
+	m_Buttons["MIN_IT_ADD"] = new Button(40,466,15,15);
 	m_Buttons["MIN_IT_ADD"]->SetNormalState(m_AddSubtractButtonImages[0]);
 	m_Buttons["MIN_IT_ADD"]->SetHoverState(m_AddSubtractButtonImages[1]);
 	m_Buttons["MIN_IT_ADD"]->SetDownState(m_AddSubtractButtonImages[1]);
 
-	m_Buttons["MIN_IT_SUB"] = new Button(20,436,15,15);
+	m_Buttons["MIN_IT_SUB"] = new Button(20,466,15,15);
 	m_Buttons["MIN_IT_SUB"]->SetNormalState(m_AddSubtractButtonImages[2]);
 	m_Buttons["MIN_IT_SUB"]->SetHoverState(m_AddSubtractButtonImages[3]);
 	m_Buttons["MIN_IT_SUB"]->SetDownState(m_AddSubtractButtonImages[3]);
 
-	m_Buttons["MAX_IT_ADD"] = new Button(40,495,15,15);
+	m_Buttons["MAX_IT_ADD"] = new Button(40,525,15,15);
 	m_Buttons["MAX_IT_ADD"]->SetNormalState(m_AddSubtractButtonImages[0]);
 	m_Buttons["MAX_IT_ADD"]->SetHoverState(m_AddSubtractButtonImages[1]);
 	m_Buttons["MAX_IT_ADD"]->SetDownState(m_AddSubtractButtonImages[1]);
 
-	m_Buttons["MAX_IT_SUB"] = new Button(20,495,15,15);
+	m_Buttons["MAX_IT_SUB"] = new Button(20,525,15,15);
 	m_Buttons["MAX_IT_SUB"]->SetNormalState(m_AddSubtractButtonImages[2]);
 	m_Buttons["MAX_IT_SUB"]->SetHoverState(m_AddSubtractButtonImages[3]);
 	m_Buttons["MAX_IT_SUB"]->SetDownState(m_AddSubtractButtonImages[3]);
@@ -131,6 +144,11 @@ void ALOptions::Tick()
 		m_SSAOSettings.maxIterations += 2;
 	else if (m_Buttons["MAX_IT_SUB"]->Clicked())
 		m_SSAOSettings.maxIterations -= 2;
+
+	if (m_Buttons["USEAO"]->IsActive())
+		m_bUseAO = true;
+	else
+		m_bUseAO = false;
 }
 
 void ALOptions::Draw()
@@ -144,7 +162,8 @@ void ALOptions::Draw()
 	tstringstream stream;
 	stream.precision(3);
 
-	stream << _T("SSAO:\n\n\n\n\n\n\n\n");
+	stream << _T("SSAO:\n\n\n\n");
+	stream << _T("Use AO:\n\n\n\n\n\n");
 	stream << _T("Radius: ") << m_SSAOSettings.radius << _T("\n\n\n\n");
 	stream << _T("Intensity: ") << m_SSAOSettings.intensity << _T("\n\n\n\n");
 	stream << _T("Scale: ") << m_SSAOSettings.scale << _T("\n\n\n\n");

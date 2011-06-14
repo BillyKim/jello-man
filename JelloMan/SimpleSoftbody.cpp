@@ -2,8 +2,8 @@
 #include "ContentManager.h"
 #include "UserData.h"
 
-SimpleSoftbody::SimpleSoftbody(): 
-                Softbody(), m_pSBMesh(0),
+SimpleSoftbody::SimpleSoftbody(const Vector3& pos): 
+                Softbody(), m_vPosition(pos), m_pSBMesh(0),
                 m_strDiffusePath(_T("")), m_strSpecPath(_T("")),
                 m_strGlossPath(_T("")), m_strNormalPath(_T("")),
                 m_strModelPath(_T("")), m_strPhysXPath(_T("")),
@@ -45,7 +45,7 @@ void SimpleSoftbody::Init(PhysX* pPhysX)
     m_pEffect = Content->LoadEffect<DeferredPreEffectNormals>(_T("../Content/Effects/predeferredNormal.fx"));
 
     m_pSBMesh = Content->LoadSoftbodyMesh(m_strModelPath)->Copy();
-    InitSoftbody(pPhysX, m_pSBMesh, m_strPhysXPath, Vector3::Zero);
+    InitSoftbody(pPhysX, m_pSBMesh, m_strPhysXPath, m_vPosition);
     m_pUserData = new UserData(UserDataFlag_IsPickable, dynamic_cast<ILevelObject*>(this));
     m_pSoftbody->userData = m_pUserData;
 }
@@ -57,18 +57,22 @@ void SimpleSoftbody::Selected(bool selected)
 
 void SimpleSoftbody::Tick(const float dTime)
 {
-    m_Timer += dTime;
+    /*m_Timer += dTime;
 
-    if (m_Timer >= 1.0f / 30.0f)
+    if (m_Timer >= 1.0f / 60.0f)
     {
         TransformPositions();
 	    SetVertices();
         m_Timer = 0.0f;
-    }
+    }*/
 }
 
 void SimpleSoftbody::Draw(const RenderContext* pRenderContext)
 {   
+    TransformPositions();
+	SetVertices();
+    
+
     m_pEffect->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
     m_pEffect->SetWorld(Matrix::Identity);
 
@@ -85,29 +89,4 @@ void SimpleSoftbody::DrawShadow(const RenderContext* pRenderContext)
     pRenderContext->GetPreShadowEffect()->SetWorldViewProjection(pRenderContext->GetCamera()->GetViewProjection());
 
     m_pSoftbodyMesh->Draw(pRenderContext->GetPreShadowEffect());
-}
-
-
-void SimpleSoftbody::Serialize(Serializer* pSerializer) const
-{
-    pSerializer->GetStream()->storeTString(m_strDiffusePath);
-    pSerializer->GetStream()->storeTString(m_strSpecPath);
-    pSerializer->GetStream()->storeTString(m_strGlossPath);
-    pSerializer->GetStream()->storeTString(m_strNormalPath);
-    pSerializer->GetStream()->storeTString(m_strModelPath);
-    pSerializer->GetStream()->storeTString(m_strPhysXPath);
-    pSerializer->GetStream()->storeVector3(GetPosition());
-}
-void SimpleSoftbody::Deserialize(Serializer* pSerializer)
-{
-    m_strDiffusePath = pSerializer->GetStream()->readTString();
-    m_strSpecPath = pSerializer->GetStream()->readTString();
-    m_strGlossPath = pSerializer->GetStream()->readTString();
-    m_strNormalPath = pSerializer->GetStream()->readTString();
-    m_strModelPath = pSerializer->GetStream()->readTString();
-    m_strPhysXPath = pSerializer->GetStream()->readTString();
-
-    Init(pSerializer->GetPhysX());
-    Vector3 pos(pSerializer->GetStream()->readVector3());
-    //SetPosition(pos);
 }

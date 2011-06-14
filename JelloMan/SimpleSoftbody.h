@@ -4,14 +4,13 @@
 #include "DeferredPreEffectNormals.h"
 #include "ILevelObject.h"
 #include "IDrawable.h"
-#include "ISerializable.h"
 
 struct UserData;
 
-class SimpleSoftbody : public Softbody, public ILevelObject, public IDrawable, public ISerializable
+class SimpleSoftbody : public Softbody, public ILevelObject, public IDrawable
 {
 public:
-    SimpleSoftbody();
+    SimpleSoftbody(const Vector3& pos);
     virtual ~SimpleSoftbody(void);
 
     virtual IEditorObject* Copy() const { return 0; } //non copyable
@@ -46,11 +45,6 @@ public:
 
     void SetModelPath(tstring path) { m_strModelPath = path; }
     void SetPhysXModel(tstring path) { m_strPhysXPath = path; }
-    
-	//Serialize
-	virtual void Serialize(Serializer* pSerializer) const;
-	virtual void Deserialize(Serializer* pSerializer);
-    virtual DWORD GetUniqueIdentifier() const { return SerializeTypes::SimpleSoftbody; }
 
 private:
     tstring m_strDiffusePath, m_strSpecPath, m_strGlossPath, m_strNormalPath;
@@ -62,6 +56,8 @@ private:
     DeferredPreEffectNormals* m_pEffect;
 
     float m_Timer;
+
+    Vector3 m_vPosition;
 
     bool m_bIsSelected;
 

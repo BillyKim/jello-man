@@ -211,7 +211,9 @@ void Softbody::TransformPositions()
         vecVPNTData[i].tangent.Normalize();
 
         if (vecVPNTData[i].tangent.Dot(vecVPNTData[i].normal) > 0.0001f)
+		{
             PANIC("Tangent not loodrecht op Normal");
+		}
     }
 
 

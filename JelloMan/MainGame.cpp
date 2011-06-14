@@ -49,7 +49,8 @@ MainGame::MainGame()	:	m_dTtime(0),
 							m_bRunning(true),
 							m_PhysXDTime(0),
 							m_PhysXTimeBase(0),
-							m_pSSAOEffect(0)
+							m_pSSAOEffect(0),
+							m_pSSAOProcessor(0)
 {
 
 }
@@ -76,6 +77,7 @@ MainGame::~MainGame()
 	delete m_pForwardRenderer;
 	delete m_pPostProcessor;
 	delete m_pRenderContext;
+	delete m_pSSAOProcessor;
 
     delete Content;
 
@@ -86,7 +88,7 @@ void MainGame::Initialize(GameConfig& refGameConfig)
 {
     IniReader reader;
     try { reader.Open("config.ini"); }
-    catch (const exceptions::FileNotFoundException& e) { cout << "config.ini not found, loading defaults\n"; }
+    catch (const exceptions::FileNotFoundException& /*e*/) { cout << "config.ini not found, loading defaults\n"; }
     
     int width = -1, 
         height = -1;
@@ -146,7 +148,7 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_LoadingText = _T("PhysX");
 
 	m_pPhysXEngine = new PhysX();
-	m_pPhysXEngine->Init(true);
+	m_pPhysXEngine->Init();
 
 	m_pDefaultFont = Content->LoadTextFormat(_T("Arial"), 12, false,false);
 	BX2D->SetFont(m_pDefaultFont);
@@ -174,6 +176,10 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pPostProcessor = new PostProcessor(	pDXDevice,
 											static_cast<int>(BX2D->GetWindowSize().width),
 											static_cast<int>(BX2D->GetWindowSize().height));
+
+	m_pSSAOProcessor = new PostProcessor(	pDXDevice,
+											static_cast<int>(BX2D->GetWindowSize().width),
+											static_cast<int>(BX2D->GetWindowSize().height));
 	
 	m_pEdgeDetectionEffect = Content->LoadEffect<EdgeDetectionPostEffect>(_T("../Content/Effects/postEdgeDetection.fx"));
     m_pEdgeDetectionEffect->SetTechnique(0);
@@ -181,7 +187,8 @@ void MainGame::LoadResources(ID3D10Device* pDXDevice)
 	m_pSSAOEffect = Content->LoadEffect<SSAOPostEffect>(_T("../Content/Effects/postSSAO.fx"));
 	//m_pSSAOEffect->SetTechnique(0);
 
-	m_pPostProcessor->SetEffect(m_pSSAOEffect);
+	m_pPostProcessor->SetEffect(m_pEdgeDetectionEffect);
+	m_pSSAOProcessor->SetEffect(m_pSSAOEffect);
 
 	m_pDeferredRenderer->Init(	static_cast<int>(BX2D->GetWindowSize().width),
 								static_cast<int>(BX2D->GetWindowSize().height));
@@ -344,11 +351,14 @@ void MainGame::DrawScene()
 	m_pSSAOEffect->SetMinIterations(ss.minIterations);
 	m_pSSAOEffect->SetMaxIterations(ss.maxIterations);
 
-	m_pSSAOEffect->SetWorldView(m_pRenderContext->GetCamera()->GetView());
+	m_pSSAOEffect->SetWorldView(m_pRenderContext->GetCamera()->GetView() );
 
 	// POST PROCESS
 	if (m_pEditorGUI->GetPostFXMode() == Editor::POST_EFFECTS_ON)
 		m_pPostProcessor->Begin();
+
+	if (m_pEditorGUI->UseAO())
+		m_pSSAOProcessor->Begin();
 
 	    // START DEFERRED
 	    m_pDeferredRenderer->Begin();
@@ -367,6 +377,9 @@ void MainGame::DrawScene()
 
 	    // END FORWARD
 	    m_pForwardRenderer->End();
+
+	if (m_pEditorGUI->UseAO())
+		m_pSSAOProcessor->End(m_pDeferredRenderer);
 
 	// POST PROCESS
 	if (m_pEditorGUI->GetPostFXMode() == Editor::POST_EFFECTS_ON)

@@ -104,7 +104,7 @@ bool EditorLoader::AddLevelObject(	const tstring& modelPath,
 
 		    pObj->Init(m_pPhysXEngine);
 
-		    //pObj->Translate(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
+		    pObj->Translate(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
 
 		    m_pLevel->AddLevelObject(pObj);
         }
@@ -112,7 +112,7 @@ bool EditorLoader::AddLevelObject(	const tstring& modelPath,
         {
 		    Vector3 vLook = m_pRenderContext->GetCamera()->GetLook();
 		    vLook.Normalize();
-            SimpleSoftbody* pSoftbody = new SimpleSoftbody();
+            SimpleSoftbody* pSoftbody = new SimpleSoftbody(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
 
 		    pSoftbody->SetModelPath(modelPath);
 		    pSoftbody->SetPhysXModel(physxModelPath);
@@ -123,8 +123,6 @@ bool EditorLoader::AddLevelObject(	const tstring& modelPath,
             pSoftbody->SetNormalPath(normalPath);
 
             pSoftbody->Init(m_pPhysXEngine);
-            
-            pSoftbody->SetPosition(m_pRenderContext->GetCamera()->GetPosition() + vLook * 10);
 
             m_pLevel->AddLevelObject(pSoftbody);
         }

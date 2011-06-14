@@ -88,7 +88,7 @@ void CharacterController::DrawForward(const RenderContext* /*pRenderContext*/)
 			opacity = (4.0f - m_Timer) / 2.0f;
 		else opacity = 1.0f;
 
-		BX2D->SetColor(0.0,0.0,0.0,opacity);
+		BX2D->SetColor(0.0f, 0.0f, 0.0f, opacity);
 		BX2D->FillBackGround();
 
 		float opacity2(0.0f);

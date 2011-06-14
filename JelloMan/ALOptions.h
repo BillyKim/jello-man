@@ -31,12 +31,18 @@ public:
 	SSAOSettings GetSSAOSettings() const
 	{ return m_SSAOSettings; }
 
+	bool UseAO() const
+	{ return m_bUseAO; }
+
 private:
 
 	/* DATAMEMBERS */
+	bool m_bUseAO;
+
 	SSAOSettings m_SSAOSettings;
 
 	vector<Image*> m_AddSubtractButtonImages;
+	vector<Image*> m_UseAOButtonImages;
 	map<string, Button*> m_Buttons;
 
 	TextFormat* m_pFont;

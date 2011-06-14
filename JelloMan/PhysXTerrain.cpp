@@ -82,7 +82,7 @@ void PhysXTerrain::Serialize(Serializer* pSerializer) const
     /*pSerializer->GetStream()->storeVector3(Vector3(m_pBoxShapeDesc->dimensions));
     pSerializer->GetStream()->storeFloat(m_pBoxShapeDesc->mass);*/
 }
-void PhysXTerrain::Deserialize(Serializer* pSerializer)
+void PhysXTerrain::Deserialize(Serializer* /*pSerializer*/)
 {/*
     SafeDelete(m_pBoxShapeDesc);
 
