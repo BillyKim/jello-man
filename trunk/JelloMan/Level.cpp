@@ -14,7 +14,7 @@
 #include "LightBehaviourBroken.h"
 #include "Terrain.h"
 #include "Coin.h"
-#include "SimpleSoftbody.h"
+#include "ForceField.h"
 
 // CONSTRUCTOR - DESTRUCTOR
 Level::Level(ID3D10Device* pDXDevice)	:	
@@ -64,16 +64,20 @@ void Level::Initialize(PhysX* pPhysXEngine, Editor* pGUI, Graphics::Camera::Foll
     AddLevelObject(pSpawnpoint);
     m_pCharacterController->SetSpawnPoint(pSpawnpoint);
 
-    Terrain* pTerrain = new Terrain();
+    /*Terrain* pTerrain = new Terrain();
     pTerrain->SetDiffusePath(_T("../Content/Textures/heightmap_tex.png"));
     pTerrain->SetTerrainPath(_T("../Content/Textures/heightmap.png"));
     pTerrain->Init(m_pPhysXEngine);
-    AddLevelObject(pTerrain);
+    AddLevelObject(pTerrain);*/
 
-    Coin* pCoin = new Coin();
+    /*Coin* pCoin = new Coin();
     pCoin->Init(pPhysXEngine);
     AddLevelObject(pCoin);
-    pCoin->Translate(Vector3(5, 0.5f, 0.0f));
+    pCoin->Translate(Vector3(5, 0.5f, 0.0f));*/
+
+	/*ForceField* pForcefield(new ForceField());
+	pForcefield->Create(m_pPhysXEngine, Vector3(-200,0,0), Vector3(50,50,50), Vector3(0,0,0));*/
+
     //for (int x = 0; x < 20; ++x)
     //    for (int y = 0; y < 20; ++y)
     //        for (int z = 0; z < 20; ++z)
@@ -246,7 +250,6 @@ ISerializable* GetObject(DWORD id)
         case SerializeTypes::SimpleObject: return new SimpleObject(true);
         case SerializeTypes::PhysXTrigger: return new Trigger();
         case SerializeTypes::SpawnPoint: return new SpawnPoint();
-        case SerializeTypes::SimpleSoftbody: return new SimpleSoftbody();
         case SerializeTypes::Coin: return new Coin();
         default: PANIC("File corrupt!"); return 0;
     }

@@ -99,8 +99,6 @@ void Editor::Draw()
 			m_pToolbar->Draw();
 			m_pInfobar->Draw();
 
-			DrawJoints();
-
 			break;
 		}
 		case EDITOR_MODE_GAME:
@@ -115,6 +113,8 @@ void Editor::Draw()
 			break;
 		}
 	}
+
+	DrawJoints();
 
 	// CAMERA
 	if (m_bUsingCamera && m_Mode != EDITOR_MODE_PLAY)

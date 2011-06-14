@@ -53,6 +53,9 @@ public:
 	SSAOSettings GetSSAOSettings() const
 	{ return m_pALOptions->GetSSAOSettings(); }
 
+	bool UseAO() const
+	{ return m_pALOptions->UseAO(); }
+
 private:
 
 	/* DATAMEMBERS */

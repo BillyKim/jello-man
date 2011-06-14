@@ -32,7 +32,7 @@ public:
     virtual void Scale(const Vector3& /*scale*/) {}
 
     // IUpdateable
-    virtual void Tick(float /*dTime*/) {}
+    virtual void Tick(float dTime) {}
    
     // IDrawable
     virtual void Draw(const RenderContext* pRenderContext);

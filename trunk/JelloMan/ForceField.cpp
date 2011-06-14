@@ -30,13 +30,13 @@ void ForceField::Create(PhysX* pPhysX, const Vector3& force, const Vector3& dime
 	NxMat33 m;
 	m.zero();
 	linearKernelDesc.positionMultiplier = m;
-	linearKernelDesc.noise = NxVec3(1.3,1.3,1.3); //adds a random noise on the forces to make the objects a little more chaotic
+	linearKernelDesc.noise = NxVec3(1.3f, 1.3f, 1.3f); //adds a random noise on the forces to make the objects a little more chaotic
 
 	//Set target velocity along the radius to 20
-	linearKernelDesc.velocityTarget = NxVec3(10,0,0);
-	m.diagonal(NxVec3(1,0,0)); //Acts with a force relative to the current velocity to reach the
+	//linearKernelDesc.velocityTarget = NxVec3(10,0,0);
+	//m.diagonal(NxVec3(1,0,0)); //Acts with a force relative to the current velocity to reach the
 							   //target velocities. 0 means that those components won't be affected
-	linearKernelDesc.velocityMultiplier = m;
+	//linearKernelDesc.velocityMultiplier = m;
 
 	NxForceFieldLinearKernel* pLinearKernel;
 	pLinearKernel = pPhysX->GetScene()->createForceFieldLinearKernel(linearKernelDesc);

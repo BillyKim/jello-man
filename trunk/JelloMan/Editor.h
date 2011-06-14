@@ -68,6 +68,9 @@ public:
 
 	SSAOSettings GetSSAOSettings() const;
 
+	bool UseAO() const
+	{ return m_pInfopane->UseAO(); }
+
 private:
 
 	void DrawSelectedObjects();

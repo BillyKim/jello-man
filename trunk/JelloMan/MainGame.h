@@ -86,6 +86,7 @@ private:
 	DeferredRenderer* m_pDeferredRenderer;
     ForwardRenderer* m_pForwardRenderer;
     PostProcessor* m_pPostProcessor;
+	PostProcessor* m_pSSAOProcessor;
     EdgeDetectionPostEffect* m_pEdgeDetectionEffect;
 	SSAOPostEffect* m_pSSAOEffect;
 
